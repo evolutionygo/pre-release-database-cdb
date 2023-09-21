@@ -37,22 +37,18 @@ function s.spcon(e,c)
 end
 --atk up
 function s.atkcon(e,tp,eg,ep,ev,re,r,rp)
-	local ac=Duel.GetAttacker()
-	if not ac:IsControler(tp) then return false end
-	return ac and ac:IsControler(tp) and ac:IsFaceup() and ac:IsType(TYPE_SYNCHRO) end
-function s.atkfilter(c)
-	return c:IsFaceup() and c:IsRelateToBattle()
+	local at=Duel.GetAttacker()
+	return at:IsControler(tp) and at:IsType(TYPE_SYNCHRO)
 end
 function s.atkop(e,tp,eg,ep,ev,re,r,rp)
-	local ac=Duel.GetAttacker()
-	local g=Group.FromCards(ac):Filter(s.atkfilter,nil)
-	local gc=g:GetFirst()
-	local e1=Effect.CreateEffect(e:GetHandler())
-	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetCode(EFFECT_UPDATE_ATTACK)
-	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-	e1:SetValue(800)
-	e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
-	gc:RegisterEffect(e1)
+	local at=Duel.GetAttacker()
+	if at:IsFaceup() and at:IsRelateToBattle() then
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_UPDATE_ATTACK)
+		e1:SetValue(800)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+		at:RegisterEffect(e1)
+	end
 end
 
