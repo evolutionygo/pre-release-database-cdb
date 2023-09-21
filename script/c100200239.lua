@@ -1,56 +1,61 @@
---废品插座龙
+--废品盔甲
 local s,id=GetID()
 function c100200239.initial_effect(c)
-	--special summon
+    --battle
     local e1=Effect.CreateEffect(c)
-    e1:SetDescription(aux.Stringid(id,0))
-    e1:SetType(EFFECT_TYPE_FIELD)
-    e1:SetCode(EFFECT_SPSUMMON_PROC)
-    e1:SetProperty(EFFECT_FLAG_UNCOPYABLE)
-    e1:SetRange(LOCATION_HAND)
-    e1:SetCountLimit(1,id+EFFECT_COUNT_CODE_OATH)
-    e1:SetCondition(s.spcon)
-    e1:SetValue(SUMMON_VALUE_SELF)
-    c:RegisterEffect(e1)
-    --atk up
+	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+	e1:SetCode(EVENT_BE_MATERIAL)
+	e1:SetProperty(EFFECT_FLAG_EVENT_PLAYER)
+	e1:SetCondition(s.indcon)
+	e1:SetOperation(s.indop)
+	c:RegisterEffect(e1)
+    --spsummon
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
-	e2:SetCategory(CATEGORY_ATKCHANGE)
-	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
-	e2:SetCode(EVENT_ATTACK_ANNOUNCE)
+	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_GRAVE)
-	e2:SetCountLimit(1,id+100)
-	e2:SetCondition(s.atkcon)
-	e2:SetCost(aux.bfgcost)
-	e2:SetOperation(s.atkop)
+	e2:SetCountLimit(1,id)
+	e2:SetCondition(s.spcon)
+	e2:SetTarget(s.sptg)
+	e2:SetOperation(s.spop)
 	c:RegisterEffect(e2)
+end
+--battle
+function s.indcon(e,tp,eg,ep,ev,re,r,rp)
+	return r==REASON_SYNCHRO
+end
+function s.indop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	local rc=c:GetReasonCard()
+	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(id,0))
+	e1:SetProperty(EFFECT_FLAG_CLIENT_HINT)
+	e1:SetType(EFFECT_TYPE_SINGLE)
+	e1:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
+	e1:SetValue(1)
+	e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+	rc:RegisterEffect(e1,true)
 end
 --spsummon
 function s.spfilter(c)
-	return c:IsFaceup() and c:IsType(TYPE_SYNCHRO)
+	return  c:IsFaceup()and c:IsOriginalSetCard(0x66,0x1017,0xa3) and c:IsType(TYPE_SYNCHRO) end
+function s.spcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_MZONE,0,1,nil) and aux.exccon(e)
 end
-function s.spcon(e,c)
-	if c==nil then return true end
-	return Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(s.spfilter,c:GetControler(),LOCATION_MZONE,0,1,nil)
+function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
---atk up
-function s.atkcon(e,tp,eg,ep,ev,re,r,rp)
-	local ac=Duel.GetAttacker()
-	if not ac:IsControler(tp) then return false end
-	return ac and ac:IsControler(tp) and ac:IsFaceup() and ac:IsType(TYPE_SYNCHRO) end
-function s.atkfilter(c)
-	return c:IsFaceup() and c:IsRelateToBattle()
-end
-function s.atkop(e,tp,eg,ep,ev,re,r,rp)
-	local ac=e:GetLabelObject()
-	if ac:IsRelateToBattle() and ac:IsFaceup() and ac:IsControler(tp) then
-		local e1=Effect.CreateEffect(e:GetHandler())
+function s.spop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	if c:IsRelateToEffect(e) and Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)>0 then
+		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_UPDATE_ATTACK)
+		e1:SetCode(EFFECT_LEAVE_FIELD_REDIRECT)
 		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-		e1:SetValue(800)
-		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
-		ac:RegisterEffect(e1)
+		e1:SetReset(RESET_EVENT+RESETS_REDIRECT)
+		e1:SetValue(LOCATION_REMOVED)
+		c:RegisterEffect(e1,true)
 	end
 end
