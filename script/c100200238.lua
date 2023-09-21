@@ -1,4 +1,5 @@
---废品插座龙
+--ジャンク・ドラゴンセント
+--Script by fmole
 local s,id=GetID()
 function c100200238.initial_effect(c)
 	--special summon
@@ -43,14 +44,15 @@ function s.atkfilter(c)
 	return c:IsFaceup() and c:IsRelateToBattle()
 end
 function s.atkop(e,tp,eg,ep,ev,re,r,rp)
-	local ac=e:GetLabelObject()
-	if ac:IsRelateToBattle() and ac:IsFaceup() and ac:IsControler(tp) then
-		local e1=Effect.CreateEffect(e:GetHandler())
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_UPDATE_ATTACK)
-		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-		e1:SetValue(800)
-		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
-		ac:RegisterEffect(e1)
-	end
+	local ac=Duel.GetAttacker()
+	local g=Group.FromCards(ac):Filter(s.atkfilter,nil)
+	local gc=g:GetFirst()
+	local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetType(EFFECT_TYPE_SINGLE)
+	e1:SetCode(EFFECT_UPDATE_ATTACK)
+	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+	e1:SetValue(800)
+	e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+	gc:RegisterEffect(e1)
 end
+
