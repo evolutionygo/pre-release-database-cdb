@@ -28,7 +28,8 @@ function s.initial_effect(c)
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,2))
 	e3:SetCategory(CATEGORY_TOHAND)
-	e3:SetType(EFFECT_TYPE_IGNITION)
+	e3:SetType(EFFECT_TYPE_QUICK_O)
+	e3:SetCode(EVENT_FREE_CHAIN)
 	e3:SetRange(LOCATION_GRAVE)
 	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e3:SetCountLimit(1,id+o)
@@ -40,15 +41,18 @@ end
 function s.filter(c)
 	return c:IsSetCard(0x1a4) 
 end
+function s.filter1(c,tp)
+	return c:IsAbleToRemove(tp,POS_FACEDOWN)
+end 
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_MZONE,0,1,nil)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,0,LOCATION_GRAVE,1,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.filter1,tp,0,LOCATION_GRAVE,1,nil,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,1,1-tp,LOCATION_GRAVE)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.SelectMatchingCard(tp,Card.IsAbleToRemove,tp,0,LOCATION_GRAVE,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,s.filter1,tp,0,LOCATION_GRAVE,1,1,nil,tp)
 	if #g>0 then 
 	Duel.Remove(g,POS_FACEDOWN,REASON_EFFECT)
 	end
@@ -61,11 +65,11 @@ function s.recon(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.retg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
-	local g=Duel.GetMatchingGroupCount(Card.IsAbleToRemove,tp,0,LOCATION_GRAVE,nil)
+	local g=Duel.GetMatchingGroupCount(s.filter1,tp,0,LOCATION_GRAVE,nil,tp)
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,g,1-tp,LOCATION_GRAVE)
 end
 function s.reop(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetMatchingGroupCount(Card.IsAbleToRemove,tp,0,LOCATION_GRAVE,nil)
+	local g=Duel.GetMatchingGroupCount(s.filter1,tp,0,LOCATION_GRAVE,nil,tp)
 	Duel.Remove(g,POS_FACEDOWN,REASON_EFFECT)
 end
 function s.thfilter(c)
