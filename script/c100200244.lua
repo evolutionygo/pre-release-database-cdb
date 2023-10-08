@@ -26,15 +26,15 @@ function cm.initial_effect(c)
 	e2:SetTarget(cm.pentg)
 	e2:SetOperation(cm.penop)
 	c:RegisterEffect(e2)
-    --to EX
-    local e3=Effect.CreateEffect(c)
-    e3:SetCategory(CATEGORY_TOEXTRA)
+	--to EX
+	local e3=Effect.CreateEffect(c)
+	e3:SetCategory(CATEGORY_TOEXTRA)
 	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e3:SetCode(EVENT_DESTROYED)
 	e3:SetProperty(EFFECT_FLAG_DELAY)
-    e3:SetRange(LOCATION_PZONE)
-    e3:SetCountLimit(1,m+o)
-    e3:SetCondition(cm.tecon)
+	e3:SetRange(LOCATION_PZONE)
+	e3:SetCountLimit(1,m+o)
+	e3:SetCondition(cm.tecon)
 	e3:SetTarget(cm.tetg)
 	e3:SetOperation(cm.teop)
 	c:RegisterEffect(e3)
@@ -83,39 +83,39 @@ function cm.penop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function cm.cfilter(c,tp)
-    return c:IsPreviousLocation(LOCATION_MZONE) and c:IsPreviousPosition(POS_FACEUP) and c:IsPreviousControler(tp)
-        and c:IsType(TYPE_XYZ+TYPE_SYNCHRO+TYPE_FUSION) and c:IsReason(REASON_DESTROY)
-        and (c:IsReason(REASON_BATTLE) or c:GetReasonPlayer()==1-tp)
+	return c:IsPreviousLocation(LOCATION_MZONE) and c:IsPreviousPosition(POS_FACEUP) and c:IsPreviousControler(tp)
+		and c:IsType(TYPE_XYZ+TYPE_SYNCHRO+TYPE_FUSION) and c:IsReason(REASON_DESTROY)
+		and (c:IsReason(REASON_BATTLE) or c:GetReasonPlayer()==1-tp)
 end
 function cm.tefilter(c,race)
-    return c:IsType(TYPE_PENDULUM) and c:GetOriginalRace()&race~=0
+	return c:IsType(TYPE_PENDULUM) and c:GetOriginalRace()&race~=0
 end
 function cm.tecon(e,tp,eg,ep,ev,re,r,rp)
-    return eg:IsExists(cm.cfilter,1,nil,tp)
+	return eg:IsExists(cm.cfilter,1,nil,tp)
 end
 function cm.tetg(e,tp,eg,ep,ev,re,r,rp,chk)
-    local g=eg:Filter(cm.cfilter,nil,tp)
-    local tc=g:GetFirst()
-    local sg=Group.CreateGroup()
-    while tc do
-        local rg=Duel.GetMatchingGroup(cm.tefilter,tp,LOCATION_DECK,0,nil,tc:GetOriginalRace())
-        sg:Merge(rg)
-        tc=g:GetNext()
-    end
-    if chk==0 then return sg:GetCount()>0 end
+	local g=eg:Filter(cm.cfilter,nil,tp)
+	local tc=g:GetFirst()
+	local sg=Group.CreateGroup()
+	while tc do
+		local rg=Duel.GetMatchingGroup(cm.tefilter,tp,LOCATION_DECK,0,nil,tc:GetOriginalRace())
+		sg:Merge(rg)
+		tc=g:GetNext()
+	end
+	if chk==0 then return sg:GetCount()>0 end
 end
 function cm.teop(e,tp,eg,ep,ev,re,r,rp)
-    local g=eg:Filter(cm.cfilter,nil,tp)
-    local tc=g:GetFirst()
-    local sg=Group.CreateGroup()
-    while tc do
-        local rg=Duel.GetMatchingGroup(cm.tefilter,tp,LOCATION_DECK,0,nil,tc:GetOriginalRace())
-        sg:Merge(rg)
-        tc=g:GetNext()
-    end
-    if sg:GetCount()>0 then
-        Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(84521924,2))
-        local exg=sg:Select(tp,1,1,nil)
-        Duel.SendtoExtraP(exg,nil,REASON_EFFECT)
-    end
+	local g=eg:Filter(cm.cfilter,nil,tp)
+	local tc=g:GetFirst()
+	local sg=Group.CreateGroup()
+	while tc do
+		local rg=Duel.GetMatchingGroup(cm.tefilter,tp,LOCATION_DECK,0,nil,tc:GetOriginalRace())
+		sg:Merge(rg)
+		tc=g:GetNext()
+	end
+	if sg:GetCount()>0 then
+		Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,0))
+		local exg=sg:Select(tp,1,1,nil)
+		Duel.SendtoExtraP(exg,nil,REASON_EFFECT)
+	end
 end

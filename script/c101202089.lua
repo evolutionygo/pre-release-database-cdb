@@ -38,6 +38,13 @@ function s.initial_effect(c)
 	e3:SetTarget(s.sptg)
 	e3:SetOperation(s.spop)
 	c:RegisterEffect(e3)
+	local e4=Effect.CreateEffect(c)
+	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+	e4:SetCode(EVENT_LEAVE_FIELD_P)
+	e4:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+	e4:SetLabelObject(e3)
+	e4:SetOperation(s.chk)
+	c:RegisterEffect(e4)
 end
 function s.tgfilter(c)
 	return c:IsFacedown() and c:IsAbleToGrave()
@@ -73,8 +80,7 @@ function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local ct=c:GetOverlayCount()
-	return c:GetReasonPlayer()==1-tp and c:IsPreviousLocation(LOCATION_MZONE) and c:IsPreviousControler(tp) and ct>0
+	return c:GetReasonPlayer()==1-tp and c:IsPreviousLocation(LOCATION_MZONE) and c:IsPreviousControler(tp) and e:GetLabel()>0
 end
 function s.spfilter(c,e,tp)
 	return c:IsSetCard(0x1a4) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
@@ -89,4 +95,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and #g>0 then
 		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 	end
+end
+function s.chk(e,tp,eg,ep,ev,re,r,rp)
+	e:GetLabelObject():SetLabel(e:GetHandler():GetOverlayCount())
 end
