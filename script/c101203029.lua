@@ -67,8 +67,7 @@ function s.disop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.rcon(e)
-	return e:GetOwner():IsHasCardTarget(e:GetHandler()) and e:GetOwner():
-	IsPosition(POS_DEFENSE) and e:GetOwner():IsFaceup()
+	return e:GetOwner():IsHasCardTarget(e:GetHandler())
 end
 
 	--to hand
