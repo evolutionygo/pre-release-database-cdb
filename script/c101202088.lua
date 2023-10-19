@@ -63,7 +63,7 @@ function s.dacon(e,tp,eg,ep,ev,re,r,rp)
 	return not c:IsPreviousLocation(LOCATION_ONFIELD)
 end
 function s.filter(c)
-	return c:IsSetCard(0x1a4) and c:IsCanBeEffectTarget()
+	return c:IsFaceup() and c:IsSetCard(0x1a4) and c:IsCanBeEffectTarget() and not c:IsHasEffect(EFFECT_EXTRA_ATTACK)
 end
 function s.datg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return s.filter(chkc) and chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) end
