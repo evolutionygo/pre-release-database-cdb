@@ -63,22 +63,31 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.lvfilter(c)
-	return c:IsFaceup() and c:IsLevelAbove(0) and c:IsSetCard(0xba)
+	return c:IsFaceup() and c:IsLevelAbove(1) and c:IsSetCard(0xba)
 end
 function s.lvtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.lvfilter,tp,LOCATION_MZONE,0,1,nil) end
 end
 function s.lvop(e,tp,eg,ep,ev,re,r,rp)
+	--local g=Duel.GetMatchingGroup(s.lvfilter,tp,LOCATION_MZONE,0,nil)
 	local g=Duel.GetMatchingGroup(s.lvfilter,tp,LOCATION_MZONE,0,nil)
-	local tc=g:GetFirst()
-	while tc do
+	local sel=0
+	local lv=1
+	if not g:IsExists(Card.IsLevelAbove,1,nil,2) then
+		sel=Duel.SelectOption(tp,aux.Stringid(id,0))
+	else
+		sel=Duel.SelectOption(tp,aux.Stringid(id,0),aux.Stringid(id,1))
+	end
+	if sel==1 then
+		lv=-1
+	end
+	for tc in aux.Next(g) do
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_UPDATE_LEVEL)
 		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-		e1:SetValue(1)
+		e1:SetCode(EFFECT_UPDATE_LEVEL)
+		e1:SetValue(lv)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 		tc:RegisterEffect(e1)
-		tc=g:GetNext()
 	end
 end
