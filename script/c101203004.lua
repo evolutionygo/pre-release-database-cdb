@@ -32,7 +32,6 @@ function s.initial_effect(c)
 		Duel.RegisterEffect(ge1,0)
 		local ge2=ge1:Clone()
 		ge2:SetCode(EVENT_SPSUMMON_SUCCESS)
-		ge2:SetLabel(id)
 		Duel.RegisterEffect(ge2,0)
 	end
 end
@@ -63,13 +62,12 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.lvfilter(c)
-	return c:IsFaceup() and c:IsLevelAbove(1) and c:IsSetCard(0xba)
+	return c:IsFaceup() and c:IsLevelAbove(0) and c:IsSetCard(0xba)
 end
 function s.lvtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.lvfilter,tp,LOCATION_MZONE,0,1,nil) end
 end
 function s.lvop(e,tp,eg,ep,ev,re,r,rp)
-	--local g=Duel.GetMatchingGroup(s.lvfilter,tp,LOCATION_MZONE,0,nil)
 	local g=Duel.GetMatchingGroup(s.lvfilter,tp,LOCATION_MZONE,0,nil)
 	local sel=0
 	local lv=1
