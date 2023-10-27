@@ -18,7 +18,7 @@ redtext:
     - mv /ygopro-server/ygopro .
     - mkdir dist
     - cd ygopro
-    - mkdir expansions
+    - mkdir -p expansions
     - mv ../script expansions/
     - mv ../*.cdb expansions
     - echo "# Result of redtext test of commit $CI_COMMIT_SHA"
