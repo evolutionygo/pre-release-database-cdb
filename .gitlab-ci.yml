@@ -60,14 +60,14 @@ upload_archive:
   variables:
     uploadDir: archive
   only:
-    - master
+    - tags
 
 upload_data:
   extends: .minio
   variables:
     uploadDir: data
   only:
-    - master
+    - tags
 
 deploy:
   stage: deploy
@@ -78,7 +78,7 @@ deploy:
   variables:
     username: $MYCARD_USERNAME
     password: $MYCARD_PASSWORD
-    appVersion: $CI_COMMIT_SHORT_SHA
+    appVersion: $CI_COMMIT_REF_NAME
   script:
     - apt update; apt -y install tar zstd curl jq
     - git clone https://code.mycard.moe/mycard/mycard-package-script
@@ -87,7 +87,8 @@ deploy:
     - ./index.sh makeBuild ygopro2-super-pre ../data || true
     - cd ..
   only:
-    - master
+    # - master
+    - tags
 
 .deploy_to_server:
   stage: deploy
@@ -105,6 +106,7 @@ deploy:
     - rsync -4cavzP --exclude=pics --delete ./server-dist/ $SERVER_USER@$SERVER_HOST:~/ygopro-super-pre/expansions
   only:
     - master
+    - tags
 
 deploy_to_tiramisu:
   extends: .deploy_to_server
