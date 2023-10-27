@@ -1,0 +1,113 @@
+stages:
+  - pack
+  - deploy
+
+variables:
+  GIT_DEPTH: "1"
+
+pack:
+  stage: pack
+  dependencies: []
+  tags: 
+    - linux
+  script:
+    - mkdir -p data archive
+    - mv *.cdb data/
+    - mv pics data/
+    - mv script data/
+    - mv *.conf data/
+    - mv *.ini data/
+    - cd data
+    - 7z a -mx9 ../archive/ygopro-super-pre.zip pics script *.cdb *.conf *.ini
+    - cd ..
+    - mv archive/ygopro-super-pre.zip archive/ygopro-super-pre.ypk
+    - cp archive/ygopro-super-pre.ypk archive/ygopro-super-pre-$CI_COMMIT_REF_NAME.ypk
+  artifacts:
+    paths:
+      - data
+      - archive
+
+server:
+  stage: pack
+  dependencies: []
+  tags: 
+    - linux
+  script:
+    - mkdir server-dist
+    - mv *.cdb server-dist
+    - mv *.conf server-dist
+    - mv script server-dist
+    # merge ygopro-pre-data
+    - git clone --depth=1 https://code.mycard.moe/mycard/ygopro-pre-data
+    - mv ygopro-pre-data/expansions/* server-dist/
+    - mv ygopro-pre-data/script/* server-dist/script/
+  artifacts:
+    paths:
+      - server-dist
+
+
+.minio:
+  stage: deploy
+  dependencies:
+    - pack
+  tags: 
+    - linux
+  script:
+    - aws s3 --endpoint=https://minio.mycard.moe:9000 sync $uploadDir/ s3://mycard/ygopro-super-pre/$uploadDir
+
+upload_archive:
+  extends: .minio
+  variables:
+    uploadDir: archive
+  only:
+    - master
+
+upload_data:
+  extends: .minio
+  variables:
+    uploadDir: data
+  only:
+    - master
+
+deploy:
+  stage: deploy
+  dependencies:
+    - pack
+  tags: 
+    - linux
+  variables:
+    username: $MYCARD_USERNAME
+    password: $MYCARD_PASSWORD
+    appVersion: $CI_COMMIT_SHORT_SHA
+  script:
+    - apt update; apt -y install tar zstd curl jq
+    - git clone https://code.mycard.moe/mycard/mycard-package-script
+    - cd mycard-package-script
+    - ./index.sh makeBuild ygopro-super-pre ../data || true
+    - ./index.sh makeBuild ygopro2-super-pre ../data || true
+    - cd ..
+  only:
+    - master
+
+.deploy_to_server:
+  stage: deploy
+  dependencies:
+    - server
+  tags:
+    - linux
+  script:
+    - apt update && apt -y install openssh-client rsync coreutils
+    - mkdir ~/.ssh
+    - chmod 700 ~/.ssh
+    - ssh-keyscan $SERVER_HOST >> ~/.ssh/known_hosts
+    - echo $NANAHIRA_SSH_KEY | base64 --decode > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/*
+    - rsync -4cavzP --exclude=pics --delete ./server-dist/ $SERVER_USER@$SERVER_HOST:~/ygopro-super-pre/expansions
+  only:
+    - master
+
+deploy_to_tiramisu:
+  extends: .deploy_to_server
+  variables:
+    SERVER_HOST: tiramisu.mycard.moe
+    SERVER_USER: mycard
