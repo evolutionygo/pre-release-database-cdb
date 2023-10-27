@@ -19,6 +19,8 @@ function s.condition(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.filter1(c,e,tp)
 	return c:GetRank()>0 and c:IsFaceup() and c:IsSetCard(0xba)
+function s.filter1(c,e)
+	return c:GetRank()>0 and c:IsFaceup() and c:IsSetCard(0xba) and c:IsCanBeEffectTarget(e)
 end
 function s.filter2(c,e,tp,mg)   
 	local rk=0
@@ -33,6 +35,8 @@ end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_MZONE+LOCATION_GRAVE) and s.filter1(chkc,e,tp) end
 	local rg=Duel.GetMatchingGroup(s.filter1,tp,LOCATION_MZONE+LOCATION_GRAVE,0,nil,e,tp)
+	if chkc then return false end
+	local rg=Duel.GetMatchingGroup(s.filter1,tp,LOCATION_MZONE+LOCATION_GRAVE,0,nil,e)
 	if chk==0 then return rg:CheckSubGroup(s.fselect,2,99,tp,e) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
 	local sg=rg:SelectSubGroup(tp,s.fselect,false,2,99,tp,e)
