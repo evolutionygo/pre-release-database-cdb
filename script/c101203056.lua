@@ -21,18 +21,13 @@ function s.filter1(c,e)
 	return c:GetRank()>0 and c:IsFaceup() and c:IsSetCard(0xba) and c:IsCanBeEffectTarget(e)
 end
 function s.filter2(c,e,tp,mg)   
-	local rk=0
-	for c in aux.Next(mg) do
-		rk=rk+c:GetRank()
-	end
+	local rk=mg:GetSum(Card.GetRank)
 	return c:IsRank(rk) and c:IsSetCard(0xba) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false) and Duel.GetLocationCountFromEx(tp,tp,nil,c)>0
 end
 function s.fselect(g,tp,e)
 	return g:IsExists(Card.IsLocation,1,nil,LOCATION_MZONE) and Duel.IsExistingMatchingCard(s.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,g)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_MZONE+LOCATION_GRAVE) and s.filter1(chkc,e,tp) end
-	local rg=Duel.GetMatchingGroup(s.filter1,tp,LOCATION_MZONE+LOCATION_GRAVE,0,nil,e,tp)
 	if chkc then return false end
 	local rg=Duel.GetMatchingGroup(s.filter1,tp,LOCATION_MZONE+LOCATION_GRAVE,0,nil,e)
 	if chk==0 then return rg:CheckSubGroup(s.fselect,2,99,tp,e) end
