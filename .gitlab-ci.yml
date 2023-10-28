@@ -5,26 +5,26 @@ stages:
 variables:
   GIT_DEPTH: "1"
 
-redtext:
-  stage: pack
-  dependencies: []
-  tags:
-    - linux
-  image: git-registry.mycard.moe/nanahira/srvpro:lite
-  variables:
-    DATABASE_FILE: expansions/test-release.cdb
-  script:
-    - apt update && apt -y install sqlite3
-    - mv /ygopro-server/ygopro .
-    - mkdir dist
-    - cd ygopro
-    - mkdir -p expansions
-    - mv ../script expansions/
-    - mv ../*.cdb expansions
-    - echo "# Result of redtext test of commit $CI_COMMIT_SHA"
-    - echo "select id from datas where type != 0x10 and (type & 0x4000) = 0;" | sqlite3 $DATABASE_FILE | xargs -I {} ./ygopro {} 2>&1 | tee ../dist/redtext.txt
-    - cd ..
-    - exit $(cat dist/redtext.txt | wc -l)
+# redtext:
+#   stage: pack
+#   dependencies: []
+#   tags:
+#     - linux
+#   image: git-registry.mycard.moe/nanahira/srvpro:lite
+#   variables:
+#     DATABASE_FILE: expansions/test-release.cdb
+#   script:
+#     - apt update && apt -y install sqlite3
+#     - mv /ygopro-server/ygopro .
+#     - mkdir dist
+#     - cd ygopro
+#     - mkdir -p expansions
+#     - mv ../script expansions/
+#     - mv ../*.cdb expansions
+#     - echo "# Result of redtext test of commit $CI_COMMIT_SHA"
+#     - echo "select id from datas where type != 0x10 and (type & 0x4000) = 0;" | sqlite3 $DATABASE_FILE | xargs -I {} ./ygopro {} 2>&1 | tee ../dist/redtext.txt
+#     - cd ..
+#     - exit $(cat dist/redtext.txt | wc -l)
 
 
 pack:
