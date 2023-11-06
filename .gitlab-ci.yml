@@ -33,6 +33,7 @@ pack:
   tags: 
     - linux
   script:
+    - pip install -U sqlite-utils
     - mkdir -p data archive
     - mv *.cdb data/
     - mv pics data/
@@ -44,6 +45,7 @@ pack:
     - cd ..
     - mv archive/ygopro-super-pre.zip archive/ygopro-super-pre.ypk
     - cp archive/ygopro-super-pre.ypk archive/ygopro-super-pre-$CI_COMMIT_REF_NAME.ypk
+    - sqlite-utils test-release.cdb 'select datas.*,texts.* from datas,texts where datas.id=texts.id and (datas.type & 0x4000) = 0 and (datas.alias = 0 or datas.alias - datas.id > 10 or datas.alias - datas.id < -10)' > data/test-release.json
   artifacts:
     paths:
       - data
@@ -67,7 +69,6 @@ server:
     paths:
       - server-dist
 
-
 .minio:
   stage: deploy
   dependencies:
@@ -89,7 +90,7 @@ upload_data:
   variables:
     uploadDir: data
   only:
-    - tags
+    - master
 
 deploy:
   stage: deploy
