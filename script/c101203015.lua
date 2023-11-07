@@ -21,6 +21,7 @@ function s.initial_effect(c)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DELAY)
 	e2:SetCountLimit(1,id+o)
+	e2:SetCondition(s.rmcon)
 	e2:SetTarget(s.rmtg)
 	e2:SetOperation(s.rmop)
 	c:RegisterEffect(e2)
@@ -66,14 +67,16 @@ function s.spfilter1(c,e,tp)
 	return c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsLevelBelow(6) and c:IsRace(RACE_FISH) and e:GetHandler():IsAbleToRemove()
 end
 function s.rmfilter(c,tp,e)
-	return c:IsFaceup() and c:IsLocation(LOCATION_MZONE) and c:IsSummonPlayer(1-tp)
-		and c:IsAbleToRemove() and (not e or c:IsCanBeEffectTarget(e))
+	return c:IsLocation(LOCATION_MZONE) and c:IsControler(1-tp) and c:IsAbleToRemove() and c:IsCanBeEffectTarget(e)
+end
+function s.rmcon(e,tp,eg,ep,ev,re,r,rp)
+	return eg:IsExists(Card.IsControler,1,nil,1-tp)
 end
 function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()
 	local g=eg:Filter(s.rmfilter,nil,tp,e)
 	if chkc then return g:IsContains(chkc) and e:GetHandler():IsAbleToRemove() end
-	if chk==0 then return e:IsCostChecked() and #g>0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+	if chk==0 then return e:IsCostChecked() and #g>0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>=0
 	and Duel.IsExistingTarget(s.spfilter1,tp,LOCATION_REMOVED,0,1,nil,e,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local tg=g:Clone()
@@ -91,7 +94,7 @@ function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 	local ex1,tg1=Duel.GetOperationInfo(0,CATEGORY_REMOVE)
 	local ex2,tg2=Duel.GetOperationInfo(0,CATEGORY_SPECIAL_SUMMON)
 	if tg1:GetFirst():IsRelateToEffect(e) and Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_EFFECT)~=0 then
-		Duel.Remove(tg1,POS_FACEUP,REASON_EFFECT)
+	    Duel.Remove(tg1,POS_FACEUP,REASON_EFFECT)
 	end
 	if tg2:GetFirst():IsRelateToEffect(e) and tg2:GetFirst():IsRace(RACE_FISH) then
 		Duel.SpecialSummon(tg2,0,tp,tp,false,false,POS_FACEUP)
