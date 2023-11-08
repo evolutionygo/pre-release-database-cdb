@@ -32,54 +32,47 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function s.bfilter(c)
-	return c:IsSetCard(0xb5) and c:IsFaceup() and c:IsAbleToHand() or c:IsAbleToExtra()
+	return c:IsSetCard(0xb5) and c:IsFaceup() and c:IsAbleToHand()
 end
 function s.sfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0xb5) and c:IsSummonable(true,nil)
+	return c:IsSetCard(0xb5) and c:IsSummonable(true,nil)
 end
 function s.bstg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_REMOVED) and chkc:IsControler(tp) and s.bfilter(chkc) end
 	if chk==0 then return Duel.IsExistingTarget(s.bfilter,tp,LOCATION_REMOVED,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SELECT)
 	local tc=Duel.SelectTarget(tp,s.bfilter,tp,LOCATION_REMOVED,0,1,1,nil):GetFirst()
-	if tc:IsAbleToHand() then
-		Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,1,tp,LOCATION_REMOVED)
+	if tc:IsAbleToExtra() then
+		Duel.SetOperationInfo(0,CATEGORY_TOEXTRA,g,1,tp,LOCATION_REMOVED)
 	else
-		Duel.SetOperationInfo(0,CATEGORY_TODECK,g,1,tp,LOCATION_REMOVED)
+		Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,1,tp,LOCATION_REMOVED)
 	end
 end
 function s.bsop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetTargetsRelateToChain():GetFirst()
 	if tc then
-		local b1,b2=0,0
-		if tc:IsAbleToHand() then
-			b1=Duel.SendtoHand(tc,nil,REASON_EFFECT)
-		else
-			b2=Duel.SendtoDeck(tc,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)
-		end
-		if b1+b2>0 and Duel.IsExistingMatchingCard(s.sfilter,tp,LOCATION_HAND,0,1,nil) and Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
+		if Duel.SendtoHand(tc,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)>0
+			and Duel.IsExistingMatchingCard(s.sfilter,tp,LOCATION_HAND,0,1,nil)
+			and Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
 			Duel.BreakEffect()
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SUMMON)
-			local g=Duel.SelectMatchingCard(tp,s.sfilter,tp,LOCATION_HAND,0,1,1,nil)
-			local sumc=g:GetFirst()
-			if sumc then
-				Duel.Summon(tp,sumc,true,nil)
-			end
+			local sumc=Duel.SelectMatchingCard(tp,s.sfilter,tp,LOCATION_HAND,0,1,1,nil):GetFirst()
+			if sumc then	Duel.Summon(tp,sumc,true,nil) end
 		end
 	end
 end
 function s.rmcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetTurnPlayer()==1-tp
 end
-function s.rmmfilter(c,e,tp)
-	return c:IsSetCard(0xb5) and c:IsAbleToRemove()
+function s.rmfilter(c,e,tp)
+	return c:IsFaceup() and c:IsSetCard(0xb5) and c:IsAbleToRemove()
 end
 function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end
-	if chk==0 then return Duel.IsExistingTarget(s.rmmfilter,tp,LOCATION_ONFIELD,0,1,nil)
+	if chk==0 then return Duel.IsExistingTarget(s.rmfilter,tp,LOCATION_ONFIELD,0,1,nil)
 		and Duel.IsExistingTarget(Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g1=Duel.SelectTarget(tp,s.rmmfilter,tp,LOCATION_ONFIELD,0,1,1,nil)
+	local g1=Duel.SelectTarget(tp,s.rmfilter,tp,LOCATION_ONFIELD,0,1,1,nil)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local g2=Duel.SelectTarget(tp,Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD,1,1,nil)
 	g1:Merge(g2)
