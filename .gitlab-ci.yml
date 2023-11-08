@@ -1,4 +1,5 @@
 stages:
+  - json
   - pack
   - deploy
 
@@ -26,21 +27,37 @@ variables:
 #     - cd ..
 #     - exit $(cat dist/redtext.txt | wc -l)
 
+json:
+  stage: json
+  dependencies: []
+  tags:
+    - linux
+  image: git-registry.mycard.moe/mycard/ygopro-cdb-descgen:master-x86
+  script:
+    - currentPath=$PWD
+    - cd /usr/src/app
+    - wget -O strings.conf https://code.mycard.moe/mycard/ygopro-database/-/raw/master/locales/zh-CN/cards.cdb
+    - node dist $currentPath/test-release.cdb ./strings.conf $currentPath/test-strings.conf > $currentPath/test-release.json
+    - cd $currentPath
+  artifacts:
+    paths:
+      - test-release.json
+
 
 pack:
   stage: pack
-  dependencies: []
+  dependencies:
+    - json
   tags: 
     - linux
   script:
-    - pip install -U sqlite-utils
     - mkdir -p data archive
-    - sqlite-utils test-release.cdb 'select datas.*,texts.* from datas,texts where datas.id=texts.id and (datas.type & 0x4000) = 0 and (datas.alias = 0 or datas.alias - datas.id > 10 or datas.alias - datas.id < -10)' > data/test-release.json
     - mv *.cdb data/
     - mv pics data/
     - mv script data/
     - mv *.conf data/
     - mv *.ini data/
+    - mv test-release.json data/
     - cd data
     - 7z a -mx9 ../archive/ygopro-super-pre.zip pics script *.cdb *.conf *.ini
     - cd ..
