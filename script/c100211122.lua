@@ -45,7 +45,10 @@ function c100211122.sumfilter(c)
 end
 
 function c100211122.sumtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c100211122.sumfilter,tp,LOCATION_HAND+LOCATION_MZONE,0,1,nil) end
+	if chk==0 then 
+		local c = e:GetHandler()
+		return Duel.IsExistingMatchingCard(c100211122.sumfilter,tp,LOCATION_HAND+LOCATION_MZONE,0,1,c) 
+	end
 	Duel.SetOperationInfo(0,CATEGORY_SUMMON,nil,1,0,0)
 end
 
