@@ -34,6 +34,7 @@ json:
     - linux
   image: git-registry.mycard.moe/mycard/ygopro-cdb-descgen:master-x86
   script:
+    - apt update;apt -y install wget
     - currentPath=$PWD
     - cd /usr/src/app
     - wget -O strings.conf https://code.mycard.moe/mycard/ygopro-database/-/raw/master/locales/zh-CN/strings.conf
