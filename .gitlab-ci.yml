@@ -36,7 +36,7 @@ json:
   script:
     - currentPath=$PWD
     - cd /usr/src/app
-    - wget -O strings.conf https://code.mycard.moe/mycard/ygopro-database/-/raw/master/locales/zh-CN/cards.cdb
+    - wget -O strings.conf https://code.mycard.moe/mycard/ygopro-database/-/raw/master/locales/zh-CN/strings.conf
     - node dist $currentPath/test-release.cdb ./strings.conf $currentPath/test-strings.conf > $currentPath/test-release.json
     - cd $currentPath
   artifacts:
