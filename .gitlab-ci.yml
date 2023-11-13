@@ -33,6 +33,9 @@ json:
   tags:
     - linux
   image: git-registry.mycard.moe/mycard/ygopro-cdb-descgen:master-x86
+  variables:
+    YGOPRO_PIC_URL_PREFIX: 'https://cdn02.moecube.com:444/ygopro-super-pre/data/pics/'
+    YGOPRO_PIC_URL_SUFFIX: '.jpg'
   script:
     - apt update;apt -y install wget
     - currentPath=$PWD
