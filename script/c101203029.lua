@@ -1,4 +1,5 @@
 --ゴブリン降下部隊
+--Scripted by Gong'E
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--disable
@@ -9,7 +10,6 @@ function s.initial_effect(c)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e1:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
 	e1:SetCountLimit(1,id)
-	e1:SetLabelObject(e0)
 	e1:SetCondition(s.discon)
 	e1:SetTarget(s.distg)
 	e1:SetOperation(s.disop)
@@ -29,7 +29,7 @@ function s.initial_effect(c)
 	e2:SetOperation(s.thop)
 	c:RegisterEffect(e2)
 end
-	
+
 	--disable
 function s.disfilter(c)
 	return c:IsType(TYPE_EFFECT) and not c:IsDisabled()
@@ -47,7 +47,7 @@ function s.distg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function s.disop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if not c:IsRelateToEffect(e) or c:IsDefensePos() then return end
+	if not c:IsRelateToEffect(e) or c:IsDefensePos() or not c:IsCanChangePosition() then return end
 	Duel.ChangePosition(c,POS_FACEUP_DEFENSE,POS_FACEDOWN_DEFENSE,0,0)
 	local tc=Duel.GetFirstTarget()
 	if c:IsFaceup() and c:IsDefensePos() and c:IsRelateToEffect(e) and tc:IsFaceup() and tc:IsRelateToEffect(e)
@@ -76,7 +76,16 @@ end
 function s.rcon(e)
 	return e:GetOwner():IsHasCardTarget(e:GetHandler())
 end
-
+	--cancel target
+function s.recon(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	return c:IsPreviousPosition(POS_DEFENSE) and c:IsFaceup() and c:IsAttackPos()
+end
+function s.reop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	local tc=c:GetFirstCardTarget()
+	Card.CancelCardTarget(c,tc)
+end
 	--to hand
 function s.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(Card.IsControler,1,nil,1-tp)
