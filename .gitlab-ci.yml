@@ -111,7 +111,7 @@ upload_data:
   variables:
     uploadDir: data
   only:
-    - master
+    - tags
 
 deploy:
   stage: deploy
