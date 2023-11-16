@@ -36,6 +36,7 @@ json:
   variables:
     YGOPRO_PIC_URL_PREFIX: 'https://cdn02.moecube.com:444/ygopro-super-pre/data/pics/'
     YGOPRO_PIC_URL_SUFFIX: '.jpg'
+    FIELDS: 'name,desc,overallString,picUrl'
   script:
     - apt update;apt -y install wget
     - currentPath=$PWD
