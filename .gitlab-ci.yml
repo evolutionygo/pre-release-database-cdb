@@ -158,3 +158,9 @@ deploy_to_tiramisu:
   variables:
     SERVER_HOST: tiramisu.mycard.moe
     SERVER_USER: mycard
+
+deploy_to_koishi:
+  extends: .deploy_to_server
+  variables:
+    SERVER_HOST: koishi.momobako.com
+    SERVER_USER: nanahira
