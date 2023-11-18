@@ -63,6 +63,7 @@ pack:
     - mv *.conf data/
     - mv *.ini data/
     - mv test-release.json data/
+    - git show -s --format=%ct $CI_COMMIT_SHA > data/version.txt
     - cd data
     - 7z a -mx9 ../archive/ygopro-super-pre.zip pics script *.cdb *.conf *.ini
     - cd ..
