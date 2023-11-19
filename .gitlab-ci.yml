@@ -61,6 +61,7 @@ pack:
     - mv pics data/
     - mv script data/
     - mv *.conf data/
+    - mv pack data/
     - mv *.ini data/
     - mv test-release.json data/
     - git show -s --format=%ct $CI_COMMIT_SHA > data/version.txt
