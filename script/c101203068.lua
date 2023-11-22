@@ -47,7 +47,7 @@ function s.setop(e,tp,eg,ep,ev,re,r,rp)
 end
 --fusion
 function s.filter1(c,e)
-	return c:IsAbleToGrave() and not c:IsImmuneToEffect(e)
+	return c:IsAbleToRemove() and not c:IsImmuneToEffect(e)
 end
 function s.exfilter0(c)
 	return  c:IsRace(RACE_PLANT) and c:IsCanBeFusionMaterial() and c:IsAbleToRemove()
@@ -68,7 +68,7 @@ end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		local chkf=tp
-		local mg1=Duel.GetFusionMaterial(tp):Filter(Card.IsAbleToGrave,nil)
+		local mg1=Duel.GetFusionMaterial(tp):Filter(Card.IsAbleToRemove,nil)
 		if Duel.GetLP(tp)>Duel.GetLP(1-tp) then
 			local sg=Duel.GetMatchingGroup(s.exfilter0,tp,LOCATION_GRAVE,0,nil)
 			if sg:GetCount()>0 then
@@ -138,8 +138,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 			tc:SetMaterial(mat1)
 			local rg=mat1:Filter(Card.IsLocation,nil,LOCATION_GRAVE)
 			mat1:Sub(rg)
-			Duel.SendtoGrave(mat1,REASON_EFFECT+REASON_MATERIAL+REASON_FUSION)
-			Duel.Remove(rg,POS_FACEUP,REASON_EFFECT+REASON_MATERIAL+REASON_FUSION)
+			Duel.Remove(mat1+rg,POS_FACEUP,REASON_EFFECT+REASON_MATERIAL+REASON_FUSION)
 			Duel.BreakEffect()
 			Duel.SpecialSummon(tc,SUMMON_TYPE_FUSION,tp,tp,false,false,POS_FACEUP)
 		else
