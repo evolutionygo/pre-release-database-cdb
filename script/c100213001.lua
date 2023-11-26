@@ -6,7 +6,6 @@ function c100213001.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetRange(LOCATION_HAND)
 	e1:SetCountLimit(1,100213001)
-	e1:SetCost(c100213001.spcost)
 	e1:SetTarget(c100213001.sptg)
 	e1:SetOperation(c100213001.spop)
 	c:RegisterEffect(e1)
@@ -17,7 +16,7 @@ function c100213001.initial_effect(c)
 	e2:SetCode(EVENT_CHAINING)
 	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
 	e2:SetRange(LOCATION_MZONE)
-	e1:SetCountLimit(1,100213101)
+	e2:SetCountLimit(1,100213101)
 	e2:SetCondition(c100213001.negcon)
 	e2:SetCost(c100213001.negcost)
 	e2:SetTarget(c100213001.negtg)
@@ -27,22 +26,23 @@ end
 function c100213001.cfilter(c,tp)
 	return Duel.IsExistingMatchingCard(Card.IsCode,tp,0,LOCATION_GRAVE,1,nil,c:GetCode()) and not c:IsPublic()
 end
-function c100213001.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	local g=Duel.GetMatchingGroup(c100213001.cfilter,tp,LOCATION_DECK+LOCATION_HAND,0,nil,tp)
-	if chk==0 then return g:CheckSubGroup(aux.dncheck,3,3) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONFIRM)
-	local sg=g:SelectSubGroup(tp,aux.dncheck,false,3,3,nil)
-	Duel.ConfirmCards(1-tp,sg)
-end
 function c100213001.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+	local g=Duel.GetMatchingGroup(c100213001.cfilter,tp,LOCATION_DECK+LOCATION_HAND,0,nil,tp)
+	if chk==0 then return g:CheckSubGroup(aux.dncheck,3,3) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
 function c100213001.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if not c:IsRelateToEffect(e) then return end
-	Duel.SpecialSummon(c,SUMMON_VALUE_SELF,tp,tp,false,false,POS_FACEUP)
+	local g=Duel.GetMatchingGroup(c100213001.cfilter,tp,LOCATION_DECK+LOCATION_HAND,0,nil,tp)
+	if g:CheckSubGroup(aux.dncheck,3,3) then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONFIRM)
+		local sg=g:SelectSubGroup(tp,aux.dncheck,false,3,3,nil)
+		Duel.ConfirmCards(1-tp,sg)
+		if not c:IsRelateToEffect(e) then return end
+		Duel.SpecialSummon(c,SUMMON_VALUE_SELF,tp,tp,false,false,POS_FACEUP)
+		Duel.ShuffleDeck(tp)
+	end
 end
 function c100213001.negcon(e,tp,eg,ep,ev,re,r,rp)
 	return not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) and ep~=tp and Duel.IsChainNegatable(ev)
@@ -57,7 +57,7 @@ end
 function c100213001.negtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c100213001.filter,tp,LOCATION_DECK+LOCATION_EXTRA,0,1,nil,re) end
 	Duel.SetOperationInfo(0,CATEGORY_NEGATE,eg,1,0,0)
-	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_EXTRA+LOCATION_EXTRA)
+	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_DECK+LOCATION_EXTRA)
 end
 function c100213001.negop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
