@@ -28,6 +28,7 @@ function s.initial_effect(c)
 	e4:SetCode(EVENT_ATTACK_ANNOUNCE)
 	e4:SetCountLimit(1)
 	e4:SetRange(LOCATION_SZONE)
+	e4:SetCondition(s.dmcon)
 	e4:SetCost(s.dmcost)
 	e4:SetTarget(s.dmtg)
 	e4:SetOperation(s.dmop)
@@ -35,7 +36,7 @@ function s.initial_effect(c)
 end
 function s.stfilter(c)
 	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x2a8) and c:IsSSetable()
-    and c.set_as_spell and (not c:IsLocation(LOCATION_MZONE) or c:IsFaceup())
+	and c.set_as_spell and (not c:IsLocation(LOCATION_MZONE) or c:IsFaceup())
 end
 function s.sttg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.stfilter,tp,LOCATION_HAND+LOCATION_DECK+LOCATION_MZONE+LOCATION_GRAVE,0,1,nil) end
@@ -60,6 +61,9 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 		local sg=g:Select(tp,1,2,nil)
 		Duel.Destroy(sg,REASON_EFFECT)
 	end
+end
+function s.dmcon(e,tp,eg,ep,ev,re,r,rp)
+	return tp~=Duel.GetTurnPlayer()
 end
 function s.cfilter(c,tp)
 	return c:IsFacedown() and c:IsAbleToGraveAsCost()

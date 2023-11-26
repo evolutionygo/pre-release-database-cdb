@@ -47,10 +47,10 @@ function cm.thfilter(c)
 end
 function cm.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chkc then return chkc:IsLocation(LOCATION_PZONE) and cm.desfilter(chkc) and chkc~=e:GetHandler() end
-	if chk==0 then return Duel.IsExistingTarget(cm.desfilter,tp,LOCATION_PZONE,0,1,e:GetHandler())
+	if chk==0 then return Duel.IsExistingTarget(cm.desfilter,tp,LOCATION_PZONE,LOCATION_PZONE,1,e:GetHandler())
 		and Duel.IsExistingMatchingCard(cm.thfilter,tp,LOCATION_DECK,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g=Duel.SelectTarget(tp,cm.desfilter,tp,LOCATION_PZONE,0,1,1,e:GetHandler())
+	local g=Duel.SelectTarget(tp,cm.desfilter,tp,LOCATION_PZONE,LOCATION_PZONE,1,1,e:GetHandler())
 	g:AddCard(e:GetHandler())
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,2,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
@@ -114,7 +114,7 @@ function cm.teop(e,tp,eg,ep,ev,re,r,rp)
 		tc=g:GetNext()
 	end
 	if sg:GetCount()>0 then
-		Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,0))
+		Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(m,0))
 		local exg=sg:Select(tp,1,1,nil)
 		Duel.SendtoExtraP(exg,nil,REASON_EFFECT)
 	end
