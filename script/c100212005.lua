@@ -73,7 +73,7 @@ function c100212005.spcon2(e,tp,eg,ep,ev,re,r,rp)
 	return ep~=tp and not (bc and bc:IsStatus(STATUS_BATTLE_DESTROYED))
 end
 function c100212005.spfilter(c,e,tp)
-	return c:IsSetCard(0x20f8) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsSetCard(0x20f8) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE)
 		and (c:IsLocation(LOCATION_DECK) and Duel.GetMZoneCount(tp)>0
 			or c:IsLocation(LOCATION_EXTRA) and Duel.GetLocationCountFromEx(tp,tp,nil,c)>0)
 end
@@ -89,7 +89,7 @@ function c100212005.spop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,c100212005.spfilter,tp,LOCATION_DECK+LOCATION_EXTRA+LOCATION_GRAVE,0,1,ft,nil,e,tp)
 	if g:GetCount()>0 then
-		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
+		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
 	end
 end
 function c100212005.pencon(e,tp,eg,ep,ev,re,r,rp)
