@@ -18,7 +18,7 @@ function s.initial_effect(c)
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_SUMMON_SUCCESS)
-	e2:SetProperty(EFFECT_FLAG_DELAY)   
+	e2:SetProperty(EFFECT_FLAG_DELAY)	
 	e2:SetCountLimit(1,id+o)
 	e2:SetTarget(s.sptg2)
 	e2:SetOperation(s.spop2)
@@ -84,7 +84,7 @@ function s.splimit(e,c)
 	return not c:IsRace(RACE_MACHINE) and c:IsLocation(LOCATION_EXTRA)
 end
 function s.thfilter(c,e,tp)
-	return c:IsCode(37351133) and (c:IsAbleToHand() or c:IsCanBeSpecialSummoned(e,0,tp,false,false))
+	return c:IsCode(37351133) and (c:IsAbleToHand() or c:IsCanBeSpecialSummoned(e,0,tp,false,false))  and c:IsFaceupEx()
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp) end
@@ -99,6 +99,6 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 		else
 			Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
 		end
-
+		
 	end
 end
