@@ -1,4 +1,4 @@
---勤劳的山螳螂
+--Asset Mountis
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--special summon
@@ -37,7 +37,7 @@ function s.spfilter(c)
 end
 function s.spcon(e,c)
 	if c==nil then return true end
-	return Duel.IsExistingMatchingCard(s.spfilter,tp,0,LOCATION_MZONE,1,nil)
+	return Duel.IsExistingMatchingCard(s.spfilter,c:GetControler(),0,LOCATION_MZONE,1,nil)
 end
 function s.filter(c)
 	return c:IsFaceup() and c:IsCanChangePosition()
