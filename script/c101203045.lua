@@ -1,5 +1,4 @@
---急袭猛禽-崛起叛逆猎鹰
---lua by zengsxing
+--RR-ライジング・リベリオン・ファルコン
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--Xyz Summon
@@ -41,18 +40,26 @@ end
 function s.descon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_XYZ)
 end
+function s.damval1(c)
+	if c:GetLocation()~=LOCATION_MZONE then return end
+	return math.max(0,c:GetTextAttack()) 
+end
+function s.damval2(c)
+	if c:GetPreviousLocation()~=LOCATION_MZONE then return end
+	return math.max(0,c:GetTextAttack())
+end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.GetMatchingGroup(aux.TRUE,tp,0,LOCATION_ONFIELD,nil)
 	if chk==0 then return #g>0 end
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,g:GetCount(),0,0)
-	local atk=g:Filter(Card.IsType,nil,TYPE_MONSTER):GetSum(Card.GetBaseAttack)
+	local atk=g:GetSum(s.damval1)
 	if atk>0 then Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,0) end
 end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(aux.TRUE,tp,0,LOCATION_ONFIELD,nil)
 	if Duel.Destroy(g,REASON_EFFECT)>0 and e:GetHandler():GetOverlayGroup():Filter(Card.IsType,nil,TYPE_XYZ):GetClassCount(Card.GetCode)>=3 then
-		local dg=Duel.GetOperatedGroup():Filter(Card.IsType,nil,TYPE_MONSTER)
-		local atk=dg:GetSum(Card.GetBaseAttack)
+		local dg=Duel.GetOperatedGroup()
+		local atk=dg:GetSum(s.damval2)
 		if atk>0 then
 			Duel.BreakEffect()
 			Duel.Damage(1-tp,atk,REASON_EFFECT)
@@ -63,8 +70,10 @@ function s.filter(c)
 	return c:IsSetCard(0xba) and c:IsType(TYPE_MONSTER) and c:IsType(TYPE_XYZ) and not c:IsForbidden()
 end
 function s.copycost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,3,REASON_COST) end
-	e:GetHandler():RemoveOverlayCard(tp,3,3,REASON_COST)
+	local c=e:GetHandler()
+	if chk==0 then return c:GetFlagEffect(id)==0 and c:CheckRemoveOverlayCard(tp,3,REASON_COST) end
+	c:RemoveOverlayCard(tp,3,3,REASON_COST)
+	c:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,1)
 end
 function s.copytg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and s.filter(chkc) end
