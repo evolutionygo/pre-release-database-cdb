@@ -1,5 +1,4 @@
 --嗤う黒山羊
---Scripted by Crescent0v0
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--Activate & sumlimit
@@ -48,7 +47,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RegisterEffect(e1,tp)
 end
 function s.sumlimit(e,c,sump,sumtype,sumpos,targetp)
-  return c:IsCode(e:GetLabel()) and not c:IsLocation(LOCATION_GRAVE)
+	return c:IsOriginalCodeRule(e:GetLabel()) and not c:IsLocation(LOCATION_GRAVE)
 end
 function s.alop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -65,5 +64,5 @@ function s.alop(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.actlimit(e,re,tp)
 	local rc=re:GetHandler()
-	return rc:IsCode(e:GetLabel()) and (rc:IsOnField() or re:IsHasType(EFFECT_TYPE_ACTIVATE))
+	return rc:IsOriginalCodeRule(e:GetLabel()) and (rc:IsOnField() or re:IsHasType(EFFECT_TYPE_ACTIVATE))
 end
