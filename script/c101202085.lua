@@ -1,4 +1,4 @@
---电气念力斗技传承者
+--Wattsychic Fighting Porter
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--Activate

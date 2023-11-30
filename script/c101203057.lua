@@ -1,4 +1,4 @@
---急袭猛禽-栖所
+--RR-ルースト
 --lua by zengsxing
 local s,id,o=GetID()
 function s.initial_effect(c)
