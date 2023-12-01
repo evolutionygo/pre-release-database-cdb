@@ -1,4 +1,4 @@
---急袭猛禽-勇气林鸮
+--RR-ブレイブ・ストリクス
 --lua by zengsxing
 local s,id,o=GetID()
 function s.initial_effect(c)

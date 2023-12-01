@@ -14,6 +14,7 @@ function s.initial_effect(c)
 	e2:SetCode(EFFECT_SPSUMMON_PROC)
 	e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 	e2:SetRange(LOCATION_HAND+LOCATION_GRAVE)
+	e2:SetCountLimit(1,id+EFFECT_COUNT_CODE_OATH)
 	e2:SetCondition(s.spcon)
 	e2:SetOperation(s.spop)
 	c:RegisterEffect(e2)
@@ -39,7 +40,7 @@ function s.initial_effect(c)
 end
 s.lvup={57116033,id}
 function s.spfilter(c)
-	return (c:IsCode(57116033) or c:IsSetCard(0x3008)) and c:IsFaceupEx() and c:IsAbleToRemoveAsCost()
+	return (c:IsCode(57116033) or c:IsSetCard(0x3008) and c:IsType(TYPE_FUSION)) and c:IsFaceupEx() and c:IsAbleToRemoveAsCost()
 end
 function s.spcon(e,c)
 	if c==nil then return true end
@@ -72,7 +73,7 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.descon2(e,tp,eg,ep,ev,re,r,rp)
-	return re:GetHandler():IsOnField() and re:GetHandler():IsRelateToEffect(re) and re:IsActiveType(TYPE_MONSTER)
+	return rp~=tp and re:GetHandler():IsOnField() and re:GetHandler():IsRelateToEffect(re) and re:IsActiveType(TYPE_MONSTER)
 end
 function s.destg2(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return re:GetHandler():IsDestructable() end
