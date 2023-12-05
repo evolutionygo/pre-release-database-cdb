@@ -22,7 +22,7 @@ function c100213002.initial_effect(c)
 	e2:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
 	e2:SetCondition(c100213002.indcon)
 	e2:SetValue(1)
-	c:RegisterEffect(e1)
+	c:RegisterEffect(e2)
 	local e3=e2:Clone()
 	e3:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
 	c:RegisterEffect(e3)
@@ -46,7 +46,7 @@ function c100213002.atkcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsAttackPos()
 end
 function c100213002.val(e,c)
-	local g=Duel.GetMatchingGroup(Card.IsFaceup,tp,0,LOCATION_MZONE,nil)
+	local g=Duel.GetMatchingGroup(Card.IsFaceup,e:GetOwnerPlayer(),0,LOCATION_MZONE,nil)
 	if g:GetCount()==0 then
 		return 0
 	else
