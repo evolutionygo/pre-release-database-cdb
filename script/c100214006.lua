@@ -18,10 +18,12 @@ function c100214006.filter(c)
 end
 function c100214006.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_GRAVE) and c100214006.filter(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(c100214006.filter,tp,LOCATION_GRAVE,0,1,nil) end
+	local g=Duel.GetMatchingGroup(c100214006.filter,tp,LOCATION_GRAVE,0,nil,e,tp)
+	if chk==0 then return g:GetCount()>0 end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g=Duel.SelectTarget(tp,c100214006.filter,tp,LOCATION_GRAVE,0,1,2,nil)
-	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,g:GetCount(),0,0)
+	local sg=g:SelectSubGroup(tp,aux.dncheck,false,1,2)
+	Duel.SetTargetCard(sg)
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,sg,sg:GetCount(),0,0)
 end
 function c100214006.activate(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
