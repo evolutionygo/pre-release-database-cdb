@@ -64,7 +64,7 @@ function c100214013.drop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if c:IsRelateToEffect(e) and tc:IsRelateToEffect(e) then
 		local g=Group.FromCards(c,tc)
-		if Duel.SendtoGrave(g,REASON_EFFECT)~=2 then
+		if Duel.SendtoGrave(g,REASON_EFFECT)~=0 then
 			 Duel.Draw(tp,1,REASON_EFFECT)
 		end
 	end
