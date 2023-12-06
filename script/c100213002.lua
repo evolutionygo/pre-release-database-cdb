@@ -1,4 +1,4 @@
---A★臆测者
+--A★スペキュレーション
 --Lua by Gim J.Blocks
 function c100213002.initial_effect(c)
 	c:SetSPSummonOnce(100213002)
