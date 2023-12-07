@@ -1,4 +1,4 @@
---既视感分割者
+--ディーヴジャン
 --Amiya
 function c100214005.initial_effect(c)
 	--token
@@ -30,7 +30,7 @@ end
 function c100214005.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	local rg=Duel.GetMatchingGroup(c100214005.cfilter,tp,LOCATION_MZONE,0,nil,tp)
-	if chk==0 then return Duel.GetMZoneCount(tp,rg)>0 end
+	if chk==0 then return rg:GetCount()==Duel.GetMatchingGroup(Card.IsCode,tp,LOCATION_MZONE,0,nil,100214005):GetCount() and rg:GetCount()~=0 and Duel.GetMZoneCount(tp,rg)>0 end
 	ct=Duel.Release(rg,REASON_COST)*2
 	e:SetLabel(ct)
 end
