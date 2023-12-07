@@ -1,4 +1,4 @@
---地缚共振
+--地縛共振
 function c100214011.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)

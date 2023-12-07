@@ -1,4 +1,4 @@
---纳祭升阶
+--サクリファイス・ランクアップ
 function c100214014.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(100214014,0))

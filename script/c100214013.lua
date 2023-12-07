@@ -1,4 +1,4 @@
---电极兽 阴离子
+--電極獣アニオン
 function c100214013.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(100214013,0))

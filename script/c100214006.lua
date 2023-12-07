@@ -1,4 +1,4 @@
---石油采掘
+--石油採掘
 --Amiya
 function c100214006.initial_effect(c)
 	--Activate

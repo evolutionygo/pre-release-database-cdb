@@ -1,4 +1,4 @@
---同调恐慌
+--シンクロ・パニック
 function c100214017.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(100214017,0))

@@ -1,4 +1,4 @@
---既视感分割者
+--ディーヴジャン
 --Amiya
 function c100214005.initial_effect(c)
 	--token
