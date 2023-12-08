@@ -1,4 +1,4 @@
---电极兽 阴离子
+--電極獣アニオン
 function c100214013.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(100214013,0))
@@ -27,6 +27,7 @@ end
 function c100214013.lvtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()
 	if chk==0 then return not c:IsLevel(4) end
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK+LOCATION_GRAVE)
 end
 function c100214013.lvop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -35,7 +36,7 @@ function c100214013.lvop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_CHANGE_LEVEL)
 		e1:SetValue(4)
-		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 		c:RegisterEffect(e1)
 		if c:IsLevel(4) and Duel.IsExistingMatchingCard(aux.NecroValleyFilter(c100214013.thfilter),tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil) 
 			and Duel.SelectYesNo(tp,aux.Stringid(100214013,2)) then
@@ -64,7 +65,7 @@ function c100214013.drop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if c:IsRelateToEffect(e) and tc:IsRelateToEffect(e) then
 		local g=Group.FromCards(c,tc)
-		if Duel.SendtoGrave(g,REASON_EFFECT)~=2 then
+		if Duel.SendtoGrave(g,REASON_EFFECT)~=0 then
 			 Duel.Draw(tp,1,REASON_EFFECT)
 		end
 	end

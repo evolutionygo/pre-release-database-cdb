@@ -1,4 +1,4 @@
---纳祭升阶
+--サクリファイス・ランクアップ
 function c100214014.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(100214014,0))
@@ -13,11 +13,11 @@ function c100214014.initial_effect(c)
 end
 function c100214014.filter1(c,e,tp)
 	local rk=c:GetRank()
-	return c:IsFaceup() and c:IsType(TYPE_XYZ)
+	return c:IsFaceup() and c:IsType(TYPE_XYZ) and c:GetOverlayCount()>=2
 		and Duel.IsExistingMatchingCard(c100214014.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,rk+1)
 end
 function c100214014.filter2(c,e,tp,rk)
-	return c:IsRank(rk) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsRank(rk) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and Duel.GetLocationCountFromEx(tp,tp,nil,c)>0
 end
 function c100214014.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_MZONE) and c100214014.filter1(chkc,e,tp) end
@@ -29,7 +29,7 @@ end
 function c100214014.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if not aux.MustMaterialCheck(tc,tp,EFFECT_MUST_BE_XMATERIAL) then return end
-	if tc:IsFacedown() or not tc:IsRelateToEffect(e) or tc:IsControler(1-tp) or tc:IsImmuneToEffect(e) then return end
+	if tc:IsFacedown() or not tc:IsRelateToEffect(e) then return end
 	local g=tc:GetOverlayGroup()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local rg=g:FilterSelect(tp,Card.IsAbleToRemove,2,2,nil,POS_FACEUP)

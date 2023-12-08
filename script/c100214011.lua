@@ -1,4 +1,4 @@
---地缚共振
+--地縛共振
 function c100214011.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
@@ -29,7 +29,7 @@ function c100214011.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function c100214011.cfilter(c,tp)
-	return c:IsPreviousPosition(POS_FACEUP) and c:IsPreviousControler(tp) and c:IsPreviousLocation(LOCATION_MZONE) and c:IsSummonLocation(LOCATION_EXTRA)
+	return c:IsPreviousControler(tp) and c:IsPreviousLocation(LOCATION_MZONE) and c:IsSummonLocation(LOCATION_EXTRA)
 		and not c:IsType(TYPE_TOKEN)
 		and c:IsReason(REASON_EFFECT)
 end
