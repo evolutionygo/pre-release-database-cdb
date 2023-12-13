@@ -68,8 +68,7 @@ function c100212004.disop(e,tp,eg,ep,ev,re,r,rp)
 end
 function c100212004.atcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local bc=c:GetBattleTarget()
-	return bc:IsLocation(LOCATION_GRAVE) and bc:IsType(TYPE_MONSTER) and c:IsChainAttackable() and c:IsStatus(STATUS_OPPO_BATTLE)
+	return Duel.GetAttacker()==c and aux.bdocon(e,tp,eg,ep,ev,re,r,rp) and c:IsChainAttackable()
 end
 function c100212004.atcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end
