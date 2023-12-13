@@ -21,12 +21,13 @@ function c100212005.initial_effect(c)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_BATTLED)
+	e2:SetCountLimit(1,EFFECT_COUNT_CODE_CHAIN)
 	e2:SetCondition(c100212005.spcon1)
 	e2:SetTarget(c100212005.sptg)
 	e2:SetOperation(c100212005.spop)
 	c:RegisterEffect(e2)
-	e3=e2:Clone()
-	e3:SetCode(EVENT_BATTLED)
+	local e3=e2:Clone()
+	e3:SetCode(EVENT_BATTLE_DAMAGE)
 	e3:SetCondition(c100212005.spcon2)
 	c:RegisterEffect(e3)
 	local e4=Effect.CreateEffect(c)
@@ -43,7 +44,7 @@ function c100212005.matfilter(c)
 	return c:IsAttribute(ATTRIBUTE_DARK) and c:IsType(TYPE_PENDULUM)
 end
 function c100212005.cfilter(c,tp)
-	return c:IsSetCard(0x10f8,0x20f8) and Duel.GetMZoneCount(tp,c)>0
+	return c:IsSetCard(0x10f8,0x20f8) and c:IsType(TYPE_PENDULUM) and Duel.GetMZoneCount(tp,c)>0
 		and (c:IsFaceup() or c:IsControler(tp))
 end
 function c100212005.pspcost(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -65,12 +66,12 @@ end
 function c100212005.spcon1(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local bc=c:GetBattleTarget()
-	return bc and bc:IsStatus(STATUS_BATTLE_DESTROYED)
+	return not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) and bc~=nil and bc:IsStatus(STATUS_BATTLE_DESTROYED)
 end
 function c100212005.spcon2(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local bc=c:GetBattleTarget()
-	return ep~=tp and not (bc and bc:IsStatus(STATUS_BATTLE_DESTROYED))
+	return not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) and ep~=tp
 end
 function c100212005.spfilter(c,e,tp)
 	return c:IsSetCard(0x20f8) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE)
@@ -79,17 +80,38 @@ function c100212005.spfilter(c,e,tp)
 end
 function c100212005.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c100212005.spfilter,tp,LOCATION_DECK+LOCATION_EXTRA+LOCATION_GRAVE,0,1,nil,e,tp) end
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK+LOCATION_EXTRA)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK+LOCATION_EXTRA+LOCATION_GRAVE)
+end
+function c100212005.filter(c)
+	return c:IsFaceup() and c:IsType(TYPE_PENDULUM) and c:IsLocation(LOCATION_EXTRA)
+end
+function c100212005.gcheck(g,tp,eft)
+	return g:FilterCount(c100212005.filter,nil)<=eft
 end
 function c100212005.spop(e,tp,eg,ep,ev,re,r,rp)
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+	local eft=Duel.GetLocationCountFromEx(tp,tp,nil,TYPE_PENDULUM)
 	if ft<=0 then return end
 	if ft>=2 then ft=2 end
 	if Duel.IsPlayerAffectedByEffect(tp,59822133) then ft=1 end
+	local g=Duel.GetMatchingGroup(c100212005.spfilter,tp,LOCATION_DECK+LOCATION_EXTRA+LOCATION_GRAVE,0,nil,e,tp)
+	if g:GetCount()==0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,c100212005.spfilter,tp,LOCATION_DECK+LOCATION_EXTRA+LOCATION_GRAVE,0,1,ft,nil,e,tp)
-	if g:GetCount()>0 then
-		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
+	local sg=g:SelectSubGroup(tp,c100212005.gcheck,false,1,ft,tp,eft)
+	if sg:GetCount()>0 then
+		local exg=sg:Filter(c100212005.filter,nil)
+		sg:Sub(exg)
+		if exg:GetCount()>0 then
+			for tc in aux.Next(exg) do
+				Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
+			end
+		end
+		if sg:GetCount()>0 then
+			for tc in aux.Next(sg) do
+				Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
+			end
+		end
+		Duel.SpecialSummonComplete()
 	end
 end
 function c100212005.pencon(e,tp,eg,ep,ev,re,r,rp)

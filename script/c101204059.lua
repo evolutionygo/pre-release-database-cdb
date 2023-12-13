@@ -34,7 +34,7 @@ function c101204059.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 function c101204059.indcon(e)
-	return Duel.GetCurrentPhase()==PHASE_MAIN1
+	return Duel.GetCurrentPhase()==PHASE_MAIN1 and Duel.GetTurnPlayer()==tp
 end
 function c101204059.indtg(e,c)
 	return c:IsRace(RACE_DRAGON) and c:IsAttribute(ATTRIBUTE_FIRE)
