@@ -74,7 +74,7 @@ function c101204040.posop(e,tp,eg,ep,ev,re,r,rp)
 end
 function c101204040.actcon(e)
 	local ph=Duel.GetCurrentPhase()
-	return ph>=PHASE_BATTLE_START and ph<=PHASE_BATTLE
+	return ph>=PHASE_BATTLE_START and ph<=PHASE_BATTLE )
 end
 function c101204040.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetFlagEffect(tp,101204040)>=3
