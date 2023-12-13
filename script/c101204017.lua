@@ -63,7 +63,7 @@ function c101204017.indtg(e,c)
 end
 function c101204017.sccon(e,tp,eg,ep,ev,re,r,rp)
 	local ph=Duel.GetCurrentPhase()
-	return not e:GetHandler():IsStatus(STATUS_CHAINING) and (ph>=PHASE_BATTLE_START and ph<=PHASE_BATTLE)
+	return ph>=PHASE_BATTLE_START and ph<=PHASE_BATTLE
 end
 function c101204017.sctg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsSynchroSummonable,tp,LOCATION_EXTRA,0,1,nil,e:GetHandler()) end
