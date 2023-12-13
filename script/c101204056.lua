@@ -1,4 +1,4 @@
---幻奏协奏曲
+--幻奏協奏曲
 function c101204056.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_FUSION_SUMMON)
@@ -25,7 +25,7 @@ function c101204056.filter0(c,e)
 	return c:IsCanBeFusionMaterial() and not c:IsImmuneToEffect(e)
 end
 function c101204056.filter1(c,e)
-	return c:IsOnField() and not c:IsImmuneToEffect(e)
+	return not c:IsImmuneToEffect(e)
 end
 function c101204056.filter2(c,e,tp,m,f,chkf)
 	return c:IsType(TYPE_FUSION) and c:IsRace(RACE_FAIRY) and (not f or f(c))
@@ -34,7 +34,7 @@ end
 function c101204056.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		local chkf=tp
-		local mg1=Duel.GetFusionMaterial(tp):Filter(Card.IsOnField,nil)
+		local mg1=Duel.GetFusionMaterial(tp)
 		mg1:Merge(Duel.GetMatchingGroup(c101204056.filter0,tp,LOCATION_PZONE,0,nil,e))
 		local res=Duel.IsExistingMatchingCard(c101204056.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,mg1,nil,chkf)
 		if not res then
