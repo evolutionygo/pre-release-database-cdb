@@ -1,4 +1,4 @@
---幻奏的歌姬 库普乐
+--幻奏の歌姫クープレ
 function c101204010.initial_effect(c)
 	aux.EnablePendulumAttribute(c)
 	local e0=Effect.CreateEffect(c)
