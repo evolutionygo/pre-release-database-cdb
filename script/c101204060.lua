@@ -26,14 +26,14 @@ function c101204060.activate(e,tp,eg,ep,ev,re,r,rp)
 	local op=0
 	if Duel.IsExistingMatchingCard(c101204060.filter,tp,LOCATION_DECK,0,1,nil) then
 		if not Duel.IsExistingMatchingCard(c101204060.spfilter,tp,LOCATION_HAND,0,1,nil,e,tp) or Duel.GetLocationCount(tp,LOCATION_MZONE)>=1 and Duel.IsExistingMatchingCard(c101204060.spfilter,tp,LOCATION_HAND,0,1,nil,e,tp) and Duel.SelectYesNo(tp,aux.Stringid(101204060,1)) then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 			local g=Duel.SelectMatchingCard(tp,c101204060.filter,tp,LOCATION_DECK,0,1,1,nil)
 			if g:GetCount()>0 then
 				Duel.SendtoHand(g,nil,REASON_EFFECT)
 				Duel.ConfirmCards(1-tp,g)
 			end
+			op=1
 		end
-		op=1
 	end
 	Duel.AdjustAll()
 	if op==0 or Duel.IsExistingMatchingCard(c101204060.spfilter,tp,LOCATION_HAND,0,1,nil,e,tp) and Duel.GetLocationCount(tp,LOCATION_MZONE)>=1 and ph>=PHASE_BATTLE_START and ph<=PHASE_BATTLE and Duel.SelectYesNo(tp,aux.Stringid(101204060,2)) then
