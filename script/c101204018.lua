@@ -38,7 +38,7 @@ function c101204018.cfilter(c)
 	return c:IsFaceup() and c:IsRace(RACE_DRAGON) and c:IsAttribute(ATTRIBUTE_FIRE)
 end
 function c101204018.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(c101204018.cfilter,tp,LOCATION_MZONE,0,2,nil)
+	return Duel.IsExistingMatchingCard(c101204018.cfilter,tp,LOCATION_MZONE,0,1,nil)
 end
 function c101204018.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
@@ -69,7 +69,7 @@ function c101204018.spop2(e,tp,eg,ep,ev,re,r,rp)
 end
 function c101204018.sccon(e,tp,eg,ep,ev,re,r,rp)
 	local ph=Duel.GetCurrentPhase()
-	return not e:GetHandler():IsStatus(STATUS_CHAINING) and (ph>=PHASE_BATTLE_START and ph<=PHASE_BATTLE)
+	return ph>=PHASE_BATTLE_START and ph<=PHASE_BATTLE
 end
 function c101204018.sctg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsSynchroSummonable,tp,LOCATION_EXTRA,0,1,nil,e:GetHandler()) end
