@@ -55,7 +55,7 @@ function c101204009.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
 	local tg=Duel.SelectMatchingCard(tp,c101204009.tgfilter,tp,LOCATION_DECK,0,1,1,nil):GetFirst()
-	if tg and Duel.SendtoGrave(tg,REASON_COST)~=0 then
+	if tg and Duel.SendtoGrave(tg,REASON_COST)~=0 and tc:IsLocation(LOCATION_GRAVE) then
 		local tc=Duel.GetFirstTarget()
 		if tc:IsRelateToEffect(e) and tc:IsFaceup() then
 			local e0=Effect.CreateEffect(c)
