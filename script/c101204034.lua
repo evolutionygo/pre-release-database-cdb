@@ -1,5 +1,6 @@
 --粛声なる竜神サフィラ
 function c101204034.initial_effect(c)
+	c:EnableReviveLimit()
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(101204034,0))
 	e1:SetCategory(CATEGORY_DRAW)
@@ -58,7 +59,7 @@ end
 function c101204034.hscon(e,tp,eg,ep,ev,re,r,rp)
 	local a=Duel.GetAttacker()
 	local d=Duel.GetAttackTarget()
-	return c101204034.filter(a) or (d and c101204034.filter(b))
+	return c101204034.filter(a) or (d and c101204034.filter(d))
 end
 function c101204034.hstg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetFieldGroupCount(tp,0,LOCATION_HAND)>0 end
