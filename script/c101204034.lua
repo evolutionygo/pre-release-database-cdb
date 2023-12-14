@@ -58,7 +58,7 @@ end
 function c101204034.hscon(e,tp,eg,ep,ev,re,r,rp)
 	local a=Duel.GetAttacker()
 	local d=Duel.GetAttackTarget()
-	return c101204034.filter(a) or (b and c101204034.filter(b))
+	return c101204034.filter(a) or (d and c101204034.filter(b))
 end
 function c101204034.hstg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetFieldGroupCount(tp,0,LOCATION_HAND)>0 end
