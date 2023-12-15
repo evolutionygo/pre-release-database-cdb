@@ -161,6 +161,8 @@ deploy:
 
 .deploy_to_server:
   stage: deploy
+  tags:
+    - linux
   dependencies:
     - server
   variables:
