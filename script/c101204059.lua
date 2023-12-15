@@ -61,8 +61,7 @@ function c101204059.thop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c101204059.atkcon(e,tp,eg,ep,ev,re,r,rp)
-	local ph=Duel.GetCurrentPhase()
-	return Duel.GetTurnPlayer()==tp and ph>=PHASE_BATTLE_START and ph<=PHASE_BATTLE
+	return ph>=PHASE_BATTLE_START and ph<=PHASE_BATTLE
 end
 function c101204059.atkfilter(c)
 	return c:IsFaceup() and c:IsType(TYPE_SYNCHRO) and c:IsRace(RACE_DRAGON)
