@@ -1,5 +1,6 @@
 stages:
-  - json
+  - prepare
+  - prepare2
   - pack
   - deploy
 
@@ -27,9 +28,22 @@ variables:
 #     - cd ..
 #     - exit $(cat dist/redtext.txt | wc -l)
 
-json:
-  stage: json
+merge_databases:
+  stage: prepare
   dependencies: []
+  tags:
+    - linux
+  script:
+    - apt update && apt -y install sqlite3
+    - ls cdbs/test-release.cdb | xargs -I '{}' sqlite3 '{}' .dump | sqlite3 > test-release.cdb
+  artifacts:
+    paths:
+      - test-release.cdb
+
+json:
+  stage: prepare2
+  dependencies:
+    - merge_databases
   tags:
     - linux
   image: git-registry.mycard.moe/mycard/ygopro-cdb-descgen:master-x86
@@ -52,6 +66,7 @@ json:
 pack:
   stage: pack
   dependencies:
+    - merge_databases
     - json
   tags: 
     - linux
@@ -77,7 +92,8 @@ pack:
 
 server:
   stage: pack
-  dependencies: []
+  dependencies:
+    - merge_databases
   tags: 
     - linux
   script:
@@ -141,8 +157,8 @@ deploy:
   stage: deploy
   dependencies:
     - server
-  tags:
-    - linux
+  variables:
+    SERVER_PATH: ~/ygopro-super-pre/expansions
   script:
     - apt update && apt -y install openssh-client rsync coreutils
     - mkdir ~/.ssh
@@ -150,7 +166,7 @@ deploy:
     - ssh-keyscan $SERVER_HOST >> ~/.ssh/known_hosts
     - echo $NANAHIRA_SSH_KEY | base64 --decode > ~/.ssh/id_rsa
     - chmod 600 ~/.ssh/*
-    - rsync -4cavzP --exclude=pics --delete ./server-dist/ $SERVER_USER@$SERVER_HOST:~/ygopro-super-pre/expansions
+    - rsync -4cavzP --exclude=pics --delete ./server-dist/ $SERVER_USER@$SERVER_HOST:$SERVER_PATH
   only:
     - master
     - tags
