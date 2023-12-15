@@ -1,4 +1,4 @@
---粛声なる竜神サフィラ
+--肃声的龙神 萨菲拉
 function c101204034.initial_effect(c)
 	c:EnableReviveLimit()
 	local e1=Effect.CreateEffect(c)
@@ -35,8 +35,11 @@ function c101204034.initial_effect(c)
 	e3:SetOperation(c101204034.thop)
 	c:RegisterEffect(e3)
 end
+function c101204034.cfilter(c)
+	return c:IsFaceupEx() and c:IsCode(101203019)
+end
 function c101204034.drcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():IsSummonType(SUMMON_TYPE_RITUAL)
+	return e:GetHandler():IsSummonType(SUMMON_TYPE_RITUAL) and Duel.IsExistingMatchingCard(c101204034.cfilter,tp,LOCATION_ONFIELD+LOCATION_GRAVE,0,1,nil)
 end
 function c101204034.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsPlayerCanDraw(tp,2) end
