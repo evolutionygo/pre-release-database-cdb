@@ -132,6 +132,12 @@ upload_data:
   only:
     - tags
 
+upload_version_json:
+  extends: .minio
+  script:
+    - aws s3 --endpoint=https://minio.mycard.moe:9000 cp data/version.txt s3://mycard/ygopro-super-pre/versions/$CI_COMMIT_REF_NAME/version.txt
+    - aws s3 --endpoint=https://minio.mycard.moe:9000 cp data/test-release.json s3://mycard/ygopro-super-pre/versions/$CI_COMMIT_REF_NAME/test-release.json
+
 deploy:
   stage: deploy
   dependencies:
