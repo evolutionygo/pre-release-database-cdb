@@ -1,3 +1,4 @@
+--幻奏の歌姫クープレ
 function c101204010.initial_effect(c)
 	aux.EnablePendulumAttribute(c)
 	local e0=Effect.CreateEffect(c)
@@ -46,7 +47,7 @@ end
 function c101204010.splimit(e,c,tp,sumtp,sumpos)
 	return not c:IsAttribute(ATTRIBUTE_LIGHT) and bit.band(sumtp,SUMMON_TYPE_PENDULUM)==SUMMON_TYPE_PENDULUM 
 end
-function c101204010.thcfilter()
+function c101204010.thcfilter(c)
 	return c:IsFaceup() and not c:IsSetCard(0x9b)
 end
 function c101204010.thcon(e,tp,eg,ep,ev,re,r,rp)
