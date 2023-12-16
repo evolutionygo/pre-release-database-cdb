@@ -1,7 +1,7 @@
 --獸累々
 function c100213005.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
-	e1:SetCategory(CATEGORY_POSITION+CATEGORY_DRAW)
+	e1:SetCategory(CATEGORY_POSITION)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_END_PHASE)
@@ -23,7 +23,7 @@ end
 function c100213005.checkop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=eg:GetFirst()
 	while tc do
-		tc:RegisterFlagEffect(100213005,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,1)
+		tc:RegisterFlagEffect(100213005,RESET_EVENT+RESETS_STANDARD-RESET_TEMP_REMOVE+RESET_PHASE+PHASE_END,0,1)
 		tc=eg:GetNext()
 	end
 end
