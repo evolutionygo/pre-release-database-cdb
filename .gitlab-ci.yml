@@ -35,7 +35,7 @@ merge_databases:
     - linux
   script:
     - apt update && apt -y install sqlite3
-    - ls cdbs/test-release.cdb | xargs -I '{}' sqlite3 '{}' .dump | sqlite3 test-release.cdb
+    - ls -1 *.cdb | sed '/test-update.cdb/d' | xargs -I '{}' sqlite3 '{}' .dump | sqlite3 test-release.cdb
   artifacts:
     paths:
       - test-release.cdb
@@ -72,7 +72,8 @@ pack:
     - linux
   script:
     - mkdir -p data archive
-    - mv *.cdb data/
+    - mv test-release.cdb data/
+    - mv test-update.cdb data/
     - mv pics data/
     - mv script data/
     - mv *.conf data/
@@ -98,7 +99,8 @@ server:
     - linux
   script:
     - mkdir server-dist
-    - mv *.cdb server-dist
+    - mv test-release.cdb server-dist
+    - mv test-update.cdb server-dist
     - mv *.conf server-dist
     - mv script server-dist
     # merge ygopro-pre-data
