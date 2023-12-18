@@ -1,3 +1,4 @@
+
 --幻奏の歌姫クープレ
 function c101204010.initial_effect(c)
 	aux.EnablePendulumAttribute(c)
@@ -47,8 +48,11 @@ end
 function c101204010.splimit(e,c,tp,sumtp,sumpos)
 	return not c:IsAttribute(ATTRIBUTE_LIGHT) and bit.band(sumtp,SUMMON_TYPE_PENDULUM)==SUMMON_TYPE_PENDULUM 
 end
+function c101204010.thcfilter(c)
+	return c:IsFaceup() and not c:IsSetCard(0x9b)
+end
 function c101204010.thcon(e,tp,eg,ep,ev,re,r,rp)
-	return not Duel.IsExistingMatchingCard(aux.NOT(aux.AND(Card.IsFaceup,Card.IsSetCard)),tp,LOCATION_MZONE,0,1,nil,0x9b)
+	return not Duel.IsExistingMatchingCard(c101204010.thcfilter,tp,LOCATION_MZONE,0,1,nil)
 end
 function c101204010.thfilter(c)
 	return c:IsSetCard(0x9b) and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToHand()
@@ -98,7 +102,7 @@ function c101204010.pentg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c101204010.penop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) then
+	if c:IsRelateToEffect(e) and (Duel.CheckLocation(tp,LOCATION_PZONE,0) or Duel.CheckLocation(tp,LOCATION_PZONE,1)) then
 		Duel.MoveToField(c,tp,tp,LOCATION_PZONE,POS_FACEUP,true)
 	end
 end
