@@ -20,7 +20,7 @@ function c101204039.initial_effect(c)
 	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetHintTiming(0,TIMING_BATTLE_START+TIMING_ATTACK+TIMINGS_CHECK_MONSTER+TIMING_MAIN_END)
 	e2:SetRange(LOCATION_GRAVE)
-	e2:SetCountLimit(1,101204039+EFFECT_COUNT_CODE_DUEL)
+	e2:SetCountLimit(1,101204140+EFFECT_COUNT_CODE_DUEL)
 	e2:SetCondition(c101204039.spcon2)
 	e2:SetCost(c101204039.spcost2)
 	e2:SetTarget(c101204039.sptg2)
@@ -83,7 +83,7 @@ function c101204039.spcost2(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.RegisterEffect(e1,tp)
 end
 function c101204039.sptg2(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
 function c101204039.spop2(e,tp,eg,ep,ev,re,r,rp)
