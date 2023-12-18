@@ -1,5 +1,6 @@
 --古代の進軍
 function c101204055.initial_effect(c)
+	aux.AddCodeList(c,83104731)
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
