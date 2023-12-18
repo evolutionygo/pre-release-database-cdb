@@ -37,7 +37,7 @@ function c101204008.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 function c101204008.costfilter(c,tp)
-	return c:IsCode(83104731) and not c:IsCode(36521307) and c:IsAbleToGraveAsCost()
+	return c:IsCode(83104731) and c:IsAbleToGraveAsCost()
 		and Duel.IsExistingMatchingCard(c101204008.sumfilter,tp,LOCATION_HAND+LOCATION_MZONE,0,1,c)
 end
 function c101204008.scost(e,tp,eg,ep,ev,re,r,rp,chk)

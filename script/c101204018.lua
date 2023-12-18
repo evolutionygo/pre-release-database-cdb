@@ -47,7 +47,7 @@ function c101204018.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c101204018.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if not c:IsRelateToEffect(e) or Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
+	if not c:IsRelateToEffect(e) then return end
 	Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
 end
 function c101204018.filter(c,e,tp)
