@@ -53,11 +53,20 @@ function c100212001.FShaddollSpgcheck(g,c,fe)
 	return (g:FilterCount(c100212001.Blue_Eyes_Ultimate_Dragon,c,g,fe)==1
 		or g:FilterCount(Card.IsFusionSetCard,c,0xdd)==3)
 end
+function c100212001.Necessarily_FShaddollFilter(c,gc)
+	return c:IsCode(gc:GetCode())
+end
+function c100212001.Necessarily_FShaddollSpgcheck(g,c,fe,gc)
+	return g:FilterCount(Card.IsFusionSetCard,c,0xdd)==3 and g:FilterCount(c100212001.Necessarily_FShaddollFilter,nil,gc)==1
+end
 function c100212001.FShaddollCondition()
 	return  function(e,g,gc,chkf)
 			if g==nil then return aux.MustMaterialCheck(nil,e:GetHandlerPlayer(),EFFECT_MUST_BE_FMATERIAL) end
 			local c=e:GetHandler()
 			local mg=g:Filter(c100212001.FShaddollFilter,nil)
+			if gc then
+				if not mg:IsContains(gc) then return false end
+			end
 			return mg:IsExists(c100212001.Chaos_FShaddollFilter,1,nil,mg,e)
 		end
 end
@@ -67,16 +76,30 @@ function c100212001.FShaddollOperation()
 			local mg=eg:Filter(c100212001.FShaddollFilter,nil)
 			local g=nil
 			if gc then
-				g=Group.FromCards(gc)
-				mg:RemoveCard(gc)
+				if c100212001.Chaos_FShaddollFilter(c,mg,e) then
+					g=Group.FromCards(gc)
+					mg:RemoveCard(gc)
+				end
 			else
 				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
 				g=mg:FilterSelect(tp,c100212001.Chaos_FShaddollFilter,1,1,nil,mg,e)
 				mg:Sub(g)
 			end
 			local sg=nil
-			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
-			sg=mg:SelectSubGroup(tp,c100212001.FShaddollSpgcheck,true,1,3,g,e)
+			if gc and g:FilterCount(c100212001.Necessarily_FShaddollFilter,nil,gc)==1 then
+				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
+				sg=mg:SelectSubGroup(tp,c100212001.FShaddollSpgcheck,true,1,3,g,e)
+			else
+				if gc and c100212001.Blue_Eyes_Ultimate_Dragon(gc,g,e) then
+					sg=Group.FromCards(gc)
+				elseif gc then
+					Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
+					sg=mg:SelectSubGroup(tp,c100212001.Necessarily_FShaddollSpgcheck,true,1,3,g,e,gc)
+				else
+					Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
+					sg=mg:SelectSubGroup(tp,c100212001.FShaddollSpgcheck,true,1,3,g,e)
+				end
+			end
 			while not sg do
 				mg:AddCard(g:GetFirst())
 				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
