@@ -68,6 +68,9 @@ end
 function c100212001.Chaos_FShaddollFilter(c,mg,fc,chkf)
 	return c:IsFusionSetCard(0xcf) and c:IsFusionType(TYPE_RITUAL) and mg:CheckSubGroup(c100212001.FShaddollSpgcheck,1,3,fc,c,chkf)
 end
+function c100212001.Unnecessary_Chaos_FShaddollFilter(c)
+	return c:IsFusionSetCard(0xcf) and c:IsFusionType(TYPE_RITUAL) and not (c:IsFusionSetCard(0xdd) or c:IsFusionCode(23995346) or c:IsHasEffect(EFFECT_FUSION_SUBSTITUTE))
+end
 function c100212001.Blue_Eyes_Ultimate_Dragon(c)
 	return c:IsFusionCode(23995346) and not c:IsHasEffect(EFFECT_FUSION_SUBSTITUTE)
 		or c:IsHasEffect(EFFECT_FUSION_SUBSTITUTE)
@@ -78,10 +81,11 @@ function c100212001.FShaddollSpgcheck(g,fc,ec,chkf)
 	local c=g:Filter(c100212001.Blue_Eyes_Ultimate_Dragon,nil):GetFirst()
 	if aux.FCheckAdditional and not aux.FCheckAdditional(tp,sg,fc)
 		or aux.FGoalCheckAdditional and not aux.FGoalCheckAdditional(tp,sg,fc)  then return false end
-	return (g:FilterCount(c100212001.Blue_Eyes_Ultimate_Dragon,nil)==1
+	return ((g:FilterCount(c100212001.Blue_Eyes_Ultimate_Dragon,nil)==1
 		and g:FilterCount(Card.IsFusionSetCard,c,0xdd)==0
 		or g:FilterCount(Card.IsFusionSetCard,nil,0xdd)==3)
-		and (chkf==PLAYER_NONE or Duel.GetLocationCountFromEx(tp,tp,sg,fc)>0)
+		and (chkf==PLAYER_NONE or Duel.GetLocationCountFromEx(tp,tp,sg,fc)>0))
+		and g:FilterCount(c100212001.Unnecessary_Chaos_FShaddollFilter,nil)==0
 end
 function c100212001.Necessarily_FShaddollFilter(c,gc)
 	return c:IsCode(gc:GetCode())
@@ -92,10 +96,11 @@ function c100212001.Necessarily_FShaddollSpgcheck(g,gc,fc,ec,chkf)
 	sg:AddCard(ec)
 	if aux.FCheckAdditional and not aux.FCheckAdditional(tp,sg,fc)
 		or aux.FGoalCheckAdditional and not aux.FGoalCheckAdditional(tp,sg,fc)  then return false end
-	return ((g:FilterCount(c100212001.Blue_Eyes_Ultimate_Dragon,nil)==1
+	return (((g:FilterCount(c100212001.Blue_Eyes_Ultimate_Dragon,nil)==1
 		and g:FilterCount(Card.IsFusionSetCard,c,0xdd)==0
 		or g:FilterCount(Card.IsFusionSetCard,nil,0xdd)==3) and g:FilterCount(c100212001.Necessarily_FShaddollFilter,nil,gc)==1)
-		and (chkf==PLAYER_NONE or Duel.GetLocationCountFromEx(tp,tp,sg,fc)>0)
+		and (chkf==PLAYER_NONE or Duel.GetLocationCountFromEx(tp,tp,sg,fc)>0))
+		and g:FilterCount(c100212001.Unnecessary_Chaos_FShaddollFilter,nil)==0
 end
 function c100212001.FShaddollCondition()
 	return  function(e,g,gc,chkf)
@@ -121,9 +126,6 @@ function c100212001.FShaddollOperation()
 			end
 			local g=nil
 			if gc then
-				if not mg:IsContains(gc) then return false end
-			end
-			if gc then
 				if c100212001.Chaos_FShaddollFilter(gc,mg,fc,chkf) then
 					g=Group.FromCards(gc)
 					mg:RemoveCard(gc)
@@ -136,14 +138,14 @@ function c100212001.FShaddollOperation()
 			local sg=nil
 			if gc and g:FilterCount(c100212001.Necessarily_FShaddollFilter,nil,gc)==1 then
 				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
-				sg=mg:SelectSubGroup(tp,c100212001.FShaddollSpgcheck,false,1,3,gc,g:GetFirst(),fc,chkf)
+				sg=mg:SelectSubGroup(tp,c100212001.FShaddollSpgcheck,false,1,3,fc,g:GetFirst(),chkf)
 			else
 				if gc then
 					Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
-					sg=mg:SelectSubGroup(tp,c100212001.Necessarily_FShaddollSpgcheck,false,1,3,gc,g:GetFirst(),fc,chkf)
+					sg=mg:SelectSubGroup(tp,c100212001.Necessarily_FShaddollSpgcheck,false,1,3,gc,fc,g:GetFirst(),chkf)
 				else
 					Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
-					sg=mg:SelectSubGroup(tp,c100212001.FShaddollSpgcheck,true,1,3,g:GetFirst(),fc,chkf)
+					sg=mg:SelectSubGroup(tp,c100212001.FShaddollSpgcheck,true,1,3,fc,g:GetFirst(),chkf)
 				end
 			end
 			while not sg do
@@ -152,7 +154,7 @@ function c100212001.FShaddollOperation()
 				g=mg:FilterSelect(tp,c100212001.Chaos_FShaddollFilter,1,1,nil,mg,e)
 				mg:Sub(g)
 				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
-				sg=mg:SelectSubGroup(tp,c100212001.FShaddollSpgcheck,true,1,3,g:GetFirst(),fc,chkf)
+				sg=mg:SelectSubGroup(tp,c100212001.FShaddollSpgcheck,true,1,3,fc,g:GetFirst(),chkf)
 			end
 			g:Merge(sg)
 			Duel.SetFusionMaterial(g)
