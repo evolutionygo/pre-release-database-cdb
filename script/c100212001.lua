@@ -125,11 +125,9 @@ function c100212001.FShaddollOperation()
 				mg=eg:Filter(c100212001.FShaddollFilter,nil)
 			end
 			local g=nil
-			if gc then
-				if c100212001.Chaos_FShaddollFilter(gc,mg,fc,chkf) then
-					g=Group.FromCards(gc)
-					mg:RemoveCard(gc)
-				end
+			if gc and c100212001.Chaos_FShaddollFilter(gc,mg,fc,chkf) then
+				g=Group.FromCards(gc)
+				mg:RemoveCard(gc)
 			else
 				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
 				g=mg:FilterSelect(tp,c100212001.Chaos_FShaddollFilter,1,1,nil,mg,fc,chkf)
