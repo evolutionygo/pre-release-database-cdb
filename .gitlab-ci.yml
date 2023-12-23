@@ -104,9 +104,9 @@ server:
     - mv *.conf server-dist
     - mv script server-dist
     # merge ygopro-pre-data
-    - git clone --depth=1 https://code.mycard.moe/mycard/ygopro-pre-data
-    - mv ygopro-pre-data/expansions/* server-dist/
-    - mv ygopro-pre-data/script/* server-dist/script/
+    # - git clone --depth=1 https://code.mycard.moe/mycard/ygopro-pre-data
+    # - mv ygopro-pre-data/expansions/* server-dist/
+    # - mv ygopro-pre-data/script/* server-dist/script/
   artifacts:
     paths:
       - server-dist
