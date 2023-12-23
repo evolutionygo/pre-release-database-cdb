@@ -85,9 +85,9 @@ function c101204055.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c101204055.drcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.CheckReleaseGroup(tp,nil,1,nil,tp) end
+	if chk==0 then return Duel.CheckReleaseGroup(REASON_COST,tp,nil,1,nil,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
-	local g=Duel.SelectReleaseGroup(tp,nil,1,1,nil,tp)
+	local g=Duel.SelectReleaseGroup(REASON_COST,tp,nil,1,1,nil,tp)
 	Duel.Release(g,REASON_COST)
 end
 function c101204055.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
