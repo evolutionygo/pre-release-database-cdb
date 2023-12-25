@@ -68,6 +68,9 @@ end
 function c100212001.Chaos_FShaddollFilter(c,mg,fc,chkf)
 	return c:IsFusionSetCard(0xcf) and c:IsFusionType(TYPE_RITUAL) and mg:CheckSubGroup(c100212001.FShaddollSpgcheck,1,3,fc,c,chkf)
 end
+function c100212001.Engine_Startup_Chaos_FShaddollFilter(c,mg,fc,chkf)
+	return c:IsFusionSetCard(0xcf) and c:IsFusionType(TYPE_RITUAL) and mg:CheckSubGroup(c100212001.FShaddollSpgcheck,1,3,fc,c,chkf)
+end
 function c100212001.Unnecessary_Chaos_FShaddollFilter(c)
 	return c:IsFusionSetCard(0xcf) and c:IsFusionType(TYPE_RITUAL) and not (c:IsFusionSetCard(0xdd) or c:IsFusionCode(23995346) or c:IsHasEffect(EFFECT_FUSION_SUBSTITUTE))
 end
@@ -82,8 +85,8 @@ function c100212001.FShaddollSpgcheck(g,fc,ec,chkf)
 	if aux.FCheckAdditional and not aux.FCheckAdditional(tp,sg,fc)
 		or aux.FGoalCheckAdditional and not aux.FGoalCheckAdditional(tp,sg,fc)  then return false end
 	return ((g:FilterCount(c100212001.Blue_Eyes_Ultimate_Dragon,nil)==1
-		and g:FilterCount(Card.IsFusionSetCard,c,0xdd)==0
-		or g:FilterCount(Card.IsFusionSetCard,nil,0xdd)==3)
+		and g:FilterCount(Card.IsFusionSetCard,Group.FromCards(c,ec),0xdd)==0
+		or g:FilterCount(Card.IsFusionSetCard,ec,0xdd)==3)
 		and (chkf==PLAYER_NONE or Duel.GetLocationCountFromEx(tp,tp,sg,fc)>0))
 		and g:FilterCount(c100212001.Unnecessary_Chaos_FShaddollFilter,nil)==0
 end
@@ -111,7 +114,7 @@ function c100212001.FShaddollCondition()
 			if gc then
 				if not mg:IsContains(gc) then return false end
 			end
-			return mg:IsExists(c100212001.Chaos_FShaddollFilter,1,nil,mg,fc,chkf)
+			return mg:IsExists(c100212001.Engine_Startup_Chaos_FShaddollFilter,1,nil,mg,fc,chkf)
 		end
 end
 function c100212001.FShaddollOperation()
@@ -161,8 +164,8 @@ end
 function c100212001.discon(e,tp,eg,ep,ev,re,r,rp)
 	return rp==1-tp and not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) and Duel.IsChainNegatable(ev)
 		and ((re:IsActiveType(TYPE_MONSTER) and Duel.GetFlagEffect(tp,100212001)==0)
-		or (re:IsActiveType(TYPE_SPELL) and Duel.GetFlagEffect(tp,100212101)==0)
-		or (re:IsActiveType(TYPE_TRAP) and Duel.GetFlagEffect(tp,100212201)==0))
+		or (re:IsActiveType(TYPE_SPELL) and Duel.GetFlagEffect(tp,100212001+100)==0)
+		or (re:IsActiveType(TYPE_TRAP) and Duel.GetFlagEffect(tp,100212001+200)==0))
 end
 function c100212001.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
@@ -178,15 +181,15 @@ function c100212001.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 		e1:SetTargetRange(1,0)
 		Duel.RegisterEffect(e1,tp)
 	elseif re:IsActiveType(TYPE_SPELL) then
-		Duel.RegisterFlagEffect(tp,100212101,RESET_PHASE+PHASE_END,EFFECT_FLAG_OATH,1)
+		Duel.RegisterFlagEffect(tp,100212001+100,RESET_PHASE+PHASE_END,EFFECT_FLAG_OATH,1)
 		local e1=Effect.CreateEffect(c)
 		e1:SetDescription(aux.Stringid(100212001,4))
 		e1:SetType(EFFECT_TYPE_FIELD)
 		e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CLIENT_HINT)
 		e1:SetReset(RESET_PHASE+PHASE_END)
 		e1:SetTargetRange(1,0)
-	else re:IsActiveType(TYPE_TRAP)
-		Duel.RegisterFlagEffect(tp,100212201,RESET_PHASE+PHASE_END,EFFECT_FLAG_OATH,1)
+	elseif re:IsActiveType(TYPE_TRAP) then
+		Duel.RegisterFlagEffect(tp,100212001+200,RESET_PHASE+PHASE_END,EFFECT_FLAG_OATH,1)
 		local e1=Effect.CreateEffect(c)
 		e1:SetDescription(aux.Stringid(100212001,5))
 		e1:SetType(EFFECT_TYPE_FIELD)
