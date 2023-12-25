@@ -165,8 +165,8 @@ end
 function s.discon(e,tp,eg,ep,ev,re,r,rp)
 	return rp==1-tp and not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) and Duel.IsChainNegatable(ev)
 		and ((re:IsActiveType(TYPE_MONSTER) and Duel.GetFlagEffect(tp,id)==0)
-		or (re:IsActiveType(TYPE_SPELL) and Duel.GetFlagEffect(tp,id+100)==0)
-		or (re:IsActiveType(TYPE_TRAP) and Duel.GetFlagEffect(tp,id+200)==0))
+		or (re:IsActiveType(TYPE_SPELL) and Duel.GetFlagEffect(tp,id+o)==0)
+		or (re:IsActiveType(TYPE_TRAP) and Duel.GetFlagEffect(tp,id+o*2)==0))
 end
 function s.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
@@ -182,7 +182,7 @@ function s.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 		e1:SetTargetRange(1,0)
 		Duel.RegisterEffect(e1,tp)
 	elseif re:IsActiveType(TYPE_SPELL) then
-		Duel.RegisterFlagEffect(tp,id+100,RESET_PHASE+PHASE_END,EFFECT_FLAG_OATH,1)
+		Duel.RegisterFlagEffect(tp,id+o,RESET_PHASE+PHASE_END,EFFECT_FLAG_OATH,1)
 		local e1=Effect.CreateEffect(c)
 		e1:SetDescription(aux.Stringid(id,4))
 		e1:SetType(EFFECT_TYPE_FIELD)
@@ -190,7 +190,7 @@ function s.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 		e1:SetReset(RESET_PHASE+PHASE_END)
 		e1:SetTargetRange(1,0)
 	elseif re:IsActiveType(TYPE_TRAP) then
-		Duel.RegisterFlagEffect(tp,id+200,RESET_PHASE+PHASE_END,EFFECT_FLAG_OATH,1)
+		Duel.RegisterFlagEffect(tp,id+o*2,RESET_PHASE+PHASE_END,EFFECT_FLAG_OATH,1)
 		local e1=Effect.CreateEffect(c)
 		e1:SetDescription(aux.Stringid(id,5))
 		e1:SetType(EFFECT_TYPE_FIELD)
@@ -213,8 +213,9 @@ function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 		and c:IsPreviousPosition(POS_FACEUP) and c:IsPreviousControler(tp) and c:GetReasonPlayer()==1-tp
 end
 function s.spfilter(c,e,tp)
-	return (c:IsFusionSetCard(0xdd) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) 
-		or c:IsFusionSetCard(0xcf) and c:IsFusionType(TYPE_RITUAL) and c:IsType(TYPE_MONSTER) and c:IsCanBeSpecialSummoned(e,0,tp,true,false))
+	return (c:IsFusionSetCard(0xdd) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+		or c:IsFusionSetCard(0xcf) and c:IsFusionType(TYPE_RITUAL) and c:IsType(TYPE_MONSTER) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
+		and not (c:IsCode(70551291) or c:IsCode(55410871) or c:IsCode(20654247)))
 		and (c:IsLocation(LOCATION_GRAVE) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 			or c:IsLocation(LOCATION_EXTRA) and Duel.GetLocationCountFromEx(tp,tp,nil,c)>0)
 end
