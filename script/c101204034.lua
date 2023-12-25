@@ -36,7 +36,7 @@ function c101204034.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function c101204034.cfilter(c)
-	return c:IsFaceupEx() and c:IsCode(101203019)
+	return c:IsFaceupEx() and c:IsCode(25801745)
 end
 function c101204034.drcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_RITUAL) and Duel.IsExistingMatchingCard(c101204034.cfilter,tp,LOCATION_ONFIELD+LOCATION_GRAVE,0,1,nil)

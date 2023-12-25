@@ -30,7 +30,7 @@ function c101204062.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 function c101204062.filter(c,e,tp)
-	return not c:IsCode(101204062) and c:IsFaceupEx() and c:IsSetCard(0x2a6) and c:IsAbleToHand()
+	return not c:IsCode(101204062) and c:IsFaceupEx() and c:IsSetCard(0x1a6) and c:IsAbleToHand()
 end
 function c101204062.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE+LOCATION_REMOVED) and chkc:IsControler(tp) and c101204062.filter(chkc,e,tp) end
