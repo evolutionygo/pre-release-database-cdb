@@ -48,8 +48,8 @@ function c100212005.cfilter(c,tp)
 		and (c:IsFaceup() or c:IsControler(tp))
 end
 function c100212005.pspcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.CheckReleaseGroup(tp,c100212005.cfilter,1,nil,tp) end
-	local g=Duel.SelectReleaseGroup(tp,c100212005.cfilter,1,1,nil,tp)
+	if chk==0 then return Duel.CheckReleaseGroup(REASON_COST,tp,c100212005.cfilter,1,nil,tp) end
+	local g=Duel.SelectReleaseGroup(REASON_COST,tp,c100212005.cfilter,1,1,nil,tp)
 	Duel.Release(g,REASON_COST)
 end
 function c100212005.psptg(e,tp,eg,ep,ev,re,r,rp,chk)
