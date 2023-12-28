@@ -50,13 +50,15 @@ json:
   variables:
     YGOPRO_PIC_URL_PREFIX: 'https://cdn02.moecube.com:444/ygopro-super-pre/data/pics/'
     YGOPRO_PIC_URL_SUFFIX: '.jpg'
-    FIELDS: 'name,desc,overallString,picUrl'
+    FIELDS: 'name,desc,overallString,picUrl,createTime,updateTime,created,updated'
+    GIT_DEPTH: '1000'
+    REF_COMMIT: '1.34' # created 和 updated 的参照 tag 或者 commit 填写在这里！
   script:
     - apt update;apt -y install wget
     - currentPath=$PWD
     - cd /usr/src/app
     - wget -O strings.conf https://code.mycard.moe/mycard/ygopro-database/-/raw/master/locales/zh-CN/strings.conf
-    - node dist $currentPath/test-release.cdb ./strings.conf $currentPath/test-strings.conf > $currentPath/test-release.json
+    - env GIT_PATH=$currentPath node dist $currentPath/test-release.cdb ./strings.conf $currentPath/test-strings.conf > $currentPath/test-release.json
     - cd $currentPath
   artifacts:
     paths:
