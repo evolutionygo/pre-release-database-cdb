@@ -7,6 +7,7 @@ function s.initial_effect(c)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetHintTiming(0,TIMING_END_PHASE)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e1:SetCountLimit(1,id+EFFECT_COUNT_CODE_OATH)
 	e1:SetTarget(s.target)
 	e1:SetOperation(s.activate)
 	c:RegisterEffect(e1)
@@ -17,8 +18,8 @@ function s.tgfilter(c,e,tp)
 end
 function s.spfilter(c,e,tp,race,att,atk)
 	local res=0
-	if c:GetRace()==race then res=res+1 end
-	if c:GetAttribute()==att then res=res+1 end
+	if bit.band(c:GetRace(),race)~=0 then res=res+1 end
+	if bit.band(c:GetAttribute(),att)~=0 then res=res+1 end
 	if c:GetAttack()==atk then res=res+1 end
 	if res<2 then return false end
 	return ((c:IsLocation(LOCATION_EXTRA) and Duel.GetLocationCountFromEx(tp,tp,nil,c)>0) or not c:IsLocation(LOCATION_EXTRA) and Duel.GetMZoneCount(tp)>0)
