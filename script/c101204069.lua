@@ -39,9 +39,6 @@ function s.limit(c)
 				return e:GetHandler()~=c
 			end
 end
-function s.fselect(g)
-	return g:IsExists(Card.IsAbleToRemove,1,nil,POS_FACEDOWN)
-end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
@@ -86,8 +83,10 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 				tc:RegisterEffect(e5)
 			end
 			local rg=Group.FromCards(tc,sc)
-			if sc:GetCode()==tc:GetCode() and rg:CheckSubGroup(s.fselect,2,2)
+			if sc:GetCode()==tc:GetCode() and rg:IsExists(Card.IsAbleToRemove,2,nil,POS_FACEDOWN)
+				and rg:IsExists(Card.IsLocation,2,nil,LOCATION_MZONE)
 				and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
+				Duel.BreakEffect()
 				Duel.Remove(rg,POS_FACEDOWN,REASON_EFFECT)
 			end
 		end
