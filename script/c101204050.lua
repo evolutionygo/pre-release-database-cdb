@@ -16,7 +16,7 @@ function s.initial_effect(c)
 	e1:SetTarget(s.detg)
 	e1:SetOperation(s.deop)
 	c:RegisterEffect(e1)
-	--special sSpecialSummonummon
+	--special summon
 	local e2=Effect.CreateEffect(c)
 	e2:SetCategory(CATEGORY_TODECK+CATEGORY_SPECIAL_SUMMON)
 	e2:SetType(EFFECT_TYPE_IGNITION)
@@ -40,11 +40,13 @@ function s.detg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,2,0,0)
 end
 function s.deop(e,tp,eg,ep,ev,re,r,rp)
+	local g=Duel.GetMatchingGroup(nil,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
+	if g:GetCount()<2 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g=Duel.SelectMatchingCard(tp,nil,tp,LOCATION_MZONE,LOCATION_MZONE,2,2,nil)
-	if g:GetCount()==2 then
-		Duel.HintSelection(g)
-		Duel.Destroy(g,REASON_EFFECT)
+	local sg=Duel.SelectMatchingCard(tp,nil,tp,LOCATION_MZONE,LOCATION_MZONE,2,2,nil)
+	if sg:GetCount()==2 then
+		Duel.HintSelection(sg)
+		Duel.Destroy(sg,REASON_EFFECT)
 	end
 end
 function s.spfilter(c,tp)
