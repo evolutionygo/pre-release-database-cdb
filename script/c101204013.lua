@@ -43,20 +43,32 @@ function s.thfilter(c)
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.GetMatchingGroup(s.thfilter,tp,LOCATION_DECK+LOCATION_REMOVED,0,nil)
-	if chk==0 then return g:GetCount()>=1 end
+	if chk==0 then return Duel.IsPlayerCanRemove(tp) and g:GetCount()>=1 end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK+LOCATION_REMOVED)
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(s.thfilter,tp,LOCATION_DECK+LOCATION_REMOVED,0,nil)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	local tg1=g:SelectSubGroup(tp,aux.dncheck,false,1,2)
-	Duel.SendtoHand(tg1,nil,REASON_EFFECT)
-	Duel.ConfirmCards(1-tp,tg1)
-	Duel.ShuffleHand(tp)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,Card.IsAbleToRemove,tp,LOCATION_HAND,0,1,1,nil)
-	if g then
-		Duel.BreakEffect()
-		Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
+	if Duel.SendtoHand(tg1,nil,REASON_EFFECT)~=0 then
+		Duel.ConfirmCards(1-tp,tg1)
+		Duel.ShuffleHand(tp)
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+		local g=Duel.SelectMatchingCard(tp,Card.IsAbleToRemove,tp,LOCATION_HAND,0,1,1,nil)
+		if g then
+			Duel.BreakEffect()
+			Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
+		end
 	end
+	local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_OATH)
+	e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+	e1:SetTargetRange(1,0)
+	e1:SetTarget(s.splimit)
+	e1:SetReset(RESET_PHASE+PHASE_END)
+	Duel.RegisterEffect(e1,tp)
+end
+function s.splimit(e,c,sump,sumtype,sumpos,targetp,se)
+	return not c:IsRace(RACE_INSECT+RACE_PLANT+RACE_REPTILE)
 end
