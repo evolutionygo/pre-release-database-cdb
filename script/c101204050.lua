@@ -35,7 +35,7 @@ function s.decon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.defilter,1,nil,tp)
 end
 function s.detg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
+	if chk==0 then return Duel.IsExistingMatchingCard(nil,tp,LOCATION_MZONE,LOCATION_MZONE,2,nil) end
 	local g=Duel.GetMatchingGroup(nil,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,2,0,0)
 end
