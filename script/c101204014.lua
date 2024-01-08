@@ -41,7 +41,7 @@ function s.spcon2(e,tp,eg,ep,ev,re,r,rp)
 	return c:IsLocation(LOCATION_GRAVE) and r==REASON_LINK and c:GetReasonCard():IsSetCard(0x2ab)
 end
 function s.spfilter2(c,e,tp)
-	return not c:IsCode(id) and c:IsRace(RACE_INSECT+RACE_PLANT+RACE_REPTILE) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE)
+	return not c:IsCode(id) and c:IsLevelBelow(4) and c:IsRace(RACE_INSECT+RACE_PLANT+RACE_REPTILE) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE)
 end
 function s.sptg2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and s.spfilter2(chkc,e,tp) end
