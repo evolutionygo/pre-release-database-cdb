@@ -26,8 +26,21 @@ end
 function s.mvcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local ac=c:GetBattleTarget()
+	local ft1=0
+	local ft2=0
+	if c:GetOwner()==tp then
+		ft1=ft1+1
+	else
+		ft2=ft2+1
+	end
+	if ac:GetOwner()==tp then
+		ft1=ft1+1
+	else
+		ft2=ft2+1
+	end
 	e:SetLabelObject(ac)
-	return ac and ac:IsFaceup() and ac:IsControler(1-tp)
+	return ac and ac:IsControler(1-tp) and Duel.GetLocationCount(tp,LOCATION_SZONE)>=ft1
+		and Duel.GetLocationCount(1-tp,LOCATION_SZONE)>=ft2
 end
 function s.mvtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
@@ -35,7 +48,22 @@ end
 function s.mvop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local ac=e:GetLabelObject()
-	if ac:IsRelateToBattle() and not ac:IsImmuneToEffect(e)
+	if not ac:IsRelateToBattle() or not c:IsRelateToEffect(e) then return false end
+	local ft1=0
+	local ft2=0
+	if c:GetOwner()==tp then
+		ft1=ft1+1
+	else
+		ft2=ft2+1
+	end
+	if ac:GetOwner()==tp then
+		ft1=ft1+1
+	else
+		ft2=ft2+1
+	end
+	if not (Duel.GetLocationCount(tp,LOCATION_SZONE)>=ft1)
+		or not (Duel.GetLocationCount(1-tp,LOCATION_SZONE)>=ft2) then return false end
+	if ac:IsType(TYPE_MONSTER) and not ac:IsImmuneToEffect(e)
 		and Duel.MoveToField(ac,tp,ac:GetOwner(),LOCATION_SZONE,POS_FACEUP,true) then
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetCode(EFFECT_CHANGE_TYPE)
@@ -45,7 +73,7 @@ function s.mvop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetValue(TYPE_SPELL+TYPE_CONTINUOUS)
 		ac:RegisterEffect(e1)
 	end
-	if c:IsRelateToEffect(e) and not c:IsImmuneToEffect(e)
+	if not c:IsImmuneToEffect(e)
 		and Duel.MoveToField(c,tp,c:GetOwner(),LOCATION_SZONE,POS_FACEUP,true) then
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetCode(EFFECT_CHANGE_TYPE)
