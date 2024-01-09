@@ -41,7 +41,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e5)
 end
 function s.cfilter(c,e,tp)
-	return c:IsFaceupEx() and c:IsAbleToGraveAsCost()
+	return c:IsFaceupEx() and c:IsAbleToGraveAsCost() and c:IsType(TYPE_MONSTER)
 		and Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_EXTRA,0,1,nil,e,tp,c)
 end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
