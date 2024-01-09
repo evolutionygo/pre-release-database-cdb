@@ -29,7 +29,6 @@ function s.initial_effect(c)
 	e4:SetType(EFFECT_TYPE_IGNITION)
 	e4:SetRange(LOCATION_SZONE)
 	e4:SetCountLimit(1,id+o)
-	e4:SetCost(s.spcost)
 	e4:SetTarget(s.sptg)
 	e4:SetOperation(s.spop)
 	c:RegisterEffect(e4)
@@ -69,25 +68,28 @@ end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Destroy(e:GetHandler(),REASON_EFFECT+REASON_REPLACE)
 end
-function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	local c=e:GetHandler()
-	if chk==0 then return c:IsAbleToGraveAsCost() and c:GetControler()==c:GetEquipTarget():GetControler()
-		and c:GetEquipTarget():IsType(TYPE_FUSION)
-		and c:GetEquipTarget():IsAbleToGraveAsCost() end
-	local g=Group.FromCards(c,c:GetEquipTarget())
-	Duel.SendtoGrave(g,REASON_COST)
-end
-function s.ffilter(c,e,tp)
+function s.ffilter(c,e,tp,qc)
 	return c:IsType(TYPE_FUSION) and (c:IsCode(45231177) or aux.IsCodeListed(c,45231177)) and c:CheckFusionMaterial()
-		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) and Duel.GetLocationCountFromEx(tp,tp,nil,c)>0
+		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) and Duel.GetLocationCountFromEx(tp,tp,qc,c)>0
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return aux.MustMaterialCheck(nil,tp,EFFECT_MUST_BE_FMATERIAL)
-		and Duel.IsExistingMatchingCard(s.ffilter,tp,LOCATION_EXTRA,0,1,nil,e,tp,nil)
+	local c=e:GetHandler()
+	local qc=c:GetEquipTarget()
+	if chk==0 then return qc and aux.MustMaterialCheck(nil,tp,EFFECT_MUST_BE_FMATERIAL)
+		and Duel.IsExistingMatchingCard(s.ffilter,tp,LOCATION_EXTRA,0,1,nil,e,tp,qc)
+		and c:GetControler()==qc:GetControler() and qc:IsType(TYPE_FUSION)
+		and qc:IsAbleToGrave() and c:IsAbleToGrave()
 	end
+	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,Group.FromCards(c,qc),2,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	local qc=c:GetEquipTarget()
+	Duel.SendtoGrave(Group.FromCards(c,qc),REASON_EFFECT)
+	local g=Duel.GetOperatedGroup()
+	local ct=g:FilterCount(Card.IsLocation,nil,LOCATION_GRAVE)
+	if ct~=2 then return false end
 	if not aux.MustMaterialCheck(nil,tp,EFFECT_MUST_BE_FMATERIAL) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,s.ffilter,tp,LOCATION_EXTRA,0,1,1,nil,e,tp)
