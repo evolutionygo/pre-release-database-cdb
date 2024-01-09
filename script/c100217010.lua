@@ -54,7 +54,7 @@ function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 		and ph>=PHASE_BATTLE_START and ph<=PHASE_BATTLE
 end
 function s.costfilter(c,tp)
-	return c:IsControler(tp) or c:IsFacedown()
+	return c:IsControler(tp) and c:IsFacedown()
 end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost() and Duel.CheckReleaseGroup(REASON_COST,tp,s.costfilter,1,nil,tp) end
