@@ -1,4 +1,4 @@
---金傲大奖赛-灭杀者
+--ＧＰ－アニヒレーター
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddCodeList(c,101204020)

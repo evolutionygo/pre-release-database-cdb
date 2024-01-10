@@ -1,4 +1,4 @@
---蕾祸缭乱狂笑
+--蕾禍繚乱狂咲
 local s,id,o=GetID()
 function s.initial_effect(c)
 	local e1=Effect.CreateEffect(c)

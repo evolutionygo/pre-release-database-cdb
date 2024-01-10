@@ -1,4 +1,4 @@
---蕾祸 矢筈天牛
+--蕾禍ノ矢筈天牛
 local s,id,o=GetID()
 function s.initial_effect(c)
 	local e1=Effect.CreateEffect(c)

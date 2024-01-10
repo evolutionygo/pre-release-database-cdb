@@ -1,4 +1,4 @@
---飞龙炎 ,飞炎之龙
+--Salamadra, the Flying Flame Dragon
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddCodeList(c,45231177)

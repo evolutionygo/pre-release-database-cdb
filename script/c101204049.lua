@@ -1,4 +1,4 @@
---蕾祸 锁蛇巳
+--蕾禍ノ鎖蛇巳
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddLinkProcedure(c,nil,2,99,s.lcheck)

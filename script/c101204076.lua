@@ -1,4 +1,4 @@
---蕾祸大轮首狩舞
+--蕾禍大輪首狩舞
 local s,id,o=GetID()
 function s.initial_effect(c)
 	local e1=Effect.CreateEffect(c)

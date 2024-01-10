@@ -1,4 +1,4 @@
---蕾祸 御拜神主
+--蕾禍ノ御拝神主
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddLinkProcedure(c,nil,2,99,s.lcheck)

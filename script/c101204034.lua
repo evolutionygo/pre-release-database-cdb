@@ -1,4 +1,4 @@
---肃声的龙神 萨菲拉
+--粛声なる竜神サフィラ
 function c101204034.initial_effect(c)
 	c:EnableReviveLimit()
 	local e1=Effect.CreateEffect(c)

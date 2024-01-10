@@ -1,4 +1,4 @@
---幻影之剑士
+--Mirage Swordsman
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddCodeList(c,45231177)

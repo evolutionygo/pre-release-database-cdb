@@ -1,4 +1,4 @@
---幻奏的歌姬 露芙兰
+--幻奏の歌姫ルフラン
 function c101204009.initial_effect(c)
 	aux.EnablePendulumAttribute(c)
 	local e0=Effect.CreateEffect(c)

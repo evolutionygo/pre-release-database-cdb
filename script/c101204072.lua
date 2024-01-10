@@ -1,4 +1,4 @@
---古代的机械竞斗
+--古代の機械競闘
 function c101204072.initial_effect(c)
 	aux.AddCodeList(c,83104731)
 	local e0=Effect.CreateEffect(c)

@@ -1,4 +1,4 @@
---蕾祸 毬首
+--蕾禍ノ毬首
 local s,id,o=GetID()
 function s.initial_effect(c)
 	local e1=Effect.CreateEffect(c)

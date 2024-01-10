@@ -1,4 +1,4 @@
---附锁链的飞龙炎
+--Salamandra with Chain
 local s,id,o=GetID()
 function s.initial_effect(c)
 	local e1=Effect.CreateEffect(c)

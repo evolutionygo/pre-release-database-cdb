@@ -1,4 +1,4 @@
---蕾祸 武者髑髅
+--蕾禍ノ武者髑髏
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddLinkProcedure(c,nil,2,2,s.lcheck)

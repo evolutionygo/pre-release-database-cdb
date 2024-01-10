@@ -1,4 +1,4 @@
---飞龙炎融合
+--Salamandra Fusion
 local s,id,o=GetID()
 function s.initial_effect(c)
 	local e1=Effect.CreateEffect(c)

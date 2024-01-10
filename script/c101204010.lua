@@ -1,4 +1,3 @@
-
 --幻奏の歌姫クープレ
 function c101204010.initial_effect(c)
 	aux.EnablePendulumAttribute(c)

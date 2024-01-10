@@ -1,4 +1,4 @@
---金傲大奖赛-刺杀者
+--ＧＰ－アサシネーター
 local s,id,o=GetID()
 function s.initial_effect(c)
 	local e1=Effect.CreateEffect(c)

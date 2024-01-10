@@ -1,4 +1,4 @@
---蕾祸 铠石龙
+--蕾禍ノ鎧石竜
 local s,id,o=GetID()
 function s.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
