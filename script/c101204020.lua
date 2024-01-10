@@ -1,4 +1,4 @@
---ＧＰ－アサシネーター
+--ＧＰ－アニヒレーター
 local s,id,o=GetID()
 function s.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
@@ -74,12 +74,14 @@ function s.tokenop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.SpecialSummonComplete()
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE)
-	e2:SetCode(EFFECT_CANNOT_BE_FUSION_MATERIAL)
+	e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e2:SetCode(EFFECT_CANNOT_BE_SYNCHRO_MATERIAL)
 	e2:SetValue(s.synlimit)
 	e2:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
 	c:RegisterEffect(e2)
 	local e3=e2:Clone()
-	e3:SetCode(EFFECT_CANNOT_BE_SYNCHRO_MATERIAL)
+	e3:SetValue(s.fsynlimit)
+	e3:SetCode(EFFECT_CANNOT_BE_FUSION_MATERIAL)
 	c:RegisterEffect(e3)
 	local e4=e2:Clone()
 	e4:SetCode(EFFECT_CANNOT_BE_XYZ_MATERIAL)
@@ -91,4 +93,8 @@ end
 function s.synlimit(e,c)
 	if not c then return false end
 	return not c:IsSetCard(0x192)
+end
+function s.fsynlimit(e,c,sumtype)
+	if not c then return false end
+	return sumtype==SUMMON_TYPE_FUSION and not c:IsSetCard(0x192)
 end
