@@ -73,6 +73,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	if not tc then return end
 	tc:SetMaterial(nil)
 	Duel.SpecialSummon(tc,SUMMON_TYPE_FUSION,tp,tp,false,false,POS_FACEUP)
+	tc:CompleteProcedure()
 end
 function s.limfilter(c,tp)
 	return c:IsSummonPlayer(tp) and c:IsRace(RACE_WARRIOR)
