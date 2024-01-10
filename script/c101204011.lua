@@ -33,7 +33,7 @@ function s.mvcon(e,tp,eg,ep,ev,re,r,rp)
 	else
 		ft2=ft2+1
 	end
-	if ac:GetOwner()==tp then
+	if ac and ac:GetOwner()==tp then
 		ft1=ft1+1
 	else
 		ft2=ft2+1
@@ -56,7 +56,7 @@ function s.mvop(e,tp,eg,ep,ev,re,r,rp)
 	else
 		ft2=ft2+1
 	end
-	if ac:GetOwner()==tp then
+	if ac and ac:GetOwner()==tp then
 		ft1=ft1+1
 	else
 		ft2=ft2+1
