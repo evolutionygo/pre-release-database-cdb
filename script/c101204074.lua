@@ -49,12 +49,16 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 				local e1=Effect.CreateEffect(e:GetHandler())
 				e1:SetType(EFFECT_TYPE_SINGLE)
 				e1:SetCode(EFFECT_CANNOT_TRIGGER)
+				e1:SetCondition(s.condition)
 				e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
 				tc:RegisterEffect(e1)
 			end
 			Duel.SpecialSummonComplete()
 		end
 	end
+end
+function s.condition(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetCurrentPhase()==PHASE_MAIN1 or Duel.GetCurrentPhase()==PHASE_MAIN2
 end
 function s.thfilter(c)
 	return c:IsFacedown() and c:IsAbleToHand()
