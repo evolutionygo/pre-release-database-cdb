@@ -37,6 +37,9 @@ function c101204060.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 	Duel.AdjustAll()
 	if op==0 or Duel.IsExistingMatchingCard(c101204060.spfilter,tp,LOCATION_HAND,0,1,nil,e,tp) and Duel.GetLocationCount(tp,LOCATION_MZONE)>=1 and ph>=PHASE_BATTLE_START and ph<=PHASE_BATTLE and Duel.SelectYesNo(tp,aux.Stringid(101204060,2)) then
+		if op~=0 then
+			Duel.BreakEffect()
+		end
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local g=Duel.SelectMatchingCard(tp,c101204060.spfilter,tp,LOCATION_HAND,0,1,1,nil,e,tp,e,tp)
 		if g:GetCount()>0 then
