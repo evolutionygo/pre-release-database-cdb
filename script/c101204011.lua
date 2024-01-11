@@ -63,6 +63,7 @@ function s.mvop(e,tp,eg,ep,ev,re,r,rp)
 	end
 	if not (Duel.GetLocationCount(tp,LOCATION_SZONE)>=ft1)
 		or not (Duel.GetLocationCount(1-tp,LOCATION_SZONE)>=ft2) then return false end
+	if not ac:IsControler(1-tp) then return false end
 	if ac:IsType(TYPE_MONSTER) and not ac:IsImmuneToEffect(e)
 		and Duel.MoveToField(ac,tp,ac:GetOwner(),LOCATION_SZONE,POS_FACEUP,true) then
 		local e1=Effect.CreateEffect(e:GetHandler())
@@ -89,7 +90,7 @@ function s.mvcon2(e,tp,eg,ep,ev,re,r,rp)
 	return c:IsType(TYPE_SPELL) and c:IsType(TYPE_CONTINUOUS)
 end
 function s.filter2(c,tp)
-	return c:IsAttribute(ATTRIBUTE_FIRE)
+	return not c:IsCode(id) and c:IsAttribute(ATTRIBUTE_FIRE)
 		and Duel.GetLocationCount(tp,LOCATION_SZONE)>0
 end
 function s.mvtg2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
