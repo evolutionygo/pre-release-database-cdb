@@ -29,15 +29,46 @@ end
 function s.desfilter(c)
 	return c:IsFaceupEx() and c:IsSetCard(0x19e)
 end
-function s.descheck(g,tp)
-	return g:FilterCount(Card.IsControler,nil,tp)<=Duel.GetMatchingGroupCount(s.desfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,nil) and g:FilterCount(Card.IsControler,nil,1-tp)<=Duel.GetMatchingGroupCount(s.desfilter,tp,0,LOCATION_GRAVE+LOCATION_REMOVED,nil)
+function s.desfilter2(c,e,tp,gc1,gc2)
+	return c:IsCanBeEffectTarget(e) and ((c:IsControler(tp) and gc1>0) or (c:IsControler(1-tp) and gc2>0))
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	local g=Duel.GetMatchingGroup(Card.IsCanBeEffectTarget,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,e:GetHandler(),e)
+	local gc1=Duel.GetMatchingGroupCount(s.desfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,nil)
+	local gc2=Duel.GetMatchingGroupCount(s.desfilter,tp,0,LOCATION_GRAVE+LOCATION_REMOVED,nil)
 	if chkc then return chkc:IsOnField() and chkc:IsCanBeEffectTarget(e) and chkc~=e:GetHandler() end
-	if chk==0 then return g:CheckSubGroup(s.descheck,1,99,tp) end
+	if chk==0 then return Duel.IsExistingTarget(s.desfilter2,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,e:GetHandler(),e,tp,gc1,gc2) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local sg=g:SelectSubGroup(tp,s.descheck,false,1,99,tp)
+	local sg=Group.CreateGroup()
+	while true do
+		g=Duel.GetMatchingGroup(s.desfilter2,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,sg,e,tp,gc1,gc2)
+		if g:IsContains(e:GetHandler()) then
+			g:RemoveCard(e:GetHandler())
+		end
+		if #g==0 then
+			break
+		end
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
+		local sc=g:SelectUnselect(sg,tp,#sg>0,#sg>0,1,99)
+		if not sc then
+			break
+		elseif g:IsContains(sc) then
+			g:RemoveCard(sc)
+			sg:AddCard(sc)
+			if sc:IsControler(tp) then
+				gc1=gc1-1
+			else
+				gc2=gc2-1
+			end
+		else
+			sg:RemoveCard(sc)
+			g:AddCard(sc)
+			if sc:IsControler(tp) then
+				gc1=gc1+1
+			else
+				gc2=gc2+1
+			end
+		end
+	end
 	Duel.SetTargetCard(sg)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,sg,sg:GetCount(),0,0)
 end
