@@ -42,7 +42,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.tgfilter(c)
-	return not c:IsCode(id) and aux.IsCodeListed(c,45231177) and c:IsType(TYPE_MONSTER) and c:IsAbleToGrave()
+	return not c:IsCode(id) and (c:IsCode(45231177) or aux.IsCodeListed(c,45231177)) and c:IsType(TYPE_MONSTER) and c:IsAbleToGrave()
 end
 function s.tgtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.tgfilter,tp,LOCATION_DECK+LOCATION_EXTRA,0,1,nil) end
