@@ -48,7 +48,7 @@ function c70226289.activate(e,tp,eg,ep,ev,re,r,rp)
 end
 function c70226289.chainop(e,tp,eg,ep,ev,re,r,rp)
 	local race=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_RACE)
-	if re:IsActiveType(TYPE_MONSTER) and race&RACE_SPELLCASTER>0 and ep==tp then
+	if re:IsActiveType(TYPE_MONSTER) and bit.band(race,RACE_SPELLCASTER)~=0 and ep==tp then
 		Duel.SetChainLimit(c70226289.chainlm)
 	end
 end
