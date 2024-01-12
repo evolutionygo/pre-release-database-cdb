@@ -37,7 +37,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.cfilter(c,tp)
 	return c:IsSetCard(0x192) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost() and c:IsLevelAbove(1) and c:IsFaceupEx()
-		and Duel.IsPlayerCanSpecialSummonMonster(tp,id+o,0,TYPES_TOKEN_MONSTER,0,0,c:GetLevel(),RACE_MACHINE,ATTRIBUTE_EARTH)
+		and Duel.IsPlayerCanSpecialSummonMonster(tp,id+o,0,TYPES_TOKEN_MONSTER,0,0,c:GetLevel(),RACE_MACHINE,ATTRIBUTE_EARTH) and Duel.GetMZoneCount(tp,c)>0
 end
 function s.tokencost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:SetLabel(100)
@@ -61,7 +61,7 @@ function s.tokenop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local lv=e:GetLabel()
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsPlayerCanSpecialSummonMonster(tp,id+o,0,TYPES_TOKEN_MONSTER,0,0,lv,RACE_CYBERSE,ATTRIBUTE_FIRE) then
+		and Duel.IsPlayerCanSpecialSummonMonster(tp,id+o,0,TYPES_TOKEN_MONSTER,0,0,lv,RACE_MACHINE,ATTRIBUTE_EARTH) then
 		local tk=Duel.CreateToken(tp,id+o)
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
@@ -76,8 +76,9 @@ function s.tokenop(e,tp,eg,ep,ev,re,r,rp)
 	e2:SetType(EFFECT_TYPE_SINGLE)
 	e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
 	e2:SetCode(EFFECT_CANNOT_BE_SYNCHRO_MATERIAL)
+	e2:SetRange(LOCATION_MZONE)
 	e2:SetValue(s.synlimit)
-	e2:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+	e2:SetReset(RESET_EVENT+RESETS_STANDARD-RESET_TURN_SET+RESET_PHASE+PHASE_END)
 	c:RegisterEffect(e2)
 	local e3=e2:Clone()
 	e3:SetValue(s.fsynlimit)
