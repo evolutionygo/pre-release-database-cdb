@@ -1,4 +1,4 @@
---クロンズ・オブ・シュリーレン
+--タロンズ・オブ・シュリーレン
 local s,id,o=GetID()
 function s.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
@@ -25,7 +25,7 @@ function s.initial_effect(c)
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,2))
 	e3:SetCategory(CATEGORY_DESTROY)
-	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
+	e3:SetType(EFFECT_TYPE_QUICK_O)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e3:SetCode(EVENT_CHAINING)
@@ -39,7 +39,7 @@ function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetTurnPlayer()==1-tp
 end
 function s.spfilter(c,tp)
-	return c:IsRace(RACE_FIEND+RACE_ILLUSION) and c:IsFaceup() and c:IsAbleToHand()
+	return not c:IsCode(id) and c:IsRace(RACE_FIEND+RACE_ILLUSION) and c:IsFaceup() and c:IsAbleToHand()
 		and Duel.GetMZoneCount(tp,c)>0
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
@@ -55,7 +55,7 @@ end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToChain() and Duel.SendtoHand(tc,nil,REASON_EFFECT)>0
+	if tc:IsRelateToChain() and tc:IsType(TYPE_MONSTER) and Duel.SendtoHand(tc,nil,REASON_EFFECT)>0
 		and tc:IsLocation(LOCATION_HAND) and c:IsRelateToChain() then
 		Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
 	end
@@ -81,8 +81,10 @@ end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if not c:IsRelateToEffect(e) or not Duel.SendtoHand(c,nil,REASON_EFFECT)~=0 then return end
-	if tc:IsRelateToEffect(e) and tc:IsType(TYPE_MONSTER) then
-		Duel.Destroy(tc,REASON_EFFECT)
+	if c:IsRelateToEffect(e) and Duel.SendtoHand(c,nil,REASON_EFFECT)~=0 then
+		if tc:IsRelateToEffect(e) and tc:IsType(TYPE_MONSTER) then
+			Duel.BreakEffect()
+			Duel.Destroy(tc,REASON_EFFECT)
+		end
 	end
 end
