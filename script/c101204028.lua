@@ -81,9 +81,9 @@ end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if c:IsRelateToEffect(e) and Duel.SendtoHand(c,nil,REASON_EFFECT)~=0 then
+	if c:IsRelateToEffect(e) and Duel.SendtoHand(c,nil,REASON_EFFECT)~=0
+		and c:IsLocation(LOCATION_HAND) then
 		if tc:IsRelateToEffect(e) and tc:IsType(TYPE_MONSTER) then
-			Duel.BreakEffect()
 			Duel.Destroy(tc,REASON_EFFECT)
 		end
 	end
