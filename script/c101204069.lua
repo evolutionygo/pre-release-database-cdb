@@ -83,7 +83,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 				tc:RegisterEffect(e5)
 			end
 			local rg=Group.FromCards(tc,sc)
-			if sc:GetCode()==tc:GetCode() and rg:IsExists(Card.IsAbleToRemove,2,nil,POS_FACEDOWN)
+			if (sc:IsCode(tc:GetCode()) or tc:IsCode(sc:GetCode())) and rg:IsExists(Card.IsAbleToRemove,2,nil,POS_FACEDOWN)
 				and rg:IsExists(Card.IsLocation,2,nil,LOCATION_MZONE)
 				and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
 				Duel.BreakEffect()
