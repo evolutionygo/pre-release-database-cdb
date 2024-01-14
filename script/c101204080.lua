@@ -5,7 +5,7 @@ function s.initial_effect(c)
 	e1:SetCategory(CATEGORY_REMOVE+CATEGORY_TOEXTRA)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
-	e1:SetCountLimit(1,id)
+	e1:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_END_PHASE)
 	e1:SetTarget(s.target)
 	e1:SetOperation(s.activate)
 	c:RegisterEffect(e1)
@@ -43,13 +43,14 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	sg=g:SelectSubGroup(tp,s.rcheck,false,3,3,ct)
 	if not sg or not Duel.Remove(sg,POS_FACEUP,REASON_EFFECT)==3 then return false end
 	if Duel.IsExistingMatchingCard(s.lrfilter,tp,0,LOCATION_MZONE,1,nil,tp) and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
-		Duel.AdjustAll()
+		Duel.BreakEffect()
 		tc=Duel.SelectMatchingCard(tp,s.lrfilter,tp,0,LOCATION_MZONE,1,1,nil,tp):GetFirst()
 		local tg=Duel.GetMatchingGroup(aux.AND(Card.IsType,Card.IsFaceupEx),tp,LOCATION_REMOVED,0,nil,TYPE_FUSION+TYPE_XYZ)
 		local lr=0
 		if tc:IsType(TYPE_XYZ) then lr=tc:GetRank() else lr=tc:GetLevel() end
 		local rg=tg:SelectSubGroup(tp,s.lrcheck,false,2,2,lr)
 		if rg and Duel.SendtoDeck(rg,nil,1,REASON_EFFECT)==2 then
+			Duel.BreakEffect()
 			local qg=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD,nil,POS_FACEUP)
 			Duel.Remove(qg,POS_FACEUP,REASON_EFFECT)
 		end
