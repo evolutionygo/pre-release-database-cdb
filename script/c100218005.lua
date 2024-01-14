@@ -14,7 +14,7 @@ end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and Duel.IsPlayerCanSpecialSummon(tp) and Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>=1
-		and Duel.IsExistingMatchingCard(Card.IsSummonableCard,tp,LOCATION_DECK,0,1) end
+		and Duel.IsExistingMatchingCard(Card.IsSummonableCard,tp,LOCATION_DECK,0,1,nil) end
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	if not Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>=1 then return false end
