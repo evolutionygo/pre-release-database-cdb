@@ -58,7 +58,7 @@ function s.srop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.gyfilter(c,tp)
-	return c:IsSummonLocation(LOCATION_GRAVE) and c:IsSummonPlayer(1-tp) and c:IsAbleToGrave()
+	return c:IsSummonLocation(LOCATION_GRAVE) and c:IsSummonPlayer(1-tp) and c:IsAbleToGrave() and bit.band(c:GetOriginalType(),TYPE_MONSTER)~=0
 end
 function s.gycon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.gyfilter,1,nil,tp)
