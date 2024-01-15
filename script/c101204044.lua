@@ -19,7 +19,7 @@ function s.initial_effect(c)
 	e2:SetCategory(CATEGORY_POSITION)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_SUMMON_SUCCESS)
-	e2:SetProperty(EFFECT_FLAG_DELAY)
+	e2:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCountLimit(1)
 	e2:SetTarget(s.postg)
@@ -43,7 +43,7 @@ function s.dacon(e)
 	return Duel.GetOverlayCount(0,1,1)>=3
 end
 function s.filter(c,e)
-	return c:IsCanChangePosition() and (not e or c:IsRelateToEffect(e))
+	return c:IsCanChangePosition() and c:IsCanBeEffectTarget(e) and c:IsLocation(LOCATION_MZONE)
 end
 function s.postg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return eg:IsExists(s.filter,1,nil,e) and not eg:IsContains(e:GetHandler()) and Duel.CheckRemoveOverlayCard(tp,1,1,1,REASON_EFFECT) end
