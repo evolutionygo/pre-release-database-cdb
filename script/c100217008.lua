@@ -13,9 +13,10 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
-	e2:SetCategory(CATEGORY_ATKCHANGE)
+	e2:SetCategory(CATEGORY_DESTROY)
 	e2:SetType(EFFECT_TYPE_ACTIVATE)
 	e2:SetCode(EVENT_ATTACK_ANNOUNCE)
+	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e2:SetCountLimit(1,id+EFFECT_COUNT_CODE_OATH)
 	e2:SetCondition(s.conditio2)
 	e2:SetTarget(s.target2)
@@ -65,11 +66,10 @@ function s.activate2(e,tp,eg,ep,ev,re,r,rp)
 	if tc:IsRelateToEffect(e) then Duel.Destroy(tc,REASON_EFFECT) end
 end
 function s.dfilter(c,tp)
-	return c:IsOnField() and c:IsControler(tp) and (c:IsCode(45231177) or aux.IsCodeListed(c,45231177)) and c:IsType(TYPE_MONSTER)
+	return c:IsOnField() and c:IsFaceup() and c:IsControler(tp) and (c:IsCode(45231177) or aux.IsCodeListed(c,45231177)) and c:IsType(TYPE_MONSTER)
 end
 function s.conditio3(e,tp,eg,ep,ev,re,r,rp)
-	if rp==tp or not Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_ONFIELD,0,1,nil)
-		or not re:IsHasProperty(EFFECT_FLAG_CARD_TARGET) then return false end
+	if rp==tp or not re:IsHasProperty(EFFECT_FLAG_CARD_TARGET) then return false end
 	local g=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)
 	return g and g:IsExists(s.dfilter,1,nil,tp) and Duel.IsChainDisablable(ev)
 end
