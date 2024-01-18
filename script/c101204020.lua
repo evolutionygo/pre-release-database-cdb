@@ -52,7 +52,7 @@ function s.tokentg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		local res=e:GetLabel()==100
 		e:SetLabel(0)
-		return res and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		return res
 	end
 	Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,1,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,0,0)

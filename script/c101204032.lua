@@ -46,7 +46,7 @@ function s.tgtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND)
 end
 function s.tgop(e,tp,eg,ep,ev,re,r,rp)
-	if not (Duel.GetLocationCount(tp,LOCATION_MZONE)>0) then return end
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	local c=e:GetHandler()
 	local sc=e:GetLabelObject()
 	local g=Group.FromCards(c,sc)
