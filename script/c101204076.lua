@@ -45,7 +45,7 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.cfilter2(c,tp)
 	return c:IsPreviousPosition(POS_FACEUP) and c:IsPreviousControler(tp) and c:IsPreviousLocation(LOCATION_MZONE)
-		and bit.band(c:GetPreviousRaceOnField(),RACE_INSECT+RACE_PLANT+RACE_REPTILE)~=0 and not c:IsType(TYPE_TOKEN)
+		and bit.band(c:GetPreviousRaceOnField(),RACE_INSECT+RACE_PLANT+RACE_REPTILE)~=0
 		and c:IsReason(REASON_BATTLE+REASON_EFFECT)
 end
 function s.descon2(e,tp,eg,ep,ev,re,r,rp)
