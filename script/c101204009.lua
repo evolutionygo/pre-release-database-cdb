@@ -44,7 +44,7 @@ function c101204009.filter(c)
 	return c:IsType(TYPE_FUSION) and c:IsSetCard(0x9b) and c:IsFaceup()
 end
 function c101204009.atktg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and chkc:IsFaceup() end
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and c101204009.filter(chkc) end
 	if chk==0 then return Duel.IsExistingTarget(c101204009.filter,tp,LOCATION_MZONE,0,1,nil) and Duel.IsExistingMatchingCard(c101204009.tgfilter,tp,LOCATION_DECK,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
 	local g=Duel.SelectTarget(tp,c101204009.filter,tp,LOCATION_MZONE,0,1,1,nil)
