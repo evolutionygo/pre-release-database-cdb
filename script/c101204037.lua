@@ -5,7 +5,7 @@ function s.initial_effect(c)
 	aux.AddFusionProcFunRep(c,aux.FilterBoolFunction(Card.IsFusionSetCard,0x1a1),2,true)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
-	e1:SetCategory(CATEGORY_TOGRAVE)
+	e1:SetCategory(CATEGORY_SEARCH+CATEGORY_DESTROY+CATEGORY_TOHAND)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e1:SetCountLimit(1,id)
@@ -54,13 +54,14 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 	local g=Duel.SelectMatchingCard(tp,s.filter1,tp,LOCATION_HAND+LOCATION_MZONE,0,1,1,nil)
 	if g:GetCount()>0 and Duel.Destroy(g,REASON_EFFECT)~=0 then
-		Duel.BreakEffect()
 		local g=Duel.GetMatchingGroup(s.filter2,tp,LOCATION_DECK,0,nil)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 		local tg1=g:SelectSubGroup(tp,aux.dncheck,false,1,2)
-		Duel.SendtoHand(tg1,nil,REASON_EFFECT)
-		Duel.ConfirmCards(1-tp,tg1)
-		Duel.ShuffleHand(tp)
+		if tg1 then
+			Duel.SendtoHand(tg1,nil,REASON_EFFECT)
+			Duel.ConfirmCards(1-tp,tg1)
+			Duel.ShuffleHand(tp)
+		end
 	end
 end
 function s.tdtg(e,c)

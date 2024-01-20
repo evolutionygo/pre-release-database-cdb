@@ -7,6 +7,7 @@ function s.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetCountLimit(1,id)
+	e1:SetCondition(s.condition)
 	e1:SetTarget(s.target)
 	e1:SetOperation(s.activate)
 	c:RegisterEffect(e1)
@@ -30,15 +31,28 @@ function s.initial_effect(c)
 		Duel.RegisterEffect(ge1,0)
 	end
 end
-function s.spcfilter(c,tp)
+function s.spcfilter1(c)
+	return c:IsReason(REASON_EFFECT)
+		and c:IsPreviousLocation(LOCATION_MZONE)
+end
+function s.spcfilter2(c,tp)
 	return c:IsReason(REASON_EFFECT)
 		and c:IsPreviousControler(tp) and c:IsPreviousLocation(LOCATION_MZONE)
 end
 function s.regcon(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(s.spcfilter,1,nil,tp)
+	return eg:IsExists(s.spcfilter1,1,nil)
 end
 function s.regop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,EFFECT_FLAG_OATH,1)
+	if eg:IsExists(s.spcfilter2,1,nil,0) then
+		Duel.RegisterFlagEffect(0,id,RESET_PHASE+PHASE_END,EFFECT_FLAG_OATH,1)
+	end
+	if eg:IsExists(s.spcfilter2,1,nil,1) then
+		Duel.RegisterFlagEffect(1,id,RESET_PHASE+PHASE_END,EFFECT_FLAG_OATH,1)
+	end
+end
+function s.condition(e,tp,eg,ep,ev,re,r,rp)
+	local ph=Duel.GetCurrentPhase()
+	return (ph==PHASE_MAIN1 or ph==PHASE_MAIN2)
 end
 function s.filter1(c,e)
 	return c:IsType(TYPE_MONSTER) and c:IsAbleToDeck() and c:IsCanBeFusionMaterial() and not c:IsImmuneToEffect(e)
@@ -88,7 +102,7 @@ end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local chkf=tp
 	local mg1=Duel.GetFusionMaterial(tp):Filter(s.filter2,nil,e)
-	local mg2=Duel.GetMatchingGroup(s.filter1,tp,LOCATION_GRAVE,0,nil,e)
+	local mg2=Duel.GetMatchingGroup(aux.NecroValleyFilter(s.filter1),tp,LOCATION_GRAVE,0,nil,e)
 	if Duel.GetFlagEffect(tp,id)~=0 then
 		mg1:Merge(mg2)
 	end
