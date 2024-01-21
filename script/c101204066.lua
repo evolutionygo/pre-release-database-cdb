@@ -15,9 +15,11 @@ function s.pfilter(c)
 	return c:IsFaceup() and c:IsCanAddCounter(0x6a,1)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.pfilter,tp,LOCATION_PZONE,0,1,nil) end
+	if chk==0 then return not e:IsHasType(EFFECT_TYPE_ACTIVATE) or Duel.IsExistingMatchingCard(s.pfilter,tp,LOCATION_PZONE,0,1,nil) end
 	local g=Duel.GetMatchingGroup(s.pfilter,tp,LOCATION_PZONE,0,nil)
-	Duel.SetOperationInfo(0,CATEGORY_COUNTER,g,1,0,0)
+	if e:IsHasType(EFFECT_TYPE_ACTIVATE) then
+		Duel.SetOperationInfo(0,CATEGORY_COUNTER,g,1,0,0)
+	end
 end
 function s.filter(c)
 	return c:IsFaceupEx() and c:IsSetCard(0x1a3) and c:IsAbleToHand() and not c:IsCode(id)
