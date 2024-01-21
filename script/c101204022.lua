@@ -28,7 +28,6 @@ function s.initial_effect(c)
 	e4:SetCode(EVENT_TO_GRAVE)
 	e4:SetProperty(EFFECT_FLAG_DELAY)
 	e4:SetCountLimit(1,id+o)
-	e4:SetCondition(s.thcon2)
 	e4:SetTarget(s.thtg2)
 	e4:SetOperation(s.thop2)
 	c:RegisterEffect(e4)
@@ -54,11 +53,9 @@ end
 function s.atcon(e)
 	return Duel.IsExistingMatchingCard(aux.NOT(Card.IsCode),e:GetHandlerPlayer(),LOCATION_MZONE,0,1,e:GetHandler(),id)
 end
-function s.thcon2(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(Card.IsSetCard,tp,LOCATION_PZONE,0,2,nil,0x1a3)
-end
 function s.thtg2(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsAbleToHand() end
+	if chk==0 then return e:GetHandler():IsAbleToHand()
+		and Duel.IsExistingMatchingCard(Card.IsSetCard,tp,LOCATION_PZONE,0,2,nil,0x1a3) end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,e:GetHandler(),1,0,0)
 end
 function s.thop2(e,tp,eg,ep,ev,re,r,rp)
