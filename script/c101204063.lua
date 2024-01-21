@@ -32,10 +32,10 @@ function s.initial_effect(c)
 	end
 end
 function s.spcfilter1(c)
-	return c:IsReason(REASON_EFFECT) and c:IsType(TYPE_MONSTER)
+	return c:IsReason(REASON_EFFECT) and (c:IsType(TYPE_MONSTER) or c:IsPreviousLocation(LOCATION_MZONE))
 end
 function s.spcfilter2(c,tp)
-	return c:IsReason(REASON_EFFECT) and c:IsType(TYPE_MONSTER)
+	return c:IsReason(REASON_EFFECT) and (c:IsType(TYPE_MONSTER) or c:IsPreviousLocation(LOCATION_MZONE))
 		and c:IsPreviousControler(tp)
 end
 function s.regcon(e,tp,eg,ep,ev,re,r,rp)
