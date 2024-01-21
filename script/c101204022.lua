@@ -50,8 +50,11 @@ end
 function s.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_PENDULUM)
 end
+function s.cfilter(c)
+	return not c:IsCode(id) and c:IsFaceup()
+end
 function s.atcon(e)
-	return Duel.IsExistingMatchingCard(aux.AND(aux.NOT(Card.IsCode),Card.IsFaceup),e:GetHandlerPlayer(),LOCATION_MZONE,0,1,e:GetHandler(),id)
+	return Duel.IsExistingMatchingCard(s.cfilter,e:GetHandlerPlayer(),LOCATION_MZONE,0,1,e:GetHandler())
 end
 function s.thtg2(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToHand()
