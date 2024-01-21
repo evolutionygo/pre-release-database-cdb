@@ -18,7 +18,7 @@ function s.thfilter(c,tp)
 		and (c:IsAbleToExtra() or c:IsAbleToHand())
 end
 function s.cfilter(c)
-	return not c:IsType(TYPE_PENDULUM) and c:IsSetCard(0x1a3)
+	return not c:IsType(TYPE_PENDULUM) and c:IsSetCard(0x1a3) and c:IsFaceup()
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.GetMatchingGroup(s.thfilter,tp,LOCATION_DECK,0,nil)
