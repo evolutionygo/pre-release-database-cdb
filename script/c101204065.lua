@@ -25,7 +25,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local b1=Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_DECK,0,1,nil,e,tp)
 	local b2=g:CheckSubGroup(s.Group,2,2)
-		and Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_MZONE,0,1,nil,TYPE_PENDULUM)
+		and Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_MZONE,0,1,nil)
 	if chk==0 then return b1 or b2 end
 end
 function s.thfilter2(c,g)
@@ -40,7 +40,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local b1=Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_DECK,0,1,nil,e,tp)
 	local b2=g:CheckSubGroup(s.Group,2,2)
-		and Duel.IsExistingMatchingCard(aux.NOT(Card.IsType),tp,LOCATION_MZONE,0,1,nil,TYPE_PENDULUM)
+		and Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_MZONE,0,1,nil)
 	local op=0
 	if b1 and b2 then
 		op=Duel.SelectOption(tp,aux.Stringid(id,1),aux.Stringid(id,2))+1
