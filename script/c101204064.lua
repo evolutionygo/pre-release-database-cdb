@@ -34,14 +34,14 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 		(t1 or t2) end
 	local lv=0
 	if t1 and t2 then
-		lv=Duel.SelectOption(tp,aux.Stringid(id,2),aux.Stringid(id,3))+1
-		e:SetLabel(lv*4)
+		Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,2))
+		e:SetLabel(Duel.AnnounceLevel(tp,4,8,5,6,7))
 	elseif t1 then
-		Duel.SelectOption(tp,aux.Stringid(id,2))
-		e:SetLabel(4)
+		Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,2))
+		e:SetLabel(Duel.AnnounceLevel(tp,4,4))
 	elseif t2 then
-		Duel.SelectOption(tp,aux.Stringid(id,3))
-		e:SetLabel(8)
+		Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,2))
+		e:SetLabel(Duel.AnnounceLevel(tp,8,8))
 	end
 	Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,1,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,0)
