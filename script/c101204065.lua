@@ -55,11 +55,12 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		if sg:GetCount()>0 then
 			Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP)
 		end
-		local e1=Effect.CreateEffect(c)
+		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_FIELD)
-		e1:SetCode(EFFECT_CANNOT_TRIGGER)
-		e1:SetTargetRange(LOCATION_MZONE,0)
-		e1:SetTarget(s.target1)
+		e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+		e1:SetCode(EFFECT_CANNOT_ACTIVATE)
+		e1:SetTargetRange(0,1)
+		e1:SetValue(s.aclimit)
 		e1:SetReset(RESET_PHASE+PHASE_END)
 		Duel.RegisterEffect(e1,tp)
 	elseif op==2 then
@@ -73,6 +74,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SendtoExtraP(sg,nil,REASON_EFFECT)
 	end
 end
-function s.target1(e,c)
-	return not c:IsSetCard(0x1a3)
+function s.aclimit(e,re,tp)
+	local c=re:GetHandler()
+	return not c:IsSetCard(0x1a3) and re:IsActiveType(TYPE_MONSTER) and c:IsLocation(LOCATION_MZONE)
 end
