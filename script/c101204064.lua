@@ -37,7 +37,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 		lv=Duel.SelectOption(tp,aux.Stringid(id,2),aux.Stringid(id,3))+1
 		e:SetLabel(lv*4)
 	elseif t1 then
-		Duel.SelectOption(tp,aux.Stringid(id,2),aux.Stringid(id,3))
+		Duel.SelectOption(tp,aux.Stringid(id,2))
 		e:SetLabel(4)
 	elseif t2 then
 		Duel.SelectOption(tp,aux.Stringid(id,3))
