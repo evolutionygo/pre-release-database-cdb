@@ -49,10 +49,13 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		local lr=0
 		if tc:IsType(TYPE_XYZ) then lr=tc:GetRank() else lr=tc:GetLevel() end
 		local rg=tg:SelectSubGroup(tp,s.lrcheck,false,2,2,lr)
-		if rg and Duel.SendtoDeck(rg,nil,1,REASON_EFFECT)==2 then
-			Duel.BreakEffect()
-			local qg=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD,nil,POS_FACEUP)
-			Duel.Remove(qg,POS_FACEUP,REASON_EFFECT)
+		if rg then
+			Duel.ConfirmCards(1-tp,rg)
+			if Duel.SendtoDeck(rg,nil,1,REASON_EFFECT)==2 then
+				Duel.BreakEffect()
+				local qg=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD,nil,POS_FACEUP)
+				Duel.Remove(qg,POS_FACEUP,REASON_EFFECT)
+			end
 		end
 	end
 end

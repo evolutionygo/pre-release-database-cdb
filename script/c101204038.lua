@@ -125,6 +125,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	if #g1>0 and #g2>0 then
 		Duel.SendtoHand(Group.__add(g1,g2):SelectSubGroup(tp,s.fselect2,false,2,2),nil,REASON_EFFECT)
 		local tg=Duel.GetOperatedGroup()
+		Duel.ConfirmCards(1-tp,tg)
 		if tg:FilterCount(s.spfilter,nil,e,tp)==2 and Duel.GetLocationCount(tp,LOCATION_MZONE)>=2 and Duel.SelectYesNo(tp,aux.Stringid(id,3)) then
 			Duel.BreakEffect()
 			for tc in aux.Next(tg) do
