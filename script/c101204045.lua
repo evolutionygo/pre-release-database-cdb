@@ -58,7 +58,7 @@ function s.disop(e,tp,eg,ep,ev,re,r,rp)
 		and Duel.SelectYesNo(tp,aux.Stringid(id,3)) then
 		Duel.BreakEffect()
 		if c:RemoveOverlayCard(tp,1,1,REASON_EFFECT)~=0 then
-			if re:GetHandler():IsRelateToEffect(re) then
+			if re:GetHandler():IsRelateToEffect(re) and re:IsHasType(EFFECT_TYPE_ACTIVATE) then
 				g=Duel.GetFieldGroup(tp,LOCATION_ONFIELD,LOCATION_ONFIELD):Select(tp,1,1,re:GetHandler())
 			else
 				g=Duel.GetFieldGroup(tp,LOCATION_ONFIELD,LOCATION_ONFIELD):Select(tp,1,1,nil)
