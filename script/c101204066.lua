@@ -30,6 +30,9 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp,op)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_COUNTER)
 		local tc=Duel.SelectMatchingCard(tp,s.pfilter,tp,LOCATION_PZONE,0,1,1,nil):GetFirst()
 		tc:AddCounter(0x6a,1)
+		if tc:GetCounter(0x6a)==3 then
+			Duel.RaiseEvent(tc,EVENT_CUSTOM+39210885,e,0,tp,tp,0)
+		end
 		op=Duel.SelectOption(tp,aux.Stringid(id,1),aux.Stringid(id,2))+1
 	end
 	if op==1 then
