@@ -53,12 +53,16 @@ end
 function s.disop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local g=Duel.GetFieldGroup(tp,LOCATION_ONFIELD,LOCATION_ONFIELD)
-	if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToEffect(re)
+	if Duel.NegateActivation(ev)
 		and g:GetCount()>0 and c:CheckRemoveOverlayCard(tp,1,REASON_EFFECT)
 		and Duel.SelectYesNo(tp,aux.Stringid(id,3)) then
 		Duel.BreakEffect()
-		if c:RemoveOverlayCard(tp,1,1,REASON_EFFECT) then
-			local g=Duel.GetFieldGroup(tp,LOCATION_ONFIELD,LOCATION_ONFIELD):Select(tp,1,1,nil)
+		if c:RemoveOverlayCard(tp,1,1,REASON_EFFECT)~=0 then
+			if re:GetHandler():IsRelateToEffect(re) then
+				g=Duel.GetFieldGroup(tp,LOCATION_ONFIELD,LOCATION_ONFIELD):Select(tp,1,1,re:GetHandler())
+			else
+				g=Duel.GetFieldGroup(tp,LOCATION_ONFIELD,LOCATION_ONFIELD):Select(tp,1,1,nil)
+			end
 			if #g>0 then
 				Duel.BreakEffect()
 				Duel.Destroy(g,REASON_EFFECT)
