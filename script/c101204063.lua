@@ -127,6 +127,9 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			tc:SetMaterial(mat1)
 			local mat2=mat1:Filter(Card.IsLocation,nil,LOCATION_GRAVE)
 			mat1:Sub(mat2)
+			if #mat2>0 then
+				Duel.HintSelection(mat2)
+			end
 			Duel.SendtoGrave(mat1,REASON_EFFECT+REASON_MATERIAL+REASON_FUSION)
 			Duel.SendtoDeck(mat2,nil,2,REASON_EFFECT+REASON_MATERIAL+REASON_FUSION)
 			Duel.BreakEffect()
