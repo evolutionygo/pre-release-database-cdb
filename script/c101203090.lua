@@ -55,8 +55,8 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 			local b2=Duel.IsExistingMatchingCard(s.setfilter,tp,LOCATION_DECK,0,1,nil)
 			if not b1 and not b2 then return end
 			local op=aux.SelectFromOptions(tp,
-				{b1,aux.Stringid(id,0)},
-				{b2,aux.Stringid(id,1)},
+				{b1,1190},
+				{b2,1153},
 				{true,aux.Stringid(id,2)})
 			if op==1 then
 				local thc=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_DECK,0,1,1,nil)
