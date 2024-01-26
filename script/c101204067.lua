@@ -43,14 +43,14 @@ function s.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,0,LOCATION_DECK)
 end
 function s.drop(e,tp,eg,ep,ev,re,r,rp)
-	local ct=Duel.GetFieldGroupCount(tp,0,LOCATION_ONFIELD)
-	local dt=Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)
+	local p=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER)
+	local ct=Duel.GetFieldGroupCount(p,0,LOCATION_ONFIELD)
+	local dt=Duel.GetFieldGroupCount(p,LOCATION_DECK,0)
 	ct=math.min(ct,dt)
 	if ct==0 then return end
 	local t={}
 	for i=1,ct do t[i]=i end
 	local ac=Duel.AnnounceNumber(tp,table.unpack(t))
-	local p=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER)
 	Duel.ConfirmDecktop(p,ac)
 	local g=Duel.GetDecktopGroup(p,ac)
 	if #g>0 then
