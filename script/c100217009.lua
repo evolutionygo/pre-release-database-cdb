@@ -55,9 +55,9 @@ end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_MZONE) and s.filter(chkc) end
 	if chk==0 then return e:IsCostChecked()
-		and Duel.IsExistingTarget(s.filter,tp,LOCATION_MZONE,0,1,nil) end
+		and Duel.IsExistingTarget(s.filter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EQUIP)
-	Duel.SelectTarget(tp,s.filter,tp,LOCATION_MZONE,0,1,1,nil)
+	Duel.SelectTarget(tp,s.filter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_EQUIP,e:GetHandler(),1,0,0)
 end
 function s.posfilter(c)
@@ -68,7 +68,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	if not c:IsLocation(LOCATION_SZONE) then return end
 	if not c:IsRelateToEffect(e) or c:IsStatus(STATUS_LEAVE_CONFIRMED) then return end
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and tc:IsFaceup() and tc:IsControler(tp) and Duel.Equip(tp,c,tc)~=0 then
+	if tc:IsRelateToEffect(e) and tc:IsFaceup() and Duel.Equip(tp,c,tc)~=0 then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_EQUIP)
 		e1:SetCode(EFFECT_UPDATE_ATTACK)
@@ -83,8 +83,10 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 		e2:SetReset(RESET_EVENT+RESETS_STANDARD)
 		c:RegisterEffect(e2)
 		if Duel.IsExistingMatchingCard(s.posfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
+			Duel.BreakEffect()
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
 			local g=Duel.SelectMatchingCard(tp,s.posfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
+			Duel.HintSelection(g)
 			local tc=g:GetFirst()
 			Duel.ChangePosition(tc,POS_FACEDOWN_DEFENSE)
 		end
@@ -94,7 +96,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.eqlimit(e,c)
 	return e:GetHandler():GetEquipTarget()==c
-		or c:IsControler(e:GetHandlerPlayer()) and c:IsAttribute(ATTRIBUTE_FIRE)
+		or c:IsAttribute(ATTRIBUTE_FIRE)
 end
 function s.filter0(c)
 	return c:IsType(TYPE_MONSTER) and c:IsAbleToDeck()
@@ -155,6 +157,10 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 				local cg=mat1:Filter(s.fdfilter,nil)
 				Duel.ConfirmCards(1-tp,cg)
 			end
+			if mat1:IsExists(s.gdfilter,1,nil) then
+				local gg=mat1:Filter(s.gdfilter,nil)
+				Duel.HintSelection(gg)
+			end
 			Duel.SendtoDeck(mat1,nil,SEQ_DECKSHUFFLE,REASON_EFFECT+REASON_MATERIAL+REASON_FUSION)
 			Duel.BreakEffect()
 			Duel.SpecialSummon(tc,SUMMON_TYPE_FUSION,tp,tp,false,false,POS_FACEUP)
@@ -193,4 +199,7 @@ function s.descon(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.fdfilter(c)
 	return c:IsLocation(LOCATION_MZONE) and c:IsFacedown() or c:IsLocation(LOCATION_HAND)
+end
+function s.gdfilter(c)
+	return c:IsLocation(LOCATION_MZONE) and c:IsFaceup() or c:IsLocation(LOCATION_GRAVE)
 end
