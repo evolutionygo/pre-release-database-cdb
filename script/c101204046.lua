@@ -1,4 +1,4 @@
---
+--怒小児様
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddXyzProcedure(c,nil,1,2)
