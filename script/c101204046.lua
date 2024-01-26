@@ -7,8 +7,9 @@ function s.initial_effect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e1:SetCode(EVENT_CHAIN_NEGATED)
-	e1:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
+	e1:SetProperty(EFFECT_FLAG_DELAY)
 	e1:SetRange(LOCATION_MZONE)
+	e1:SetCountLimit(1,EFFECT_COUNT_CODE_CHAIN)
 	e1:SetTarget(s.ovtg)
 	e1:SetOperation(s.ovop)
 	c:RegisterEffect(e1)
@@ -59,7 +60,7 @@ end
 function s.negcheck(e,tp,eg,ep,ev,re,r,rp)
 	local de=Duel.GetChainInfo(ev,CHAININFO_DISABLE_REASON)
 	if de then
-		Duel.RaiseEvent(re,EVENT_CUSTOM+id,te,0,tp,tp,0)
+		Duel.RaiseEvent(e:GetHandler(),EVENT_CUSTOM+id,te,0,tp,tp,0)
 	end
 end
 function s.ofilter(c,e)
@@ -68,21 +69,26 @@ end
 function s.ovtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsType(TYPE_XYZ)
 		and Duel.IsExistingMatchingCard(s.ofilter,tp,LOCATION_GRAVE,0,1,nil) 
-		and Duel.IsExistingMatchingCard(s.ofilter,tp,0,LOCATION_GRAVE,1,nil)
+		or Duel.IsExistingMatchingCard(s.ofilter,tp,0,LOCATION_GRAVE,1,nil)
 	end
+end
+function s.gchecktp(c,tp)
+	return c:GetOwner()==tp
+end
+function s.gcheck(g,tp)
+	return g:FilterCount(s.gchecktp,nil,tp)<=1 and g:FilterCount(s.gchecktp,nil,1-tp)<=1
 end
 function s.ovop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsRelateToEffect(e)
-		and Duel.IsExistingMatchingCard(aux.NecroValleyFilter(s.ofilter),tp,LOCATION_GRAVE,0,1,nil)
-		and Duel.IsExistingMatchingCard(aux.NecroValleyFilter(s.ofilter),tp,0,LOCATION_GRAVE,1,nil) then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
-		local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.ofilter),tp,LOCATION_GRAVE,0,1,1,nil,e)
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
-		local tc=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.ofilter),tp,0,LOCATION_GRAVE,1,1,nil,e):GetFirst()
-		g:AddCard(tc)
-		if g:GetCount()==2 then
-			Duel.Overlay(c,g)
+	if c:IsRelateToEffect(e) then
+		local g=Duel.GetMatchingGroup(aux.NecroValleyFilter(s.ofilter),tp,LOCATION_GRAVE,LOCATION_GRAVE,nil,e)
+		if #g>0 then
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
+			local sg=g:SelectSubGroup(tp,s.gcheck,false,1,2,tp)
+			if sg:GetCount()>0 then
+				Duel.HintSelection(sg)
+				Duel.Overlay(c,sg)
+			end
 		end
 	end
 end
