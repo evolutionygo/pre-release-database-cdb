@@ -29,8 +29,8 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		Duel.HintSelection(g)
 		if Duel.Remove(g,POS_FACEDOWN,REASON_EFFECT)~=0
 			and Duel.GetMatchingGroupCount(nil,tp,LOCATION_REMOVED,0,nil)>=7
-			and Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,0,LOCATION_GRAVE,1,nil,tp,POS_FACEDOWN)
-			and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
+			and Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,0,LOCATION_GRAVE,1,nil,tp,POS_FACEDOWN) then
+			Duel.BreakEffect()
 			local ct=Duel.GetMatchingGroupCount(Card.IsAbleToRemove,tp,0,LOCATION_GRAVE,nil,POS_FACEDOWN)
 			if ct>5 then ct=5 end
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
