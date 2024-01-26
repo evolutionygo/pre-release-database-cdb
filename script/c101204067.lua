@@ -46,13 +46,14 @@ function s.drop(e,tp,eg,ep,ev,re,r,rp)
 	local ct=Duel.GetFieldGroupCount(tp,0,LOCATION_ONFIELD)
 	local dt=Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)
 	ct=math.min(ct,dt)
+	if ct==0 then return end
 	local t={}
 	for i=1,ct do t[i]=i end
 	local ac=Duel.AnnounceNumber(tp,table.unpack(t))
 	local p=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER)
 	Duel.ConfirmDecktop(p,ac)
 	local g=Duel.GetDecktopGroup(p,ac)
-	if g:GetCount()>0 then
+	if #g>0 then
 		Duel.Hint(HINT_SELECTMSG,p,HINTMSG_ATOHAND)
 		local sg=g:Select(p,1,1,nil)
 		if sg:GetFirst():IsAbleToHand() then
@@ -100,7 +101,7 @@ end
 function s.tdop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(Card.IsAbleToDeck,tp,0,LOCATION_ONFIELD+LOCATION_GRAVE,nil)
 	if aux.NecroValleyNegateCheck(g) then return end
-	if g:GetCount()>0 then
+	if #g>0 then
 		Duel.SendtoDeck(g,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)
 	end
 end
