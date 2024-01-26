@@ -34,7 +34,7 @@ end
 function s.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local ct=Duel.GetFieldGroupCount(tp,0,LOCATION_ONFIELD)
 	if chk==0 then
-		if Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)<ct then return false end
+		if ct==0 or Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)==0 then return false end
 		local g=Duel.GetDecktopGroup(tp,ct)
 		local result=g:FilterCount(Card.IsAbleToHand,nil)>0
 		return result
@@ -44,9 +44,14 @@ function s.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.drop(e,tp,eg,ep,ev,re,r,rp)
 	local ct=Duel.GetFieldGroupCount(tp,0,LOCATION_ONFIELD)
+	local dt=Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)
+	ct=math.min(ct,dt)
+	local t={}
+	for i=1,ct do t[i]=i end
+	local ac=Duel.AnnounceNumber(tp,table.unpack(t))
 	local p=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER)
-	Duel.ConfirmDecktop(p,ct)
-	local g=Duel.GetDecktopGroup(p,ct)
+	Duel.ConfirmDecktop(p,ac)
+	local g=Duel.GetDecktopGroup(p,ac)
 	if g:GetCount()>0 then
 		Duel.Hint(HINT_SELECTMSG,p,HINTMSG_ATOHAND)
 		local sg=g:Select(p,1,1,nil)
@@ -73,12 +78,12 @@ function s.drop(e,tp,eg,ep,ev,re,r,rp)
 			Duel.SendtoDeck(sg,nil,SEQ_DECKTOP,REASON_EFFECT)
 		else
 			Duel.SendtoDeck(sg,nil,SEQ_DECKBOTTOM,REASON_EFFECT)
-			ct=ct-1
+			ac=ac-1
 		end
 	end
-	if ct>0 then
-		Duel.SortDecktop(tp,tp,ct)
-		for i=1,ct do
+	if ac>0 then
+		Duel.SortDecktop(tp,tp,ac)
+		for i=1,ac do
 			local mg=Duel.GetDecktopGroup(tp,1)
 			Duel.MoveSequence(mg:GetFirst(),SEQ_DECKBOTTOM)
 		end
