@@ -36,6 +36,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 			local rg=Duel.SelectMatchingCard(1-tp,Card.IsAbleToRemove,tp,0,LOCATION_GRAVE,ct,ct,nil,POS_FACEDOWN)
 			if rg:GetCount()>0 then
+				Duel.HintSelection(rg)
 				Duel.Remove(rg,POS_FACEDOWN,REASON_EFFECT)
 			end
 		end
