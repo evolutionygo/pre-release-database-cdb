@@ -76,6 +76,7 @@ function s.spop2(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetOperation(s.desop)
 		Duel.RegisterEffect(e1,tp)
 	end
+	Duel.SpecialSummonComplete()
 end
 function s.descon(e,tp,eg,ep,ev,re,r,rp)
 	local tc=e:GetLabelObject()
