@@ -47,11 +47,14 @@ function s.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.costfilter,tp,LOCATION_HAND,0,1,e:GetHandler()) end
 	Duel.DiscardHand(tp,s.costfilter,1,1,REASON_COST+REASON_DISCARD)
 end
+function s.thfilter(c)
+	return not c:IsRace(RACE_INSECT+RACE_PLANT+RACE_REPTILE) and c:IsFaceup()
+end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() and chkc:IsControler(1-tp) and chkc:IsAbleToHand() end
-	if chk==0 then return Duel.IsExistingTarget(aux.AND(aux.NOT(Card.IsRace),Card.IsAbleToHand),tp,0,LOCATION_MZONE,1,nil,RACE_INSECT+RACE_PLANT+RACE_REPTILE) end
+	if chk==0 then return Duel.IsExistingTarget(s.thfilter,tp,0,LOCATION_MZONE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
-	local g=Duel.SelectTarget(tp,aux.AND(aux.NOT(Card.IsRace),Card.IsAbleToHand),tp,0,LOCATION_MZONE,1,1,nil,RACE_INSECT+RACE_PLANT+RACE_REPTILE)
+	local g=Duel.SelectTarget(tp,s.thfilter,tp,0,LOCATION_MZONE,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,1,0,0)
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
