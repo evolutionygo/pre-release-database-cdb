@@ -26,7 +26,6 @@ function c101204009.initial_effect(c)
 	c:RegisterEffect(e2)
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(101204009,2))
-	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e3:SetProperty(EFFECT_FLAG_DELAY)
@@ -83,7 +82,7 @@ function c101204009.thop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c101204009.cfilter(c,tp)
-	return c:IsFaceup() and c:IsType(TYPE_FUSION) and c:IsSetCard(0x9b) and c:IsFaceup() and c:IsControler(tp)
+	return c:IsFaceup() and c:IsType(TYPE_FUSION) and c:IsSetCard(0x9b) and c:IsControler(tp)
 end
 function c101204009.pencon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsFaceup() and eg:IsExists(c101204009.cfilter,1,nil,tp)
