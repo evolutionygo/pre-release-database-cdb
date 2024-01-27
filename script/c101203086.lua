@@ -1,4 +1,4 @@
---黄昏节拍
+--Sunset Beat
 local s,id,o=GetID()
 function s.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
@@ -6,7 +6,7 @@ function s.initial_effect(c)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	c:RegisterEffect(e1)
 	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(id,1))
+	e2:SetDescription(aux.Stringid(id,0))
 	e2:SetCategory(CATEGORY_DESTROY)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_CHANGE_POS)
@@ -50,7 +50,7 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.cfilter2(c,tp)
-	return c:IsPreviousPosition(POS_FACEDOWN) and c:IsFaceup() and c:IsControler(tp)
+	return c:IsPreviousPosition(POS_FACEDOWN) and c:IsFaceup() and c:IsControler(tp) and c:IsType(TYPE_FLIP)
 end
 function s.damcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.cfilter2,1,nil,tp)
@@ -69,6 +69,6 @@ function s.damtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function s.damop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=e:GetLabelObject()
-	if not tc:IsRelateToEffect(e) then return end
+	if not tc:IsRelateToEffect(e) or not tc:IsPosition(POS_FACEUP) or not tc:IsType(TYPE_MONSTER) then return end
 	Duel.Damage(1-tp,tc:GetLevel()*200,REASON_EFFECT)
 end
