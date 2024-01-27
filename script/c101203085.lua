@@ -29,18 +29,17 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SelectTarget(tp,s.filter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,e:GetHandler())
 end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
 	if tc and tc:IsRelateToEffect(e) and tc:IsType(TYPE_MONSTER) then
-		if tc:IsPosition(POS_FACEUP_DEFENSE) and c:IsFacedown() then
-			if Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
+		if tc:IsPosition(POS_FACEUP_DEFENSE) then
+			if tc:IsCanTurnSet() and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 				Duel.ChangePosition(tc,POS_FACEDOWN_DEFENSE)
 			else
 				Duel.ChangePosition(tc,POS_FACEUP_ATTACK)
 			end
-		elseif c:IsCanTurnSet() then
+		elseif tc:IsCanTurnSet() then
 			Duel.ChangePosition(tc,POS_FACEDOWN_DEFENSE)
-		elseif c:IsFacedown() then
+		elseif tc:IsFacedown() then
 			Duel.ChangePosition(tc,POS_FACEUP_ATTACK)
 		end
 	end
