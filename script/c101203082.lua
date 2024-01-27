@@ -29,11 +29,11 @@ function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 end
 function s.cfilter(c,tp)
-	return c:IsFaceup() and c:IsRace(RACE_PSYCHO) and c:IsAbleToRemove() and c:GetTextAttack()>0 and c:GetOriginalType()&TYPE_MONSTER~=0
+	return c:IsFaceup() and c:IsRace(RACE_PSYCHO) and c:IsAbleToRemove() and c:GetOriginalType()&TYPE_MONSTER~=0
 		and Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil,c:GetLevel(),c:GetAttribute()) and Duel.CheckLPCost(tp,c:GetLevel()*200)
 end
 function s.thfilter(c,lv,att)
-	return c:IsRace(RACE_MACHINE) and c:GetAttribute()==att and c:GetLevel()>=0 and c:GetLevel()>lv and c:IsAbleToHand()
+	return c:IsRace(RACE_MACHINE) and c:GetAttribute()==att and c:GetLevel()>lv and c:IsAbleToHand()
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and s.rmfilter(chkc,tp) end
@@ -43,7 +43,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		return Duel.IsExistingTarget(s.cfilter,tp,LOCATION_MZONE,0,1,nil,tp)
 	end
 	e:SetLabel(0)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
 	local g=Duel.SelectTarget(tp,s.cfilter,tp,LOCATION_MZONE,0,1,1,nil,tp)
 	local tc=g:GetFirst()
 	Duel.PayLPCost(tp,tc:GetLevel()*200)
@@ -52,8 +52,7 @@ end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
-		if tc:IsFacedown() then return end
+	if tc:IsRelateToEffect(e) and tc:IsFaceup() then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 		local g=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_DECK,0,1,1,nil,tc:GetLevel(),tc:GetAttribute())
 		if g:GetCount()>0 then
@@ -74,7 +73,7 @@ end
 function s.tdtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local dg=Duel.GetMatchingGroup(s.tdfilter,tp,LOCATION_REMOVED,0,nil,e,tp)
 	if chkc then return false end
-	if chk==0 then return dg:CheckSubGroup(s.fselect,2,2,e,tp) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 end
+	if chk==0 then return dg:CheckSubGroup(s.fselect,2,2,e,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_OPERATECARD)
 	local g=dg:SelectSubGroup(tp,s.fselect,false,2,2,e,tp)
 	Duel.SetTargetCard(g)
@@ -82,17 +81,21 @@ function s.tdtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,1,0,0)
 end
 function s.thfilter2(c,e,tp)
-	return c:IsAbleToHand()
+	return c:IsAbleToDeck()
 end
 function s.tdop(e,tp,eg,ep,ev,re,r,rp)
 	local tg=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e)
-	if tg:GetCount()>0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	if tg:GetCount()>0 then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
 		local sg=tg:FilterSelect(tp,s.thfilter2,1,1,nil,e,tp)
 		if sg:GetCount()>0 then
-			Duel.SendtoHand(sg,nil,REASON_EFFECT)
+			Duel.HintSelection(sg)
+			aux.PlaceCardsOnDeckBottom(tp,sg)
 			tg:Sub(sg)
-			aux.PlaceCardsOnDeckBottom(tp,tg)
+			if sg:GetFirst():IsLocation(LOCATION_DECK+LOCATION_EXTRA) and tg:GetCount()>0 and tg:GetFirst():IsAbleToHand() then
+				Duel.SendtoHand(tg,nil,REASON_EFFECT)
+				Duel.ConfirmCards(1-tp,tg)
+			end
 		end
 	end
 end
