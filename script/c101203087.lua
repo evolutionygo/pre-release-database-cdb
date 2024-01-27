@@ -35,7 +35,7 @@ function s.initial_effect(c)
 	end
 end
 function s.spcfilter(c,tp)
-	return c:IsReason(REASON_BATTLE+REASON_EFFECT) and c:IsPreviousControler(tp) and c:IsPreviousLocation(LOCATION_MZONE)
+	return c:IsReason(REASON_BATTLE+REASON_EFFECT) and c:IsPreviousControler(tp)
 end
 function s.regcon(e,tp,eg,ep,ev,re,r,rp)
 	local v=0
@@ -64,11 +64,10 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.thcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():IsReason(REASON_EFFECT)
+	return e:GetHandler():IsPreviousLocation(LOCATION_ONFIELD)
 end
 function s.cfilter(c,race,att)
-	return c:GetRace()==race and c:GetAttribute()==att
-		and c:IsFaceup()
+	return c:IsFaceup() and bit.band(c:GetRace(),race)~=0 and bit.band(c:GetAttribute(),att)~=0
 end
 function s.thfilter(c,tp)
 	return c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
