@@ -49,15 +49,15 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.CheckRemoveOverlayCard(tp,1,0,1,REASON_EFFECT) end
+	if chk==0 then return Duel.CheckRemoveOverlayCard(tp,1,1,1,REASON_EFFECT) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,nil,tp,LOCATION_GRAVE)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_DECK,0,nil,e,tp)
-	if Duel.RemoveOverlayCard(tp,1,0,1,1,REASON_EFFECT)~=0 then
+	if Duel.RemoveOverlayCard(tp,1,1,1,1,REASON_EFFECT)~=0 then
 		local g=Duel.GetOperatedGroup()
 		local tc=g:GetFirst()
-		if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and tc:IsType(TYPE_XYZ)
+		if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and tc:IsType(TYPE_XYZ) and tc:GetOwner()==tp
 			and tc:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE)
 			and tc:IsLocation(LOCATION_GRAVE+LOCATION_REMOVED)
 			and Duel.SelectYesNo(tp,aux.Stringid(id,3)) then
