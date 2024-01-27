@@ -18,12 +18,10 @@ function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.cfilter(c,tp)
 	return c:IsRace(RACE_WINDBEAST) and c:IsReleasable() and c:IsFaceupEx()
-		and Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil,c)
+		and Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil,c:GetLevel())
 end
-function s.thfilter(c,tc)
-	return c:IsRace(RACE_WINDBEAST)
-		and c:GetOriginalLevel()==tc:GetLevel()
-		and c:IsAbleToHand()
+function s.thfilter(c,lv)
+	return c:IsRace(RACE_WINDBEAST) and c:IsLevel(lv) and c:IsAbleToHand()
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.GetReleaseGroup(tp,true):Filter(s.cfilter,nil,tp)
@@ -33,14 +31,14 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 		return g:GetCount()>=1
 	end
 	local rg=g:FilterSelect(tp,s.cfilter,1,1,nil,tp)
-	e:SetLabelObject(rg:GetFirst())
+	e:SetLabel(rg:GetFirst():GetLevel())
 	Duel.Release(rg,REASON_COST)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
-	local tc=e:GetLabelObject()
+	local lv=e:GetLabel()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_DECK,0,1,1,nil,tc)
+	local g=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_DECK,0,1,1,nil,lv)
 	if g:GetCount()>0 then
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,g)
