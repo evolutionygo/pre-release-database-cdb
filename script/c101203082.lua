@@ -29,14 +29,14 @@ function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 end
 function s.cfilter(c,tp)
-	return c:IsFaceup() and c:IsRace(RACE_PSYCHO) and c:IsAbleToRemove() and c:GetOriginalType()&TYPE_MONSTER~=0
-		and Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil,c:GetLevel(),c:GetAttribute()) and Duel.CheckLPCost(tp,c:GetLevel()*200)
+	return c:IsFaceup() and c:IsRace(RACE_PSYCHO) and Duel.CheckLPCost(tp,c:GetLevel()*200)
+		and Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil,c:GetLevel(),c:GetAttribute())
 end
 function s.thfilter(c,lv,att)
-	return c:IsRace(RACE_MACHINE) and c:GetAttribute()==att and c:GetLevel()>lv and c:IsAbleToHand()
+	return c:IsRace(RACE_MACHINE) and bit.band(c:GetAttribute(),att)~=0 and c:GetLevel()>lv and c:IsAbleToHand()
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and s.rmfilter(chkc,tp) end
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and s.cfilter(chkc,tp) end
 	if chk==0 then
 		if e:GetLabel()~=100 then return false end
 		e:SetLabel(0)
