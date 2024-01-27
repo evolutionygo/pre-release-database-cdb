@@ -1,4 +1,4 @@
---蜈蚣群
+--Swarm of Centipedes
 local s,id,o=GetID()
 function s.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
@@ -31,7 +31,7 @@ end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if tc and tc:IsRelateToEffect(e) then
+	if tc and tc:IsRelateToEffect(e) and tc:IsType(TYPE_MONSTER) then
 		if tc:IsPosition(POS_FACEUP_DEFENSE) and c:IsFacedown() then
 			if Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 				Duel.ChangePosition(tc,POS_FACEDOWN_DEFENSE)
