@@ -49,16 +49,16 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Destroy(tc,REASON_EFFECT)
 	end
 end
-function s.cfilter2(c,tp)
-	return c:IsPreviousPosition(POS_FACEDOWN) and c:IsFaceup() and c:IsControler(tp) and c:IsType(TYPE_FLIP)
+function s.cfilter2(c,tp,e)
+	return c:IsPreviousPosition(POS_FACEDOWN) and c:IsFaceup() and c:IsControler(tp) and c:IsType(TYPE_FLIP) and c:IsCanBeEffectTarget(e)
 end
 function s.damcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.cfilter2,1,nil,tp)
 end
 function s.damtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return eg:IsContains(chkc) and chkc:IsPreviousControler(tp)
-		and chkc:IsPreviousLocation(LOCATION_MZONE) and cfilter2(chkc,tp) end
-	local g=eg:Filter(s.cfilter2,nil,tp)
+		and chkc:IsPreviousLocation(LOCATION_MZONE) and s.cfilter2(chkc,tp,e) end
+	local g=eg:Filter(s.cfilter2,nil,tp,e)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE) and #g>0 end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
 	local sg=g:Select(tp,1,1,nil)
