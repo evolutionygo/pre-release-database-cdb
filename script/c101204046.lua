@@ -67,10 +67,7 @@ function s.ofilter(c,e)
 	return c:IsCanOverlay() and (not e or not c:IsImmuneToEffect(e))
 end
 function s.ovtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsType(TYPE_XYZ)
-		and Duel.IsExistingMatchingCard(s.ofilter,tp,LOCATION_GRAVE,0,1,nil) 
-		or Duel.IsExistingMatchingCard(s.ofilter,tp,0,LOCATION_GRAVE,1,nil)
-	end
+	if chk==0 then return e:GetHandler():IsType(TYPE_XYZ) and Duel.IsExistingMatchingCard(s.ofilter,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,nil) end
 end
 function s.gchecktp(c,tp)
 	return c:GetOwner()==tp
