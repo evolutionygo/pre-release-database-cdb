@@ -65,6 +65,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 			and tc:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE)
 			and tc:IsLocation(LOCATION_GRAVE+LOCATION_REMOVED)
 			and Duel.SelectYesNo(tp,aux.Stringid(id,3)) then
+			Duel.BreakEffect()
 			Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
 		end
 	end
