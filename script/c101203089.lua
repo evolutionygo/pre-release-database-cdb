@@ -21,8 +21,8 @@ function s.initial_effect(c)
 	e2:SetOperation(s.spop)
 	c:RegisterEffect(e2)
 end
-function s.tgfilter(c)
-	return not c:IsCode(id) and c:IsSetCard(0x73) and c:IsAbleToGrave()
+function s.tgfilter(c,b)
+	return not c:IsCode(id) and c:IsSetCard(0x73) and (c:IsAbleToGrave() or b and c:IsAbleToHand())
 end
 function s.mfilter(c)
 	return c:IsType(TYPE_XYZ)
@@ -31,19 +31,23 @@ function s.ffilter(c)
 	return c:IsType(TYPE_XYZ) and c:IsFaceup() and c:GetOverlayGroup():IsExists(s.mfilter,1,nil)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.tgfilter,tp,LOCATION_DECK,0,1,nil) end
+	local b=Duel.IsExistingMatchingCard(s.ffilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil)
+	if chk==0 then return Duel.IsExistingMatchingCard(s.tgfilter,tp,LOCATION_DECK,0,1,nil,b) end
 	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_DECK)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
+	local b=Duel.IsExistingMatchingCard(s.ffilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local g=Duel.SelectMatchingCard(tp,s.tgfilter,tp,LOCATION_DECK,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,s.tgfilter,tp,LOCATION_DECK,0,1,1,nil,b)
 	local tc=g:GetFirst()
 	if tc then
-		if Duel.IsExistingMatchingCard(s.ffilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) and tc:IsAbleToHand()
-			and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
+		if b and tc:IsAbleToHand() and tc:IsAbleToGrave() and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 			Duel.SendtoHand(tc,nil,REASON_EFFECT)
 			Duel.ConfirmCards(1-tp,tc)
-		else
+		elseif b and tc:IsAbleToHand() and not tc:IsAbleToGrave() then
+			Duel.SendtoHand(tc,nil,REASON_EFFECT)
+			Duel.ConfirmCards(1-tp,tc)
+		elseif tc:IsAbleToGrave() then
 			Duel.SendtoGrave(tc,REASON_EFFECT)
 		end
 	end
