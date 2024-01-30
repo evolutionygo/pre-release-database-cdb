@@ -40,7 +40,7 @@ function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local a=Duel.GetAttacker()
 	local d=Duel.GetAttackTarget()
-	return a~=c and a:IsControler(tp) and a:IsRace(RACE_MACHINE+RACE_ILLUSION) or d and a~=c and d:IsControler(tp) and d:IsRace(RACE_MACHINE+RACE_ILLUSION)
+	return a:IsControler(tp) and a:IsRace(RACE_MACHINE+RACE_ILLUSION) or d and d:IsControler(tp) and d:IsRace(RACE_MACHINE+RACE_ILLUSION)
 end
 function s.filter(c,e,tp)
 	return c:IsFaceupEx() and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
