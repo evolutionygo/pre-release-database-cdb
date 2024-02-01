@@ -39,10 +39,10 @@ function c101204034.cfilter(c)
 	return c:IsFaceupEx() and c:IsCode(25801745)
 end
 function c101204034.drcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():IsSummonType(SUMMON_TYPE_RITUAL) and Duel.IsExistingMatchingCard(c101204034.cfilter,tp,LOCATION_ONFIELD+LOCATION_GRAVE,0,1,nil)
+	return e:GetHandler():IsSummonType(SUMMON_TYPE_RITUAL)
 end
 function c101204034.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsPlayerCanDraw(tp,2) end
+	if chk==0 then return Duel.IsExistingMatchingCard(c101204034.cfilter,tp,LOCATION_ONFIELD+LOCATION_GRAVE,0,1,nil) and Duel.IsPlayerCanDraw(tp,2) end
 	Duel.SetTargetPlayer(tp)
 	Duel.SetTargetParam(2)
 	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,2)
@@ -51,9 +51,9 @@ end
 function c101204034.drop(e,tp,eg,ep,ev,re,r,rp)
 	local p=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER)
 	if Duel.Draw(p,2,REASON_EFFECT)==2 then
-		Duel.ShuffleHand(tp)
+		Duel.ShuffleHand(p)
 		Duel.BreakEffect()
-		Duel.DiscardHand(tp,nil,1,1,REASON_EFFECT+REASON_DISCARD)
+		Duel.DiscardHand(p,nil,1,1,REASON_EFFECT+REASON_DISCARD)
 	end
 end
 function c101204034.filter(c)
