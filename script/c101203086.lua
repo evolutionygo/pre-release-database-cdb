@@ -53,7 +53,7 @@ function s.cfilter2(c,tp,e)
 	return c:IsPreviousPosition(POS_FACEDOWN) and c:IsFaceup() and c:IsControler(tp) and c:IsType(TYPE_FLIP) and c:IsCanBeEffectTarget(e)
 end
 function s.damcon(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(s.cfilter2,1,nil,tp)
+	return eg:IsExists(s.cfilter2,1,nil,tp,e)
 end
 function s.damtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return eg:IsContains(chkc) and chkc:IsPreviousControler(tp)
