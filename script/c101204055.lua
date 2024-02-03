@@ -49,7 +49,7 @@ function c101204055.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetFlagEffect(tp,101204055)==0 end
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_FIELD)
-	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_OATH)
 	e1:SetCode(EFFECT_CANNOT_MSET)
 	e1:SetTargetRange(1,0)
 	e1:SetTarget(aux.TRUE)
@@ -98,7 +98,7 @@ function c101204055.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c101204055.drop(e,tp,eg,ep,ev,re,r,rp)
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
-	if Duel.Draw(p,d,REASON_EFFECT)~=0 and Duel.GetFlagEffect(tp,101204055)==0 then
+	if Duel.Draw(p,d,REASON_EFFECT)~=0 and Duel.GetFlagEffect(tp,101204155)==0 then
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetDescription(aux.Stringid(101204055,2))
 		e1:SetType(EFFECT_TYPE_FIELD)
@@ -109,7 +109,7 @@ function c101204055.drop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetTarget(c101204055.nttg)
 		e1:SetReset(RESET_PHASE+PHASE_END)
 		Duel.RegisterEffect(e1,tp)
-		Duel.RegisterFlagEffect(tp,101204055,RESET_PHASE+PHASE_END,EFFECT_FLAG_OATH,1)
+		Duel.RegisterFlagEffect(tp,101204155,RESET_PHASE+PHASE_END,EFFECT_FLAG_OATH,1)
 	end
 end
 function c101204055.ntcon(e,c,minc)
