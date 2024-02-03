@@ -48,6 +48,10 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		tc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id,0))
 	end
 end
+function s.aclimit(e,re,tp)
+	local c=re:GetHandler()
+	return e:GetLabel()~=c:GetFieldID()
+end
 function s.descost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	Duel.PayLPCost(tp,math.floor(Duel.GetLP(tp)/2))
@@ -57,7 +61,7 @@ function s.eqfilter(c)
 end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-	if chk==0 then return Duel.IsExistingMatchingCard(nil,tp,LOCATION_SZONE,LOCATION_SZONE,1,nil) and Duel.IsExistingMatchingCard(s.eqfilter,tp,LOCATION_DECK,0,5,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(nil,tp,LOCATION_SZONE,LOCATION_SZONE,1,nil) and Duel.IsExistingMatchingCard(s.eqfilter,tp,LOCATION_DECK+LOCATION_HAND,0,5,nil) end
 	local sg=Duel.GetMatchingGroup(nil,tp,LOCATION_SZONE,LOCATION_SZONE,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,sg,sg:GetCount(),0,0)
 end
@@ -84,6 +88,15 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 			tc:RegisterEffect(e2)
 		end
 	end
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_FIELD)
+	e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e3:SetCode(EFFECT_CANNOT_ACTIVATE)
+	e3:SetTargetRange(1,0)
+	e3:SetLabel(c:GetFieldID())
+	e3:SetValue(s.aclimit)
+	e3:SetReset(RESET_PHASE+PHASE_END)
+	Duel.RegisterEffect(e3,tp)
 end
 function s.eqlimit(e,c)
 	return c==e:GetLabelObject()
