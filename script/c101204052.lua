@@ -1,5 +1,4 @@
 --時の沈黙-ターン・サイレンス
---Coded by Lee
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddCodeList(c,101204051)
@@ -23,11 +22,20 @@ function s.initial_effect(c)
 	e2:SetOperation(s.baop)
 	c:RegisterEffect(e2)
 end
+function s.lvfilter(c)
+	return c:IsFaceup() and c:IsLevelAbove(1)
+end
 function s.lvtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsFaceup() and chkc:IsLocation(LOCATION_MZONE) and c:IsControler(tp) end
-	if chk==0 then return Duel.IsExistingTarget(Card.IsFaceup,tp,LOCATION_MZONE,0,1,nil) end
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and c:IsControler(tp) and s.lvfilter(chkc) end
+	if chk==0 then return Duel.IsExistingTarget(s.lvfilter,tp,LOCATION_MZONE,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
-	local g=Duel.SelectTarget(tp,Card.IsFaceup,tp,LOCATION_MZONE,0,1,1,nil)
+	local g=Duel.SelectTarget(tp,s.lvfilter,tp,LOCATION_MZONE,0,1,1,nil)
+end
+function s.nfilter1(c)
+	return c:IsFaceup() and c:IsCode(101204051)
+end
+function s.nfilter2(c)
+	return c:IsFaceup() and aux.IsCodeListed(c,101204051)
 end
 function s.lvop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
@@ -39,12 +47,12 @@ function s.lvop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetValue(3)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 		tc:RegisterEffect(e1)
-		local ct=Duel.GetCurrentChain()
-		if ct<2 then return end
-		local te,tep=Duel.GetChainInfo(ct-1,CHAININFO_TRIGGERING_EFFECT,CHAININFO_TRIGGERING_PLAYER)
-		if tep==1-tp and te:IsActiveType(TYPE_MONSTER) and Duel.IsExistingMatchingCard(Card.IsCode,tp,LOCATION_ONFIELD,0,1,nil,101204051) and Duel.IsExistingMatchingCard(aux.IsCodeListed,tp,LOCATION_MZONE,0,1,nil,101204051) then
-			Duel.NegateEffect(ct-1)
-		end
+	end
+	local ct=Duel.GetCurrentChain()
+	if ct<2 then return end
+	local te,tep=Duel.GetChainInfo(ct-1,CHAININFO_TRIGGERING_EFFECT,CHAININFO_TRIGGERING_PLAYER)
+	if tep==1-tp and te:IsActiveType(TYPE_MONSTER) and Duel.IsExistingMatchingCard(s.nfilter1,tp,LOCATION_ONFIELD,0,1,nil) and Duel.IsExistingMatchingCard(s.nfilter2,tp,LOCATION_MZONE,0,1,nil) then
+		Duel.NegateEffect(ct-1)
 	end
 end
 function s.bacon(e,tp,eg,ep,ev,re,r,rp)
@@ -52,7 +60,7 @@ function s.bacon(e,tp,eg,ep,ev,re,r,rp)
 	if tc:IsControler(1-tp) then tc=Duel.GetAttackTarget() end
 	if not tc then return false end
 	e:SetLabelObject(tc)
-	return aux.IsCodeListed(tc,101204051)
+	return tc:IsFaceup() and aux.IsCodeListed(tc,101204051)
 end
 function s.baop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()

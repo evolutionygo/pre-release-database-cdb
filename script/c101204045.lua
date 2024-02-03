@@ -65,6 +65,7 @@ function s.disop(e,tp,eg,ep,ev,re,r,rp)
 			end
 			if #g>0 then
 				Duel.BreakEffect()
+				Duel.HintSelection(g)
 				Duel.Destroy(g,REASON_EFFECT)
 			end
 		end
@@ -83,6 +84,7 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 	local g=Duel.GetFieldGroup(tp,LOCATION_ONFIELD,LOCATION_ONFIELD):Select(tp,1,1,nil)
 	if #g>0 then
+		Duel.HintSelection(g)
 		Duel.Destroy(g,REASON_EFFECT)
 	end
 end
