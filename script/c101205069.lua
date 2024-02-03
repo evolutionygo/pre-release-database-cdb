@@ -18,7 +18,7 @@ function s.cfilter1(c)
 	return aux.IsCodeListed(c,101204051) and c:IsFaceup()
 end
 function s.condition1(e,tp,eg,ep,ev,re,r,rp)
-	return tp~=Duel.GetTurnPlayer() and Duel.IsExistingMatchingCard(s.cfilter1,tp,LOCATION_MZONE,0,1,nil)
+	return tp~=Duel.GetTurnPlayer() and Duel.IsExistingMatchingCard(s.cfilter1,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil)
 end
 function s.filter(c)
 	return c:IsAttackPos()
@@ -65,5 +65,5 @@ function s.condition2(e,tp,eg,ep,ev,re,r,rp)
 	if tp==ep then return false end
 	if not re:IsActiveType(TYPE_MONSTER) then return false end
 	local ex,tg,tc=Duel.GetOperationInfo(ev,CATEGORY_DESTROY)
-	return ex and tg~=nil and tc+tg:FilterCount(s.cfilter3,nil)-tg:GetCount()>0 and Duel.IsExistingMatchingCard(s.cfilter1,tp,LOCATION_MZONE,0,1,nil)
+	return ex and tg~=nil and tc+tg:FilterCount(s.cfilter3,nil)-tg:GetCount()>0 and Duel.IsExistingMatchingCard(s.cfilter1,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil)
 end
