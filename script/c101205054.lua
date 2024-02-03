@@ -43,6 +43,7 @@ function s.setop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
 	local g=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_HAND,0,1,1,nil)
+	if #g==0 then return end
 	local tc=g:GetFirst()
 	if tc then
 		Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
@@ -53,8 +54,8 @@ function s.setop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD-RESET_TURN_SET)
 		e1:SetValue(TYPE_SPELL+TYPE_CONTINUOUS)
 		tc:RegisterEffect(e1)
+		tc:SetStatus(STATUS_EFFECT_ENABLED,true)
 	end
-	tc:SetStatus(STATUS_EFFECT_ENABLED,true)
 	if Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 then return end
 	Duel.BreakEffect()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
@@ -69,8 +70,8 @@ function s.setop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD-RESET_TURN_SET)
 		e1:SetValue(TYPE_SPELL+TYPE_CONTINUOUS)
 		stc:RegisterEffect(e1)
+		stc:SetStatus(STATUS_EFFECT_ENABLED,true)
 	end
-	stc:SetStatus(STATUS_EFFECT_ENABLED,true)
 end
 function s.repcon(e)
 	local c=e:GetHandler()

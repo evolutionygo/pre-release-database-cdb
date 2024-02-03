@@ -24,24 +24,9 @@ function s.tdfilter(c)
 	return not (c:IsLevelAbove(10) and c:IsSetCard(0xde) or c:IsSetCard(0x2ae) or c:IsFacedown())
 		and c:IsAbleToDeck()
 end
-function s.activate(e,tp,eg,ep,ev,re,r,rp)
-	if not Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_DECK+LOCATION_HAND+LOCATION_ONFIELD,0,5,nil) then return end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONFIRM)
-	local g=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_DECK+LOCATION_HAND+LOCATION_ONFIELD,0,5,5,nil,e,tp)
-	Duel.ConfirmCards(tp,g)
-	Duel.ConfirmCards(1-tp,g)
-	if g:FilterCount(Card.IsLocation,nil,LOCATION_HAND)>=1 then
-		Duel.ShuffleHand(tp)
-	end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local sg=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_EXTRA,0,1,1,nil,e,tp)
-	local tc=sg:GetFirst()
-	if not tc then return end
-	if Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP) then
-		local tg=Duel.GetMatchingGroup(s.tdfilter,tp,LOCATION_MZONE,0,nil)
-		Duel.SendtoDeck(tg,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)
-	end
-	local e1=Effect.CreateEffect(e:GetHandler())
+function s.afactivate(e,tp)
+	local c=e:GetHandler()
+	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetCode(EFFECT_CANNOT_SUMMON)
 	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_OATH)
@@ -54,4 +39,34 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local e3=e1:Clone()
 	e3:SetCode(EFFECT_CANNOT_FLIP_SUMMON)
 	Duel.RegisterEffect(e3,tp)
+	if c:IsRelateToEffect(e) and e:IsHasType(EFFECT_TYPE_ACTIVATE) then
+		c:CancelToGrave()
+		Duel.SendtoDeck(c,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)
+	end
+end
+function s.activate(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	if not Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_DECK+LOCATION_HAND+LOCATION_ONFIELD,0,5,nil) then
+		s.afactivate(e,tp)
+		return
+	end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONFIRM)
+	local g=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_DECK+LOCATION_HAND+LOCATION_ONFIELD,0,5,5,nil,e,tp)
+	Duel.ConfirmCards(tp,g)
+	Duel.ConfirmCards(1-tp,g)
+	if g:FilterCount(Card.IsLocation,nil,LOCATION_HAND)>=1 then
+		Duel.ShuffleHand(tp)
+	end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	local sg=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_EXTRA,0,1,1,nil,e,tp)
+	local tc=sg:GetFirst()
+	if not tc then
+		s.afactivate(e,tp)
+		return
+	end
+	if Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP) then
+		local tg=Duel.GetMatchingGroup(s.tdfilter,tp,LOCATION_MZONE,0,nil)
+		Duel.SendtoDeck(tg,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)
+	end
+	s.afactivate(e,tp)
 end
