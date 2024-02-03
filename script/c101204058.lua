@@ -26,7 +26,7 @@ function s.initial_effect(c)
 end
 function s.val(e,c)
 	local r=c:GetRace()
-	if bit.band(r,RACE_INSECT+RACE_PLANT+RACE_REPTILE)>0 then return 300
+	if bit.band(r,RACE_INSECT+RACE_PLANT+RACE_REPTILE)~=0 then return 300
 	else return -300 end
 end
 function s.filter1(c)
@@ -59,7 +59,7 @@ function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	end
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
-	if  e:GetLabel()==0 then
+	if e:GetLabel()==0 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 		local g=Duel.SelectMatchingCard(tp,s.filter1,tp,LOCATION_DECK,0,1,1,nil)
 		if g:GetCount()>0 and Duel.SendtoHand(g,nil,REASON_EFFECT)~=0 and g:GetFirst():IsLocation(LOCATION_HAND) then
