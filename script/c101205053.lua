@@ -21,8 +21,8 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 end
 function s.tdfilter(c)
-	return not (c:IsLevelAbove(10) and c:IsSetCard(0xde) or c:IsSetCard(0x2ae) or c:IsFacedown())
-		and c:IsAbleToDeck()
+	return c:IsFaceup() and bit.band(c:GetOriginalType(),TYPE_MONSTER)~=0 and c:IsAbleToDeck()
+		and not (c:GetOriginalLevel()>=10 and c:IsSetCard(0xde) or c:IsSetCard(0x2ae))
 end
 function s.afactivate(e,tp)
 	local c=e:GetHandler()
@@ -65,8 +65,11 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		return
 	end
 	if Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP) then
-		local tg=Duel.GetMatchingGroup(s.tdfilter,tp,LOCATION_MZONE,0,nil)
-		Duel.SendtoDeck(tg,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)
+		local tg=Duel.GetMatchingGroup(s.tdfilter,tp,LOCATION_ONFIELD,0,nil)
+		if #tg>0 then
+			Duel.BreakEffect()
+			Duel.SendtoDeck(tg,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)
+		end
 	end
 	s.afactivate(e,tp)
 end
