@@ -17,15 +17,42 @@ function s.spfilter(c,e,tp)
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and Duel.GetLocationCountFromEx(tp,tp,nil,c)>0
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_DECK+LOCATION_HAND+LOCATION_ONFIELD,0,5,nil) and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp) end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_DECK+LOCATION_HAND+LOCATION_ONFIELD,0,5,nil)
+		and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp)
+		and not Duel.IsExistingMatchingCard(s.ndfilter,tp,LOCATION_ONFIELD,0,1,nil,e,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 end
-function s.tdfilter(c)
-	return c:IsFaceup() and bit.band(c:GetOriginalType(),TYPE_MONSTER)~=0 and c:IsAbleToDeck()
+function s.dfilter(c)
+	return c:IsFaceup() and bit.band(c:GetOriginalType(),TYPE_MONSTER)~=0
 		and not (c:GetOriginalLevel()>=10 and c:IsSetCard(0xde) or c:IsSetCard(0x2ae))
 end
-function s.afactivate(e,tp)
+function s.tdfilter(c)
+	return s.dfilter(c) and c:IsAbleToDeck()
+end
+function s.ndfilter(c)
+	return s.dfilter(c) and not c:IsAbleToDeck()
+end
+function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
+	if Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_DECK+LOCATION_HAND+LOCATION_ONFIELD,0,5,nil) then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONFIRM)
+		local g=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_DECK+LOCATION_HAND+LOCATION_ONFIELD,0,5,5,nil,e,tp)
+		Duel.ConfirmCards(tp,g)
+		Duel.ConfirmCards(1-tp,g)
+		if g:FilterCount(Card.IsLocation,nil,LOCATION_HAND)>=1 then
+			Duel.ShuffleHand(tp)
+		end
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+		local sg=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_EXTRA,0,1,1,nil,e,tp)
+		local tc=sg:GetFirst()
+		if tc and Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP) then
+			local tg=Duel.GetMatchingGroup(s.tdfilter,tp,LOCATION_ONFIELD,0,nil)
+			if #tg>0 then
+				Duel.BreakEffect()
+				Duel.SendtoDeck(tg,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)
+			end
+		end
+	end
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetCode(EFFECT_CANNOT_SUMMON)
@@ -43,33 +70,4 @@ function s.afactivate(e,tp)
 		c:CancelToGrave()
 		Duel.SendtoDeck(c,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)
 	end
-end
-function s.activate(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	if not Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_DECK+LOCATION_HAND+LOCATION_ONFIELD,0,5,nil) then
-		s.afactivate(e,tp)
-		return
-	end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONFIRM)
-	local g=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_DECK+LOCATION_HAND+LOCATION_ONFIELD,0,5,5,nil,e,tp)
-	Duel.ConfirmCards(tp,g)
-	Duel.ConfirmCards(1-tp,g)
-	if g:FilterCount(Card.IsLocation,nil,LOCATION_HAND)>=1 then
-		Duel.ShuffleHand(tp)
-	end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local sg=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_EXTRA,0,1,1,nil,e,tp)
-	local tc=sg:GetFirst()
-	if not tc then
-		s.afactivate(e,tp)
-		return
-	end
-	if Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP) then
-		local tg=Duel.GetMatchingGroup(s.tdfilter,tp,LOCATION_ONFIELD,0,nil)
-		if #tg>0 then
-			Duel.BreakEffect()
-			Duel.SendtoDeck(tg,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)
-		end
-	end
-	s.afactivate(e,tp)
 end
