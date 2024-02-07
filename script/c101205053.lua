@@ -68,9 +68,8 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RegisterEffect(e3,tp)
 	if c:IsRelateToEffect(e) and e:IsHasType(EFFECT_TYPE_ACTIVATE) then
 		c:CancelToGrave()
-		if c:IsAbleToDeck() then 
-			Duel.SendtoDeck(c,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)
-		else
+		Duel.SendtoDeck(c,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)
+		if c:IsLocation(LOCATION_ONFIELD) then
 			c:CancelToGrave(false)
 		end
 	end
