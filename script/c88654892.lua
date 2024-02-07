@@ -13,8 +13,10 @@ function c88654892.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c88654892.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	e:SetLabel(100)
-	return true
+	if chk==0 then return Duel.CheckReleaseGroup(REASON_COST,tp,c88654892.filter1,1,nil,e,tp,ft) end
+	local rg=Duel.SelectReleaseGroup(tp,c88654892.filter1,1,1,nil,e,tp,ft)
+	e:SetLabel(rg:GetFirst():GetLevel())
+	Duel.Release(rg,REASON_COST)
 end
 function c88654892.filter1(c,e,tp,ft)
 	local lv=c:GetLevel()
@@ -26,14 +28,7 @@ function c88654892.filter2(c,lv,e,tp)
 end
 function c88654892.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
-	if chk==0 then
-		if e:GetLabel()~=100 then return false end
-		e:SetLabel(0)
-		return ft>-1 and Duel.CheckReleaseGroup(REASON_COST,tp,c88654892.filter1,1,nil,e,tp,ft)
-	end
-	local rg=Duel.SelectReleaseGroup(REASON_COST,tp,c88654892.filter1,1,1,nil,e,tp,ft)
-	e:SetLabel(rg:GetFirst():GetLevel())
-	Duel.Release(rg,REASON_COST)
+	if chk==0 then return ft>-1 and e:IsCostChecked() end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK)
 end
 function c88654892.activate(e,tp,eg,ep,ev,re,r,rp)
