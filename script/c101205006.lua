@@ -1,7 +1,7 @@
---黑色魔术师-黑魔术师
+--黒き魔術師－ブラック・マジシャン
 local s,id,o=GetID()
 function s.initial_effect(c)
-	aux.AddCodeList(c,101204051)
+	aux.AddCodeList(c,79791878)
 	aux.EnableChangeCode(c,46986414)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
@@ -26,7 +26,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function s.cfilter1(c)
-	return c:IsCode(101204051) and c:IsFaceup()
+	return c:IsCode(79791878) and c:IsFaceup()
 end
 function s.spcon1(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(s.cfilter1,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil)

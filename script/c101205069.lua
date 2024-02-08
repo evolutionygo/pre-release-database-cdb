@@ -1,7 +1,7 @@
 --黒魔術のバリア－ミラーフォース－
 local s,id,o=GetID()
 function s.initial_effect(c)
-	aux.AddCodeList(c,101204051,46986414)
+	aux.AddCodeList(c,79791878,46986414)
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_DESTROY+CATEGORY_DAMAGE)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
@@ -16,7 +16,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function s.cfilter1(c)
-	return aux.IsCodeListed(c,101204051) and c:IsFaceup()
+	return aux.IsCodeListed(c,79791878) and c:IsFaceup()
 end
 function s.condition1(e,tp,eg,ep,ev,re,r,rp)
 	return tp~=Duel.GetTurnPlayer() and Duel.IsExistingMatchingCard(s.cfilter1,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil)
@@ -52,7 +52,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.efftg(e,c)
-	return aux.IsCodeListed(c,101204051)
+	return aux.IsCodeListed(c,79791878)
 end
 function s.indct(e,re,r,rp)
 	if bit.band(r,REASON_BATTLE+REASON_EFFECT)~=0 then
