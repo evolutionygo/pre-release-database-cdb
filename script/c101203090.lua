@@ -50,7 +50,6 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	if c:IsRelateToEffect(e) and Duel.SpecialSummon(c,0,tp,1-tp,false,false,POS_FACEUP)>0 then
 		local tc=Duel.GetFirstTarget()
 		if tc:IsRelateToEffect(e) and Duel.Destroy(tc,REASON_EFFECT)>0 then
-			Duel.BreakEffect()
 			local b1=Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil)
 			local b2=Duel.IsExistingMatchingCard(s.setfilter,tp,LOCATION_DECK,0,1,nil)
 			if not b1 and not b2 then return end
@@ -58,6 +57,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 				{b1,1190},
 				{b2,1153},
 				{true,aux.Stringid(id,2)})
+			if op<3 then Duel.BreakEffect() end
 			if op==1 then
 				local thc=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_DECK,0,1,1,nil)
 				Duel.SendtoHand(thc,tp,REASON_EFFECT)
