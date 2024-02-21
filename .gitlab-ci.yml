@@ -53,7 +53,7 @@ merge_databases:
     FIELDS: 'name,desc,overallString,picUrl'
     GIT_DEPTH: '1000'
     OUTPUT_FILENAME: test-release.json
-    REF_COMMIT: '1.63' # 更新的时候改这里
+    REF_COMMIT: '1.66' # 更新的时候改这里
   script:
     - apt update;apt -y install wget
     - currentPath=$PWD
