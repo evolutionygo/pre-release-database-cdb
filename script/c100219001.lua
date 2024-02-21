@@ -1,8 +1,7 @@
 --デーモンの光来
 local s,id,o=GetID()
 function s.initial_effect(c)
-	aux.AddCodeList(c,101204051)
-	--aux.AddCodeList(c,79791878)
+	aux.AddCodeList(c,79791878)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE)
@@ -34,7 +33,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 function s.ntfilter(c)
-	return c:IsFaceup() and c:IsCode(101204051)-- and c:IsCode(79791878)
+	return c:IsFaceup() and c:IsCode(79791878)
 end
 function s.ntcon(e,c,minc)
 	if c==nil then return true end
