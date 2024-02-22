@@ -86,10 +86,10 @@ neos:
   script:
     - apt update && apt -y install sqlite3
     - mkdir neos
-    - sqlite3 test-release.cdb >> ygopro-super-pre-neos.sql
-    - sqlite3 test-update.cdb >> ygopro-super-pre-neos.sql
+    - sqlite3 test-release.cdb .dump >> ygopro-super-pre-neos.sql
+    - sqlite3 test-update.cdb .dump >> ygopro-super-pre-neos.sql
     - wget -O cards.cdb https://code.mycard.moe/mycard/ygopro-database/-/raw/master/locales/zh-CN/cards.cdb
-    - sqlite3 cards.cdb >> ygopro-super-pre-neos.sql
+    - sqlite3 cards.cdb .dump >> ygopro-super-pre-neos.sql
     - cat ygopro-super-pre-neos.sql | sqlite3 neos/ygopro-super-pre-neos.cdb || true
   artifacts:
     paths:
