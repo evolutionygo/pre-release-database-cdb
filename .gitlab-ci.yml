@@ -90,7 +90,7 @@ neos:
     - sqlite3 test-update.cdb >> ygopro-super-pre-neos.sql
     - wget -O cards.cdb https://code.mycard.moe/mycard/ygopro-database/-/raw/master/locales/zh-CN/cards.cdb
     - sqlite3 cards.cdb >> ygopro-super-pre-neos.sql
-    - cat ygopro-super-pre-neos.sql | sqlite3 neos/ygopro-super-pre-neos.sql || true
+    - cat ygopro-super-pre-neos.sql | sqlite3 neos/ygopro-super-pre-neos.cdb || true
   artifacts:
     paths:
       - neos
