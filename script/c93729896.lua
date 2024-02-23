@@ -31,10 +31,10 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		local sg=g:Select(tp,1,1,nil)
 		local tc=sg:GetFirst()
 		if tc:IsAbleToHand() and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
-			Duel.SendtoHand(tc,nil,REASON_EFFECT)
-			Duel.ConfirmCards(1-tp,tc)
-		else
 			Duel.Destroy(tc,REASON_EFFECT)
+		else
+			Duel.SendtoHand(tc,nil,REASON_EFFECT)
+			Duel.ConfirmCards(1-tp,tc)	
 		end
 	end
 end
