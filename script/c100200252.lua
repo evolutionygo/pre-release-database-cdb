@@ -29,7 +29,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function s.cfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x7)
+	return c:IsFaceup() and c:IsRace(RACE_MACHINE) and c:IsAttribute(ATTRIBUTE_EARTH)
 end
 function s.ntcon(e,c,minc)
 	if c==nil then return true end
@@ -42,8 +42,8 @@ function s.discon(e,tp,eg,ep,ev,re,r,rp)
 		and re:IsActiveType(TYPE_SPELL+TYPE_TRAP) and Duel.IsChainNegatable(ev)
 end
 function s.cfilter(c)
-	return c:IsRace(RACE_MACHINE) and c:IsLocation(LOCATION_HAND+LOCATION_MZONE)
-		or c:IsCode(83104731) and c:IsLocation(LOCATION_DECK)
+	return (c:IsRace(RACE_MACHINE) and c:IsLocation(LOCATION_HAND+LOCATION_MZONE)
+		or c:IsCode(83104731) and c:IsLocation(LOCATION_DECK))
 		and c:IsAbleToGraveAsCost() and c:IsFaceupEx()
 end
 function s.discost(e,tp,eg,ep,ev,re,r,rp,chk)
