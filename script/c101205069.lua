@@ -37,6 +37,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	if g:GetCount()>0 then
 		local ct=Duel.Destroy(g,REASON_EFFECT)
 		if Duel.IsExistingMatchingCard(s.cfilter2,tp,LOCATION_ONFIELD,0,1,nil) then
+			Duel.BreakEffect()
 			Duel.Damage(1-tp,ct*500,REASON_EFFECT)
 		end
 	end
