@@ -54,12 +54,12 @@ end
 function s.atktg(e,c)
 	return not c:IsRace(RACE_FIEND)
 end
-function s.cfilter(c,tp)
+function s.cfilter2(c,tp)
 	return c:IsPreviousControler(tp) and c:IsPreviousLocation(LOCATION_MZONE) and c:IsPreviousPosition(POS_FACEUP)
 		and c:IsSetCard(0x2b0)
 end
 function s.setcon(e,tp,eg,ep,ev,re,r,rp)
-	return rp==1-tp and eg:IsExists(s.cfilter,1,e:GetHandler(),tp)
+	return rp==1-tp and eg:IsExists(s.cfilter2,1,e:GetHandler(),tp)
 end
 function s.settg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
