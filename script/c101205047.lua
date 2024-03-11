@@ -27,7 +27,7 @@ function s.lcheck(g)
 	return g:IsExists(s.mfilter,1,nil)
 end
 function s.mfilter(c)
-	return c:IsLinkRace(RACE_FIEND) and c:IsAttribute(ATTRIBUTE_LIGHT)
+	return c:IsLinkRace(RACE_FIEND) and c:IsLinkAttribute(ATTRIBUTE_LIGHT)
 end
 function s.filter0(c)
 	return c:IsType(TYPE_MONSTER) and c:IsAbleToDeck()
@@ -99,7 +99,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.eqfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x2b0) and not c:IsType(TYPE_LINK)
+	return c:IsFaceup() and c:IsRace(RACE_FIEND) and c:IsAttribute(ATTRIBUTE_LIGHT) and not c:IsType(TYPE_LINK)
 end
 function s.eqtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and s.eqfilter(chkc) end
@@ -113,7 +113,7 @@ end
 function s.eqop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if c:IsRelateToEffect(e) and tc:IsFaceup() and tc:IsRelateToEffect(e) and tc:IsControler(tp) then
+	if c:IsRelateToEffect(e) and c:IsFaceup() and c:IsControler(tp) and tc:IsFaceup() and tc:IsRelateToEffect(e) and tc:IsControler(tp) then
 		if not Duel.Equip(tp,c,tc) then return end
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
