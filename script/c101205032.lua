@@ -55,7 +55,8 @@ function s.fselect(g,atk)
 	return sum>=atk and not g:IsExists(Card.IsAttackBelow,1,nil,sum-atk)
 end
 function s.distg(e,tp,eg,ep,ev,re,r,rp,chk)
-	local atk=re:GetHandler():GetBaseAttack()
+	--local atk=re:GetHandler():GetBaseAttack()
+	local atk=re:GetHandler():GetTextAttack()
 	local g=Duel.GetMatchingGroup(s.costfilter,tp,LOCATION_GRAVE,0,nil)
 	if chk==0 then
 		if e:GetLabel()~=100 then return false end
