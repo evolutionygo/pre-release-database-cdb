@@ -37,7 +37,7 @@ function s.tgtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function s.tgop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if not tc:IsRelateToEffect(e) or not c:IsType(TYPE_MONSTER) then return end
+	if not tc:IsRelateToEffect(e) or not tc:IsType(TYPE_MONSTER) then return end
 	if tc then
 		local dg=Duel.GetMatchingGroup(Card.IsAbleToGrave,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,tc)
 		Duel.SendtoGrave(dg,REASON_EFFECT)
