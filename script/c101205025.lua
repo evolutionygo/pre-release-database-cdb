@@ -27,7 +27,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function s.cfilter(c)
-	return c:IsControler(tp) and c:IsPreviousLocation(LOCATION_MZONE+LOCATION_HAND) and c:GetOriginalRace()&RACE_THUNDER==RACE_THUNDER and c:GetOriginalType&TYPE_MONSTER==TYPE_MONSTER
+	return c:IsPreviousControler(tp) and c:IsPreviousLocation(LOCATION_MZONE+LOCATION_HAND) and c:GetOriginalRace()&RACE_THUNDER==RACE_THUNDER and c:GetOriginalType&TYPE_MONSTER==TYPE_MONSTER
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.cfilter,1,nil)
