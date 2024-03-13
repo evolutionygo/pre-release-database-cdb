@@ -44,12 +44,9 @@ end
 function s.cfilter(c,sp)
 	return c:IsSummonPlayer(sp) and c:IsFaceup()
 end
-function s.lpcon(e,tp,eg,ep,ev,re,r,rp)
-	return (Duel.GetCurrentPhase()==PHASE_MAIN1 or Duel.GetCurrentPhase()==PHASE_MAIN2)
-		and eg:IsExists(s.cfilter,1,nil,1-tp)
-end
 function s.lpcon1(e,tp,eg,ep,ev,re,r,rp)
 	return (Duel.GetCurrentPhase()==PHASE_MAIN1 or Duel.GetCurrentPhase()==PHASE_MAIN2)
+		and eg:IsExists(s.cfilter,1,nil,1-tp)
 		and (not re:IsHasType(EFFECT_TYPE_ACTIONS) or re:IsHasType(EFFECT_TYPE_CONTINUOUS))
 end
 function s.lpop1(e,tp,eg,ep,ev,re,r,rp)
@@ -59,6 +56,7 @@ function s.lpop1(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.regcon(e,tp,eg,ep,ev,re,r,rp)
 	return (Duel.GetCurrentPhase()==PHASE_MAIN1 or Duel.GetCurrentPhase()==PHASE_MAIN2)
+		and eg:IsExists(s.cfilter,1,nil,1-tp)
 		and re:IsHasType(EFFECT_TYPE_ACTIONS) and not re:IsHasType(EFFECT_TYPE_CONTINUOUS)
 end
 function s.regop(e,tp,eg,ep,ev,re,r,rp)
@@ -78,6 +76,7 @@ end
 function s.lpop2(e,tp,eg,ep,ev,re,r,rp)
 	e:GetHandler():ResetFlagEffect(id)
 	local lg=e:GetLabelObject():GetLabelObject()
+	lg=lg:Filter(Card.IsLocation,nil,LOCATION_MZONE)
 	local rnum=lg:GetSum(Card.GetAttack)
 	local g=Group.CreateGroup()
 	g:KeepAlive()
@@ -111,8 +110,5 @@ function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetValue(e:GetLabel())
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_DISABLE)
 		c:RegisterEffect(e1)
-		local e2=e1:Clone()
-		e2:SetCode(EFFECT_UPDATE_DEFENSE)
-		c:RegisterEffect(e2)
 	end
 end
