@@ -37,7 +37,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function s.indtg(e,c)
-	return c~=e:GetHandler()
+	return c~=e:GetHandler() and c:IsFaceup() and c:IsSetCard(0x154)
 end
 function s.discon(e,tp,eg,ep,ev,re,r,rp)
 	return ep==1-tp and re:IsActiveType(TYPE_MONSTER) and Duel.IsChainNegatable(ev)
