@@ -96,7 +96,7 @@ function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		sg=Duel.SelectTarget(tp,aux.IsInGroup,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil,g)
 	end
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,sg,1,0,0)
-	if math.max(0,sg:GetFirst():GetTextAttack())>0 then
+	if sg:GetFirst():IsFaceup() and math.max(0,sg:GetFirst():GetTextAttack())>0 then
 		Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,0)
 	end
 end
