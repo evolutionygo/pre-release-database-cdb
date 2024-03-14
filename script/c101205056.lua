@@ -51,7 +51,7 @@ function s.indtg(e,c)
 	return c:IsSetCard(0x1083) and c:IsFaceup()
 end
 function s.efilter(e,re)
-	return e:GetHandlerPlayer()~=re:GetOwnerPlayer() and re:IsActivated() and re:GetHandler():IsType(TYPE_MONSTER) and not re:GetHandler():IsType(TYPE_XYZ)
+	return e:GetHandlerPlayer()~=re:GetOwnerPlayer() and re:IsActivated() and re:IsActiveType(TYPE_MONSTER) and not re:GetHandler():IsType(TYPE_XYZ)
 end
 function s.spfilter(c,e,tp)
 	return c:IsSetCard(0x1083) and c:IsType(TYPE_MONSTER) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE,1-tp)
