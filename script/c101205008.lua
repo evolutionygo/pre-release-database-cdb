@@ -64,7 +64,7 @@ end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local lv=e:GetLabel()
-	if not c:IsRelateToEffect(e) or Duel.IsPlayerAffectedByEffect(tp,59822133) then return end		
+	if not c:IsRelateToEffect(e) or Duel.IsPlayerAffectedByEffect(tp,59822133) or not c:IsCanBeSpecialSummoned(e,0,tp,false,false) then return end		
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local tc=Duel.SelectMatchingCard(tp,s.spfilter2,tp,LOCATION_DECK,0,1,1,nil,e,tp,lv):GetFirst()
 	if tc and Duel.GetLocationCount(tp,LOCATION_MZONE)>1 then
