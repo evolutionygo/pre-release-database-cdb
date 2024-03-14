@@ -92,7 +92,7 @@ function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		sg=g:Clone()
 		Duel.SetTargetCard(sg)
 	else
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
+		Duel.Hint(HINTMSG_DESTROY,tp,HINTMSG_TOGRAVE)
 		sg=Duel.SelectTarget(tp,aux.IsInGroup,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil,g)
 	end
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,sg,1,0,0)
