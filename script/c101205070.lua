@@ -1,4 +1,4 @@
---傀儡游仪-超待傀儡
+--傀儡遊儀－サービスト・パペット
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--Activate

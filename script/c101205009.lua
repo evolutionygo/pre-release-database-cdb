@@ -1,4 +1,4 @@
---机关傀儡-悲啸牛
+--ギミック・パペット－カトル・スクリーム
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--special summon

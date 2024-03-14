@@ -1,4 +1,4 @@
---机关傀儡-机幻降神
+--ギミック・パペット－ファンタジクス・マキナ
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--xyz summon

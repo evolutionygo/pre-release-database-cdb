@@ -1,4 +1,4 @@
---地狱人形之馆
+--地獄人形の館
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--Activate

@@ -1,4 +1,4 @@
---机关傀儡-小小卫队
+--ギミック・パペット－リトル・ソルジャーズ
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--level

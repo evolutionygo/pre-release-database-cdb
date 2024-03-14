@@ -1,4 +1,4 @@
---混沌超量 机关傀儡-热械降神
+--CX ギミック・パペット－ファナティクス・マキナ
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--xyz summon

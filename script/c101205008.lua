@@ -1,4 +1,4 @@
---机关傀儡-血腥人偶
+--ギミック・パペット－ブラッディ・ドール
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--spsummon
@@ -33,6 +33,7 @@ function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetCustomActivityCount(id,tp,ACTIVITY_SPSUMMON)==0 and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONFIRM)
 	local sc=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_EXTRA,0,1,1,nil,e,tp):GetFirst()
+	Duel.ConfirmCards(1-tp,sc)
 	e:SetLabel(sc:GetRank())
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_FIELD)
