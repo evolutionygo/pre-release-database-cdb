@@ -7,7 +7,7 @@ function s.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e1:SetCode(EVENT_TO_GRAVE)
 	e1:SetRange(LOCATION_HAND)
-	e1:SetProperty(EFFECT_FLAG_DELAY)
+	e1:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
 	e1:SetCountLimit(1,id)
 	e1:SetCondition(s.spcon)
 	e1:SetTarget(s.sptg)
@@ -27,7 +27,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function s.cfilter(c)
-	return c:IsPreviousLocation(LOCATION_MZONE+LOCATION_HAND) and c:GetOriginalRace()&RACE_THUNDER==RACE_THUNDER
+	return c:IsPreviousControler(tp) and c:IsPreviousLocation(LOCATION_MZONE+LOCATION_HAND) and c:GetOriginalRace()&RACE_THUNDER==RACE_THUNDER and c:GetOriginalType()&TYPE_MONSTER==TYPE_MONSTER
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.cfilter,1,nil)
