@@ -133,6 +133,5 @@ function s.csbop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.lklimit(e,c)
-	if not c then return false end
-	return c:IsControler(e:GetHandlerPlayer())
+	return c~=e:GetHandler()
 end
