@@ -6,12 +6,13 @@ function s.initial_effect(c)
 	e1:SetCategory(CATEGORY_DESTROY+CATEGORY_DAMAGE)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
-	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e1:SetCode(EVENT_CUSTOM+id)
 	e1:SetCountLimit(1,id)
 	e1:SetCondition(s.descon)
 	e1:SetTarget(s.destg)
 	e1:SetOperation(s.desop)
 	c:RegisterEffect(e1)
+	aux.RegisterMergedDelayedEvent(c,id,EVENT_SPSUMMON_SUCCESS)
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
@@ -26,7 +27,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function s.cfilter(c,tp)
-	return c:IsPreviousControler(1-tp)
+	return c:IsSummonPlayer(1-tp)
 end
 function s.cfilter2(c)
 	return c:IsType(TYPE_LINK) and c:IsFaceup()
@@ -40,7 +41,7 @@ end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chkc then return eg:IsContains(chkc) and s.filter(chkc,e) end
 	if chk==0 then return eg:IsExists(s.filter,1,nil,e) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_POSCHANGE)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 	local g=eg:FilterSelect(tp,s.filter,1,1,nil,e)
 	Duel.SetTargetCard(g)
 	local tc=g:GetFirst()
@@ -52,7 +53,7 @@ function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and tc:IsLocation(LOCATION_MZONE) and Duel.Destroy(tc,REASON_EFFECT)~=0 then
+	if tc:IsRelateToEffect(e) and tc:IsLocation(LOCATION_MZONE) and tc:IsType(TYPE_MONSTER) and Duel.Destroy(tc,REASON_EFFECT)~=0 then
 		local atk=math.floor(tc:GetTextAttack()/2)
 		if atk>0 then
 			Duel.Damage(1-tp,atk,REASON_EFFECT)
@@ -66,10 +67,13 @@ function s.setfilter(c)
 	return c:IsFaceupEx() and c:GetType()==TYPE_SPELL and c:IsSSetable()
 end
 function s.settg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_GRAVE+LOCATION_REMOVED) and s.thfilter(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(s.thfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil) end
+	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_GRAVE+LOCATION_REMOVED) and s.setfilter(chkc) end
+	if chk==0 then return Duel.IsExistingTarget(s.setfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SET)
-	local g=Duel.SelectTarget(tp,s.thfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,1,nil)
+	local g=Duel.SelectTarget(tp,s.setfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,1,nil)
+	if g:GetFirst():IsLocation(LOCATION_GRAVE) then
+		Duel.SetOperationInfo(0,CATEGORY_LEAVE_GRAVE,g,g:GetCount(),0,0)
+	end
 end
 function s.setop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
