@@ -1,4 +1,4 @@
---淘气仙星·可儿琪华
+--トリックスター・コルチカ
 local s,id,o=GetID()
 function s.initial_effect(c)
 	c:SetSPSummonOnce(id)
@@ -24,8 +24,8 @@ end
 function s.damcon(e,tp,eg,ep,ev,re,r,rp)
 	local rc=eg:GetFirst()
 	local bc=rc:GetBattleTarget()
-	return rc:IsRelateToBattle() and rc:IsStatus(STATUS_OPPO_BATTLE) and bc:IsType(TYPE_MONSTER)
-		and bc:IsLocation(LOCATION_GRAVE+LOCATION_REMOVED) and bc:IsFaceupEx()
+	return rc:IsRelateToBattle() and rc:IsStatus(STATUS_OPPO_BATTLE) and rc:IsSetCard(0xfb)
+		and bc:IsType(TYPE_MONSTER) and bc:IsLocation(LOCATION_GRAVE+LOCATION_REMOVED) and bc:IsFaceupEx()
 end
 function s.damtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local rc=eg:GetFirst()

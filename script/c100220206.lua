@@ -44,14 +44,16 @@ function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=eg:FilterSelect(tp,s.filter,1,1,nil,e)
 	Duel.SetTargetCard(g)
 	local tc=g:GetFirst()
-	local dam=math.max(math.floor(tc:GetBaseAttack()/2),0)
+	local dam=math.max(math.floor(tc:GetTextAttack()/2),0)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,tc,1,0,0)
-	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,dam)
+	if tc:IsFaceup() and dam>0 then
+		Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,dam)
+	end
 end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) and tc:IsLocation(LOCATION_MZONE) and Duel.Destroy(tc,REASON_EFFECT)~=0 then
-		local atk=math.floor(tc:GetBaseAttack()/2)
+		local atk=math.floor(tc:GetTextAttack()/2)
 		if atk>0 then
 			Duel.Damage(1-tp,atk,REASON_EFFECT)
 		end
