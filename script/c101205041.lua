@@ -73,7 +73,8 @@ function s.splimit(e,c)
 end
 function s.cfilter(c,tp)
 	local bc=c:GetBattleTarget()
-	return (c:IsRace(RACE_CYBERSE) and c:IsControler(tp) or (bc and bc:IsRace(RACE_CYBERSE) and bc:IsControler(tp))) and (not bc or c:GetControler()~=bc:GetControler())
+	if not bc then return false end
+	return (c:IsRace(RACE_CYBERSE) and c:IsControler(tp) or (bc:IsRace(RACE_CYBERSE) and bc:IsControler(tp))) and c:GetControler()~=bc:GetControler()
 end
 function s.damcon(e,tp,eg,ep,ev,re,r,rp)
 	return ep~=tp and eg:IsExists(s.cfilter,1,nil,tp)
