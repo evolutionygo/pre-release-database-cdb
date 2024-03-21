@@ -1,4 +1,4 @@
--- 爆撃獸ファイヤ・ボンバー
+--爆撃獸ファイヤ・ボンバー
 local s,id,o=GetID()
 function s.initial_effect(c)
 	c:EnableReviveLimit()
@@ -39,10 +39,14 @@ function s.destg2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 	local g=Duel.SelectTarget(tp,aux.AND(Card.IsAttackBelow,Card.IsFaceup),tp,0,LOCATION_MZONE,1,1,nil,1900)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,0)
 end
 function s.desop2(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and tc:IsLocation(LOCATION_MZONE) then
-		Duel.Destroy(tc,REASON_EFFECT)
+	if tc:IsRelateToEffect(e) and tc:IsLocation(LOCATION_MZONE) and Duel.Destroy(tc,REASON_EFFECT)~=0 then
+		local atk=tc:GetTextAttack()
+		if atk>0 then
+			Duel.Damage(1-tp,atk,REASON_EFFECT)
+		end
 	end
 end
