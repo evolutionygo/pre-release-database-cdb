@@ -50,7 +50,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local op=0
 	if res and Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_EXTRA,0,1,nil) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EFFECT)
-		op=Duel.SelectOption(tp,aux.Stringid(id,2),aux.Stringid(8842266,3))+1
+		op=Duel.SelectOption(tp,aux.Stringid(id,2),aux.Stringid(id,3))+1
 	elseif res then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EFFECT)
 		op=Duel.SelectOption(tp,aux.Stringid(id,2))+1
