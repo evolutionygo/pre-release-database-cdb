@@ -1,7 +1,7 @@
 --Veidos Der Drache Der Endlosen Finsternis
 local s,id,o=GetID()
 function s.initial_effect(c)
-	aux.AddFusionProcCodeFun(c,78783557,s.ffilter,2,true,true)
+	aux.AddFusionProcCodeFunRep(c,78783557,s.ffilter,2,127,true,true)
 	c:EnableReviveLimit()
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
@@ -71,9 +71,9 @@ function s.costfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0x1ad) and c:IsAbleToGraveAsCost()
 end
 function s.descost2(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.costfilter,tp,LOCATION_ONFIELD,0,1,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.costfilter,tp,LOCATION_ONFIELD,0,1,re:GetHandler()) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local g=Duel.SelectMatchingCard(tp,s.costfilter,tp,LOCATION_ONFIELD,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,s.costfilter,tp,LOCATION_ONFIELD,0,1,1,re:GetHandler())
 	Duel.SendtoGrave(g,REASON_COST)
 end
 function s.destg2(e,tp,eg,ep,ev,re,r,rp,chk)
