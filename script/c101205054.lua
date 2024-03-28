@@ -88,5 +88,5 @@ function s.repop(e,tp,eg,ep,ev,re,r,rp)
 	c:RegisterEffect(e1)
 end
 function s.eftg(e,c)
-	return c:IsType(TYPE_EFFECT) and c:IsSetCard(0x2ae)
+	return c:IsSetCard(0x2ae)
 end
