@@ -1,7 +1,7 @@
 --蕾禍ノ玄神憑月
 local s,id,o=GetID()
 function s.initial_effect(c)
-	aux.AddLinkProcedure(c,nil,2,99,s.lcheck)
+	aux.AddLinkProcedure(c,s.lkfilter,2,99)
 	c:EnableReviveLimit()
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
@@ -25,8 +25,8 @@ function s.initial_effect(c)
 	e2:SetOperation(s.spop)
 	c:RegisterEffect(e2)
 end
-function s.lcheck(g)
-	return g:IsExists(Card.IsLinkRace,1,nil,RACE_INSECT+RACE_PLANT+RACE_REPTILE)
+function s.lkfilter(c)
+	return c:IsLinkRace(RACE_INSECT+RACE_PLANT+RACE_REPTILE)
 end
 function s.costfilter(c)
 	return c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost()
