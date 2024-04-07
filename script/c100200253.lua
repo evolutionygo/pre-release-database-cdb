@@ -32,7 +32,7 @@ function s.counterfilter(c)
 	return c:IsAttribute(ATTRIBUTE_LIGHT)
 end
 function s.spfilter(c,tp,se)
-	return c:IsControler(tp) and c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsFaceup()
+	return c:IsControler(tp) and c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsLevel(4) and c:IsFaceup()
 		and (se==nil or c:GetReasonEffect()~=se)
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
