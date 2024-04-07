@@ -76,7 +76,7 @@ function s.lvfilter(c)
 end
 function s.lvtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and s.filter(chkc) and chkc~=c end
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and s.lvfilter(chkc) and chkc~=c end
 	if chk==0 then return c:IsLevelAbove(1) and not c:IsLevel(8) and Duel.IsExistingTarget(s.lvfilter,tp,LOCATION_MZONE,0,1,c) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
 	Duel.SelectTarget(tp,s.lvfilter,tp,LOCATION_MZONE,0,1,1,c)
@@ -84,8 +84,7 @@ end
 function s.lvop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	local g=Group.CreateGroup()
-	if c:IsRelateToEffect(e) and c:IsFaceup() and not c:IsLevel(8) and tc:IsRelateToEffect(e) and tc:IsFaceup() and not tc:IsLevel(8) then
+	if c:IsRelateToEffect(e) and c:IsControler(tp) and c:IsFaceup() and c:IsLocation(LOCATION_MZONE) and not c:IsLevel(8) and tc:IsRelateToEffect(e) and tc:IsFaceup() and tc:IsLocation(LOCATION_MZONE) and not tc:IsLevel(8) then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_CHANGE_LEVEL)
