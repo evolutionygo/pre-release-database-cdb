@@ -1,14 +1,15 @@
 --白の枢機竜
 local s,id,o=GetID()
 function s.initial_effect(c)
+	aux.AddCodeList(c,68468459)
 	--aux.AddFusionProcCodeFun(c,68468459,s.mfilter,6,true,true)
 	c:EnableReviveLimit()
 	local e0=Effect.CreateEffect(c)
 	e0:SetType(EFFECT_TYPE_SINGLE)
 	e0:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 	e0:SetCode(EFFECT_FUSION_MATERIAL)
-	e0:SetCondition(s.FShaddollCondition())
-	e0:SetOperation(s.FShaddollOperation())
+	e0:SetCondition(s.Alba_System_Drugmata_Fusion_Condition())
+	e0:SetOperation(s.Alba_System_Drugmata_Fusion_Operation())
 	c:RegisterEffect(e0)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
@@ -40,22 +41,18 @@ function s.initial_effect(c)
 	e4:SetOperation(s.tgop)
 	c:RegisterEffect(e4)
 end
-function s.mfilter(c,fc,sub,mg,sg)
-	return c:IsLocation(LOCATION_GRAVE) and c:IsControler(fc:GetControler()) and 
-		(not sg or not sg:IsExists(Card.IsFusionCode,1,c,c:GetFusionCode()))
-end
-function s.FShaddollFilter(c,mg,fc,tp,chkf,gc)
+function s.Alba_System_Drugmata_Fusion_Filter(c,mg,fc,tp,chkf,gc)
 	if not c:IsFusionCode(68468459) and not c:IsHasEffect(EFFECT_FUSION_SUBSTITUTE) then return false end
 	local g=mg:Filter(s.matfilter,c,tp)
 	aux.GCheckAdditional=aux.dncheck
-	local res=g:CheckSubGroup(s.FShaddollSpgcheck,6,6,fc,tp,c,chkf,gc)
+	local res=g:CheckSubGroup(s.Alba_System_Drugmata_Fusion_Gcheck,6,6,fc,tp,c,chkf,gc)
 	aux.GCheckAdditional=nil
 	return res
 end
 function s.matfilter(c,fc)
 	return c:IsLocation(LOCATION_GRAVE) and c:IsControler(tp) and not c:IsHasEffect(6205579)
 end
-function s.FShaddollSpgcheck(g,fc,tp,ec,chkf,gc)
+function s.Alba_System_Drugmata_Fusion_Gcheck(g,fc,tp,ec,chkf,gc)
 	local sg=g:Clone()
 	sg:AddCard(ec)
 	if sg:IsExists(aux.TuneMagicianCheckX,1,nil,sg,EFFECT_TUNE_MAGICIAN_F) then return false end
@@ -65,36 +62,35 @@ function s.FShaddollSpgcheck(g,fc,tp,ec,chkf,gc)
 	return g:GetClassCount(Card.GetFusionCode)==g:GetCount()
 		and (chkf==PLAYER_NONE or Duel.GetLocationCountFromEx(tp,tp,sg,fc)>0)
 end
-function s.FShaddollCondition()
+function s.Alba_System_Drugmata_Fusion_Condition()
 	return function(e,g,gc,chkf)
 			if g==nil then return aux.MustMaterialCheck(nil,e:GetHandlerPlayer(),EFFECT_MUST_BE_FMATERIAL) end
 			local fc=e:GetHandler()
 			local tp=e:GetHandlerPlayer()
 			if gc then
 				if not g:IsContains(gc) then return false end
-				return g:IsExists(s.FShaddollFilter,1,nil,g,fc,tp,chkf,gc)
+				return g:IsExists(s.Alba_System_Drugmata_Fusion_Filter,1,nil,g,fc,tp,chkf,gc)
 			end
-			return g:IsExists(s.FShaddollFilter,1,nil,g,fc,tp,chkf,nil)
+			return g:IsExists(s.Alba_System_Drugmata_Fusion_Filter,1,nil,g,fc,tp,chkf,nil)
 		end
 end
-function s.FShaddollOperation()
+function s.Alba_System_Drugmata_Fusion_Operation()
 	return function(e,tp,eg,ep,ev,re,r,rp,gc,chkf)
 			local fc=e:GetHandler()
 			local tp=e:GetHandlerPlayer()
-			local mg=eg:Clone()
 			local g=nil
 			if gc then
-				if s.FShaddollFilter(gc,eg,fc,tp,chkf) then
+				if s.Alba_System_Drugmata_Fusion_Filter(gc,eg,fc,tp,chkf) then
 					g=Group.FromCards(gc)
 					eg:RemoveCard(gc)
 				else
 					Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
-					g=eg:FilterSelect(tp,s.FShaddollFilter,1,1,nil,eg,fc,tp,chkf,gc)
+					g=eg:FilterSelect(tp,s.Alba_System_Drugmata_Fusion_Filter,1,1,nil,eg,fc,tp,chkf,gc)
 					eg:Sub(g)
 				end
 			else
 				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
-				g=eg:FilterSelect(tp,s.FShaddollFilter,1,1,nil,eg,fc,tp,chkf,nil)
+				g=eg:FilterSelect(tp,s.Alba_System_Drugmata_Fusion_Filter,1,1,nil,eg,fc,tp,chkf,nil)
 				eg:Sub(g)
 			end
 			local sg=nil
@@ -102,26 +98,26 @@ function s.FShaddollOperation()
 			local mg=eg:Filter(s.matfilter,c,tp)
 			if gc and g:IsContains(gc) then
 				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
-				sg=mg:SelectSubGroup(tp,s.FShaddollSpgcheck,false,6,6,fc,tp,g:GetFirst(),chkf,gc)
+				sg=mg:SelectSubGroup(tp,s.Alba_System_Drugmata_Fusion_Gcheck,false,6,6,fc,tp,g:GetFirst(),chkf,gc)
 			else
 				if gc then
 					Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
-					sg=mg:SelectSubGroup(tp,s.FShaddollSpgcheck,false,6,6,fc,tp,g:GetFirst(),chkf,gc)
+					sg=mg:SelectSubGroup(tp,s.Alba_System_Drugmata_Fusion_Gcheck,false,6,6,fc,tp,g:GetFirst(),chkf,gc)
 				else
 					Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
-					sg=mg:SelectSubGroup(tp,s.FShaddollSpgcheck,true,6,6,fc,tp,g:GetFirst(),chkf,nil)
+					sg=mg:SelectSubGroup(tp,s.Alba_System_Drugmata_Fusion_Gcheck,true,6,6,fc,tp,g:GetFirst(),chkf,nil)
 				end
 			end
 			aux.GCheckAdditional=nil
 			while not sg do
 				eg:AddCard(g:GetFirst())
 				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
-				g=eg:FilterSelect(tp,s.FShaddollFilter,1,1,nil,eg,fc,tp,chkf,nil)
+				g=eg:FilterSelect(tp,s.Alba_System_Drugmata_Fusion_Filter,1,1,nil,eg,fc,tp,chkf,nil)
 				eg:Sub(g)
 				local mg=eg:Filter(s.matfilter,c,tp)
 				aux.GCheckAdditional=aux.dncheck
 				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
-				sg=mg:SelectSubGroup(tp,s.FShaddollSpgcheck,true,6,6,fc,tp,g:GetFirst(),chkf)
+				sg=mg:SelectSubGroup(tp,s.Alba_System_Drugmata_Fusion_Gcheck,true,6,6,fc,tp,g:GetFirst(),chkf)
 				aux.GCheckAdditional=nil
 			end
 			g:Merge(sg)
