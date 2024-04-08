@@ -2,6 +2,7 @@
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddCodeList(c,68468459)
+	aux.AddMaterialCodeList(c,68468459)
 	--aux.AddFusionProcCodeFun(c,68468459,s.mfilter,6,true,true)
 	c:EnableReviveLimit()
 	local e0=Effect.CreateEffect(c)
