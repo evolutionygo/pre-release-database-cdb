@@ -78,47 +78,38 @@ function s.Alba_System_Drugmata_Fusion_Operation()
 	return function(e,tp,eg,ep,ev,re,r,rp,gc,chkf)
 			local fc=e:GetHandler()
 			local tp=e:GetHandlerPlayer()
+			local fg=eg:Clone()
 			local g=nil
-			if gc then
-				if s.Alba_System_Drugmata_Fusion_Filter(gc,eg,fc,tp,chkf) then
-					g=Group.FromCards(gc)
-					eg:RemoveCard(gc)
-				else
-					Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
-					g=eg:FilterSelect(tp,s.Alba_System_Drugmata_Fusion_Filter,1,1,nil,eg,fc,tp,chkf,gc)
-					eg:Sub(g)
-				end
-			else
-				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
-				g=eg:FilterSelect(tp,s.Alba_System_Drugmata_Fusion_Filter,1,1,nil,eg,fc,tp,chkf,nil)
-				eg:Sub(g)
-			end
 			local sg=nil
-			aux.GCheckAdditional=aux.dncheck
-			local mg=eg:Filter(s.matfilter,c,tp)
-			if gc and g:IsContains(gc) then
-				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
-				sg=mg:SelectSubGroup(tp,s.Alba_System_Drugmata_Fusion_Gcheck,false,6,6,fc,tp,g:GetFirst(),chkf,gc)
-			else
+			while not sg do
+				if g then
+					fg:AddCard(g:GetFirst())
+				end
 				if gc then
-					Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
-					sg=mg:SelectSubGroup(tp,s.Alba_System_Drugmata_Fusion_Gcheck,false,6,6,fc,tp,g:GetFirst(),chkf,gc)
+					if s.Alba_System_Drugmata_Fusion_Filter(gc,fg,fc,tp,chkf) then
+						g=Group.FromCards(gc)
+						fg:RemoveCard(gc)
+						local mg=fg:Filter(s.matfilter,c,tp)
+						Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
+						sg=mg:SelectSubGroup(tp,s.Alba_System_Drugmata_Fusion_Gcheck,false,6,6,fc,tp,g:GetFirst(),chkf,gc)
+					else
+						Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
+						g=fg:FilterSelect(tp,s.Alba_System_Drugmata_Fusion_Filter,1,1,nil,fg,fc,tp,chkf,gc)
+						fg:Sub(g)
+						local mg=fg:Filter(s.matfilter,c,tp)
+						Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
+						sg=mg:SelectSubGroup(tp,s.Alba_System_Drugmata_Fusion_Gcheck,true,6,6,fc,tp,g:GetFirst(),chkf,gc)
+					end
 				else
 					Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
-					sg=mg:SelectSubGroup(tp,s.Alba_System_Drugmata_Fusion_Gcheck,true,6,6,fc,tp,g:GetFirst(),chkf,nil)
+					g=fg:FilterSelect(tp,s.Alba_System_Drugmata_Fusion_Filter,1,1,nil,fg,fc,tp,chkf,nil)
+					fg:Sub(g)
+					local mg=fg:Filter(s.matfilter,c,tp)
+					aux.GCheckAdditional=aux.dncheck
+					Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
+					sg=mg:SelectSubGroup(tp,s.Alba_System_Drugmata_Fusion_Gcheck,true,6,6,fc,tp,g:GetFirst(),chkf)
+					aux.GCheckAdditional=nil
 				end
-			end
-			aux.GCheckAdditional=nil
-			while not sg do
-				eg:AddCard(g:GetFirst())
-				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
-				g=eg:FilterSelect(tp,s.Alba_System_Drugmata_Fusion_Filter,1,1,nil,eg,fc,tp,chkf,nil)
-				eg:Sub(g)
-				local mg=eg:Filter(s.matfilter,c,tp)
-				aux.GCheckAdditional=aux.dncheck
-				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
-				sg=mg:SelectSubGroup(tp,s.Alba_System_Drugmata_Fusion_Gcheck,true,6,6,fc,tp,g:GetFirst(),chkf)
-				aux.GCheckAdditional=nil
 			end
 			g:Merge(sg)
 			Duel.SetFusionMaterial(g)
