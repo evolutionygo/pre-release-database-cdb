@@ -61,7 +61,6 @@ function s.drcost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsPlayerCanDraw(tp,1) end
-	local ct=e:GetLabel()
 	Duel.SetTargetPlayer(tp)
 	Duel.SetTargetParam(1)
 	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
@@ -76,11 +75,11 @@ function s.spfilter2(c,tp)
 end
 function s.sptg2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and s.spfilter2(chkc,tp) end
-	if chk==0 then return Duel.IsExistingTarget(s.spfilter2,tp,LOCATION_MZONE,0,1,nil,tp)
+	if chkc then return chkc:IsLocation(LOCATION_MZONE+LOCATION_GRAVE) and chkc:IsControler(tp) and s.spfilter2(chkc,tp) end
+	if chk==0 then return Duel.IsExistingTarget(s.spfilter2,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,nil,tp)
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-	local g=Duel.SelectTarget(tp,s.spfilter2,tp,LOCATION_MZONE,0,1,1,nil,tp)
+	local g=Duel.SelectTarget(tp,s.spfilter2,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,1,nil,tp)
 	Duel.SetOperationInfo(0,CATEGORY_TOEXTRA,g,#g,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,c,1,0,0)
 end
