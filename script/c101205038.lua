@@ -26,10 +26,11 @@ function s.initial_effect(c)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetTargetRange(LOCATION_MZONE,0)
 	e3:SetTarget(s.atktg)
+	e3:SetValue(DOUBLE_DAMAGE)
 	c:RegisterEffect(e3)
 end
 function s.posfilter(c)
-	return c:IsPosition(POS_FACEUP) and c:IsCanChangePosition()
+	return c:IsPosition(POS_FACEUP) and c:IsCanTurnSet()
 end
 function s.postg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.posfilter,tp,0,LOCATION_MZONE,1,nil) end
