@@ -39,7 +39,7 @@ function s.descon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(s.desfilter,tp,LOCATION_MZONE,0,1,nil)
 end
 function s.desfilter(c)
-	return c:IsFaceup() and aux.NegateAnyFilter(c)
+	return c:IsFaceup() and not aux.NegateAnyFilter(c)
 end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.desfilter,tp,0,LOCATION_ONFIELD,1,nil) end

@@ -29,7 +29,6 @@ function s.initial_effect(c)
 	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
 	e4:SetCode(EVENT_ATTACK_ANNOUNCE)
 	e4:SetRange(LOCATION_MZONE)
-	e4:SetCondition(s.mtcon)
 	e4:SetTarget(s.mttg)
 	e4:SetOperation(s.mtop)
 	c:RegisterEffect(e4)
@@ -84,18 +83,14 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.ConfirmCards(1-hp,g)
 	end
 end
-function s.mtcon(e,tp,eg,ep,ev,re,r,rp)
+function s.mttg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local at=Duel.GetAttacker()
 	if chk==0 then return at:IsType(TYPE_XYZ) and at:IsOnField() and at:IsRace(RACE_DRAGON) end
-end
-function s.mttg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
-	Duel.SetOperationInfo(0,CATEGORY_COUNTER,nil,1,0,0x1)
 end
 function s.mtop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local at=Duel.GetAttacker()
-	if c:IsRelateToEffect(e) and at:IsRelateToBattle() and not at:IsImmuneToEffect(e) then
+	if c:IsRelateToEffect(e) and at:IsRelateToBattle() then
 		Duel.Overlay(at,Group.FromCards(c))
 	end
 end
