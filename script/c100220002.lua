@@ -1,6 +1,7 @@
 --時空の雲篭
 local s,id,o=GetID()
 function s.initial_effect(c)
+	local e0=aux.AddThisCardInGraveAlreadyCheck(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
@@ -29,6 +30,7 @@ function s.initial_effect(c)
 	e3:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DELAY)
 	e3:SetRange(LOCATION_GRAVE+LOCATION_HAND)
 	e3:SetCountLimit(1,id+o*2)
+	e3:SetLabelObject(e0)
 	e3:SetCondition(s.matcon)
 	e3:SetTarget(s.mattg)
 	e3:SetOperation(s.matop)
@@ -69,11 +71,12 @@ function s.spop2(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 end
-function s.cfilter(c,e)
-	return c:IsFaceup() and c:IsType(TYPE_XYZ) and c:IsCanBeEffectTarget(e) and c:IsRace(RACE_DRAGON)
+function s.cfilter(c,e,se)
+	return c:IsFaceup() and c:IsType(TYPE_XYZ) and c:IsCanBeEffectTarget(e) and c:IsRace(RACE_DRAGON) and (se==nil or c:GetReasonEffect()~=se)
 end
 function s.matcon(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(s.cfilter,1,nil,e)
+	local se=e:GetLabelObject():GetLabelObject()
+	return eg:IsExists(s.cfilter,1,nil,e,se)
 end
 function s.tgfilter(c,eg)
 	return eg:IsContains(c) and c:IsFaceup() and c:IsType(TYPE_XYZ) and c:IsRace(RACE_DRAGON)
