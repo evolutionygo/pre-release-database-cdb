@@ -40,17 +40,19 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
 	end
 end
-function s.desfilter(c)
-	return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil,c)
+function s.desfilter(c,tp)
+	local code=c:GetCode()
+	if c:IsControler(1-tp) then code=nil end
+	return c:IsControler(1-tp) and aux.NegateAnyFilter(c) and c:IsFaceup() and Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil,nil) or c:IsControler(tp) and Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil,c:GetCode())
 end
-function s.thfilter(c,tc)
-	return c:IsType(TYPE_FIELD) and c:IsAbleToHand() and (not tc or tc:IsControler(1-c:GetControler()) or not c:IsCode(tc:GetCode()))
+function s.thfilter(c,code)
+	return c:IsType(TYPE_FIELD) and c:IsAbleToHand() and (not code or not c:IsCode(code))
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_FZONE) and (chkc:IsControler(1-tp)and chkc:IsFaceup() and aux.NegateAnyFilter(c) or Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil,chkc) and chkc:IsControler(tp))end
-	if chk==0 then return Duel.IsExistingTarget(s.desfilter,tp,LOCATION_FZONE,LOCATION_FZONE,1,nil) end
+	if chkc then return false end
+	if chk==0 then return Duel.IsExistingTarget(s.desfilter,tp,LOCATION_FZONE,LOCATION_FZONE,1,nil,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local tc=Duel.SelectTarget(tp,s.desfilter,tp,LOCATION_FZONE,LOCATION_FZONE,1,1,nil):GetFirst()
+	local tc=Duel.SelectTarget(tp,s.desfilter,tp,LOCATION_FZONE,LOCATION_FZONE,1,1,nil,tp):GetFirst()
 	if tc:IsControler(tp) then
 		Duel.SetOperationInfo(0,CATEGORY_DESTROY,tc,1,0,0)
 	else
@@ -62,12 +64,13 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) then
+		local code=tc:GetCode()
 		if tc:IsControler(tp) and Duel.Destroy(tc,REASON_EFFECT)>0 then
-			local g=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_DECK,0,1,1,nil,tc)
+			local g=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_DECK,0,1,1,nil,code)
 			if g:GetCount()>0 then
 				Duel.SendtoHand(g,nil,REASON_EFFECT)
 				Duel.ConfirmCards(1-tp,g)
-			end			
+			end
 		elseif tc:IsFaceup() and tc:IsCanBeDisabledByEffect(e) then
 			Duel.NegateRelatedChain(tc,RESET_TURN_SET)
 			local e1=Effect.CreateEffect(c)
@@ -80,11 +83,6 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 			e2:SetCode(EFFECT_DISABLE_EFFECT)
 			e2:SetValue(RESET_TURN_SET)
 			tc:RegisterEffect(e2)
-			if tc:IsType(TYPE_TRAPMONSTER) then
-				local e3=e1:Clone()
-				e3:SetCode(EFFECT_DISABLE_TRAPMONSTER)
-				tc:RegisterEffect(e3)
-			end
 			Duel.AdjustInstantly()
 			local g=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_DECK,0,1,1,nil,nil)
 			if g:GetCount()>0 then
