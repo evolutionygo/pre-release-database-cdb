@@ -24,7 +24,7 @@ function s.initial_effect(c)
 end
 function s.thfilter(c,e,tp)
 	return c:IsFaceup() and c:IsRace(RACE_ILLUSION+RACE_SPELLCASTER) and (c:IsAbleToHand() or c:IsAbleToExtra()) and Duel.GetMZoneCount(tp,c)>0
-		and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp)
+		and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil,e,tp)
 end
 function s.spfilter(c,e,tp)
 	return c:IsFaceupEx() and c:IsRace(RACE_ILLUSION+RACE_SPELLCASTER) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
