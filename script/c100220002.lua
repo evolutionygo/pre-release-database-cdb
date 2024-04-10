@@ -75,7 +75,7 @@ function s.matcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.cfilter,1,nil,e)
 end
 function s.tgfilter(c,eg)
-	return eg:IsContains(c) and c:IsFaceup() and c:IsType(TYPE_XYZ)
+	return eg:IsContains(c) and c:IsFaceup() and c:IsType(TYPE_XYZ) and c:IsRace(RACE_DRAGON)
 end
 function s.mattg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and s.tgfilter(chkc,eg) end
