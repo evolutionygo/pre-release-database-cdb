@@ -1,9 +1,9 @@
 --神影金龍ドラッグルクシオン
 local s,id,o=GetID()
 function s.initial_effect(c)
-	local e1=Effect.CreateEffect(c)
 	aux.AddXyzProcedure(c,nil,8,2)
 	c:EnableReviveLimit()
+	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
@@ -14,16 +14,16 @@ function s.initial_effect(c)
 	e1:SetTarget(s.thtg)
 	e1:SetOperation(s.thop)
 	c:RegisterEffect(e1)
-	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(id,1))
-	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
-	e1:SetType(EFFECT_TYPE_IGNITION)
-	e1:SetRange(LOCATION_MZONE)
-	e1:SetCountLimit(1,id+o)
-	e1:SetCost(s.spcost)
-	e1:SetTarget(s.sptg)
-	e1:SetOperation(s.spop)
-	c:RegisterEffect(e1)
+	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(aux.Stringid(id,1))
+	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e2:SetType(EFFECT_TYPE_IGNITION)
+	e2:SetRange(LOCATION_MZONE)
+	e2:SetCountLimit(1,id+o)
+	e2:SetCost(s.spcost)
+	e2:SetTarget(s.sptg)
+	e2:SetOperation(s.spop)
+	c:RegisterEffect(e2)
 end
 function s.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonLocation(LOCATION_EXTRA)
@@ -75,15 +75,17 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 			end
 			tc:SetMaterial(Group.FromCards(c))
 			Duel.Overlay(tc,Group.FromCards(c))
-			if Duel.SpecialSummon(tc,SUMMON_TYPE_XYZ,tp,tp,false,false,POS_FACEUP)~=0 
-				and Duel.IsExistingMatchingCard(s.xfilter,tp,LOCATION_EXTRA,0,1,nil)
-				and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
-				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
-				local g=Duel.SelectMatchingCard(tp,s.xfilter,tp,LOCATION_EXTRA,0,1, 1,nil)
-				if g:GetCount()>0 then
-					Duel.BreakEffect()
-					Duel.Overlay(tc,g)
+			if Duel.SpecialSummon(tc,SUMMON_TYPE_XYZ,tp,tp,false,false,POS_FACEUP)~=0 then
+				if Duel.IsExistingMatchingCard(s.xfilter,tp,LOCATION_EXTRA,0,1,nil)
+					and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
+					Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
+					local g=Duel.SelectMatchingCard(tp,s.xfilter,tp,LOCATION_EXTRA,0,1, 1,nil)
+					if g:GetCount()>0 then
+						Duel.BreakEffect()
+						Duel.Overlay(tc,g)
+					end
 				end
+				tc:CompleteProcedure()
 			end
 		end
 	end

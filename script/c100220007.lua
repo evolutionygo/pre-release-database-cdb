@@ -46,7 +46,7 @@ function s.tdcon(e,tp,eg,ep,ev,re,r,rp)
 	return ph>=PHASE_BATTLE_START and ph<=PHASE_BATTLE
 end
 function s.xfilter(c)
-	return c:IsSetCard(0x107b) and c:IsType(TYPE_XYZ)
+	return c:IsSetCard(0x107b) and c:IsType(TYPE_XYZ) and c:IsFaceup()
 end
 function s.tdcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local xg=Group.CreateGroup()
