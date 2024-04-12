@@ -31,7 +31,7 @@ function s.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_COST)
 end
 function s.arkfilter(c)
-	return c:IsFaceup() and (not c:IsAttack(c:GetBaseAttack()) or c:IsDefense(c:GetBaseDefense()))
+	return c:IsFaceup() and (not c:IsAttack(c:GetBaseAttack()) or (not c:IsType(TYPE_LINK) and not c:IsDefense(c:GetBaseDefense())))
 end
 function s.atktg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and s.arkfilter(chkc) end
@@ -83,14 +83,13 @@ function s.cfilter(c,tp)
 end
 function s.atkcon2(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.cfilter,1,nil,tp) and not eg:IsContains(e:GetHandler())
-		and e:GetHandler():GetOverlayCount()>2
 end
 function s.atkfilter(c,e,tp)
 	return c:IsSummonPlayer(tp) and (not e or c:IsRelateToEffect(e))
 		and c:IsType(TYPE_MONSTER) and c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
 end
 function s.atktg2(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return eg:IsExists(s.atkfilter,1,nil,nil,tp) end
+	if chk==0 then return eg:IsExists(s.atkfilter,1,nil,nil,tp) and e:GetHandler():GetOverlayCount()>2 end
 	local g=eg:Filter(s.atkfilter,nil,nil,tp)
 	Duel.SetTargetCard(g)
 end
