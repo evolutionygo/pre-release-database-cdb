@@ -7,6 +7,7 @@ function s.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e1:SetRange(LOCATION_HAND)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e1:SetCountLimit(1,id)
 	e1:SetCondition(s.descon)
 	e1:SetCost(s.descost)
 	e1:SetTarget(s.destg)
@@ -33,7 +34,7 @@ function s.descost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.desfilter(c,e,tp)
 	return c:IsSummonPlayer(1-tp) and (not e or c:IsRelateToEffect(e))
-		and c:IsType(TYPE_MONSTER)
+		and c:IsType(TYPE_MONSTER) and c:IsLocation(LOCATION_MZONE)
 end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return eg:IsExists(s.desfilter,1,nil,nil,tp) end
