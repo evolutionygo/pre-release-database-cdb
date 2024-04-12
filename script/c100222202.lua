@@ -15,7 +15,7 @@ function s.initial_effect(c)
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_MZONE)
-	e2:SetCountLimit(1,id)
+	e2:SetCountLimit(1,id+o)
 	e2:SetCost(s.spcost)
 	e2:SetTarget(s.sptg)
 	e2:SetOperation(s.spop)
@@ -31,7 +31,7 @@ function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Release(e:GetHandler(),REASON_COST)
 end
 function s.spfilter(c,e,tp)
-	return aux.IsCodeListed(c,83104731) and c:IsType(TYPE_MONSTER) and not c:IsCode(i) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
+	return (c:IsCode(83104731) or aux.IsCodeListed(c,83104731)) and c:IsType(TYPE_MONSTER) and not c:IsCode(id) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetMZoneCount(tp,e:GetHandler())>0
