@@ -34,10 +34,16 @@ function s.arkfilter(c)
 	return c:IsFaceup() and (not c:IsAttack(c:GetBaseAttack()) or c:IsDefense(c:GetBaseDefense()))
 end
 function s.atktg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) and s.filter(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(s.filter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and s.arkfilter(chkc) end
+	if chk==0 then return Duel.IsExistingTarget(s.arkfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-	local g=Duel.SelectTarget(tp,s.filter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
+	local g=Duel.SelectTarget(tp,s.arkfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
+	if g:GetCount()>0 then
+		local tc=g:GetFirst()
+		if tc:IsControler(tp) then
+			e:SetLabel(1)
+		end
+	end
 end
 function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -57,7 +63,8 @@ function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 		e2:SetValue(tc:GetBaseDefense())
 		e2:SetReset(RESET_EVENT+RESETS_STANDARD)
 		tc:RegisterEffect(e2)
-		if tc:IsControler(tp) then
+		if e:GetLabel()==1 then
+			Duel.BreakEffect()
 			local e3=Effect.CreateEffect(c)
 			e3:SetType(EFFECT_TYPE_SINGLE)
 			e3:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
