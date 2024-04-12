@@ -48,7 +48,7 @@ end
 function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if tc:IsFaceup() and tc:IsRelateToEffect(e) and tc:IsLocation(LOCATION_MZONE) then
+	if tc:IsRelateToEffect(e) and tc:IsLocation(LOCATION_MZONE) and s.arkfilter(tc) then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
@@ -87,12 +87,12 @@ function s.atkcon2(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.atkfilter(c,e,tp)
 	return c:IsSummonPlayer(tp) and (not e or c:IsRelateToEffect(e))
-		and c:IsType(TYPE_MONSTER) and c:IsFaceup()
+		and c:IsType(TYPE_MONSTER) and c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
 end
 function s.atktg2(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return eg:IsExists(s.atkfilter,1,nil,nil,tp) end
 	local g=eg:Filter(s.atkfilter,nil,nil,tp)
-	Duel.SetTargetCard(eg)
+	Duel.SetTargetCard(g)
 end
 function s.atkop2(e,tp,eg,ep,ev,re,r,rp)
 	local g=eg:Filter(s.atkfilter,nil,e,tp):Filter(Card.IsRelateToChain,nil)
