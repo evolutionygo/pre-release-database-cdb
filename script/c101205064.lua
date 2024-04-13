@@ -45,7 +45,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 			local og=Duel.GetOperatedGroup()
 			local fid=og:GetFirst():GetFieldID()
 			for tc in aux.Next(og) do
-				tc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_STANDBY+RESET_SELF_TURN,0,1,fid)
+				tc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,1,fid)
 			end
 			og:KeepAlive()
 			local e1=Effect.CreateEffect(e:GetHandler())
