@@ -41,15 +41,19 @@ end
 function s.thfilter(c)
 	return c:IsCode(3055018) and c:IsAbleToHand()
 end
+function s.rtfilter(c)
+	return c:IsSetCard(0x1ad) and c:IsLocation(LOCATION_DECK+LOCATION_EXTRA)
+end
 function s.tdop(e,tp,eg,ep,ev,re,r,rp)
 	local tg=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e)
 	if tg:GetCount()>0 then
 		if Duel.SendtoDeck(tg,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)==0 and not g:IsExists(Card.IsLocation,1,nil,LOCATION_DECK+LOCATION_EXTRA) then return end
 		local g=Duel.GetOperatedGroup()
 		if g:IsExists(Card.IsLocation,1,nil,LOCATION_DECK) then Duel.ShuffleDeck(tp) end
-		if tg:IsExists(Card.IsSetCard,1,nil,0x1ad)
+		if tg:IsExists(s.rtfilter,1,nil)
 			and Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil)
 			and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
+			Duel.BreakEffect()
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 			local hg=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_DECK,0,1,1,nil)
 			Duel.SendtoHand(hg,nil,REASON_EFFECT)
