@@ -1,4 +1,4 @@
---CHAMANA DE LA CIUDAD CALCINADA4
+--Shaman of the Ashened City
 local s,id,o=GetID()
 function s.initial_effect(c)
 	local e1=Effect.CreateEffect(c)

@@ -1,4 +1,4 @@
---灰尽无限
+--Ashened to Infinity
 local s,id,o=GetID()
 function s.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
@@ -115,7 +115,10 @@ function s.fsop(e,tp,eg,ep,ev,re,r,rp)
 	aux.FCheckAdditional=nil
 end
 function s.costfilter(c)
-	return c:IsRace(RACE_PYRO) and c:IsAbleToRemoveAsCost()
+	return c:IsRace(RACE_PYRO) and c:IsAttribute(ATTRIBUTE_DARK) and c:IsAbleToRemoveAsCost()
+end
+function s.crfilter(c)
+	return c:IsFaceup() and not c:IsRace(RACE_PYRO)
 end
 function s.attcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
@@ -126,7 +129,7 @@ function s.attcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
 function s.atttg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsFaceup,tp,0,LOCATION_MZONE,1,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.crfilter,tp,0,LOCATION_MZONE,1,nil) end
 end
 function s.attop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
