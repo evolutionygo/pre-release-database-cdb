@@ -14,7 +14,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function s.cfilter(c)
-	return c:IsFaceupEx() and c:IsSetCard(0x1ad) and not c:IsCode(id) and c:IsAbleToDeck()
+	return c:IsFaceupEx() and c:IsSetCard(0x1ad) and not c:IsCode(id) and c:IsAbleToDeckAsCost()
 end
 function s.discost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil) end
