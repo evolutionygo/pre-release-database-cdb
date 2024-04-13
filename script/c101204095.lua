@@ -29,7 +29,7 @@ function s.tgtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_DECK)
 end
 function s.thfilter(c,tc)
-	return c:IsSetCard(0x1ad) and c:IsType(TYPE_MONSTER)
+	return c:IsRace(RACE_PYRO) and c:IsType(TYPE_MONSTER)
 		and c:IsAbleToHand() and c:IsLevelAbove(5)
 end
 function s.tgop(e,tp,eg,ep,ev,re,r,rp)
