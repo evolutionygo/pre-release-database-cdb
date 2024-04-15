@@ -1,6 +1,7 @@
 --Shaman of the Ashened City
 local s,id,o=GetID()
 function s.initial_effect(c)
+	aux.AddCodeList(c,3055018)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE)
