@@ -46,8 +46,8 @@ end
 function s.mvop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and not tc:IsImmuneToEffect(e)
-	and Duel.Destroy(c,REASON_EFFECT)~=0 and c:IsRelateToEffect(e) then
+	if c:IsRelateToEffect(e) and Duel.Destroy(c,REASON_EFFECT)~=0
+		and tc:IsRelateToEffect(e) and not tc:IsImmuneToEffect(e) then
 		Duel.MoveToField(tc,tp,tp,LOCATION_FZONE,POS_FACEUP,true)
 	end
 end
