@@ -1,7 +1,6 @@
 --Vouiburial the Dragon Undertaker
 local s,id,o=GetID()
 function s.initial_effect(c)
-	aux.AddCodeList(c,63136489)
 	--indes
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
@@ -43,7 +42,8 @@ function s.cfilter(c,tp)
 	return c:IsPreviousLocation(LOCATION_MZONE) and c:IsPreviousControler(1-tp)
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(s.cfilter,1,nil,tp)
+	local ph=Duel.GetCurrentPhase()
+	return (ph==PHASE_MAIN1 or ph==PHASE_MAIN2) and eg:IsExists(s.cfilter,1,nil,tp)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
@@ -52,7 +52,7 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if not c:IsRelateToEffect(e) or Duel.GetLocationCount(tp,LOCATION_MZONE)==0 then return end
+	if not c:IsRelateToEffect(e) then return end
 	Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
 end
 function s.adfilter(c)
@@ -65,6 +65,7 @@ function s.adop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
 	local g=Duel.SelectMatchingCard(tp,s.adfilter,tp,0,LOCATION_MZONE,1,1,nil)
 	if #g>0 then
+		Duel.HintSelection(g)
 		local tc=g:GetFirst()
 		local preatk=tc:GetAttack()
 		local e1=Effect.CreateEffect(e:GetHandler())
@@ -73,6 +74,9 @@ function s.adop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetValue(-1500)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 		tc:RegisterEffect(e1)
-		if preatk~=0 and tc:IsAttack(0) then Duel.Destroy(tc,REASON_EFFECT) end
+		if preatk~=0 and tc:IsAttack(0) then
+			Duel.BreakEffect()
+			Duel.Destroy(tc,REASON_EFFECT)
+		end
 	end
 end

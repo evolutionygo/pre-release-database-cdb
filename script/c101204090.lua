@@ -1,4 +1,4 @@
---Embres of the Ashened City
+--Embres of the Ashened
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--fusion material

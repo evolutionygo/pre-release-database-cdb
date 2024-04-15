@@ -85,6 +85,7 @@ function s.tdop(e,tp,eg,ep,ev,re,r,rp)
 			Duel.BreakEffect()
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 			local dg=Duel.SelectMatchingCard(tp,nil,tp,0,LOCATION_ONFIELD,1,#tg,nil)
+			Duel.HintSelection(dg)
 			Duel.Destroy(dg,REASON_EFFECT)
 		end
 	end

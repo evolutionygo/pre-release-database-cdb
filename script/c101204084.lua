@@ -1,6 +1,7 @@
 --Krishnerd Witch
 local s,id,o=GetID()
 function s.initial_effect(c)
+	aux.AddCodeList(c,101204086)
 	--effect indestructable
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
@@ -42,7 +43,7 @@ function s.indcon(e)
 	return Duel.IsExistingMatchingCard(s.indfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil)
 end
 function s.spfilter(c,tp)
-	return c:IsPreviousControler(tp) and c:IsReason(REASON_EFFECT) and c:IsPreviousLocation(LOCATION_FZONE)
+	return c:IsReason(REASON_EFFECT) and c:IsPreviousLocation(LOCATION_FZONE)
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.spfilter,1,nil,tp) and not eg:IsContains(e:GetHandler())
@@ -58,7 +59,6 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.tdcon(e,tp,eg,ep,ev,re,r,rp)
 	local rc=re:GetHandler()
-	e:SetLabel(rc:GetCode())
 	return rc:IsOnField() and rc:IsRelateToEffect(re) and rc:IsLocation(LOCATION_FZONE) and not re:IsHasType(EFFECT_TYPE_ACTIVATE)
 end
 function s.tdfilter(c,e,tp)
@@ -74,11 +74,12 @@ function s.tdop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.tdfilter),tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,1,nil)
 	if g:GetCount()>0 then
 		local tc=g:GetFirst()
-		local res=Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and tc:IsCanBeSpecialSummoned(e,0,tp,false,false) and aux.IsCodeListed(tc,e:GetLabel())
+		local rc=re:GetHandler()
+		local res=Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and tc:IsCanBeSpecialSummoned(e,0,tp,false,false) and aux.IsCodeListed(tc,re:GetHandler():GetCode())
 		if res and Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
 			Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
 		else
-			Duel.ConfirmCards(1-tp,tc)
+			Duel.HintSelection(g)
 			Duel.SendtoDeck(tc,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)
 		end
 	end

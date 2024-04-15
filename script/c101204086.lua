@@ -31,7 +31,6 @@ function s.accon(e,tp,eg,ep,ev,re,r,rp)
 	return not Duel.IsExistingMatchingCard(Card.IsFaceup,tp,LOCATION_FZONE,0,1,nil)
 end
 function s.filter(c)
-	Debug.Message("TestA")
 	return c:IsType(TYPE_FIELD) and not c:IsForbidden() and c:IsFaceup()
 end
 function s.mvtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
@@ -48,8 +47,8 @@ function s.mvop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) and not tc:IsImmuneToEffect(e)
-	and c:IsRelateToEffect(e) and Duel.Destroy(c,REASON_EFFECT)~=0 then
-			Duel.MoveToField(tc,tp,tp,LOCATION_FZONE,POS_FACEUP,true)
+	and Duel.Destroy(c,REASON_EFFECT)~=0 and c:IsRelateToEffect(e) then
+		Duel.MoveToField(tc,tp,tp,LOCATION_FZONE,POS_FACEUP,true)
 	end
 end
 function s.repfilter(c)
