@@ -30,7 +30,7 @@ function s.descon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local bc=c:GetBattleTarget()
 	e:SetLabelObject(bc)
-	return bc and bc:IsControler(1-tp) and bc:IsRelateToBattle()
+	return bc and bc:IsControler(1-tp) and bc:IsRelateToBattle() and bc:IsRace(RACE_PYRO)
 end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local bc=e:GetLabelObject()
