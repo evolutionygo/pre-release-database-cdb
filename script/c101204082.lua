@@ -50,7 +50,7 @@ end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	local b1=Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil)
-	local b2=Duel.IsExistingTarget(s.tsfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil)
+	local b2=Duel.IsExistingMatchingCard(s.tsfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil)
 	if chk==0 then return b1 or b2 end
 	local op=aux.SelectFromOptions(tp,
 			{b1,aux.Stringid(id,3)},
