@@ -1,6 +1,7 @@
 --Battleguard Echoes
 local s,id,o=GetID()
 function s.initial_effect(c)
+	aux.AddCodeList(c,42233477,78621186)
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
@@ -79,6 +80,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_POSCHANGE)
 		local g=Duel.SelectMatchingCard(tp,s.tsfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
 		if g:GetCount()>0 then
+			Duel.HintSelection(g)
 			Duel.ChangePosition(g,POS_FACEDOWN_DEFENSE)
 		end
 	end
