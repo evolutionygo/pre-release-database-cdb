@@ -48,7 +48,7 @@ end
 function s.acop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	local atk,race=e:GetLabel()
-	if tc:IsFaceup() and tc:IsRelateToEffect(e) and tc:GetAttack()~=atk then
+	if tc:IsType(TYPE_MONSTER) and tc:IsFaceup() and tc:IsRelateToEffect(e) and tc:GetAttack()~=atk then
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_SET_ATTACK_FINAL)
