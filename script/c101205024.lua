@@ -37,7 +37,7 @@ end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) then 
-		Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
+		Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
 	end
 end
 function s.desfilter(c,tp)
@@ -65,11 +65,13 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) then
 		local code=tc:GetCode()
-		if tc:IsControler(tp) and Duel.Destroy(tc,REASON_EFFECT)>0 then
-			local g=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_DECK,0,1,1,nil,code)
-			if g:GetCount()>0 then
-				Duel.SendtoHand(g,nil,REASON_EFFECT)
-				Duel.ConfirmCards(1-tp,g)
+		if tc:IsControler(tp) then
+			if Duel.Destroy(tc,REASON_EFFECT)>0 then
+				local g=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_DECK,0,1,1,nil,code)
+				if g:GetCount()>0 then
+					Duel.SendtoHand(g,nil,REASON_EFFECT)
+					Duel.ConfirmCards(1-tp,g)
+				end
 			end
 		elseif tc:IsFaceup() and tc:IsCanBeDisabledByEffect(e) then
 			Duel.NegateRelatedChain(tc,RESET_TURN_SET)
