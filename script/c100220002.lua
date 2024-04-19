@@ -78,7 +78,7 @@ function s.matcon(e,tp,eg,ep,ev,re,r,rp)
 	local se=e:GetLabelObject():GetLabelObject()
 	return eg:IsExists(s.cfilter,1,nil,e,se)
 end
-function s.tgfilter(c,eg)
+function s.tgfilter(c,eg,tp)
 	return eg:IsContains(c) and c:IsFaceup() and c:IsType(TYPE_XYZ) and c:IsRace(RACE_DRAGON) and c:IsSummonPlayer(tp)
 end
 function s.mattg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
