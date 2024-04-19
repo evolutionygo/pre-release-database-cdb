@@ -1,6 +1,7 @@
 --クイーンマドルチェ・ティアラフレース
 local s,id,o=GetID()
 function s.initial_effect(c)
+	aux.AddCodeList(c,37164373)
 	aux.AddXyzProcedure(c,s.mfilter,5,3,s.ovfilter,aux.Stringid(id,0),3,s.xyzop)
 	c:EnableReviveLimit()
 	local e1=Effect.CreateEffect(c)
