@@ -36,7 +36,7 @@ end
 function s.spfilter(c,e,tp,atk)
 	return c:IsSetCard(0x71) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 		and c:IsAttackBelow(atk)
-		and (c:IsLocation(LOCATION_DECK) and Duel.GetMZoneCount(tp)>0
+		and (c:IsLocation(LOCATION_HAND) and Duel.GetMZoneCount(tp)>0
 			or c:IsLocation(LOCATION_EXTRA) and Duel.GetLocationCountFromEx(tp,tp,nil,c)>0)
 end
 function s.tdtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
