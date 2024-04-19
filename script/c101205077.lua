@@ -50,9 +50,10 @@ function s.tdtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function s.tdop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e)
-	Duel.SendtoDeck(g,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)
+	Duel.SendtoHand(g,nil,REASON_EFFECT)
 	local tg=Duel.GetOperatedGroup()
-	local sg=tg:Filter(Card.IsLocation,nil,LOCATION_DECK+LOCATION_EXTRA)
+	if tg:GetCount()==0 then return end
+	local sg=tg:Filter(Card.IsLocation,nil,LOCATION_HAND+LOCATION_EXTRA)
 	local atk=sg:GetSum(Card.GetAttack)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_HAND+LOCATION_EXTRA,0,1,nil,e,tp,atk) and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
