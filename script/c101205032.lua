@@ -1,6 +1,7 @@
 --竜儀巧－メテオニス＝DAD
 local s,id,o=GetID()
 function s.initial_effect(c)
+	aux.AddCodeList(c,22398665)
 	c:EnableReviveLimit()
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))

@@ -1,6 +1,7 @@
 --流星極輝巧群
 local s,id,o=GetID()
 function s.initial_effect(c)
+	aux.AddCodeList(c,22398665)
 	local e0=Effect.CreateEffect(c)
 	e0:SetType(EFFECT_TYPE_ACTIVATE)
 	e0:SetCode(EVENT_FREE_CHAIN)
