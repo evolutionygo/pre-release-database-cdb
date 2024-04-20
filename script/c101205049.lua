@@ -1,4 +1,4 @@
---ヴァルモニカの神奏-ヴァーラル
+--ヴァルモニカの神奏－ヴァーラル
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddLinkProcedure(c,nil,2,2,s.lcheck)
@@ -68,6 +68,7 @@ function s.disop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	Duel.NegateSummon(eg)
 	if Duel.IsCanRemoveCounter(tp,1,0,0x6a,3,REASON_EFFECT) then
+		Duel.BreakEffect()
 		Duel.RemoveCounter(tp,1,0,0x6a,3,REASON_EFFECT)
 	end
 end

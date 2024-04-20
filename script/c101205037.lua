@@ -1,4 +1,4 @@
---冥骸王-メメントラン・テクトリカ
+--冥骸王－メメントラン・テクトリカ
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddCodeList(c,43338320)
@@ -48,13 +48,13 @@ function s.filter(c)
 	return c:IsSetCard(0x1a1) and c:IsAbleToGrave()
 end
 function s.tgtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_DECK+LOCATION_EXTRA,0,2,nil) and Duel.GetFlagEffect(tp,id)==0 end
-	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,2,tp,LOCATION_DECK+LOCATION_EXTRA)
+	if chk==0 then return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_DECK+LOCATION_EXTRA,0,3,nil) and Duel.GetFlagEffect(tp,id)==0 end
+	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,3,tp,LOCATION_DECK+LOCATION_EXTRA)
 	Duel.RegisterFlagEffect(tp,id,RESET_CHAIN,EFFECT_FLAG_OATH,1)
 end
 function s.tgop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local g=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_DECK+LOCATION_EXTRA,0,2,2,nil)
+	local g=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_DECK+LOCATION_EXTRA,0,3,3,nil)
 	Duel.SendtoGrave(g,REASON_EFFECT)
 end
 function s.desfilter(c,tp)
