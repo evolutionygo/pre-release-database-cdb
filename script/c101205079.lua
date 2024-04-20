@@ -42,7 +42,6 @@ function s.disop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetCode(EFFECT_CANNOT_ACTIVATE)
 		e1:SetTargetRange(1,0)
 		e1:SetValue(s.aclimit)
-		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 		Duel.RegisterEffect(e1,tp)
 	end
 end
