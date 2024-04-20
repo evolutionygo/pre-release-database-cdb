@@ -52,7 +52,7 @@ function s.thfilter2(c,tp,oc)
 		and Duel.IsExistingTarget(s.thfilter3,tp,LOCATION_ONFIELD,0,1,nil,tp,oc,c)
 end
 function s.thfilter3(c,tp,oc,tc)
-	return not c:IsOriginalCodeRule(oc:GetOriginalCode(),tc:GetOriginalCode()) and bit.band(c:GetOriginalType(),TYPE_MONSTER)== and c:IsFaceup()
+	return not c:IsOriginalCodeRule(oc:GetOriginalCode(),tc:GetOriginalCode()) and bit.band(c:GetOriginalType(),TYPE_MONSTER)==TYPE_MONSTER and c:IsFaceup()
 		and Duel.IsExistingMatchingCard(s.setfilter,tp,LOCATION_DECK+LOCATION_HAND,0,1,nil,tp,oc,tc,c)
 end
 function s.setfilter(c,tp,oc,tc,sc)
