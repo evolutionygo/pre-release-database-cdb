@@ -127,7 +127,7 @@ end
 function s.atktg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp) and s.atkfilter(chkc) end
-	if chk==0 then return c:IsAttackAbove(500) and c:IsDefenseAbove(500) Duel.IsExistingTarget(s.atkfilter,tp,0,LOCATION_MZONE,1,nil) end
+	if chk==0 then return c:IsAttackAbove(500) and c:IsDefenseAbove(500) and Duel.IsExistingTarget(s.atkfilter,tp,0,LOCATION_MZONE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
 	Duel.SelectTarget(tp,s.atkfilter,tp,0,LOCATION_MZONE,1,1,nil)
 end
