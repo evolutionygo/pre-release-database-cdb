@@ -64,7 +64,7 @@ function s.tdop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.cfilter(c,e)
-	return c:IsPreviousLocation(LOCATION_GRAVE) and c:IsSetCard(0x71) and c:IsLocation(LOCATION_HAND+LOCATION_DECK+LOCATION_EXTRA)
+	return c:IsPreviousLocation(LOCATION_GRAVE) and c:IsSetCard(0x71) and c:IsLocation(LOCATION_DECK+LOCATION_EXTRA)
 end
 function s.matcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.cfilter,1,nil,e)
