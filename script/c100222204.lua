@@ -47,11 +47,15 @@ function s.eqlimit(e,c)
 	return c:IsControler(e:GetHandlerPlayer()) and c:IsType(TYPE_SYNCHRO)
 		and c:IsRace(RACE_DRAGON)
 end
+function s.eqfilter(c,tp)
+	return c:IsControler(e:GetHandlerPlayer()) and c:IsType(TYPE_SYNCHRO)
+		and c:IsRace(RACE_DRAGON)
+end
 function s.eqtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and chkc:IsFaceup() and s.eqlimit(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(Card.IsFaceup,tp,LOCATION_MZONE,0,1,nil) end
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and s.eqfilter(chkc,tp) and s.eqlimit(chkc) end
+	if chk==0 then return Duel.IsExistingTarget(s.eqfilter,tp,LOCATION_MZONE,0,1,nil,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EQUIP)
-	Duel.SelectTarget(tp,Card.IsFaceup,tp,LOCATION_MZONE,0,1,1,nil)
+	Duel.SelectTarget(tp,s.eqfilter,tp,LOCATION_MZONE,0,1,1,nil,tp)
 	Duel.SetOperationInfo(0,CATEGORY_EQUIP,e:GetHandler(),1,0,0)
 end
 function s.eqop(e,tp,eg,ep,ev,re,r,rp)
