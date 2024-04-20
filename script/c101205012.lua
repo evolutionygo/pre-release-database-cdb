@@ -1,4 +1,4 @@
---鎧騎士竜-ナイト・アームド・ドラゴン-
+--鎧騎士竜－ナイト・アームド・ドラゴン－
 local s,id,o=GetID()
 function s.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
@@ -63,8 +63,10 @@ function s.raatop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) and c:IsFaceup() and Duel.IsExistingMatchingCard(s.raatfilter,tp,LOCATION_REMOVED,0,1,nil,c) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-		local tc=Duel.SelectMatchingCard(tp,s.raatfilter,tp,LOCATION_REMOVED,0,1,1,nil,c):GetFirst()
-		if tc then
+		local tg=Duel.SelectMatchingCard(tp,s.raatfilter,tp,LOCATION_REMOVED,0,1,1,nil,c)
+		if tg:GetCount()>0 then
+			Duel.HintSelection(tg)
+			local tc=tg:GetFirst()
 			local e1=Effect.CreateEffect(c)
 			e1:SetType(EFFECT_TYPE_SINGLE)
 			e1:SetProperty(EFFECT_FLAG_COPY_INHERIT)
