@@ -48,7 +48,7 @@ function s.eqlimit(e,c)
 		and c:IsRace(RACE_DRAGON)
 end
 function s.eqfilter(c,tp)
-	return c:IsControler(e:GetHandlerPlayer()) and c:IsType(TYPE_SYNCHRO)
+	return c:IsControler(tp) and c:IsType(TYPE_SYNCHRO)
 		and c:IsRace(RACE_DRAGON)
 end
 function s.eqtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
