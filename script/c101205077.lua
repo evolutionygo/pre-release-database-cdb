@@ -5,7 +5,7 @@ function s.initial_effect(c)
 	e1:SetCategory(CATEGORY_TODECK+CATEGORY_SPECIAL_SUMMON+CATEGORY_DECKDES)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
-	e1:SetHintTiming(0,TIMINGS_CHECK_MONSTER)
+	e1:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_END_PHASE)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetCountLimit(1,id)
 	e1:SetTarget(s.tdtg)
@@ -48,8 +48,11 @@ function s.tdtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetTargetCard(sg)
 	Duel.SetOperationInfo(0,CATEGORY_TODECK,sg,sg:GetCount(),0,0)
 end
+function s.rtfilter(c,e)
+	return c:IsRelateToEffect(e) and c:IsType(TYPE_EFFECT)
+end
 function s.tdop(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e)
+	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(s.rtfilter,nil,e)
 	Duel.SendtoHand(g,nil,REASON_EFFECT)
 	local tg=Duel.GetOperatedGroup()
 	if tg:GetCount()==0 then return end
@@ -81,7 +84,9 @@ function s.matop(e,tp,eg,ep,ev,re,r,rp)
 	if not c:IsRelateToEffect(e) then return end
 	if Duel.IsExistingMatchingCard(s.tgfilter,tp,LOCATION_MZONE,0,1,nil) and c:IsCanOverlay() then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-		local tc=Duel.SelectMatchingCard(tp,s.tgfilter,tp,LOCATION_MZONE,0,1,1,nil):GetFirst()
+		local tg=Duel.SelectMatchingCard(tp,s.tgfilter,tp,LOCATION_MZONE,0,1,1,nil)
+		Duel.HintSelection(tg)
+		local tc=tg:GetFirst()
 		Duel.Overlay(tc,Group.FromCards(c))
 	end
 end
