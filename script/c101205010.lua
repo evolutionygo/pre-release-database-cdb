@@ -127,7 +127,7 @@ function s.atkcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.atktg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-	if chk==0 then return c:IsAttackAbove(500) end
+	if chk==0 then return c:IsAttackAbove(500) and c:IsDefenseAbove(500) end
 end
 function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
