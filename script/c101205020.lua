@@ -55,8 +55,10 @@ function s.cfilter(c,tp)
 	and c:IsReason(REASON_EFFECT)
 end
 function s.checkop(e,tp,eg,ep,ev,re,r,rp)
-	if eg:IsExists(s.cfilter,1,c,tp) then
-		Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1)
+	for p=0,1 do
+		if eg:IsExists(s.cfilter,1,c,p) then
+			Duel.RegisterFlagEffect(p,id,RESET_PHASE+PHASE_END,0,1)
+		end
 	end
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
