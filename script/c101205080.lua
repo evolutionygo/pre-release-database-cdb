@@ -44,15 +44,15 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.thfilter1(c,tp)
-	return bit.band(c:GetOriginalType(),TYPE_MONSTER)==TYPE_MONSTER
+	return bit.band(c:GetOriginalType(),TYPE_MONSTER)==TYPE_MONSTER and c:IsFaceup()
 		and Duel.IsExistingTarget(s.thfilter2,tp,LOCATION_ONFIELD,0,1,nil,tp,c)
 end
 function s.thfilter2(c,tp,oc)
-	return not c:IsOriginalCodeRule(oc:GetOriginalCode()) and bit.band(c:GetOriginalType(),TYPE_MONSTER)==TYPE_MONSTER
+	return not c:IsOriginalCodeRule(oc:GetOriginalCode()) and bit.band(c:GetOriginalType(),TYPE_MONSTER)==TYPE_MONSTER and c:IsFaceup()
 		and Duel.IsExistingTarget(s.thfilter3,tp,LOCATION_ONFIELD,0,1,nil,tp,oc,c)
 end
 function s.thfilter3(c,tp,oc,tc)
-	return not c:IsOriginalCodeRule(oc:GetOriginalCode(),tc:GetOriginalCode()) and bit.band(c:GetOriginalType(),TYPE_MONSTER)==TYPE_MONSTER
+	return not c:IsOriginalCodeRule(oc:GetOriginalCode(),tc:GetOriginalCode()) and bit.band(c:GetOriginalType(),TYPE_MONSTER)== and c:IsFaceup()
 		and Duel.IsExistingMatchingCard(s.setfilter,tp,LOCATION_DECK+LOCATION_HAND,0,1,nil,tp,oc,tc,c)
 end
 function s.setfilter(c,tp,oc,tc,sc)
@@ -73,7 +73,7 @@ function s.settg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local g=Duel.SelectTarget(tp,s.thfilter3,tp,LOCATION_ONFIELD,0,1,1,nil,tp,oc,tc)
 end
 function s.setop(e,tp,eg,ep,ev,re,r,rp)
-	local tg=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e)
+	local tg=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e):Filter(Card.IsFaceup,nil)
 	if tg:GetCount()~=3 then return end
 	local oc=tg:GetFirst()
 	local tc=tg:GetNext()
