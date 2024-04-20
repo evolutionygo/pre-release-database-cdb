@@ -132,7 +132,7 @@ end
 function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local bc=Duel.GetAttacker()
-	if c:IsRelateToEffect(e) and c:IsFaceup() and c:IsAttackAbove(500) and c:IsDefenseAbove(500) and bc:IsFaceup() and bc:IsRelateToBattle() then
+	if c:IsRelateToEffect(e) and c:IsFaceup() and c:IsAttackAbove(500) and c:IsDefenseAbove(500) then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_UPDATE_ATTACK)
@@ -142,11 +142,13 @@ function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 		local e2=e1:Clone()
 		e2:SetCode(EFFECT_UPDATE_DEFENSE)
 		c:RegisterEffect(e2)
-		local e3=Effect.CreateEffect(c)
-		e3:SetType(EFFEC3T_TYPE_SINGLE)
-		e3:SetCode(EFFECT_UPDATE_ATTACK)
-		e3:SetValue(-1500)
-		e3:SetReset(RESET_EVENT+RESETS_STANDARD)
-		bc:RegisterEffect(e3)
+		if bc:IsControler(1-tp) and bc:IsFaceup() and bc:IsRelateToBattle() then
+			local e3=Effect.CreateEffect(c)
+			e3:SetType(EFFEC3T_TYPE_SINGLE)
+			e3:SetCode(EFFECT_UPDATE_ATTACK)
+			e3:SetValue(-1500)
+			e3:SetReset(RESET_EVENT+RESETS_STANDARD)
+			bc:RegisterEffect(e3)
+		end
 	end
 end
