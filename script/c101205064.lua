@@ -31,9 +31,6 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 		db=true
 	end
 	Duel.AdjustAll()
-	if db then
-		Duel.BreakEffect()
-	end
 	local ss=Duel.GetFieldGroupCount(tp,0,LOCATION_MZONE)
 	if ss==0 then
 		Duel.SetLP(tp,math.ceil(Duel.GetLP(tp)/2))
