@@ -143,7 +143,7 @@ function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 		local e2=e1:Clone()
 		e2:SetCode(EFFECT_UPDATE_DEFENSE)
 		c:RegisterEffect(e2)
-		if bc:IsControler(1-tp) and bc:IsFaceup() and bc:IsRelateToBattle() then
+		if not c:IsHasEffect(EFFECT_REVERSE_UPDATE) and bc:IsControler(1-tp) and bc:IsFaceup() and bc:IsRelateToBattle() then
 			local e3=Effect.CreateEffect(c)
 			e3:SetType(EFFECT_TYPE_SINGLE)
 			e3:SetCode(EFFECT_UPDATE_ATTACK)
