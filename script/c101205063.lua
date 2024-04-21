@@ -16,7 +16,7 @@ function s.initial_effect(c)
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetProperty(EFFECT_FLAG_DELAY)
-	e2:SetCode(EVENT_TO_GRAVE)
+	e2:SetCode(EVENT_DESTROYED)
 	e2:SetCondition(s.setcon)
 	e2:SetTarget(s.settg)
 	e2:SetOperation(s.setop)
@@ -26,13 +26,14 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function s.cfilter(c)
-	return c:IsFaceup(0x1a2) and bit.band(c:GetType(),TYPE_MONSTER)==TYPE_MONSTER
-		and c:IsSetCard() and c:IsAbleToRemoveAsCost()
+	return c:IsFaceup() and bit.band(c:GetType(),TYPE_MONSTER)==TYPE_MONSTER
+		and c:IsSetCard(0x1a2) and c:IsAbleToRemoveAsCost()
 end
 function s.rmcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_SZONE,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	Duel.SelectMatchingCard(tp,s.cfilter,tp,LOCATION_MZONE,0,1,1,nil):GetFirst()
+	local g=Duel.SelectMatchingCard(tp,s.cfilter,tp,LOCATION_SZONE,0,1,1,nil)
+	Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
 function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(1-tp) and chkc:IsOnField() and chkc:IsAbleToRemove() end
@@ -43,7 +44,7 @@ function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsFaceup() and tc:IsRelateToEffect(e) then
+	if tc:IsRelateToEffect(e) then
 		Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)
 	end
 end
@@ -56,16 +57,14 @@ function s.filter(c)
 	return c:IsSetCard(0x1a2) and c:IsFaceupEx() and c:IsType(TYPE_MONSTER) and not c:IsForbidden()
 end
 function s.settg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_DECK+LOCATION_HAND+LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil)
+	if chk==0 then return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_DECK+LOCATION_HAND+LOCATION_GRAVE+LOCATION_REMOVED,0,2,nil)
 		and Duel.GetLocationCount(tp,LOCATION_SZONE)>0 end
 end
 function s.setop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	if Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 then return end
 	local ct=Duel.GetLocationCount(tp,LOCATION_SZONE)
-	if ct>2 then ct=2 end
+	if ct<2 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
-	local g=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_DECK+LOCATION_HAND+LOCATION_GRAVE+LOCATION_REMOVED,0,1,ct,nil)
+	local g=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_DECK+LOCATION_HAND+LOCATION_GRAVE+LOCATION_REMOVED,0,2,2,nil)
 	for tc in aux.Next(g) do
 		Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
 		local e1=Effect.CreateEffect(e:GetHandler())
