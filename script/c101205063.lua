@@ -49,30 +49,33 @@ function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.setcon(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	return c:IsReason(REASON_EFFECT) and rp==1-tp and c:IsPreviousControler(tp)
-		and c:IsPreviousLocation(LOCATION_ONFIELD) and c:IsPreviousPosition(POS_FACEDOWN)
+    local c=e:GetHandler()
+    return c:IsReason(REASON_EFFECT) and rp==1-tp and c:IsPreviousControler(tp)
+        and c:IsPreviousLocation(LOCATION_ONFIELD) and c:IsPreviousPosition(POS_FACEDOWN) and re:IsActivated()
 end
 function s.filter(c)
 	return c:IsSetCard(0x1a2) and c:IsFaceupEx() and c:IsType(TYPE_MONSTER) and not c:IsForbidden()
 end
 function s.settg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_DECK+LOCATION_HAND+LOCATION_GRAVE+LOCATION_REMOVED,0,2,nil)
-		and Duel.GetLocationCount(tp,LOCATION_SZONE)>0 end
+    local g=Duel.GetMatchingGroup(s.filter,tp,LOCATION_DECK+LOCATION_HAND+LOCATION_GRAVE+LOCATION_REMOVED,0,nil)
+    if chk==0 then return g:GetClassCount(Card.GetCode)>=2
+        and Duel.GetLocationCount(tp,LOCATION_SZONE)>1 end
 end
 function s.setop(e,tp,eg,ep,ev,re,r,rp)
-	local ct=Duel.GetLocationCount(tp,LOCATION_SZONE)
-	if ct<2 then return end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
-	local g=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_DECK+LOCATION_HAND+LOCATION_GRAVE+LOCATION_REMOVED,0,2,2,nil)
-	for tc in aux.Next(g) do
-		Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
-		local e1=Effect.CreateEffect(e:GetHandler())
-		e1:SetCode(EFFECT_CHANGE_TYPE)
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-		e1:SetReset(RESET_EVENT+RESETS_STANDARD-RESET_TURN_SET)
-		e1:SetValue(TYPE_TRAP+TYPE_CONTINUOUS)
-		tc:RegisterEffect(e1)
-	end
+    local ct=Duel.GetLocationCount(tp,LOCATION_SZONE)
+    if ct<2 then return end
+    local g=Duel.GetMatchingGroup(aux.NecroValleyFilter(s.filter),tp,LOCATION_DECK+LOCATION_HAND+LOCATION_GRAVE+LOCATION_REMOVED,0,nil)
+    if g:GetClassCount(Card.GetCode)<2 then return end
+    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
+    local tg1=g:SelectSubGroup(tp,aux.dncheck,false,2,2)
+    for tc in aux.Next(g) do
+        Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
+        local e1=Effect.CreateEffect(e:GetHandler())
+        e1:SetCode(EFFECT_CHANGE_TYPE)
+        e1:SetType(EFFECT_TYPE_SINGLE)
+        e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+        e1:SetReset(RESET_EVENT+RESETS_STANDARD-RESET_TURN_SET)
+        e1:SetValue(TYPE_TRAP+TYPE_CONTINUOUS)
+        tc:RegisterEffect(e1)
+    end
 end
