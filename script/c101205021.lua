@@ -36,7 +36,7 @@ function s.initial_effect(c)
 end
 function s.drfilter(c,tp)
 	return c:IsSetCard(0x2b5)
-		and Duel.IsExistingMatchingCard(s.drfilter2,tp,LOCATION_GRAVE,0,1,nil)
+		and Duel.IsExistingMatchingCard(s.drfilter2,tp,LOCATION_GRAVE,0,1,c)
 end
 function s.drfilter2(c)
 	return c:IsSetCard(0x1a2)
