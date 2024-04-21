@@ -49,7 +49,7 @@ function s.tdtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_TODECK,sg,sg:GetCount(),0,0)
 end
 function s.rtfilter(c,e)
-	return c:IsRelateToEffect(e) and c:IsType(TYPE_EFFECT)
+	return c:IsRelateToEffect(e) and c:IsFaceup() and c:IsType(TYPE_EFFECT)
 end
 function s.tdop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(s.rtfilter,nil,e)
@@ -62,15 +62,16 @@ function s.tdop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local ssg=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_HAND+LOCATION_EXTRA,0,1,1,nil,e,tp,atk)
 		if ssg:GetCount()>0 then
+			Duel.BreakEffect()
 			Duel.SpecialSummon(ssg,0,tp,tp,false,false,POS_FACEUP)
 		end
 	end
 end
-function s.cfilter(c,e)
-	return c:IsPreviousLocation(LOCATION_GRAVE) and c:IsSetCard(0x71) and c:IsLocation(LOCATION_DECK+LOCATION_EXTRA)
+function s.cfilter(c,e,tp)
+	return c:IsPreviousControler(tp) and c:IsPreviousLocation(LOCATION_GRAVE) and c:IsSetCard(0x71) and c:IsLocation(LOCATION_DECK+LOCATION_EXTRA)
 end
 function s.matcon(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(s.cfilter,1,nil,e)
+	return eg:IsExists(s.cfilter,1,nil,e,tp)
 end
 function s.tgfilter(c)
 	return c:IsFaceup() and c:IsType(TYPE_XYZ)
