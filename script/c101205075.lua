@@ -89,6 +89,11 @@ function s.couop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.SelectMatchingCard(tp,s.ctfilter,tp,LOCATION_PZONE,0,1,1,nil):GetFirst()
 	if tc then
 		local ct=3-tc:GetCounter(0x6a)
-		tc:AddCounter(0x6a,ct)
+		if ct>0 then
+			tc:AddCounter(0x6a,ct)
+			if tc:GetCounter(0x6a)==3 then
+				Duel.RaiseEvent(tc,EVENT_CUSTOM+39210885,e,0,tp,tp,0)
+			end
+		end
 	end
 end
