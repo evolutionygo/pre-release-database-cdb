@@ -81,7 +81,7 @@ function s.ctfilter(c)
 end
 function s.coutg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.ctfilter,tp,LOCATION_PZONE,0,1,nil) end
-	local g=Duel.GetMatchingGroup(s.ctfilter,tp,0,LOCATION_PZONE,nil)
+	local g=Duel.GetMatchingGroup(s.ctfilter,tp,LOCATION_PZONE,0,nil)
 	Duel.SetOperationInfo(0,CATEGORY_COUNTER,g,1,0,0x6a)
 end
 function s.couop(e,tp,eg,ep,ev,re,r,rp)
