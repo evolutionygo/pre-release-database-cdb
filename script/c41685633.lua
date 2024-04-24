@@ -44,18 +44,13 @@ end
 function c41685633.sprfilter1(c,sc)
 	return c:IsRace(RACE_THUNDER) and c:IsAbleToRemoveAsCost() and c:IsCanBeFusionMaterial(sc,SUMMON_TYPE_SPECIAL)
 end
-function c41685633.fusioncodechk(c,codetab)
-	for i=1,#codetab do
-		if codetab[i]~=41685633 then
-			return true
-		end
+function c41685633.sprfilter2(c)
+	if not (c:IsLocation(LOCATION_MZONE) and c:IsFusionType(TYPE_FUSION)) then return false end
+	if not c:IsFusionCode(41685633) then return true end
+	for i,code in ipairs({c:GetFusionCode()}) do
+		if code~=41685633 then return true end
 	end
 	return false
-end
-function c41685633.sprfilter2(c)
-	local codetab={c:GetFusionCode()}
-	local codechk=c41685633.fusioncodechk(c,codetab)
-	return c:IsLocation(LOCATION_MZONE) and c:IsFusionType(TYPE_FUSION) and codechk
 end
 function c41685633.fselect(g,tp,sc)
 	return aux.gffcheck(g,Card.IsLocation,LOCATION_HAND,c41685633.sprfilter2,nil)
