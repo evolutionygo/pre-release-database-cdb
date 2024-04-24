@@ -40,8 +40,8 @@ end
 function s.filter(c)
 	return c:IsType(TYPE_TRAP) and c:IsType(TYPE_CONTINUOUS) and c:IsSSetable()
 		and (c:GetOriginalLevel()>0
-		or bit.band(c:GetOriginalRace(),0x3fffffff)
-		or bit.band(c:GetOriginalAttribute(),0x7f)
+		or bit.band(c:GetOriginalRace(),0x3fffffff)~=0
+		or bit.band(c:GetOriginalAttribute(),0x7f)~=0
 		or c:GetBaseAttack()>0
 		or c:GetBaseDefense()>0)
 end
