@@ -78,7 +78,7 @@ function s.cfilter(c,tp)
 end
 function s.descon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	return not eg:IsContains(c) and eg:IsExists(s.cfilter,1,nil,tp)
+	return not eg:IsContains(c) and eg:IsExists(s.cfilter,1,nil)
 end
 function s.desfilter(c)
 	return c:IsType(TYPE_SPELL+TYPE_TRAP)
