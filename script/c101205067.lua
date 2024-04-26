@@ -32,7 +32,6 @@ function s.initial_effect(c)
 	e4:SetCode(EVENT_CUSTOM+id)
 	e4:SetProperty(EFFECT_FLAG_DELAY)
 	e4:SetRange(LOCATION_SZONE)
-	--e4:SetCondition(s.setcon)
 	e4:SetTarget(s.settg)
 	e4:SetOperation(s.setop)
 	c:RegisterEffect(e4)
@@ -65,7 +64,7 @@ function s.filter(c)
 end
 function s.settg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-	if chk==0 then return c:GetCounter(0x6c)==10 and c:IsAbleToHand() and Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_DECK,0,1,nil) end
+	if chk==0 then return eg:IsContains(c) and c:GetCounter(0x6c)==10 and c:IsAbleToHand() and Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_DECK,0,1,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,c,1,0,0)
 end
 function s.setop(e,tp,eg,ep,ev,re,r,rp)
