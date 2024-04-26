@@ -1,4 +1,4 @@
---陷阱收集器
+--トラップ・ギャザー
 local s,id,o=GetID()
 function s.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
@@ -34,6 +34,7 @@ function s.initial_effect(c)
 	e5:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
 	e5:SetCode(EFFECT_DESTROY_REPLACE)
 	e5:SetRange(LOCATION_SZONE)
+	e5:SetCountLimit(1,id+o)
 	e5:SetTarget(s.desreptg)
 	e5:SetValue(s.desrepval)
 	e5:SetOperation(s.desrepop)
