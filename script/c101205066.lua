@@ -1,4 +1,4 @@
---亚空间物质回送装置
+--亜空間物質回送装置
 local s,id,o=GetID()
 function s.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
@@ -19,7 +19,7 @@ function s.initial_effect(c)
 	e3:SetDescription(aux.Stringid(id,1))
 	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e3:SetCode(EVENT_CHAINING)
-	e3:SetProperty(EFFECT_FLAG_DELAY)
+	e3:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
 	e3:SetRange(LOCATION_SZONE)
 	e3:SetCountLimit(1,id+o)
 	e3:SetCondition(s.rmcon2)
@@ -37,7 +37,7 @@ function s.initial_effect(c)
 	e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e5:SetRange(LOCATION_SZONE)
 	e5:SetCode(EVENT_CHAIN_SOLVING)
-	e5:SetCountLimit(1,id+o)
+	e5:SetCountLimit(1,id+o*2)
 	e5:SetOperation(s.rmop3)
 	c:RegisterEffect(e5)
 end
@@ -53,7 +53,7 @@ function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and Duel.Remove(tc,0,REASON_EFFECT+REASON_TEMPORARY)~=0 and not tc:IsReason(REASON_REDIRECT) and tc:IsLocation(LOCATION_REMOVED) then
+	if tc:IsRelateToEffect(e) and tc:IsType(TYPE_MONSTER) and Duel.Remove(tc,0,REASON_EFFECT+REASON_TEMPORARY)~=0 and not tc:IsReason(REASON_REDIRECT) and tc:IsLocation(LOCATION_REMOVED) then
 		Duel.BreakEffect()
 		Duel.ReturnToField(tc)
 	end
@@ -73,7 +73,7 @@ function s.rmtg2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function s.rmop2(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and Duel.Remove(tc,0,REASON_EFFECT+REASON_TEMPORARY)~=0 and not tc:IsReason(REASON_REDIRECT) and tc:IsLocation(LOCATION_REMOVED) then
+	if tc:IsRelateToEffect(e) and tc:IsType(TYPE_MONSTER) and Duel.Remove(tc,0,REASON_EFFECT+REASON_TEMPORARY)~=0 and not tc:IsReason(REASON_REDIRECT) and tc:IsLocation(LOCATION_REMOVED) then
 		Duel.BreakEffect()
 		Duel.ReturnToField(tc)
 	end
