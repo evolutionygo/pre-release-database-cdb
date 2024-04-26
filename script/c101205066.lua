@@ -37,6 +37,7 @@ function s.initial_effect(c)
 	e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e5:SetRange(LOCATION_SZONE)
 	e5:SetCode(EVENT_CHAIN_SOLVING)
+	e5:SetCountLimit(1,id+o)
 	e5:SetOperation(s.rmop3)
 	c:RegisterEffect(e5)
 end

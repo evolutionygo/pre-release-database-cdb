@@ -52,6 +52,28 @@ function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 	if #sg>0 and Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP)>0 then
 		Duel.Remove(g-sg,POS_FACEUP,REASON_EFFECT)
 	end
+    local e1=Effect.CreateEffect(c)
+    e1:SetType(EFFECT_TYPE_FIELD)
+    e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+    e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+    e1:SetTargetRange(1,0)
+    e1:SetTarget(s.splimit)
+    e1:SetReset(RESET_PHASE+PHASE_END)
+    Duel.RegisterEffect(e1,tp)
+    local e2=Effect.CreateEffect(c)
+    e2:SetType(EFFECT_TYPE_FIELD)
+    e2:SetCode(EFFECT_CANNOT_ATTACK_ANNOUNCE)
+    e2:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
+    e2:SetTargetRange(LOCATION_MZONE,0)
+    e2:SetTarget(s.atktg)
+    e2:SetReset(RESET_PHASE+PHASE_END)
+    Duel.RegisterEffect(e2,tp)
+end
+function s.splimit(e,c)
+    return c:IsLocation(LOCATION_EXTRA) and not c:IsType(TYPE_SYNCHRO)
+end
+function s.atktg(e,c)
+    return not c:IsType(TYPE_SYNCHRO)
 end
 function s.synlimit(e,c)
 	if not c then return false end

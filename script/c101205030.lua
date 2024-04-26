@@ -21,8 +21,8 @@ function s.initial_effect(c)
 	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e3:SetCode(EVENT_CHANGE_POS)
 	e3:SetRange(LOCATION_MZONE)
-	e3:SetCountLimit(1,id)
-	e3:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DELAY)
+	e3:SetCountLimit(1)
+	e3:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
 	e3:SetCondition(s.poscon2)
 	e3:SetTarget(s.postg2)
 	e3:SetOperation(s.posop2)
@@ -32,7 +32,7 @@ s.toss_coin=true
 function s.filter(c,e,tp)
 	return c:IsCanChangePosition() and c:IsCanBeEffectTarget(e) and c:IsLocation(LOCATION_MZONE) and c:IsSummonPlayer(1-tp)
 end
-function s.postg(e,tp,eg,ep,ev,re,r,rp,chk)
+function s.postg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return eg:IsContains(chkc) and s.filter(chkc,e,tp) end
 	if chk==0 then return eg:IsExists(s.filter,1,nil,e,tp) and not eg:IsContains(e:GetHandler(),tp) end
 	local tc=eg:FilterSelect(tp,s.filter,1,1,nil,e,tp)
@@ -62,7 +62,7 @@ function s.postg2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() and s.cfilter(chkc) and eg:IsContains(chkc) end
 	if chk==0 then return eg:Filter(Card.IsOnField,nil):IsExists(s.cfilter,1,nil,e) and not eg:IsContains(e:GetHandler(),tp) end
 	local tc=eg:Filter(Card.IsOnField,nil):FilterSelect(tp,s.cfilter,1,1,nil)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_POSCHANGE)
 	Duel.SetTargetCard(tc)
 	Duel.SetOperationInfo(0,CATEGORY_POSITION,tc,1,0,0)
 end
