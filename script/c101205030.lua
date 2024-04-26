@@ -42,7 +42,7 @@ function s.postg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function s.posop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and tc:IsCanChangePosition() then
+	if tc:IsRelateToEffect(e) and tc:IsType(TYPE_MONSTER) and tc:IsCanChangePosition() then
 		local c1=Duel.TossCoin(tp,1)
 		if c1==1 and not tc:IsPosition(POS_FACEUP_ATTACK) then
 			Duel.ChangePosition(tc,0,0,0,POS_FACEUP_ATTACK,false)
@@ -68,7 +68,7 @@ function s.postg2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function s.posop2(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc and tc:IsRelateToEffect(e) then
+	if tc and tc:IsRelateToEffect(e) and tc:IsType(TYPE_MONSTER) then
 		if tc:IsPosition(POS_FACEUP_ATTACK) then
 			Duel.ChangePosition(tc,POS_FACEDOWN_DEFENSE)
 		elseif tc:IsPosition(POS_FACEDOWN_DEFENSE) then
