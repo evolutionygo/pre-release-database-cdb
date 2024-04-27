@@ -48,12 +48,12 @@ function s.discost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:SetLabel(100)
 	if chk==0 then return true end
 end
-function s.costfilter(c)
-	return c:IsSetCard(0x154) and c:IsAttackAbove(1) and c:IsAbleToRemoveAsCost()
+function s.costfilter(c,atk)
+	return c:IsSetCard(0x154) and (atk==0 or c:IsAttackAbove(1)) and c:IsAbleToRemoveAsCost()
 end
 function s.fselect(g,atk)
 	local sum=g:GetSum(Card.GetAttack)
-	return sum>=atk and not g:IsExists(Card.IsAttackBelow,1,nil,sum-atk)
+	return sum>=atk and (atk==0 and g:GetCount()==1 or not g:IsExists(Card.IsAttackBelow,1,nil,sum-atk))
 end
 function s.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local atk=0
@@ -62,7 +62,7 @@ function s.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 	else
 		atk=re:GetHandler():GetTextAttack()
 	end
-	local g=Duel.GetMatchingGroup(s.costfilter,tp,LOCATION_GRAVE,0,nil)
+	local g=Duel.GetMatchingGroup(s.costfilter,tp,LOCATION_GRAVE,0,nil,atk)
 	if chk==0 then
 		if e:GetLabel()~=100 then return false end
 		return g:CheckSubGroup(s.fselect,1,#g,atk) end
