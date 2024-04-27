@@ -53,7 +53,7 @@ function s.atkcon(e,tp,eg,ep,ev,re,r,rp)
 	return ct>5
 end
 function s.atktg(e,c)
-	return c:IsSetCard(0x1a3)
+	return c:IsSetCard(0x1a3) and c:IsType(TYPE_LINK)
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(Card.IsSummonPlayer,1,e:GetHandler(),1-tp)
@@ -80,15 +80,20 @@ function s.ctfilter(c)
 	return c:IsFaceup() and c:IsCanAddCounter(0x6a,1) and c:GetCounter(0x6a)<3
 end
 function s.coutg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.ctfilter,tp,LOCATION_ONFIELD,0,1,nil) end
-	local g=Duel.GetMatchingGroup(s.ctfilter,tp,0,LOCATION_ONFIELD,nil)
+	if chk==0 then return Duel.IsExistingMatchingCard(s.ctfilter,tp,LOCATION_PZONE,0,1,nil) end
+	local g=Duel.GetMatchingGroup(s.ctfilter,tp,LOCATION_PZONE,0,nil)
 	Duel.SetOperationInfo(0,CATEGORY_COUNTER,g,1,0,0x6a)
 end
 function s.couop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-	local tc=Duel.SelectMatchingCard(tp,s.ctfilter,tp,LOCATION_ONFIELD,0,1,1,nil):GetFirst()
+	local tc=Duel.SelectMatchingCard(tp,s.ctfilter,tp,LOCATION_PZONE,0,1,1,nil):GetFirst()
 	if tc then
 		local ct=3-tc:GetCounter(0x6a)
-		tc:AddCounter(0x6a,ct)
+		if ct>0 then
+			tc:AddCounter(0x6a,ct)
+			if tc:GetCounter(0x6a)==3 then
+				Duel.RaiseEvent(tc,EVENT_CUSTOM+39210885,e,0,tp,tp,0)
+			end
+		end
 	end
 end

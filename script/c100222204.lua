@@ -66,7 +66,7 @@ function s.eqop(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.immval(e,re)
 	local qc=e:GetHandler():GetEquipTarget()
-	return qc and qc:IsCode(70902743) and re:IsActivated() and e:GetHandlerPlayer()~=re:GetOwnerPlayer()
+	return re:IsActivated() and e:GetHandlerPlayer()~=re:GetOwnerPlayer() and qc and qc:IsCode(70902743)
 end
 function s.atkfilter(c,atk)
 	return c:IsFaceup() and c:GetAttack()~=atk
