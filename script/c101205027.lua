@@ -12,14 +12,14 @@ function s.initial_effect(c)
 	e1:SetCost(s.drcost)
 	e1:SetOperation(s.drop)
 	c:RegisterEffect(e1)
+	Duel.AddCustomActivityCounter(id,ACTIVITY_CHAIN,s.chainfilter)
 end
 function s.drcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetFieldGroupCount(tp,LOCATION_ONFIELD,0)==0
+	return Duel.GetFieldGroupCount(tp,LOCATION_ONFIELD,0)==0 and Duel.GetCustomActivityCount(id,tp,ACTIVITY_CHAIN)<2
 end
 function s.drcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsDiscardable() end
 	Duel.SendtoGrave(e:GetHandler(),REASON_COST+REASON_DISCARD)
-	Duel.AddCustomActivityCounter(id,ACTIVITY_CHAIN,s.chainfilter)
 	local e3=Effect.CreateEffect(e:GetHandler())
 	e3:SetType(EFFECT_TYPE_FIELD)
 	e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_OATH)
@@ -31,11 +31,11 @@ function s.drcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.RegisterEffect(e3,tp)
 end
 function s.chainfilter(re,tp,cid)
-	return re:IsActiveType(TYPE_MONSTER) and re:GetHandler():IsSetCard(0x2b4)
+	return not (re:IsActiveType(TYPE_MONSTER) and re:GetHandler():IsSetCard(0x2b4))
 end
 function s.actcon(e)
 	local tp=e:GetHandlerPlayer()
-	return Duel.GetCustomActivityCount(id,tp,ACTIVITY_CHAIN)~=0
+	return Duel.GetCustomActivityCount(id,tp,ACTIVITY_CHAIN)>1
 end
 function s.aclimit(e,re,tp)
 	return re:IsActiveType(TYPE_MONSTER) and re:GetHandler():IsSetCard(0x2b4)
