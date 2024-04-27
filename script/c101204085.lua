@@ -1,6 +1,6 @@
 --Jungle Dweller
 local s,id,o=GetID()
-function c101204085.initial_effect(c)
+function s.initial_effect(c)
 	--splimit
 	local e0=Effect.CreateEffect(c)
 	e0:SetType(EFFECT_TYPE_SINGLE)
@@ -81,7 +81,9 @@ function s.tdop(e,tp,eg,ep,ev,re,r,rp)
 	local tg=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.tdfilter),tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,2,nil)
 	if tg:GetCount()>0 then
 		Duel.SendtoDeck(tg,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)
-		if Duel.GetMatchingGroupCount(nil,tp,0,LOCATION_ONFIELD,nil)>0 and Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
+		tg=tg:Filter(Card.IsLocation,nil,LOCATION_DECK)
+		tg=tg-tg:Filter(Card.IsReason,nil,REASON_REDIRECT)
+		if #tg>0 and Duel.GetMatchingGroupCount(nil,tp,0,LOCATION_ONFIELD,nil)>0 and Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
 			Duel.BreakEffect()
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 			local dg=Duel.SelectMatchingCard(tp,nil,tp,0,LOCATION_ONFIELD,1,#tg,nil)
