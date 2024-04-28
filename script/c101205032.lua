@@ -49,7 +49,7 @@ function s.discost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 end
 function s.costfilter(c,atk)
-	return c:IsSetCard(0x154) and (atk==0 or c:IsAttackAbove(1)) and c:IsAbleToRemoveAsCost()
+	return c:IsSetCard(0x154) and c:IsType(TYPE_MONSTER) and (atk==0 or c:IsAttackAbove(1)) and c:IsAbleToRemoveAsCost()
 end
 function s.fselect(g,atk)
 	local sum=g:GetSum(Card.GetAttack)
