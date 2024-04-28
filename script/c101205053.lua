@@ -19,8 +19,7 @@ function s.spfilter(c,e,tp)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_DECK+LOCATION_HAND+LOCATION_ONFIELD,0,5,nil)
-		and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp)
-		and not Duel.IsExistingMatchingCard(s.ndfilter,tp,LOCATION_ONFIELD,0,1,nil,e,tp) end
+		and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 end
 function s.dfilter(c)
@@ -29,9 +28,6 @@ function s.dfilter(c)
 end
 function s.tdfilter(c)
 	return s.dfilter(c) and c:IsAbleToDeck()
-end
-function s.ndfilter(c)
-	return s.dfilter(c) and not c:IsAbleToDeck()
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
