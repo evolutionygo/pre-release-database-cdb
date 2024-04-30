@@ -46,7 +46,7 @@ function s.posop(e,tp,eg,ep,ev,re,r,rp)
 	if tc:IsRelateToEffect(e) and tc:IsType(TYPE_MONSTER) and tc:IsCanChangePosition() then
 		local c1=Duel.TossCoin(tp,1)
 		if c1==1 and not tc:IsPosition(POS_FACEUP_ATTACK) then
-			Duel.ChangePosition(tc,0,0,0,POS_FACEUP_ATTACK,false)
+			Duel.ChangePosition(tc,POS_FACEUP_ATTACK)
 		elseif c1==0 and not tc:IsPosition(POS_FACEDOWN_DEFENSE) then
 			Duel.ChangePosition(tc,POS_FACEDOWN_DEFENSE)
 		end
