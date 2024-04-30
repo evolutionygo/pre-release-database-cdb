@@ -53,7 +53,7 @@ function s.Alba_System_Drugmata_Fusion_Filter(c,mg,fc,tp,chkf,gc)
 	aux.GCheckAdditional=nil
 	return res
 end
-function s.matfilter(c,fc)
+function s.matfilter(c,tp)
 	return c:IsLocation(LOCATION_GRAVE) and c:IsControler(tp) and not c:IsHasEffect(6205579)
 end
 function s.Alba_System_Drugmata_Fusion_Gcheck(g,fc,tp,ec,chkf,gc)
