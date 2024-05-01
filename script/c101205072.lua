@@ -1,4 +1,4 @@
---镌刻魔的乐园
+--刻まれし魔の楽園
 local s,id,o=GetID()
 function s.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
@@ -37,11 +37,10 @@ function s.tgtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function s.tgop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if not tc:IsRelateToEffect(e) or not tc:IsType(TYPE_MONSTER) then return end
-	if tc then
-		local dg=Duel.GetMatchingGroup(Card.IsAbleToGrave,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,tc)
-		Duel.SendtoGrave(dg,REASON_EFFECT)
-	end
+	local exc=nil
+	if tc:IsRelateToEffect(e) and tc:IsType(TYPE_MONSTER) then exc=tc end
+	local dg=Duel.GetMatchingGroup(Card.IsAbleToGrave,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,exc)
+	Duel.SendtoGrave(dg,REASON_EFFECT)
 end
 function s.tgcon2(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(Card.IsSummonPlayer,1,nil,1-tp)
