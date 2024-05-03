@@ -64,13 +64,15 @@ end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local lv=e:GetLabel()
-	if not c:IsRelateToEffect(e) or Duel.IsPlayerAffectedByEffect(tp,59822133) or not c:IsCanBeSpecialSummoned(e,0,tp,false,false) then return end		
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local tc=Duel.SelectMatchingCard(tp,s.spfilter2,tp,LOCATION_DECK,0,1,1,nil,e,tp,lv):GetFirst()
-	if tc and Duel.GetLocationCount(tp,LOCATION_MZONE)>1 then
-		Duel.SpecialSummonStep(c,0,tp,tp,false,false,POS_FACEUP)
-		Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP)
-		Duel.SpecialSummonComplete()
+	if not c:IsRelateToEffect(e) or Duel.IsPlayerAffectedByEffect(tp,59822133) or not c:IsCanBeSpecialSummoned(e,0,tp,false,false) then return end
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)>1 then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+		local tc=Duel.SelectMatchingCard(tp,s.spfilter2,tp,LOCATION_DECK,0,1,1,nil,e,tp,lv):GetFirst()
+		if tc then
+			Duel.SpecialSummonStep(c,0,tp,tp,false,false,POS_FACEUP)
+			Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP)
+			Duel.SpecialSummonComplete()
+		end
 	end
 end
 function s.thcon(e,tp,eg,ep,ev,re,r,rp)
