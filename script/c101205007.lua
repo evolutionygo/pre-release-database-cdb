@@ -62,7 +62,7 @@ function s.upop(e,tp,eg,ep,ev,re,r,rp)
 	local sg=Duel.GetTargetsRelateToChain()
 	if #sg==0 then return end
 	for tc in aux.Next(sg) do
-		if tc:IsFaceup() then
+		if tc:IsFaceup() and tc:IsType(TYPE_MONSTER) then
 			local e1=Effect.CreateEffect(c)
 			e1:SetType(EFFECT_TYPE_SINGLE)
 			e1:SetCode(EFFECT_UPDATE_LEVEL)
