@@ -34,7 +34,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function s.spfilter(c,tp)
-	return c:IsControler(tp) and c:IsRace(RACE_DRAGON) and c:IsLevelAbove(5) and c:IsFaceup()
+	return c:IsSummonPlayer(tp) and c:IsRace(RACE_DRAGON) and c:IsLevelAbove(5) and c:IsFaceup()
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.spfilter,1,nil,tp)
