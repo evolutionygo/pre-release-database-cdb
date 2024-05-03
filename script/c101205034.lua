@@ -51,7 +51,10 @@ function s.negcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.negtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-	if chk==0 then return true end
+	if chk==0 then return c:GetFlagEffect(id)==0 end
+	if c:IsHasEffect(EFFECT_REVERSE_UPDATE) then
+		c:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,1)
+	end
 	Duel.SetOperationInfo(0,CATEGORY_NEGATE,eg,1,0,0)
 end
 function s.negop(e,tp,eg,ep,ev,re,r,rp)
