@@ -26,11 +26,11 @@ function s.initial_effect(c)
 	e2:SetOperation(s.tkop)
 	c:RegisterEffect(e2)
 end
-function s.cfilter(c)
+function s.cfilter(c,tp)
 	return c:IsPreviousControler(tp) and c:IsPreviousLocation(LOCATION_MZONE+LOCATION_HAND) and c:GetOriginalRace()&RACE_THUNDER==RACE_THUNDER and c:GetOriginalType()&TYPE_MONSTER==TYPE_MONSTER
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(s.cfilter,1,nil)
+	return eg:IsExists(s.cfilter,1,nil,tp)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
@@ -46,7 +46,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.tkcon(e,tp,eg,ep,ev,re,r,rp)
 	local race,loc=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_RACE,CHAININFO_TRIGGERING_LOCATION)
-	return re:IsActiveType(TYPE_MONSTER) and race&RACE_THUNDER~=0 and LOCATION_HAND&loc~=0
+	return re:IsActiveType(TYPE_MONSTER) and bit.band(race,RACE_THUNDER)~=0 and bit.band(LOCATION_HAND,loc)~=0
 end
 function s.tktg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
