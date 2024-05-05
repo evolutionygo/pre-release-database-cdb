@@ -38,6 +38,7 @@ end
 function s.discon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local op,loc,seq2=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_CONTROLER,CHAININFO_TRIGGERING_LOCATION,CHAININFO_TRIGGERING_SEQUENCE)
+	if loc&LOCATION_SZONE~=0 and seq2>4 then return false end
 	local seq1=aux.MZoneSequence(c:GetSequence())
 	seq2=aux.MZoneSequence(seq2)
 	return bit.band(loc,LOCATION_ONFIELD)~=0
