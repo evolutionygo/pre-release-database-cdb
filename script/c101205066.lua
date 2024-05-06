@@ -38,6 +38,7 @@ function s.initial_effect(c)
 	e5:SetRange(LOCATION_SZONE)
 	e5:SetCode(EVENT_CHAIN_SOLVING)
 	e5:SetCountLimit(1,id+o*2)
+	e5:SetCondition(s.rmcon3)
 	e5:SetOperation(s.rmop3)
 	c:RegisterEffect(e5)
 end
@@ -78,24 +79,27 @@ function s.rmop2(e,tp,eg,ep,ev,re,r,rp)
 		Duel.ReturnToField(tc)
 	end
 end
+function s.rmcon3(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	if c:GetFlagEffect(FLAG_ID_CHAINING)==0 then return false end
+	if ep==tp then return false end
+	if not re:IsHasProperty(EFFECT_FLAG_CARD_TARGET) then return false end
+	local g=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)
+	if not g or not g:IsContains(c)then return false end
+	return true
+end
 function s.rmop3(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:GetFlagEffect(FLAG_ID_CHAINING)==0 then return end
-	if ep==tp then return end
-	if not re:IsHasProperty(EFFECT_FLAG_CARD_TARGET) then return end
-	local g=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)
-	if g and g:IsContains(c) then
-		if c:IsAbleToRemove() and Duel.Remove(c,0,REASON_EFFECT+REASON_TEMPORARY)~=0 and c:GetOriginalCode()==id then
-			local e1=Effect.CreateEffect(c)
-			e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-			e1:SetCode(EVENT_PHASE+PHASE_END)
-			e1:SetReset(RESET_PHASE+PHASE_END,2)
-			e1:SetLabel(Duel.GetTurnCount())
-			e1:SetLabelObject(c)
-			e1:SetCountLimit(1)
-			e1:SetOperation(s.retop)
-			Duel.RegisterEffect(e1,tp)
-		end
+	if c:IsAbleToRemove() and Duel.Remove(c,0,REASON_EFFECT+REASON_TEMPORARY)~=0 and c:GetOriginalCode()==id then
+	local e1=Effect.CreateEffect(c)
+		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		e1:SetCode(EVENT_PHASE+PHASE_END)
+		e1:SetReset(RESET_PHASE+PHASE_END,2)
+		e1:SetLabel(Duel.GetTurnCount())
+		e1:SetLabelObject(c)
+		e1:SetCountLimit(1)
+		e1:SetOperation(s.retop)
+		Duel.RegisterEffect(e1,tp)
 	end
 end
 function s.retop(e,tp,eg,ep,ev,re,r,rp)
