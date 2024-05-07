@@ -26,7 +26,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function s.cfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0xa4) and c:GetOriginalType()&TYPE_MONSTER>0
+	return c:IsFaceup() and c:IsSetCard(0xa4) and bit.band(c:GetOriginalType(),TYPE_MONSTER)~=0
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil)
