@@ -1,4 +1,4 @@
---机雷
+--機雷化するクリボー
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--spsummon
@@ -26,10 +26,10 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function s.cfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0xa4)
+	return c:IsFaceup() and c:IsSetCard(0xa4) and c:GetOriginalType()&TYPE_MONSTER>0
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil)
+	return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
@@ -40,9 +40,6 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if not c:IsRelateToEffect(e) then return end
 	Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
-end
-function s.eqfilter(c,tp)
-	return c:IsFaceup() and c:IsType(TYPE_XYZ) and c:CheckUniqueOnField(tp) and not c:IsForbidden()
 end
 function s.eqcon(e,tp,eg,ep,ev,re,r,rp)
 	return rp==1-tp and re:IsActiveType(TYPE_MONSTER) and re:GetActivateLocation()==LOCATION_MZONE
@@ -55,10 +52,11 @@ function s.eqtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_EQUIP,c,1,0,0)
 end
 function s.eqop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 then return end
 	local c=e:GetHandler()
 	local rc=re:GetHandler()
-	if rc:IsRelateToEffect(e) and rc:IsFaceup() and Duel.Equip(tp,c,rc) then
+	if Duel.GetLocationCount(tp,LOCATION_SZONE)<=0  or rc:IsFacedown() or not rc:IsRelateToEffect(e) then
+		Duel.SendtoGrave(c,REASON_EFFECT)
+	elseif Duel.Equip(tp,c,rc) then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
