@@ -74,7 +74,7 @@ function s.adop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetValue(-1500)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 		tc:RegisterEffect(e1)
-		if preatk~=0 and tc:IsAttack(0) then
+		if preatk~=0 and tc:IsAttack(0) and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 			Duel.BreakEffect()
 			Duel.Destroy(tc,REASON_EFFECT)
 		end
