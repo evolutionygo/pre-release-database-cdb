@@ -65,7 +65,8 @@ function s.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.GetMatchingGroup(s.costfilter,tp,LOCATION_GRAVE,0,nil,atk)
 	if chk==0 then
 		if e:GetLabel()~=100 then return false end
-		return g:CheckSubGroup(s.fselect,1,#g,atk) end
+		return g:CheckSubGroup(s.fselect,1,#g,atk)
+	end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local sg=g:SelectSubGroup(tp,s.fselect,false,1,#g,atk)
 	Duel.Remove(sg,POS_FACEUP,REASON_COST)

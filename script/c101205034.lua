@@ -60,7 +60,7 @@ end
 function s.negop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsFacedown() or not c:IsRelateToEffect(e) or c:GetAttack()<1000 or c:GetDefense()<1000
-		or Duel.GetCurrentChain()~=ev+1 or c:IsStatus(STATUS_BATTLE_DESTROYED) then
+		or c:IsStatus(STATUS_BATTLE_DESTROYED) then
 		return
 	end
 	local e1=Effect.CreateEffect(c)
@@ -73,7 +73,7 @@ function s.negop(e,tp,eg,ep,ev,re,r,rp)
 	local e2=e1:Clone()
 	e2:SetCode(EFFECT_UPDATE_DEFENSE)
 	c:RegisterEffect(e2)
-	if not c:IsHasEffect(EFFECT_REVERSE_UPDATE) then
+	if not c:IsHasEffect(EFFECT_REVERSE_UPDATE) and Duel.GetCurrentChain()==ev+1 then
 		Duel.NegateActivation(ev)
 	end
 end
