@@ -111,5 +111,5 @@ function s.tdop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetFieldGroup(e:GetOwnerPlayer(),LOCATION_HAND,0)
 	local d=Duel.GetFieldGroupCount(e:GetOwnerPlayer(),LOCATION_HAND,0)-(Duel.GetFieldGroupCount(e:GetOwnerPlayer(),0,LOCATION_ONFIELD)+6)
 	local sg=g:RandomSelect(e:GetOwnerPlayer(),d)
-	Duel.SendtoDeck(sg,nil,2,REASON_EFFECT)
+	Duel.SendtoDeck(sg,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)
 end
