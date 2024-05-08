@@ -85,7 +85,7 @@ function s.sunthfilter(c,e,tp,minc,maxc)
 	if c:IsHasEffect(EFFECT_SUMMON_PROC,c:GetControler()) then
 		local tte=c:IsHasEffect(EFFECT_SUMMON_PROC,c:GetControler())
 		local ec=tte:GetCondition()
-		if not ec(e,c,0) then return false end
+		return ec(e,c,0)
 	else
 		if not Duel.CheckTribute(c,minc,maxc) then return false end
 	end
