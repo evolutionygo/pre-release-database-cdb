@@ -70,6 +70,7 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,PLAYER_ALL,LOCATION_GRAVE)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
+	if Duel.GetLocationCount(1-tp,LOCATION_MZONE)==0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.spfilter),tp,LOCATION_GRAVE,LOCATION_GRAVE,1,1,nil,e,tp)
 	if g:GetCount()>0 then
@@ -92,7 +93,7 @@ function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		sg=g:Clone()
 		Duel.SetTargetCard(sg)
 	else
-		Duel.Hint(HINTMSG_DESTROY,tp,HINTMSG_TOGRAVE)
+		Duel.Hint(HINTMSG_DESTROY,tp,HINTMSG_DESTROY)
 		sg=Duel.SelectTarget(tp,aux.IsInGroup,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil,g)
 	end
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,sg,1,0,0)
