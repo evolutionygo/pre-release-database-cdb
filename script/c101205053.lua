@@ -26,7 +26,8 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		if e:GetLabel()==0 then return false end
 		e:SetLabel(0)
-		return not Duel.IsPlayerAffectedByEffect(tp,4130270) and Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_DECK+LOCATION_HAND+LOCATION_ONFIELD,0,5,nil)
+		return not Duel.IsPlayerAffectedByEffect(tp,4130270)
+			and Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_DECK+LOCATION_HAND+LOCATION_ONFIELD,0,5,nil)
 			and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp)
 	end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
@@ -76,6 +77,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	e3:SetCode(EFFECT_CANNOT_FLIP_SUMMON)
 	Duel.RegisterEffect(e3,tp)
 	if c:IsRelateToEffect(e) and e:IsHasType(EFFECT_TYPE_ACTIVATE) then
+		Duel.BreakEffect()
 		Duel.SendtoDeck(c,nil,SEQ_DECKSHUFFLE,REASON_EFFECT,tp,true)
 	end
 end

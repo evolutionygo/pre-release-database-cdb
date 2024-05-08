@@ -73,22 +73,24 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local sg=Duel.GetMatchingGroup(s.desfilter,tp,LOCATION_SZONE,LOCATION_SZONE,nil)
 	if Duel.Destroy(sg,REASON_EFFECT)~=0 and Duel.GetMatchingGroupCount(s.desfilter,tp,LOCATION_SZONE,0,nil)==0 then
 		local g=Duel.SelectMatchingCard(tp,s.eqfilter,tp,LOCATION_DECK+LOCATION_HAND,0,5,5,nil)
+		if g:GetCount()>0 then Duel.BreakEffect() end
 		for tc in aux.Next(g) do
-			if not Duel.Equip(tp,tc,c) then return end
-			local e1=Effect.CreateEffect(c)
-			e1:SetType(EFFECT_TYPE_SINGLE)
-			e1:SetProperty(EFFECT_FLAG_OWNER_RELATE)
-			e1:SetCode(EFFECT_EQUIP_LIMIT)
-			e1:SetReset(RESET_EVENT+RESETS_STANDARD)
-			e1:SetLabelObject(c)
-			e1:SetValue(s.eqlimit)
-			tc:RegisterEffect(e1)
-			local e2=Effect.CreateEffect(c)
-			e2:SetType(EFFECT_TYPE_EQUIP)
-			e2:SetCode(EFFECT_UPDATE_ATTACK)
-			e2:SetValue(2000)
-			e2:SetReset(RESET_EVENT+RESETS_STANDARD)
-			tc:RegisterEffect(e2)
+			if Duel.Equip(tp,tc,c) then
+				local e1=Effect.CreateEffect(c)
+				e1:SetType(EFFECT_TYPE_SINGLE)
+				e1:SetProperty(EFFECT_FLAG_OWNER_RELATE)
+				e1:SetCode(EFFECT_EQUIP_LIMIT)
+				e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+				e1:SetLabelObject(c)
+				e1:SetValue(s.eqlimit)
+				tc:RegisterEffect(e1)
+				local e2=Effect.CreateEffect(c)
+				e2:SetType(EFFECT_TYPE_EQUIP)
+				e2:SetCode(EFFECT_UPDATE_ATTACK)
+				e2:SetValue(2000)
+				e2:SetReset(RESET_EVENT+RESETS_STANDARD)
+				tc:RegisterEffect(e2)
+			end
 		end
 	end
 	local e3=Effect.CreateEffect(c)
