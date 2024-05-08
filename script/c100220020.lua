@@ -1,4 +1,4 @@
---Y-ドラゴン・イアヘッド
+--Y－ドラゴン・イアヘッド
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.EnableUnionAttribute(c,s.filter)

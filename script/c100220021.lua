@@ -1,4 +1,4 @@
---Z-ジリオン・キャタビラー
+--Z－ジリオン・キャタビラー
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.EnableUnionAttribute(c,s.filter)
