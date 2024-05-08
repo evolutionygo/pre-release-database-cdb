@@ -54,7 +54,8 @@ end
 function s.eqop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local rc=re:GetHandler()
-	if Duel.GetLocationCount(tp,LOCATION_SZONE)<=0  or rc:IsFacedown() or not rc:IsRelateToEffect(e) then
+	if not c:IsRelateToEffect(e) or c:IsControler(1-tp) then return end
+	if Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 or rc:IsFacedown() or not rc:IsRelateToEffect(e) then
 		Duel.SendtoGrave(c,REASON_EFFECT)
 	elseif Duel.Equip(tp,c,rc) then
 		local e1=Effect.CreateEffect(c)
