@@ -24,11 +24,9 @@ function s.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.op(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(s.tgfilter,tp,0,LOCATION_MZONE,nil,e)
-	local db=false
 	if g:GetCount()>0 and Duel.SelectYesNo(1-tp,aux.Stringid(id,1)) then
 		local tg=g:FilterSelect(1-tp,aux.NOT(Card.IsImmuneToEffect),1,g:GetCount(),nil,e)
 		Duel.SendtoGrave(tg,REASON_EFFECT)
-		db=true
 	end
 	Duel.AdjustAll()
 	local ss=Duel.GetFieldGroupCount(tp,0,LOCATION_MZONE)
