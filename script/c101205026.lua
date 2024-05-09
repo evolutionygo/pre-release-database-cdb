@@ -1,4 +1,4 @@
---無孔砲塔-ディセイブラスター
+--無孔砲塔－ディセイブラスター
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.EnablePendulumAttribute(c)

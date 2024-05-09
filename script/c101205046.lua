@@ -1,4 +1,4 @@
---镌刻魔的镇魂棺
+--刻まれし魔の鎮魂棺
 local s,id,o=GetID()
 function s.initial_effect(c)
 	c:SetSPSummonOnce(id)

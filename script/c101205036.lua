@@ -1,4 +1,4 @@
---镌刻魔 震怒之日
+--刻まれし魔ディエスイレ
 local s,id,o=GetID()
 function s.initial_effect(c)
 	c:EnableReviveLimit()

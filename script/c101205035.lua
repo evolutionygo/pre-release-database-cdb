@@ -1,4 +1,4 @@
---镌刻魔 末日之泪
+--刻まれし魔ラクリモーサ
 local s,id,o=GetID()
 function s.initial_effect(c)
 	c:EnableReviveLimit()

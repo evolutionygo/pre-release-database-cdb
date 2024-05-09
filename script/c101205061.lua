@@ -1,4 +1,4 @@
---镌刻魔的咏圣
+--刻まれし魔の詠聖
 local s,id,o=GetID()
 function s.initial_effect(c)
 	local e1=Effect.CreateEffect(c)

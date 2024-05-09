@@ -1,4 +1,4 @@
---白森林的灾祸之人
+--白き森のわざわいなり
 local s,id,o=GetID()
 function s.initial_effect(c)
 	local e1=Effect.CreateEffect(c)

@@ -1,4 +1,4 @@
---镌刻魔的大圣棺
+--刻まれし魔の大聖棺
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddLinkProcedure(c,nil,2,2,s.lcheck)
