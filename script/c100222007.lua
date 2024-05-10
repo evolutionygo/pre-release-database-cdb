@@ -44,7 +44,7 @@ function s.atktg(e,c)
 	return aux.IsCodeListed(c,33900648)
 end
 function s.damcon(e,tp,eg,ep,ev,re,r,rp)
-	return ep~=tp and Duel.GetAttackTarget()==nil
+	return ep~=tp
 end
 function s.damtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetFieldGroupCount(1-tp,LOCATION_HAND,0)>0 end
