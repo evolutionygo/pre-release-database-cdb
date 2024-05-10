@@ -154,6 +154,7 @@ function c33900648.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if g:GetCount()>0 then
 		Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
 	end
+	Duel.Hint(HINT_OPSELECTED,1-tp,aux.Stringid(id,1))
 end
 function c33900648.desop(e,tp,eg,ep,ev,re,r,rp)
 	if bit.band(c33900648[Duel.GetTurnPlayer()],ATTRIBUTE_EARTH)==0
@@ -170,6 +171,7 @@ function c33900648.hdtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	local turnp=Duel.GetTurnPlayer()
 	Duel.SetOperationInfo(0,CATEGORY_HANDES,nil,0,turnp,1)
+	Duel.Hint(HINT_OPSELECTED,1-tp,aux.Stringid(id,2))
 end
 function c33900648.hdop(e,tp,eg,ep,ev,re,r,rp)
 	if bit.band(c33900648[Duel.GetTurnPlayer()],ATTRIBUTE_WATER)==0
@@ -183,6 +185,7 @@ function c33900648.damtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	local turnp=Duel.GetTurnPlayer()
 	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,turnp,1000)
+	Duel.Hint(HINT_OPSELECTED,1-tp,aux.Stringid(id,3))
 end
 function c33900648.damop(e,tp,eg,ep,ev,re,r,rp)
 	if bit.band(c33900648[Duel.GetTurnPlayer()],ATTRIBUTE_FIRE)==0
