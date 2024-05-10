@@ -33,6 +33,7 @@ function s.initial_effect(c)
 	e5:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 	e5:SetRange(LOCATION_SZONE)
 	e5:SetTargetRange(0,1)
+	e5:SetCondition(s.ieecon)
 	e5:SetCode(id)
 	c:RegisterEffect(e5)
 end
@@ -56,4 +57,10 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.tg(e,c)
 	return aux.IsCodeListed(c,33900648)
+end
+function s.cfilter(c)
+	return c:IsFaceup() and c:IsLevelAbove(7) and aux.IsCodeListed(c,33900648)
+end
+function s.ieecon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_MZONE,0,1,nil)
 end

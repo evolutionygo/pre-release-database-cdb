@@ -65,7 +65,7 @@ function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and Duel.Destroy(tc,REASON_EFFECT)~=0 and Duel.IsPlayerCanDiscardDeck(1-tp,1) then
+	if tc:IsRelateToEffect(e) and tc:IsLocation(LOCATION_MZONE) and Duel.Destroy(tc,REASON_EFFECT)~=0 and Duel.IsPlayerCanDiscardDeck(1-tp,1) then
 		Duel.DiscardDeck(1-tp,3,REASON_EFFECT)
 	end
 end
