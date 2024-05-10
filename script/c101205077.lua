@@ -57,7 +57,7 @@ function s.tdop(e,tp,eg,ep,ev,re,r,rp)
 	local tg=Duel.GetOperatedGroup()
 	if tg:GetCount()==0 then return end
 	local sg=tg:Filter(Card.IsLocation,nil,LOCATION_HAND+LOCATION_EXTRA)
-	local atk=sg:GetSum(Card.GetAttack)
+	local atk=sg:GetSum(Card.GetBaseAttack)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_HAND+LOCATION_EXTRA,0,1,nil,e,tp,atk) and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local ssg=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_HAND+LOCATION_EXTRA,0,1,1,nil,e,tp,atk)
