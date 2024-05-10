@@ -33,9 +33,9 @@ end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local ct=math.min(Duel.GetFieldGroup(tp,LOCATION_MZONE,0):FilterCount(s.filter,nil),Duel.GetLocationCount(tp,LOCATION_MZONE))
 	if chkc then return chkc:IsOnField() and chkc:IsControler(1-tp) and Card.IsControlerCanBeChanged(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(Card.IsControlerCanBeChanged,tp,0,LOCATION_ONFIELD,1,nil) and ct>0 end
+	if chk==0 then return Duel.IsExistingTarget(Card.IsControlerCanBeChanged,tp,0,LOCATION_MZONE,1,nil) and ct>0 end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONTROL)
-	local g=Duel.SelectTarget(tp,Card.IsControlerCanBeChanged,tp,0,LOCATION_ONFIELD,1,ct,nil)
+	local g=Duel.SelectTarget(tp,Card.IsControlerCanBeChanged,tp,0,LOCATION_MZONE,1,ct,nil)
 	Duel.SetOperationInfo(0,CATEGORY_CONTROL,g,g:GetCount(),0,0)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
