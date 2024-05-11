@@ -160,7 +160,7 @@ function c33900648.desop(e,tp,eg,ep,ev,re,r,rp)
 	if bit.band(c33900648[Duel.GetTurnPlayer()],ATTRIBUTE_EARTH)==0
 		or Duel.IsPlayerAffectedByEffect(Duel.GetTurnPlayer(),97811903) then return end
 	local tc=Duel.GetFirstTarget()
-	if tc and tc:IsRelateToEffect(e) and tc:IsPosition(POS_FACEUP_DEFENSE) then
+	if tc and tc:IsRelateToEffect(e) and tc:IsControler(1-tp) and tc:IsType(TYPE_MONSTER) and tc:IsPosition(POS_FACEUP_DEFENSE) then
 		Duel.Destroy(tc,REASON_EFFECT)
 	end
 end
