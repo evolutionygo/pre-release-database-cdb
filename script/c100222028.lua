@@ -36,7 +36,7 @@ function s.initial_effect(c)
 	e6:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH+CATEGORY_SPECIAL_SUMMON)
 	e6:SetType(EFFECT_TYPE_IGNITION)
 	e6:SetRange(LOCATION_SZONE)
-	e6:SetCountLimit(1,id)
+	e6:SetCountLimit(3,id)
 	e6:SetCost(s.thcost)
 	e6:SetTarget(s.thtg)
 	e6:SetOperation(s.thop)
@@ -89,7 +89,7 @@ end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_OPERATECARD)
 	local g=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp)
-	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+	local ft=Duel.GetLocationCount(1-tp,LOCATION_MZONE)
 	local tc=g:GetFirst()
 	if tc then
 		if tc:IsAbleToHand() and (not tc:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP,1-tp) or ft<=0 or Duel.SelectOption(tp,1190,1152)==0) then

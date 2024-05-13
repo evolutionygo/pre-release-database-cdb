@@ -163,7 +163,7 @@ function s.atkcon(e,tp,eg,ep,ev,re,r,rp)
 	local ec=e:GetHandler():GetEquipTarget()
 	local tc=ec:GetBattleTarget()
 	e:SetLabelObject(tc)
-	return tc and tc:IsFaceup()
+	return not ec:IsAttack(0) and tc and tc:IsFaceup()
 end
 function s.atktg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
