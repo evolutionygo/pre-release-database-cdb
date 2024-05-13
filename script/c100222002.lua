@@ -46,12 +46,7 @@ function s.filter(c)
 	return c:IsSummonable(true,nil)
 end
 function s.sumtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then
-		local ct1=Duel.GetMatchingGroupCount(s.filter,tp,LOCATION_HAND+LOCATION_MZONE,0,nil)
-		local ct2=Duel.GetFlagEffect(tp,80604091)
-		return ct1-ct2>0
-	end
-	Duel.RegisterFlagEffect(tp,80604091,RESET_CHAIN,0,1)
+	if chk==0 then return ct1=Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_HAND+LOCATION_MZONE,0,1,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_SUMMON,nil,1,0,0)
 end
 function s.sumop(e,tp,eg,ep,ev,re,r,rp)
