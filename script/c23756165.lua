@@ -24,7 +24,7 @@ c23756165.lvup={50140163,87257460}
 c23756165.lvdn={87257460}
 function c23756165.regop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:GetSummonType()==SUMMON_TYPE_SPECIAL+SUMMON_VALUE_LV then
+	if c:GetSummonType()==SUMMON_TYPE_SPECIAL+SUMMON_VALUE_LV or (re and re:GetHandler():IsCode(87257460)) then
 		local e1=Effect.CreateEffect(c)
 		e1:SetDescription(aux.Stringid(23756165,0))
 		e1:SetCategory(CATEGORY_EQUIP)
@@ -49,7 +49,7 @@ function c23756165.eqcon1(e,tp,eg,ep,ev,re,r,rp)
 	local ec=e:GetLabelObject():GetLabelObject()
 	return (ec==nil or ec:GetFlagEffect(23756165)==0) and not Duel.IsPlayerAffectedByEffect(tp,100222027)
 end
-function c23756165.eqcon1(e,tp,eg,ep,ev,re,r,rp)
+function c23756165.eqcon2(e,tp,eg,ep,ev,re,r,rp)
 	local ec=e:GetLabelObject():GetLabelObject()
 	return (ec==nil or ec:GetFlagEffect(23756165)==0) and Duel.IsPlayerAffectedByEffect(tp,100222027)
 end
@@ -120,7 +120,7 @@ function c23756165.spop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.SelectMatchingCard(tp,c23756165.spfilter,tp,LOCATION_HAND+LOCATION_DECK,0,1,1,nil,e,tp)
 	local tc=g:GetFirst()
 	if tc then
-		Duel.SpecialSummon(tc,SUMMON_VALUE_LV,tp,tp,true,false,POS_FACEUP)
+		Duel.SpecialSummon(tc,0,tp,tp,true,false,POS_FACEUP)
 		tc:CompleteProcedure()
 	end
 end
