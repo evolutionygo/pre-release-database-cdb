@@ -26,7 +26,7 @@ function s.initial_effect(c)
 	e3:SetOperation(s.fop)
 	c:RegisterEffect(e3)
 	local e4=Effect.CreateEffect(c)
-	e4:SetDescription(aux.Stringid(id,0))
+	e4:SetDescription(aux.Stringid(id,1))
 	e4:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_TOKEN)
 	e4:SetType(EFFECT_TYPE_IGNITION)
 	e4:SetRange(LOCATION_SZONE)
@@ -37,7 +37,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e4)
 	local e5=Effect.CreateEffect(c)
 	e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
-	e5:SetCategory(CATEGORY_DESTROY)
+	e5:SetCategory(CATEGORY_ATKCHANGE)
 	e5:SetCode(EVENT_ATTACK_ANNOUNCE)
 	e5:SetRange(LOCATION_SZONE)
 	e5:SetCondition(s.atkcon)
@@ -91,6 +91,7 @@ function s.ftg(e,tp,eg,ep,ev,re,r,rp,chk)
 		end
 		return res
 	end
+	Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 end
 function s.fop(e,tp,eg,ep,ev,re,r,rp)
@@ -133,6 +134,7 @@ function s.tokentg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local tc=e:GetHandler():GetEquipTarget()
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and Duel.IsPlayerCanSpecialSummonMonster(tp,id+o,0,TYPES_TOKEN_MONSTER,tc:GetAttack(),0,5,tc:GetRace(),tc:GetAttribute()) end
+	Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
 	Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,1,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,0,0)
 end
