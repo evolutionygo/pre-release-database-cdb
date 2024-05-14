@@ -36,7 +36,7 @@ function s.initial_effect(c)
 end
 function s.ibcon(e,tp,eg,ep,ev,re,r,rp)
 	local ec=e:GetHandler():GetEquipTarget()
-	return ec:IsType(TYPE_XYZ)
+	return ec:IsType(TYPE_XYZ) and not ec:IsDisabled()
 end
 function s.xyzcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetBattledGroupCount()>0
