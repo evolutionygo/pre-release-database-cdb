@@ -47,7 +47,7 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SendtoGrave(g,REASON_COST)
 	local rk=g:GetFirst():GetRank()
 	e:SetLabel(rk)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectTarget(tp,s.spfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp,rk)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
 end
@@ -75,7 +75,7 @@ end
 function s.eqop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if c:IsRelateToEffect(e) and tc:IsFaceup() and tc:IsRelateToEffect(e) then
+	if c:IsRelateToEffect(e) and tc:IsFaceup() and tc:IsRelateToEffect(e) and tc:IsType(TYPE_MONSTER) then
 		if not Duel.Equip(tp,c,tc) then return end
 		--equip limit
 		local e1=Effect.CreateEffect(c)
