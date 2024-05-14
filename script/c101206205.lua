@@ -98,5 +98,8 @@ function s.xyzop(e,tp,eg,ep,ev,re,r,rp)
 		local og=tc:GetOverlayGroup()
 		local sg=og:Select(tp,1,1,nil)
 		Duel.Overlay(tc2,sg,false)
+		local oc=sg:GetFirst():GetOverlayTarget()
+		Duel.RaiseSingleEvent(oc,EVENT_DETACH_MATERIAL,e,0,0,0,0)
+		Duel.RaiseEvent(oc,EVENT_DETACH_MATERIAL,e,0,0,0,0)
 	end
 end
