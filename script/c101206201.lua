@@ -41,7 +41,7 @@ function s.chainfilter(re,tp,cid)
 	return not (re:IsActiveType(TYPE_SPELL) and re:IsHasType(EFFECT_TYPE_ACTIVATE))
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetCustomActivityCount(id,tp,ACTIVITY_CHAIN)>0
+	return Duel.GetCustomActivityCount(id,tp,ACTIVITY_CHAIN)>0 or Duel.GetCustomActivityCount(id,1-tp,ACTIVITY_CHAIN)>0
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
