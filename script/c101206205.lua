@@ -94,9 +94,9 @@ function s.xyzop(e,tp,eg,ep,ev,re,r,rp)
 	tg:Sub(tg2)
 	local tc=tg2:GetFirst()
 	local tc2=tg:GetFirst()
-	if tc then
+	if tc2 then
 		local og=tc:GetOverlayGroup()
 		local sg=og:Select(tp,1,1,nil)
-		Duel.Overlay(tc,sg,false)
+		Duel.Overlay(tc2,sg,false)
 	end
 end
