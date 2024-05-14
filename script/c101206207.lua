@@ -93,16 +93,16 @@ end
 function s.eqfilter(c,fid)
 	return c:GetFlagEffectLabel(id)==fid
 end
-function s.eqfilter2(c)
+function s.eqfilter2(c,ec)
 	return c:IsType(TYPE_XYZ) and c:IsFaceup()
 		and ec:CheckEquipTarget(c) and ec:CheckUniqueOnField(tp,LOCATION_SZONE) and not ec:IsForbidden()
 end
 function s.eqop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_CARD,0,id)
 	local ec=e:GetLabelObject()
-	if Duel.GetLocationCount(tp,LOCATION_SZONE)>0 and Duel.IsExistingMatchingCard(s.eqfilter2,tp,LOCATION_MZONE,0,1,nil) then
+	if Duel.GetLocationCount(tp,LOCATION_SZONE)>0 and Duel.IsExistingMatchingCard(s.eqfilter2,tp,LOCATION_MZONE,0,1,nil,ec) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EQUIP)
-		local tc=Duel.SelectMatchingCard(tp,s.eqfilter2,tp,LOCATION_MZONE,0,1,1,nil):GetFirst()
+		local tc=Duel.SelectMatchingCard(tp,s.eqfilter2,tp,LOCATION_MZONE,0,1,1,nil,ec):GetFirst()
 		Duel.Equip(tp,ec,tc)
 	end
 end
