@@ -45,7 +45,7 @@ function s.thfilter(c,ec)
 	return c:IsAbleToHand() and c:IsType(TYPE_EQUIP) and ec:GetEquipGroup():IsContains(c)
 end
 function s.xyzfilter(c)
-	return c:IsXyzSummonable(nil)
+	return c:IsXyzSummonable(nil) and c:IsAttribute(ATTRIBUTE_WATER)
 end
 function s.xyztg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil,e:GetHandler()) and Duel.IsExistingMatchingCard(s.xyzfilter,tp,LOCATION_EXTRA,0,1,nil) end
