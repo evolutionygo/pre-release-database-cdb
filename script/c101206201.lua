@@ -62,6 +62,9 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetReset(RESET_PHASE+PHASE_END)
 	Duel.RegisterEffect(e1,tp)
 end
+function s.splimit(e,c)
+	return not c:IsType(TYPE_XYZ) and c:IsLocation(LOCATION_EXTRA)
+end
 function s.filter(c)
 	return c:IsSetCard(0x2b7) and c:IsRace(RACE_FISH) and c:IsAbleToHand()
 end

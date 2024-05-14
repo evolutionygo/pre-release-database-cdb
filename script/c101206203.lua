@@ -29,7 +29,7 @@ function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 end
 function s.tgfilter(c,e,tp)
-	return c:IsAbleToGraveAsCost() and c:IsAttribute(ATTRIBUTE_WATER) and c:IsType(TYPE_XYZ) and Duel.IsExistingTarget(s.spfilter,tp,0,LOCATION_MZONE,1,nil,e,tp,c:GetRank())
+	return c:IsAbleToGraveAsCost() and c:IsAttribute(ATTRIBUTE_WATER) and c:IsType(TYPE_XYZ) and Duel.IsExistingTarget(s.spfilter,tp,LOCATION_MZONE,0,1,nil,e,tp,c:GetRank())
 end
 function s.spfilter(c,e,tp,rk)
 	return c:IsFaceup() and c:IsLevel(rk) and c:IsRace(RACE_FISH) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
@@ -74,7 +74,7 @@ end
 function s.eqop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if c:IsRelateToEffect(e) and tc:IsFaceup() and tc:IsRelateToEffect(e) and tc:IsControler(tp) then
+	if c:IsRelateToEffect(e) and tc:IsFaceup() and tc:IsRelateToEffect(e) then
 		if not Duel.Equip(tp,c,tc) then return end
 		--equip limit
 		local e1=Effect.CreateEffect(c)

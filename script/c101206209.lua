@@ -32,14 +32,14 @@ function s.descon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(s.ffilter,tp,LOCATION_MZONE,0,1,nil)
 end
 function s.desfilter(c,attr)
-	return c:IsFaceup() and c:IsAttribute(attr) and not c:GetEquipGroup()
+	return c:IsFaceup() and c:IsAttribute(attr) and not c:GetEquipGroup():Filter(Card.IsType,nil,TYPE_SPELL)
 end
 function s.filter(c)
-	return c:IsFaceup() and not c:GetEquipGroup()
+	return c:IsFaceup() and not c:GetEquipGroup():Filter(Card.IsType,nil,TYPE_SPELL)
 end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
-	local g=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
+	if chk==0 then return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
+	local g=Duel.GetMatchingGroup(s.filter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 	local attr=0
 	for tc in aux.Next(g) do
 		attr=attr|tc:GetAttribute()
@@ -63,7 +63,7 @@ function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.RemoveOverlayCard(tp,1,0,1,1,REASON_COST)
 end
 function s.filter(c,e,tp)
-	return c:IsRace(RACE_FISH+RACE_AQUA+RACE_SEASERPENT) and c:IsLevelBelow(4) and (c:IsCanBeSpecialSummoned(e,0,tp,false,false) or c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP,1-tp))
+	return c:IsRace(RACE_FISH+RACE_AQUA+RACE_SEASERPENT) and (c:IsCanBeSpecialSummoned(e,0,tp,false,false) or c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP,1-tp))
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return (Duel.GetLocationCount(tp,LOCATION_MZONE)>0 or Duel.GetLocationCount(1-tp,LOCATION_MZONE)>0)

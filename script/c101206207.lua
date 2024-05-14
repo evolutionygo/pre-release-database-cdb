@@ -5,6 +5,7 @@ function s.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_EQUIP)
 	e1:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
+	e1:SetCondition(s.ibcon)
 	e1:SetValue(1)
 	c:RegisterEffect(e1)
 	local e2=Effect.CreateEffect(c)
@@ -32,7 +33,11 @@ function s.initial_effect(c)
 	e4:SetOperation(s.eqop)
 	c:RegisterEffect(e4)
 end
-function s.xyzcon(e,tp,eg,ep,ev,re,r,rp,chk)
+function s.ibcon(e,tp,eg,ep,ev,re,r,rp)
+	local ec=e:GetHandler():GetEquipTarget()
+	return ec:IsType(TYPE_XYZ)
+end
+function s.xyzcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetBattledGroupCount()>0
 end
 function s.thfilter(c,ec)

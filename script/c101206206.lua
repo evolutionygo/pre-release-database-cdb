@@ -41,11 +41,16 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
 		e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CANNOT_DISABLE)
 		e1:SetRange(LOCATION_MZONE)
-		e1:SetAbsoluteRange(tp,1,0)
+		e1:SetTargetRange(1,0)
 		e1:SetTarget(s.splimit)
+		e1:SetCondition(s.con)
+		e1:SetLabel(tp)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 		tc:RegisterEffect(e1,true)
 	end
+end
+function s.con(e)
+	return e:GetHandler():GetControler()==e:GetLabel()
 end
 function s.splimit(e,c)
 	return not c:IsType(TYPE_XYZ) and c:IsLocation(LOCATION_EXTRA)
