@@ -36,9 +36,9 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	local tc2=g:GetFirst()
 	if tc2 and Duel.SendtoHand(tc2,nil,REASON_EFFECT)~=0 and tc2:IsLocation(LOCATION_HAND) then
 		Duel.ConfirmCards(1-tp,tc2)
-		Duel.ShuffleHand(tp)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
 		local dg=Duel.GetFieldGroup(tp,LOCATION_HAND,0):Select(tp,1,1,nil)
+		Duel.ShuffleHand(tp)
 		if dg:GetCount()>0 then
 			Duel.BreakEffect()
 			Duel.SendtoDeck(dg,nil,SEQ_DECKTOP,REASON_EFFECT)
