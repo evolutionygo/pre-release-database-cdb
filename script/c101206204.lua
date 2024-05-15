@@ -25,6 +25,7 @@ function s.initial_effect(c)
 	e3:SetCode(EFFECT_PIERCE)
 	c:RegisterEffect(e3)
 end
+aux.xyz_number[id]=32
 function s.cfilter(c)
 	return c:IsType(TYPE_SPELL) and c:IsDiscardable()
 end
