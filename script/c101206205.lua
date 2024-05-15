@@ -19,7 +19,6 @@ function s.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCountLimit(1,id+o)
-	e2:SetCost(s.thcost2)
 	e2:SetTarget(s.thtg2)
 	e2:SetOperation(s.thop2)
 	c:RegisterEffect(e2)
@@ -48,22 +47,21 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.ConfirmCards(1-tp,g)
 	end
 end
-function s.thcost2(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.CheckRemoveOverlayCard(tp,1,0,1,REASON_COST) end
-	Duel.RemoveOverlayCard(tp,1,0,1,1,REASON_COST)
-end
 function s.thfilter2(c)
 	return not c:IsCode(id) and c:IsRace(RACE_FISH+RACE_AQUA+RACE_SEASERPENT)
 		and c:IsAbleToHand()
 end
 function s.thtg2(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter2,tp,LOCATION_GRAVE,0,1,nil) end
+	if chk==0 then return Duel.CheckRemoveOverlayCard(tp,1,0,1,REASON_COST) and Duel.IsExistingMatchingCard(s.thfilter2,tp,LOCATION_GRAVE,0,1,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_GRAVE)
 end
 function s.thop2(e,tp,eg,ep,ev,re,r,rp)
+	if not Duel.CheckRemoveOverlayCard(tp,1,0,1,REASON_COST) or not Duel.RemoveOverlayCard(tp,1,0,1,1,REASON_COST) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	local g=Duel.SelectMatchingCard(tp,s.thfilter2,tp,LOCATION_GRAVE,0,1,1,nil)
 	if g:GetCount()>0 then
+		Duel.HintSelection(g)
+		Duel.BreakEffect()
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,g)
 	end
