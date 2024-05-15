@@ -32,21 +32,20 @@ end
 function s.spcon1(e,tp,eg,ep,ev,re,r,rp)
 	return eg:FilterCount(s.cfilter,nil,tp)==1 and eg:GetCount()==1
 end
-function s.costfilter(c,eg)
-	return eg:IsContains(c)
+function s.costfilter(c,eg,tp)
+	return eg:IsContains(c) and Duel.GetMZoneCount(tp,c)>0
 end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.CheckReleaseGroup(tp,s.costfilter,1,nil,eg) end
+	if chk==0 then return Duel.CheckReleaseGroup(tp,s.costfilter,1,nil,eg,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
-	local g=Duel.SelectReleaseGroup(tp,s.costfilter,1,1,nil,eg)
+	local g=Duel.SelectReleaseGroup(tp,s.costfilter,1,1,nil,eg,tp)
 	Duel.Release(g,REASON_COST)
 end
 function s.spcon2(e,tp,eg,ep,ev,re,r,rp)
 	return eg:FilterCount(s.cfilter,nil,tp)==1 and eg:GetCount()==1 and Duel.GetAttacker():IsControler(1-tp)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
+	if chk==0 then return e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
@@ -72,6 +71,7 @@ function s.cthop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.thfilter),tp,LOCATION_GRAVE,0,1,1,nil)
 	if #g>0 then
+		Duel.HintSelection(g)
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,g)
 	end
