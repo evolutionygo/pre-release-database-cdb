@@ -1,4 +1,4 @@
---ギミック・パペット-キラーナイト
+--ギミック・パペット－キラーナイト
 local s,id,o=GetID()
 function s.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
