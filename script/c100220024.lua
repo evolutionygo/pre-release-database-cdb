@@ -130,6 +130,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=g:GetFirst()
 	if tc and Duel.SendtoHand(tc,nil,REASON_EFFECT)~=0 and tc:IsSummonable(true,nil) then
 		Duel.ConfirmCards(1-tp,tc)
+		Duel.BreakEffect()
 		Duel.Summon(tp,tc,true,nil)
 	end
 end
