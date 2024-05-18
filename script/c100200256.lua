@@ -1,4 +1,4 @@
---分裂的涡虫
+--分裂するプラナリア
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--special summon

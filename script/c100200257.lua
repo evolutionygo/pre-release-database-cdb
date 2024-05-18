@@ -1,4 +1,4 @@
---雷电邻居
+--OToNaRiサンダー
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--special summon
