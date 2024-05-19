@@ -38,6 +38,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.ConfirmCards(1-tp,tc2)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
 		local dg=Duel.GetFieldGroup(tp,LOCATION_HAND,0):Select(tp,1,1,nil)
+		Duel.ShuffleDeck(tp)
 		Duel.ShuffleHand(tp)
 		if dg:GetCount()>0 then
 			Duel.BreakEffect()
