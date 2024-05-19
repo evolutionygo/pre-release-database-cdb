@@ -1,4 +1,4 @@
---分裂するプラナリア
+--OToNaRiサンダー
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--special summon
@@ -6,78 +6,68 @@ function s.initial_effect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_IGNITION)
-	e1:SetRange(LOCATION_MZONE)
+	e1:SetRange(LOCATION_HAND+LOCATION_GRAVE)
 	e1:SetCountLimit(1,id)
-	e1:SetCost(aux.bfgcost)
+	e1:SetCondition(s.spcon)
 	e1:SetTarget(s.sptg)
 	e1:SetOperation(s.spop)
 	c:RegisterEffect(e1)
+	--attach
+	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(aux.Stringid(id,1))
+	e2:SetType(EFFECT_TYPE_IGNITION)
+	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e2:SetRange(LOCATION_MZONE)
+	e2:SetCountLimit(1,id+o)
+	e2:SetTarget(s.xtg)
+	e2:SetOperation(s.xop)
+	c:RegisterEffect(e2)
 end
-function s.filter(c,e,tp)
-	return c:IsLevel(3) and c:IsRace(RACE_INSECT) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+function s.cfilter(c)
+	return c:IsFaceup() and c:IsRace(RACE_THUNDER)
 end
-function s.fselect(g)
-	return g:GetClassCount(Card.GetCode)==1
+function s.spcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_MZONE,0,2,nil)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	local g=Duel.GetMatchingGroup(s.filter,tp,LOCATION_DECK,0,nil,e,tp)
-	if chk==0 then return not Duel.IsPlayerAffectedByEffect(tp,59822133)
-		and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and g:CheckSubGroup(s.fselect,2,2) end
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,2,tp,LOCATION_DECK)
+	local c=e:GetHandler()
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and c:IsCanBeSpecialSummoned(e,0,tp,false,false) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,c,1,0,0)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.IsPlayerAffectedByEffect(tp,59822133) then return end
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<2 then return end
 	local c=e:GetHandler()
-	local g=Duel.GetMatchingGroup(s.filter,tp,LOCATION_DECK,0,nil,e,tp)
-	local sg=g:SelectSubGroup(tp,s.fselect,false,2,2)
-	if sg:GetCount()==2 then
-		local fid=e:GetHandler():GetFieldID()
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-		for tc in aux.Next(sg) do
-			Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP)
-			local e1=Effect.CreateEffect(c)
-			e1:SetType(EFFECT_TYPE_SINGLE)
-			e1:SetCode(EFFECT_DISABLE)
-			e1:SetReset(RESET_EVENT+RESETS_STANDARD)
-			tc:RegisterEffect(e1)
-			local e2=Effect.CreateEffect(c)
-			e2:SetType(EFFECT_TYPE_SINGLE)
-			e2:SetCode(EFFECT_DISABLE_EFFECT)
-			e2:SetValue(RESET_TURN_SET)
-			e2:SetReset(RESET_EVENT+RESETS_STANDARD)
-			tc:RegisterEffect(e2)
-			tc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,0,1,fid)
-		end
-		Duel.SpecialSummonComplete()
-		sg:KeepAlive()
-		local e3=Effect.CreateEffect(c)
-		e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		e3:SetCode(EVENT_PHASE+PHASE_END)
-		e3:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
-		e3:SetCountLimit(1)
-		e3:SetLabel(fid)
-		e3:SetLabelObject(sg)
-		e3:SetCondition(s.descon)
-		e3:SetOperation(s.desop)
-		Duel.RegisterEffect(e3,tp)
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and c:IsRelateToEffect(e)
+		and Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)>0 then
+		local e1=Effect.CreateEffect(c)
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+		e1:SetCode(EFFECT_LEAVE_FIELD_REDIRECT)
+		e1:SetValue(LOCATION_REMOVED)
+		e1:SetReset(RESET_EVENT+RESETS_REDIRECT)
+		c:RegisterEffect(e1,true)
 	end
 end
-function s.desfilter(c,fid)
-	return c:GetFlagEffectLabel(id)==fid
+function s.xfilter(c)
+	return c:IsFaceup() and c:IsType(TYPE_XYZ)
 end
-function s.descon(e,tp,eg,ep,ev,re,r,rp)
-	local g=e:GetLabelObject()
-	if not g:IsExists(s.desfilter,1,nil,e:GetLabel()) then
-		g:DeleteGroup()
-		e:Reset()
-		return false
-	else return true end
+function s.xyzfilter(c)
+	return c:IsFaceup() and c:IsLevel(4) and c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsRace(RACE_THUNDER) and c:IsCanOverlay()
 end
-function s.desop(e,tp,eg,ep,ev,re,r,rp)
-	local g=e:GetLabelObject()
-	local tg=g:Filter(s.desfilter,nil,e:GetLabel())
-	Duel.Remove(tg,POS_FACEUP,REASON_EFFECT)
+function s.xtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	local c=e:GetHandler()
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and s.xfilter(chkc) and chkc~=c end
+	if chk==0 then return Duel.IsExistingTarget(s.xfilter,tp,LOCATION_MZONE,0,1,c)
+		and s.xyzfilter(c) and Duel.IsExistingMatchingCard(s.xyzfilter,tp,LOCATION_MZONE+LOCATION_HAND+LOCATION_GRAVE,0,1,c) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
+	Duel.SelectTarget(tp,s.xfilter,tp,LOCATION_MZONE,0,1,1,c)
 end
-
+function s.xop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	local tc=Duel.GetFirstTarget()
+	local g=Duel.GetMatchingGroup(s.xyzfilter,tp,LOCATION_MZONE+LOCATION_HAND+LOCATION_GRAVE,0,1,c)
+	if g:GetCount()>0 and s.xyzfilter(c) and c:IsRelateToEffect(e) and tc:IsRelateToEffect(e) and not tc:IsImmuneToEffect(e) then
+		local mg=Group.FromCards(c,g:Select(tp,1,1,nil))
+		if mg:GetCount()==2 then Duel.Overlay(tc,mg) end
+	end
+end
