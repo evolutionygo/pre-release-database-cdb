@@ -52,7 +52,7 @@ function s.xfilter(c)
 	return c:IsFaceup() and c:IsType(TYPE_XYZ)
 end
 function s.xyzfilter(c)
-	return c:IsFaceup() and c:IsLevel(4) and c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsRace(RACE_THUNDER) and c:IsCanOverlay()
+	return c:IsFaceupEx() and c:IsLevel(4) and c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsRace(RACE_THUNDER) and c:IsCanOverlay()
 end
 function s.xtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()
@@ -67,7 +67,7 @@ function s.xop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	local g=Duel.GetMatchingGroup(s.xyzfilter,tp,LOCATION_MZONE+LOCATION_HAND+LOCATION_GRAVE,0,1,c)
 	if g:GetCount()>0 and s.xyzfilter(c) and c:IsRelateToEffect(e) and tc:IsRelateToEffect(e) and not tc:IsImmuneToEffect(e) then
-		local mg=Group.FromCards(c,g:Select(tp,1,1,nil))
+		local mg=Group.FromCards(c,g:Select(tp,1,1,c))
 		if mg:GetCount()==2 then Duel.Overlay(tc,mg) end
 	end
 end

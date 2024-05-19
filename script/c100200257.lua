@@ -41,7 +41,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.atkfilter(c)
-	return c:IsFaceup() and c:IsRace(RACE_PLANT)
+	return c:IsFaceup() and c:IsRace(RACE_PLANT) and not c:IsCode(id)
 end
 function s.atktg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()
