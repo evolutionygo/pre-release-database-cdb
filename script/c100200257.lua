@@ -40,15 +40,15 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		 Duel.CalculateDamage(a,c)
 	end
 end
-function s.atkfilter(c)
-	return c:IsFaceup() and c:IsRace(RACE_PLANT) and not c:IsCode(id)
+function s.atkfilter(c,ac)
+	return c:IsFaceup() and c:IsRace(RACE_PLANT) and not c:IsCode(id) and c:GetBaseAttack()+ac:GetBaseAttack()>0
 end
 function s.atktg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()
 	if chkc then return chkc:IsControler(tp) and chkc~=c and chkc:IsLocation(LOCATION_MZONE) and s.atkfilter(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(s.atkfilter,tp,LOCATION_MZONE,0,1,c) end
+	if chk==0 then return Duel.IsExistingTarget(s.atkfilter,tp,LOCATION_MZONE,0,1,c,c) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
-	Duel.SelectTarget(tp,s.atkfilter,tp,LOCATION_MZONE,0,1,1,c)
+	Duel.SelectTarget(tp,s.atkfilter,tp,LOCATION_MZONE,0,1,1,c,c)
 end
 function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
