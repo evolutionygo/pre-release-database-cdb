@@ -1603,3 +1603,91 @@ end
 function Auxiliary.BanishRedirectCondition(e)
 	return e:GetHandler():IsFaceup()
 end
+
+--- Test for 8888
+--for effects that player usually select card from field, avoid showing panel
+function Auxiliary.SelectCardFromFieldFirst(tp,f,player,s,o,min,max,ex,...)
+	local ext_params={...}
+	local newhint=nil
+	local g=Duel.GetMatchingGroup(f,player,s,o,ex,ext_params):Filter(Card.IsOnField,nil)
+	if #g>=min then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FIELD_FIRST)
+		local sg=g:CancelableSelect(tp,min,max,nil)
+		if sg then return sg end
+		newhint=HINTMSG_OPERATECARD
+	end
+	if newhint then
+		Duel.Hint(HINT_SELECTMSG,tp,newhint)
+	end
+	return Duel.SelectMatchingCard(tp,f,player,s,o,min,max,ex,ext_params)
+end
+---If this card in the Monster Zone is destroyed by battle or card effect: You can place this card in your Pendulum Zone.
+function Auxiliary.AddPlaceToPZoneIfDestroyEffect(c)
+	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(1170)
+	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e1:SetCode(EVENT_DESTROYED)
+	e1:SetProperty(EFFECT_FLAG_DELAY)
+	e1:SetCondition(Auxiliary.PlaceToPZoneCondition)
+	e1:SetTarget(Auxiliary.PlaceToPZoneTarget)
+	e1:SetOperation(Auxiliary.PlaceToPZoneOperation)
+	c:RegisterEffect(e1)
+	return e1
+end
+---Check whether the player has a Pendulum Zone available
+function Auxiliary.CheckPendulumLocation(tp)
+	return Duel.CheckLocation(tp,LOCATION_PZONE,0) or Duel.CheckLocation(tp,LOCATION_PZONE,1)
+end
+function Auxiliary.PlaceToPZoneCondition(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	return c:IsPreviousLocation(LOCATION_MZONE) and c:IsFaceup() and c:IsReason(REASON_BATTLE+REASON_EFFECT)
+end
+function Auxiliary.PlaceToPZoneTarget(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Auxiliary.CheckPendulumLocation(tp) end
+	local c=e:GetHandler()
+	if c:IsLocation(LOCATION_GRAVE) then
+		Duel.SetOperationInfo(0,CATEGORY_LEAVE_GRAVE,c,1,0,0)
+	end
+end
+function Auxiliary.PlaceToPZoneOperation(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	if c:IsRelateToEffect(e) then
+		Duel.MoveToField(c,tp,tp,LOCATION_PZONE,POS_FACEUP,true)
+	end
+end
+---Wrap of Duel.IsPlayerCanSpecialSummonMonster with more clear parameters
+---@param tp integer
+---@param v integer|Card
+---@param data? integer|{ setcode:integer, type:integer, atk:integer, def:integer, level:integer, race:integer, attribute:integer, position:integer, target_player:integer, sumtype:integer }
+function Auxiliary.IsPlayerCanSpecialSummonMonster(tp,v,data)
+	local id
+	if Auxiliary.GetValueType(v)=="Card" then id=v:GetCode() end
+	if Auxiliary.GetValueType(v)=="number" then id=v end
+	if data==nil then
+		return Duel.IsPlayerCanSpecialSummonMonster(tp,id)
+	end
+	if data==TYPES_NORMAL_TRAP_MONSTER or data==TYPES_EFFECT_TRAP_MONSTER then
+		return Duel.IsPlayerCanSpecialSummonMonster(tp,id,nil,data)
+	end
+	local setcode=nil
+	if data.setcode then setcode=data.setcode end
+	local type=nil
+	if data.type then type=data.type end
+	local atk=nil
+	if data.atk then atk=data.atk end
+	local def=nil
+	if data.def then def=data.def end
+	local level=nil
+	if data.level then level=data.level end
+	local race=nil
+	if data.race then race=data.race end
+	local attribute=nil
+	if data.attribute then attribute=data.attribute end
+	local position=POS_FACEUP
+	if data.position then pos=data.position end
+	local target_player=tp
+	if data.target_player then target_player=data.target_player end
+	local sumtype=0
+	if data.sumtype then sumtype=data.sumtype end
+	return Duel.IsPlayerCanSpecialSummonMonster(tp,id,setcode,type,atk,def,level,race,attribute,position,target_player,sumtype)
+end
