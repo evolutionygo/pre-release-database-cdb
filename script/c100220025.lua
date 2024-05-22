@@ -22,6 +22,7 @@ function s.initial_effect(c)
 	e2:SetOperation(s.tdop)
 	c:RegisterEffect(e2)
 end
+s.has_text_type=TYPE_UNION
 function s.drcon(e,tp,eg,ep,ev,re,r,rp)
 	return rp==1-tp
 end
