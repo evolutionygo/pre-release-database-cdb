@@ -1,6 +1,7 @@
 --リヴァーチュ・ドラゴン
 local s,id,o=GetID()
 function s.initial_effect(c)
+	aux.AddCodeList(c,101206208)
 	aux.AddXyzProcedure(c,nil,3,2)
 	c:EnableReviveLimit()
 	local e1=Effect.CreateEffect(c)
