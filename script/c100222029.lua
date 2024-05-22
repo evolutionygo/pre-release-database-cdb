@@ -1,6 +1,7 @@
 --魅惑の舞
 local s,id,o=GetID()
 function s.initial_effect(c)
+	aux.AddCodeList(c,100222028)
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
