@@ -50,20 +50,11 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	if not c:IsRelateToEffect(e) then return end
 	local b1=Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 	local b2=Duel.GetLocationCount(1-tp,LOCATION_MZONE)>0 and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP,1-tp)
-	local op=0
-	if b1 and b2 then
-		op=Duel.SelectOption(tp,aux.Stringid(id,3),aux.Stringid(id,4))
-	elseif b1 then
-		op=Duel.SelectOption(tp,aux.Stringid(id,3))
-	elseif b2 then
-		op=Duel.SelectOption(tp,aux.Stringid(id,4))+1
-	else
-		Duel.SendtoGrave(c,REASON_RULE)
-	end
-	if op==0 then
-		Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
-	else
-		Duel.SpecialSummon(c,0,tp,1-tp,false,false,POS_FACEUP)
+	local toplayer=aux.SelectFromOptions(tp,
+		{b1,aux.Stringid(id,3),tp},
+		{b2,aux.Stringid(id,4),1-tp})
+	if toplayer~=nil then
+		Duel.SpecialSummon(c,0,tp,toplayer,false,false,POS_FACEUP)
 	end
 end
 function s.thfilter(c)
