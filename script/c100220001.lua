@@ -55,6 +55,8 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		{b2,aux.Stringid(id,4),1-tp})
 	if toplayer~=nil then
 		Duel.SpecialSummon(c,0,tp,toplayer,false,false,POS_FACEUP)
+	else
+		Duel.SendtoGrave(c,REASON_RULE)
 	end
 end
 function s.thfilter(c)
