@@ -1,4 +1,5 @@
 --嘆きの石版
+local s,id,o=GetID()
 function s.initial_effect(c)
 	local e0=Effect.CreateEffect(c)
 	e0:SetCategory(CATEGORY_EQUIP)
