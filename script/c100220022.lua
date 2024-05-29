@@ -60,7 +60,7 @@ function s.spfilter(c,e,tp,fc)
 	return aux.IsMaterialListCode(fc,c:GetCode()) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.fselect(tg,tp,ec)
-	return Duel.GetMZoneCount(tp,c,tp)>=#tg
+	return Duel.GetMZoneCount(tp,ec,tp)>=#tg
 end
 function s.ffilter(c,e,tp,ec)
 	if not (c:IsType(TYPE_FUSION) and c:IsRace(RACE_MACHINE) and c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsLevel(8)) then return false end
