@@ -34,7 +34,7 @@ end
 function s.tgfilter(c,e)
 	return c:IsFaceupEx() and c:GetBaseAttack()>0 and c:IsType(TYPE_MONSTER) and c:IsCanBeEffectTarget(e)
 end
-function s.damtg(e,tp,eg,ep,ev,re,r,rp,chk)
+function s.damtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end
 	local g=eg:Filter(s.tgfilter,nil,e)
 	if chk==0 then return g:GetCount()>0 end

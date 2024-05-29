@@ -41,7 +41,7 @@ end
 function s.filter(c,e)
 	return c:IsLocation(LOCATION_MZONE) and c:IsCanBeEffectTarget(e)
 end
-function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
+function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return eg:IsContains(chkc) and s.filter(chkc,e) end
 	if chk==0 then return eg:IsExists(s.filter,1,nil,e) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
