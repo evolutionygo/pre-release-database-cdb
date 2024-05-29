@@ -56,14 +56,14 @@ end
 function s.cftg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(aux.NOT(Card.IsPublic),tp,0,LOCATION_HAND,1,nil) or Duel.IsExistingMatchingCard(Card.IsFacedown,tp,0,LOCATION_ONFIELD,1,nil) end
 end
+function s.cffilter(c)
+	return c:IsLocation(LOCATION_HAND) or c:IsFacedown()
+end
 function s.cfop(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetFieldGroup(tp,0,LOCATION_HAND)
+	local g=Duel.GetFieldGroup(tp,0,LOCATION_ONFIELD+LOCATION_HAND)
 	if g:GetCount()>0 then
-		Duel.ConfirmCards(tp,g)
+		local cg=g:Filter(s.cffilter,nil)
+		Duel.ConfirmCards(tp,cg)
 		Duel.ShuffleHand(1-tp)
-	end
-	if Duel.IsExistingMatchingCard(Card.IsFacedown,tp,0,LOCATION_ONFIELD,1,nil) then
-		local sg=Duel.GetMatchingGroup(Card.IsFacedown,tp,0,LOCATION_ONFIELD,nil)
-		Duel.ConfirmCards(tp,sg)
 	end
 end
