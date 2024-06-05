@@ -53,7 +53,7 @@ function s.toop(e,tp,eg,ep,ev,re,r,rp)
 	if tc then Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true) end
 end
 function s.cfilter(c,tp)
-	return c:IsFaceup() and c:IsCode(id)
+	return c:IsFaceup() and c:IsCode(id) and c:IsAbleToGraveAsCost()
 end
 function s.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
