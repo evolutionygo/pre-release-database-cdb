@@ -32,11 +32,11 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 	if not s.global_check then
 		s.global_check=true
-		drake_shark_AddXyzProcedure=aux.AddXyzProcedure
+		Drake_shark_AddXyzProcedure=aux.AddXyzProcedure
 		function aux.AddXyzProcedure(card_c,function_f,int_lv,int_ct,function_alterf,int_dese,int_maxc,function_op)
 			if card_c:IsAttribute(ATTRIBUTE_WATER) and int_ct>=3 then
 				if function_alterf then
-					drake_shark_XyzLevelFreeOperationAlter=Auxiliary.XyzLevelFreeOperationAlter
+					Drake_shark_XyzLevelFreeOperationAlter=Auxiliary.XyzLevelFreeOperationAlter
 					function Auxiliary.XyzLevelFreeOperationAlter(f,gf,minc,maxc,alterf,alterdesc,alterop)
 						return  function(e,tp,eg,ep,ev,re,r,rp,c,og,min,max)
 									if og and not min then
@@ -85,9 +85,9 @@ function s.initial_effect(c)
 								end
 					end
 					aux.AddXyzProcedureLevelFree(card_c,s.f(function_f,int_lv,card_c),s.gf(int_ct),int_ct-1,int_ct,function_alterf,int_dese,function_op)
-					Auxiliary.XyzLevelFreeOperationAlter=drake_shark_XyzLevelFreeOperationAlter
+					Auxiliary.XyzLevelFreeOperationAlter=Drake_shark_XyzLevelFreeOperationAlter
 				else
-					drake_shark_XyzLevelFreeOperation=Auxiliary.XyzLevelFreeOperation
+					Drake_shark_XyzLevelFreeOperation=Auxiliary.XyzLevelFreeOperation
 					function Auxiliary.XyzLevelFreeOperation(f,gf,minct,maxct)
 						return  function(e,tp,eg,ep,ev,re,r,rp,c,og,min,max)
 									if og and not min then
@@ -134,14 +134,14 @@ function s.initial_effect(c)
 									end
 								end
 					end
-					aux.AddXyzProcedureLevelFree(card_c,s.f(function_f,int_lv,card_c),s.gf(int_ct),int_ct-1,int_ct)
-					Auxiliary.XyzLevelFreeOperation=drake_shark_XyzLevelFreeOperation
+					aux.AddXyzProcedureLevelFree(card_c,s.f(function_f,int_lv,card_c),s.gf(int_ct,card_c:GetOwner()),int_ct-1,int_ct)
+					Auxiliary.XyzLevelFreeOperation=Drake_shark_XyzLevelFreeOperation
 				end
 			else
 				if function_alterf then
-					drake_shark_AddXyzProcedure(card_c,function_f,int_lv,int_ct,function_alterf,int_dese,int_maxc,function_op)
+					Drake_shark_AddXyzProcedure(card_c,function_f,int_lv,int_ct,function_alterf,int_dese,int_maxc,function_op)
 				else
-					drake_shark_AddXyzProcedure(card_c,function_f,int_lv,int_ct)
+					Drake_shark_AddXyzProcedure(card_c,function_f,int_lv,int_ct)
 				end
 			end
 		end
@@ -152,12 +152,12 @@ function s.f(function_f,int_lv,card_c)
 			   return c:IsXyzLevel(card_c,int_lv) and (not function_f or function_f(c))
 	end
 end
-function s.gf(int_ct)
+function s.gf(int_ct,int_tp)
 	return function (g)
-			   return g:GetCount()==int_ct or g:GetCount()==int_ct-1 and g:IsExists(s.xfilter,1,nil)
+			   return g:GetCount()==int_ct or g:GetCount()==int_ct-1 and g:IsExists(s.xfilter,1,nil,int_tp)
 	end
 end
-function s.xfilter(c)
+function s.xfilter(c,tp)
 	return c:IsHasEffect(id,tp)
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
