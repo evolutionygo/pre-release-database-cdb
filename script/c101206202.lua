@@ -158,7 +158,7 @@ function s.gf(int_ct)
 	end
 end
 function s.xfilter(c)
-	return c:IsHasEffect(id,tp)
+	return c:IsHasEffect(id)
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return not e:GetHandler():IsReason(REASON_DRAW)
