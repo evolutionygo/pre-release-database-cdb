@@ -88,18 +88,18 @@ function s.eqcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.eqtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0
-		and Duel.IsExistingMatchingCard(s.eqfilter,tp,LOCATION_MZONE,0,1,nil,e:GetHandler()) end
+		and Duel.IsExistingMatchingCard(s.eqfilter,tp,LOCATION_MZONE,0,1,nil,e:GetHandler(),tp) end
 	Duel.SetOperationInfo(0,CATEGORY_EQUIP,e:GetHandler(),1,0,0)
 end
-function s.eqfilter(c,ec)
+function s.eqfilter(c,ec,tp)
 	return c:IsType(TYPE_XYZ) and c:IsFaceup()
 		and ec:CheckEquipTarget(c) and ec:CheckUniqueOnField(tp,LOCATION_SZONE) and not ec:IsForbidden()
 end
 function s.eqop(e,tp,eg,ep,ev,re,r,rp)
 	local ec=e:GetHandler()
-	if ec:IsRelateToEffect(e) and Duel.GetLocationCount(tp,LOCATION_SZONE)>0 and Duel.IsExistingMatchingCard(s.eqfilter,tp,LOCATION_MZONE,0,1,nil,ec) then
+	if ec:IsRelateToEffect(e) and Duel.GetLocationCount(tp,LOCATION_SZONE)>0 and Duel.IsExistingMatchingCard(s.eqfilter,tp,LOCATION_MZONE,0,1,nil,ec,tp) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EQUIP)
-		local tg=Duel.SelectMatchingCard(tp,s.eqfilter,tp,LOCATION_MZONE,0,1,1,nil,ec)
+		local tg=Duel.SelectMatchingCard(tp,s.eqfilter,tp,LOCATION_MZONE,0,1,1,nil,ec,tp)
 		Duel.HintSelection(tg)
 		Duel.Equip(tp,ec,tg:GetFirst())
 	end
