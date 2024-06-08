@@ -37,9 +37,10 @@ function s.cfilter(c,fc)
 	return c:IsAbleToGraveAsCost()
 end
 function s.natg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc==Duel.GetAttacker() end
-	if chk==0 then return Duel.GetAttacker():IsCanBeEffectTarget(e) and Duel.GetAttacker():GetAttack()>0 end
-	Duel.SetTargetCard(Duel.GetAttacker())
+	local a=Duel.GetAttacker()
+	if chkc then return chkc==a end
+	if chk==0 then return a~=nil and a:IsCanBeEffectTarget(e) and a:GetAttack()>0 end
+	Duel.SetTargetCard(a)
 end
 function s.naop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
