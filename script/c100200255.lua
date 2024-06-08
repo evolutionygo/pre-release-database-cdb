@@ -28,10 +28,10 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function s.mfilter1(c)
-	return c:IsType(TYPE_FUSION+TYPE_SYNCHRO+TYPE_LINK+TYPE_XYZ)
+	return bit.band(c:GetOriginalType(),TYPE_FUSION+TYPE_SYNCHRO+TYPE_LINK+TYPE_XYZ)~=0
 end
 function s.mfilter2(c)
-	return c:IsRace(RACE_SPELLCASTER) or (c:IsLocation(LOCATION_SZONE) and c:GetOriginalRace()&RACE_SPELLCASTER~=0)
+	return c:IsRace(RACE_SPELLCASTER) or (c:IsLocation(LOCATION_SZONE) and bit.band(c:GetOriginalRace(),RACE_SPELLCASTER)~=0)
 end
 function s.cfilter(c,fc)
 	return c:IsAbleToGraveAsCost()
