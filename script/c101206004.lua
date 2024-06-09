@@ -67,20 +67,21 @@ function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetFlagEffect(tp,id)>0
 end
 function s.tdfilter(c,tp,e)
-	return (c:IsAttackAbove(3000) or c:IsLevelAbove(8)) and c:IsSummonPlayer(1-tp) and c:IsLocation(LOCATION_MZONE)
+	return (c:IsAttackAbove(3000) or c:IsLevelAbove(8)) and c:IsFaceup() and c:IsSummonPlayer(1-tp) and c:IsLocation(LOCATION_MZONE)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	local g=eg:Filter(s.tdfilter,nil,tp)
 	if chk==0 then return Duel.GetMZoneCount(tp,g,tp)>0
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and g:GetCount()>0 end
+	Duel.SetTargetCard(g)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,c,1,0,0)
-	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,g,1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,g,#g,0,0)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local g=eg:Filter(s.tdfilter,nil,tp)
-	if c:IsRelateToEffect(e) and g:GetCount()>0 and Duel.SendtoGrave(g,REASON_EFFECT)>0 and g:IsExists(Card.IsLocation,1,nil,LOCATION_GRAVE) then
+	local g=Duel.GetTargetsRelateToChain():Filter(Card.IsType,nil,TYPE_MONSTER)
+	if g:GetCount()>0 and Duel.SendtoGrave(g,REASON_EFFECT)>0 and g:IsExists(Card.IsLocation,1,nil,LOCATION_GRAVE) and c:IsRelateToEffect(e) then
 		Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
 	end
 end
