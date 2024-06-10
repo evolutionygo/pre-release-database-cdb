@@ -150,7 +150,7 @@ function s.xyzop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
 	local tg=g:Filter(Card.IsRelateToEffect,nil,e)
 	if tg:GetCount()~=2 or not tg:IsExists(s.xyzfilter2,1,nil) then return end
-	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,3))
+	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,4))
 	local tg2=tg:FilterSelect(tp,s.xyzfilter2,1,1,nil)
 	tg:Sub(tg2)
 	local tc=tg2:GetFirst()
