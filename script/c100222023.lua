@@ -1,4 +1,4 @@
---娱乐法师 影绘师
+--Em影絵師シャドー・メイカー
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddXyzProcedure(c,nil,5,3)

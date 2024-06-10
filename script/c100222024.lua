@@ -1,4 +1,4 @@
---娱乐法师 秋千高空魔术家
+--Emトラピーズ・ハイ・マジシャン
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsRace,RACE_SPELLCASTER),5,2)

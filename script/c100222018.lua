@@ -1,4 +1,4 @@
---娱乐法师 火舞者
+--Emファイヤー・ダンサー
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.EnablePendulumAttribute(c)

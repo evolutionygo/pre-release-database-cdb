@@ -1,4 +1,4 @@
---升阶魔法-魔术之力
+--RUM-マジカル・フォース
 local s,id,o=GetID()
 function s.initial_effect(c)
 	local e1=Effect.CreateEffect(c)

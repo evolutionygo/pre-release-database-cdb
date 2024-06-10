@@ -1,4 +1,4 @@
---娱乐法师 吸风踏球人
+--Emウィンド・サッカー
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.EnablePendulumAttribute(c)

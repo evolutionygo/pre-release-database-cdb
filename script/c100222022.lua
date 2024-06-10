@@ -1,4 +1,4 @@
---娱乐法师 秋千巧力魔女
+--Emトラピーズ・フォース・ウィッチ
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddFusionProcFunRep(c,aux.FilterBoolFunction(Card.IsFusionSetCard,0xc6),2,true)

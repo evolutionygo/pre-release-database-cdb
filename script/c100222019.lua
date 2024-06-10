@@ -1,4 +1,4 @@
---娱乐法师 水舞者
+--Emウォーター・ダンサー
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.EnablePendulumAttribute(c)
