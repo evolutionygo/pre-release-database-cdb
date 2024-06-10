@@ -155,7 +155,7 @@ function s.xyzop(e,tp,eg,ep,ev,re,r,rp)
 	tg:Sub(tg2)
 	local tc=tg2:GetFirst()
 	local tc2=tg:GetFirst()
-	if tc2 then
+	if tc2 and not tc2:IsImmuneToEffect(e) then
 		local og=tc:GetOverlayGroup()
 		local sg=og:Select(tp,1,1,nil)
 		Duel.Overlay(tc2,sg,false)
