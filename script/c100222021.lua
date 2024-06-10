@@ -27,8 +27,7 @@ function s.initial_effect(c)
 	e3:SetDescription(aux.Stringid(id,2))
 	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e3:SetType(EFFECT_TYPE_IGNITION)
-	e3:SetProperty(EFFECT_FLAG_DELAY)
-	e3:SetCode(EVENT_TO_DECK)
+	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e3:SetRange(LOCATION_HAND)
 	e3:SetCountLimit(1,id+o*2)
 	e3:SetTarget(s.sptg)
@@ -54,9 +53,6 @@ function s.ovtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		and e:GetHandler():IsCanOverlay() end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
 	Duel.SelectTarget(tp,s.ovfilter,tp,LOCATION_MZONE,0,1,1,e:GetHandler())
-	if e:GetHandler():IsLocation(LOCATION_GRAVE) then
-		Duel.SetOperationInfo(0,CATEGORY_LEAVE_GRAVE,e:GetHandler(),1,0,0)
-	end
 end
 function s.ovop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -110,7 +106,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if not tc:IsRelateToEffect(e) then return end
 	local mg=tc:GetOverlayGroup()
-	local sg=g:Select(tp,1,1,nil)
+	local sg=mg:Select(tp,1,1,nil)
 	if sg:GetCount()>0 and Duel.SendtoGrave(sg,REASON_EFFECT)~=0 and c:IsRelateToEffect(e) and Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)>0 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 		local g=Duel.SelectMatchingCard(tp,s.xfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)

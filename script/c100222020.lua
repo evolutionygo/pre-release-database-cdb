@@ -122,7 +122,7 @@ function s.splimit(e,c)
 	return not c:IsSetCard(0xc6)
 end
 function s.lvtg2(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsLevelAbove(3) end
+	if chk==0 then return e:GetHandler():IsLevelAbove(2) end
 end
 function s.lvop2(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
