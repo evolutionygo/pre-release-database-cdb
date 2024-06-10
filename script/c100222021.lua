@@ -107,20 +107,24 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	if not tc:IsRelateToEffect(e) then return end
 	local mg=tc:GetOverlayGroup()
 	local sg=mg:Select(tp,1,1,nil)
-	if sg:GetCount()>0 and Duel.SendtoGrave(sg,REASON_EFFECT)~=0 and c:IsRelateToEffect(e) and Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)>0 then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-		local g=Duel.SelectMatchingCard(tp,s.xfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
-		if #g>0 then
-			Duel.HintSelection(g)
-			Duel.BreakEffect()
-			local tc=g:GetFirst()
-			local e1=Effect.CreateEffect(c)
-			e1:SetType(EFFECT_TYPE_SINGLE)
-			e1:SetProperty(EFFECT_FLAG_COPY_INHERIT)
-			e1:SetCode(EFFECT_UPDATE_ATTACK)
-			e1:SetValue(-600)
-			e1:SetReset(RESET_EVENT+RESETS_STANDARD)
-			tc:RegisterEffect(e1)
+	if sg:GetCount()>0 and Duel.SendtoGrave(sg,REASON_EFFECT)~=0 then
+		Duel.RaiseSingleEvent(tc,EVENT_DETACH_MATERIAL,e,0,0,0,0)
+		Duel.RaiseEvent(tc,EVENT_DETACH_MATERIAL,e,0,0,0,0)
+		if c:IsRelateToEffect(e) and Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)>0 then
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
+			local g=Duel.SelectMatchingCard(tp,s.xfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
+			if #g>0 then
+				Duel.HintSelection(g)
+				Duel.BreakEffect()
+				local tc=g:GetFirst()
+				local e1=Effect.CreateEffect(c)
+				e1:SetType(EFFECT_TYPE_SINGLE)
+				e1:SetProperty(EFFECT_FLAG_COPY_INHERIT)
+				e1:SetCode(EFFECT_UPDATE_ATTACK)
+				e1:SetValue(-600)
+				e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+				tc:RegisterEffect(e1)
+			end
 		end
 	end
 end
