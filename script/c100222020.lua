@@ -126,13 +126,14 @@ function s.lvtg2(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.lvop2(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsFacedown() or not c:IsRelateToEffect(e) or c:IsImmuneToEffect(e) or c:IsLevelBelow(2) then return end
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetCode(EFFECT_UPDATE_LEVEL)
-	e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_DISABLE)
-	e1:SetValue(-1)
-	c:RegisterEffect(e1)
+	if c:IsFaceup() and c:IsRelateToEffect(e) and c:IsImmuneToEffect(e) and c:IsLevelAbove(2) then
+		local e1=Effect.CreateEffect(c)
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_UPDATE_LEVEL)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_DISABLE)
+		e1:SetValue(-1)
+		c:RegisterEffect(e1)
+	end
 end
 function s.lvfilter3(c)
 	return c:IsFaceup() and c:IsLevel(4) and c:IsSetCard(0xc6)
