@@ -68,7 +68,7 @@ function s.lvop(e,tp,eg,ep,ev,re,r,rp)
 	local op=e:GetLabel()
 	local tc=Duel.GetFirstTarget()
 	if op==1 then
-		if tc:IsFaceup() and tc:IsRelateToEffect(e) and tc:IsLevelAbove(2) then
+		if tc:IsFaceup() and tc:IsRelateToEffect(e) and tc:IsType(TYPE_MONSTER) and tc:IsLevelAbove(2) then
 			local e1=Effect.CreateEffect(c)
 			e1:SetType(EFFECT_TYPE_SINGLE)
 			e1:SetCode(EFFECT_UPDATE_LEVEL)
@@ -77,7 +77,7 @@ function s.lvop(e,tp,eg,ep,ev,re,r,rp)
 			tc:RegisterEffect(e1)
 		end
 	elseif op==2 then
-		if tc:IsFaceup() and tc:IsRelateToEffect(e) and c:IsRelateToEffect(e) then
+		if tc:IsFaceup() and tc:IsRelateToEffect(e) and tc:IsType(TYPE_MONSTER) and c:IsRelateToEffect(e) then
 			local ct=tc:GetLeftScale()
 			local e1=Effect.CreateEffect(c)
 			e1:SetType(EFFECT_TYPE_SINGLE)

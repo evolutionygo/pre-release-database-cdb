@@ -99,7 +99,7 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,c,1,0,0)
 end
 function s.xfilter(c)
-	return c:IsFaceup() and c:IsType(TYPE_XYZ) and c:IsAttackAbove(1)
+	return c:IsFaceup() and c:IsType(TYPE_XYZ)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()

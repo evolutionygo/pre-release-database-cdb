@@ -1,6 +1,7 @@
 --Emトラピーズ・ハイ・マジシャン
 local s,id,o=GetID()
 function s.initial_effect(c)
+	aux.AddCodeList(c,17016362)
 	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsRace,RACE_SPELLCASTER),5,2)
 	c:EnableReviveLimit()
 	local e1=Effect.CreateEffect(c)
