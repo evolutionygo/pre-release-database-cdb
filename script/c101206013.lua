@@ -39,7 +39,7 @@ function s.tbfilter(c)
 end
 function s.ttcon(e,c,minc)
 	if c==nil then return true end
-	local g=Duel.GetMatchingGroup(s.tbfilter,tp,LOCATION_MZONE,0,nil)
+	local g=Duel.GetMatchingGroup(s.tbfilter,c:GetControler(),LOCATION_MZONE,0,nil)
 	return minc<=1 and Duel.CheckTribute(c,1,1,g,c:GetControler())
 end
 function s.ttop(e,tp,eg,ep,ev,re,r,rp,c)

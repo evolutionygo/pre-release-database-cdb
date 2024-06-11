@@ -21,7 +21,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 	--set
 	local e3=Effect.CreateEffect(c)
-	e3:SetDescription(aux.Stringid(id,1))
+	e3:SetDescription(aux.Stringid(id,2))
 	e3:SetType(EFFECT_TYPE_IGNITION)
 	e3:SetRange(LOCATION_GRAVE)
 	e3:SetCountLimit(1,id+o)
@@ -88,7 +88,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.setcon(e,tp,eg,ep,ev,re,r,rp)
-	return Deul.IsExistingMatchingCard(Card.IsSetCard,tp,LOCATION_MZONE,0,1,nil,0x2b9)
+	return Duel.IsExistingMatchingCard(Card.IsSetCard,tp,LOCATION_MZONE,0,1,nil,0x2b9)
 end
 function s.settg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()

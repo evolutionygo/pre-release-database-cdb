@@ -15,6 +15,7 @@ function s.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_QUICK_O)
 	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetRange(LOCATION_GRAVE)
+	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e2:SetCondition(s.gccon)
 	e2:SetCost(aux.bfgcost)
 	e2:SetTarget(s.gctg)
@@ -60,7 +61,7 @@ end
 function s.gccon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetTurnPlayer()==1-tp
 end
-function s.gcfilter1(c)
+function s.gcfilter1(c,tp)
 	return c:IsType(TYPE_NORMAL) and c:IsFaceup() and Duel.IsExistingMatchingCard(s.gcfilter2,tp,0,LOCATION_MZONE,1,nil,c:GetAttack())
 end
 function s.gcfilter2(c,atk)
@@ -71,9 +72,9 @@ function s.gcfilter3(c,atk)
 end
 function s.gctg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE+LOCATION_GRAVE) and chkc:IsFaceup() end
-	if chk==0 then return Duel.IsExistingTarget(s.gcfilter1,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,nil) end
+	if chk==0 then return Duel.IsExistingTarget(s.gcfilter1,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,nil,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SELECT)
-	Duel.SelectTarget(tp,s.gcfilter1,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,1,nil)
+	Duel.SelectTarget(tp,s.gcfilter1,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,1,nil,tp)
 	Duel.SetOperationInfo(0,CATEGORY_CONTROL,nil,1,0,0)
 end
 function s.gcop(e,tp,eg,ep,ev,re,r,rp)
