@@ -78,18 +78,19 @@ function s.smtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK+LOCATION_HAND+LOCATION_GRAVE)
 end
 function s.smop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
-	local code=Duel.GetChainInfo(0,CHAININFO_TARGET_PARAM)
-	local og=Duel.GetMatchingGroup(aux.NecroValleyFilter(s.smfilter),tp,LOCATION_HAND+LOCATION_GRAVE+LOCATION_DECK,0,nil,e,tp):Filter(Card.IsCode,nil,code)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=og:Select(tp,1,1,nil)
-	if g:GetCount()>0 then
-		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then
+		local code=Duel.GetChainInfo(0,CHAININFO_TARGET_PARAM)
+		local og=Duel.GetMatchingGroup(aux.NecroValleyFilter(s.smfilter),tp,LOCATION_HAND+LOCATION_GRAVE+LOCATION_DECK,0,nil,e,tp):Filter(Card.IsCode,nil,code)
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+		local g=og:Select(tp,1,1,nil)
+		if g:GetCount()>0 then
+			Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
+		end
 	end
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetCode(EFFECT_CANNOT_ACTIVATE)
-	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_OATH)
+	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 	e1:SetTargetRange(1,0)
 	e1:SetValue(s.aclimit)
 	e1:SetReset(RESET_PHASE+PHASE_END)
