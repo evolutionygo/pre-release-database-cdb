@@ -87,8 +87,11 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)
 	end
 end
+function s.setfilter(c)
+	return c:IsFaceup() and c:IsSetCard(0x2b9)
+end
 function s.setcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(Card.IsSetCard,tp,LOCATION_MZONE,0,1,nil,0x2b9)
+	return Duel.IsExistingMatchingCard(s.setfilter,tp,LOCATION_MZONE,0,1,nil)
 end
 function s.settg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
