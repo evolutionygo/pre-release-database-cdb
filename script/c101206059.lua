@@ -74,9 +74,6 @@ end
 function s.rmfilter2(c,atk)
 	return c:IsFaceup() and c:GetAttack()<atk and c:IsAbleToRemove()
 end
-function s.rmfilter3(c,atk)
-	return c:IsFaceup() and c:GetAttack()<atk
-end
 function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE+LOCATION_GRAVE) and chkc:IsFaceup() and chkc:GetAttack()>0  end
 	if chk==0 then return Duel.IsExistingTarget(s.rmfilter1,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,nil,tp) end
@@ -88,7 +85,7 @@ function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetTargetsRelateToChain():GetFirst()
 	if tc and tc:IsFaceup() and Duel.IsExistingMatchingCard(s.rmfilter2,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil,tc:GetAttack()) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-		local g=Duel.SelectMatchingCard(tp,s.rmfilter3,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil,tc:GetAttack())
+		local g=Duel.SelectMatchingCard(tp,s.rmfilter2,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil,tc:GetAttack())
 		if g:GetCount()>0 then
 			Duel.HintSelection(g)
 			Duel.Remove(g,POS_FACEUP,REASON_EFFECT)

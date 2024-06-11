@@ -31,7 +31,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_ANNOUNCE,nil,0,tp,0)
 end
 function s.smfilter(c,e,tp,code)
-	return c:IsCode(code) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP)
+	return c:IsCode(code) and c:IsType(TYPE_NORMAL) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local code=Duel.GetChainInfo(0,CHAININFO_TARGET_PARAM)
