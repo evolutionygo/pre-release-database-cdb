@@ -126,7 +126,7 @@ function s.lvtg2(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.lvop2(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsFaceup() and c:IsRelateToEffect(e) and c:IsImmuneToEffect(e) and c:IsLevelAbove(2) then
+	if c:IsFaceup() and c:IsRelateToEffect(e) and not c:IsImmuneToEffect(e) and c:IsLevelAbove(2) then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_UPDATE_LEVEL)
