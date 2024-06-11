@@ -35,7 +35,35 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 	aux.RegisterMergedDelayedEvent(c,id,EVENT_SUMMON_SUCCESS)
 	aux.RegisterMergedDelayedEvent(c,id,EVENT_SPSUMMON_SUCCESS)
-	Duel.AddCustomActivityCounter(id,ACTIVITY_CHAIN,s.chainfilter)
+	if not s.global_check then
+		s.global_check=true
+		local ge1=Effect.GlobalEffect()
+		ge1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		ge1:SetCode(EVENT_CHAINING)
+		ge1:SetCondition(s.checkcon)
+		ge1:SetOperation(s.checkop)
+		Duel.RegisterEffect(ge1,0)
+	end
+end
+function s.checkcon(e,tp,eg,ep,ev,re,r,rp)
+	return re:GetHandler():IsCode(37613663) and re:IsHasType(EFFECT_TYPE_ACTIVATE)
+end
+function s.checkop(e,tp,eg,ep,ev,re,r,rp)
+	if Duel.GetFlagEffect(rp,id)==0 then
+		Duel.RegisterFlagEffect(rp,id,0,0,0)
+		local e1=Effect.GlobalEffect()
+		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		e1:SetCode(EVENT_CHAIN_NEGATED)
+		e1:SetOperation(s.rsop)
+		e1:SetLabelObject(re)
+		e1:SetReset(RESET_CHAIN)
+		Duel.RegisterEffect(e1,rp)
+	end
+end
+function s.rsop(e,tp,eg,ep,ev,re,r,rp)
+	if e:GetLabelObject()==re then
+		Duel.ResetFlagEffect(tp,id)
+	end
 end
 function s.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
@@ -56,12 +84,6 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SendtoHand(tc,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,tc)
 	end
-end
-function s.chainfilter(re,tp,cid)
-	if re:GetHandler():IsCode(37613663) and re:IsHasType(EFFECT_TYPE_ACTIVATE) then
-		Duel.RegisterFlagEffect(tp,id,0,0,0)
-	end
-	return true
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetFlagEffect(tp,id)>0
