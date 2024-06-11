@@ -56,7 +56,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.ptfilter(e,c)
-	return c:IsSetCard(0x2b9) or c:IsCode(e:GetLabel())
+	return c:IsSetCard(0x2b9) or (c:IsCode(e:GetLabel()) and c:IsType(TYPE_NORMAL))
 end
 function s.gccon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetTurnPlayer()==1-tp
