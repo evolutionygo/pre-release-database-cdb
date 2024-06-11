@@ -79,7 +79,7 @@ function s.gctg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function s.gcop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetTargetsRelateToChain():GetFirst()
-	if tc and tc:IsFaceup() and Duel.IsExistingMatchingCard(s.gcfilter2,tp,0,LOCATION_MZONE,1,nil,tc:GetAttack()) then
+	if tc and tc:IsFaceup() and tc:IsType(TYPE_MONSTER) and Duel.IsExistingMatchingCard(s.gcfilter2,tp,0,LOCATION_MZONE,1,nil,tc:GetAttack()) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONTROL)
 		local g=Duel.SelectMatchingCard(tp,s.gcfilter3,tp,0,LOCATION_MZONE,1,1,nil,tc:GetAttack())
 		if g:GetCount()>0 then
