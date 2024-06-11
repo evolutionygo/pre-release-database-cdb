@@ -70,7 +70,7 @@ end
 function s.gcfilter3(c,atk)
 	return c:IsFaceup() and c:GetAttack()>atk
 end
-function s.gctg(e,tp,eg,ep,ev,re,r,rp,chk)
+function s.gctg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE+LOCATION_GRAVE) and chkc:IsFaceup() end
 	if chk==0 then return Duel.IsExistingTarget(s.gcfilter1,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,nil,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SELECT)
