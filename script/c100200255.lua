@@ -34,7 +34,7 @@ function s.mfilter2(c)
 	return c:IsRace(RACE_SPELLCASTER) or (c:IsLocation(LOCATION_SZONE) and bit.band(c:GetOriginalRace(),RACE_SPELLCASTER)~=0)
 end
 function s.cfilter(c,fc)
-	return c:IsAbleToGraveAsCost()
+	return c:IsAbleToGraveAsCost() and bit.band(c:GetOriginalType(),TYPE_MONSTER)~=0
 end
 function s.natg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local a=Duel.GetAttacker()
