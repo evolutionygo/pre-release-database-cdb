@@ -113,6 +113,7 @@ function s.drop(e,tp,eg,ep,ev,re,r,rp)
 		tc:RegisterEffect(e2)
 		tc=g:GetNext()
 	end
+	Duel.BreakEffect()
 	local g2=Duel.GetMatchingGroup(s.rmfilter,tp,0,LOCATION_MZONE,nil)
 	Duel.Remove(g2,POS_FACEUP,REASON_EFFECT)
 end
