@@ -40,14 +40,17 @@ function s.spfilter(c,e,tp)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local g=Duel.SelectMatchingCard(tp,s.tgfilter,tp,LOCATION_HAND+LOCATION_ONFIELD,0,1,1,nil)
-	if g:GetCount()>0 then
-		if Duel.SendtoGrave(g,REASON_EFFECT)~=0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
+	local tc=Duel.SelectMatchingCard(tp,s.tgfilter,tp,LOCATION_HAND+LOCATION_ONFIELD,0,1,1,nil):GetFirst()
+	if tc then
+		if Duel.SendtoGrave(tc,REASON_EFFECT)~=0 and tc:IsLocation(LOCATION_GRAVE)
+			and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 			local spg=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_DECK+LOCATION_EXTRA,0,1,1,nil,e,tp)
 			if spg:GetCount()>0 then
 				if spg:GetFirst():IsCode(97489701) then
-					Duel.SpecialSummon(spg,SUMMON_TYPE_SYNCHRO,tp,tp,false,false,POS_FACEUP)
+					if Duel.SpecialSummon(spg,SUMMON_TYPE_SYNCHRO,tp,tp,false,false,POS_FACEUP) then
+						spg:GetFirst():CompleteProcedure()
+					end
 				else
 					Duel.SpecialSummon(spg,0,tp,tp,false,false,POS_FACEUP)
 				end
