@@ -27,6 +27,9 @@ end
 function s.posfilter(c)
 	return c:IsFaceup() and c:IsAttackBelow(2000) and c:IsCanTurnSet()
 end
+function s.bfilter(c)
+	return c:IsSetCard(0x3d) and c:IsFaceup()
+end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_GRAVE+LOCATION_HAND,0,1,nil,e,tp)
@@ -34,7 +37,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local b1=Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_GRAVE+LOCATION_HAND,0,1,nil,e,tp)
+		and Duel.IsExistingMatchingCard(aux.NecroValleyFilter(s.spfilter),tp,LOCATION_GRAVE+LOCATION_HAND,0,1,nil,e,tp)
 	local b2=Duel.IsExistingMatchingCard(s.posfilter,tp,0,LOCATION_MZONE,1,nil)
 	local off=1
 	local ops={}
@@ -49,7 +52,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		opval[off-1]=2
 		off=off+1
 	end
-	if b1 and b2 then
+	if b1 and b2 and Duel.IsExistingMatchingCard(s.bfilter,tp,LOCATION_MZONE,0,2,nil) then
 		ops[off]=aux.Stringid(id,2)
 		opval[off-1]=3
 		off=off+1
@@ -58,7 +61,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local op=Duel.SelectOption(tp,table.unpack(ops))
 	if opval[op]==1 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-		local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_GRAVE+LOCATION_HAND,0,1,1,nil,e,tp)
+		local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.spfilter),tp,LOCATION_GRAVE+LOCATION_HAND,0,1,1,nil,e,tp)
 		if g:GetCount()>0 then
 			Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 		end
@@ -67,17 +70,19 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		local g=Duel.SelectMatchingCard(tp,s.posfilter,tp,0,LOCATION_MZONE,1,1,nil)
 		local tc=g:GetFirst()
 		if tc then
+			Duel.HintSelection(g)
 			Duel.ChangePosition(tc,POS_FACEDOWN_DEFENSE)
 		end
 	elseif opval[op]==3 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-		local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_GRAVE+LOCATION_HAND,0,1,1,nil,e,tp)
+		local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.spfilter),tp,LOCATION_GRAVE+LOCATION_HAND,0,1,1,nil,e,tp)
 		if g:GetCount()>0 and Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)~=0 then
-			Duel.BreakEffect()
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
 			local g=Duel.SelectMatchingCard(tp,s.posfilter,tp,0,LOCATION_MZONE,1,1,nil)
 			local tc=g:GetFirst()
 			if tc then
+				Duel.BreakEffect()
+				Duel.HintSelection(g)
 				Duel.ChangePosition(tc,POS_FACEDOWN_DEFENSE)
 			end
 		end
