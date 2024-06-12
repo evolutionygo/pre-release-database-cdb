@@ -44,7 +44,8 @@ function s.cost1(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 end
 function s.confilter(c)
-	return not c:IsType(TYPE_TOKEN) and (c:IsType(TYPE_NORMAL) or (c:IsSetCard(0x2b9) and c:IsLevelAbove(5)))
+	return c:IsFaceup() and not c:IsType(TYPE_TOKEN)
+		and (c:IsType(TYPE_NORMAL) or c:IsSetCard(0x2b9) and c:IsLevelAbove(5))
 end
 function s.con(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetMatchingGroupCount(s.confilter,tp,LOCATION_MZONE,0,nil)>0
