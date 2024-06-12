@@ -59,23 +59,29 @@ function s.smtg(e,tp,eg,ep,ev,re,r,rp,chk)
 		and Duel.IsExistingMatchingCard(s.smfilter,tp,LOCATION_HAND+LOCATION_GRAVE+LOCATION_DECK,0,1,nil,e,tp) end
 	local g=Duel.GetMatchingGroup(s.smfilter,tp,LOCATION_HAND+LOCATION_GRAVE+LOCATION_DECK,0,nil,e,tp)
 	local sg=Group.CreateGroup()
-	for tc in aux.Next(g) do
-		if sg:FilterCount(Card.IsCode,nil,tc:GetCode())==0 then
-			sg:AddCard(tc)
+	local codes={}
+	for c in aux.Next(g) do
+		local code=c:GetCode()
+		if not sg:IsExists(Card.IsCode,1,nil,code) then
+			sg:AddCard(c)
+			table.insert(codes,code)
 		end
 	end
-	local flag=1
-	local nt={}
-	for tc in aux.Next(sg) do
-		table.insert(nt,tc:GetCode())
-		table.insert(nt,OPCODE_ISCODE)
-		if flag>1 then table.insert(nt,OPCODE_OR) end
-		flag=flag+1
+	table.sort(codes)
+	local afilter={codes[1],OPCODE_ISCODE}
+	if #codes>1 then
+		--or ... or c:IsCode(codes[i])
+		for i=2,#codes do
+			table.insert(afilter,codes[i])
+			table.insert(afilter,OPCODE_ISCODE)
+			table.insert(afilter,OPCODE_OR)
+		end
 	end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CODE)
-	local code=Duel.AnnounceCard(tp,table.unpack(nt))
+	local code=Duel.AnnounceCard(tp,table.unpack(afilter))
 	getmetatable(e:GetHandler()).announce_filter={TYPE_MONSTER,OPCODE_ISTYPE,TYPE_NORMAL,OPCODE_ISTYPE,5405694,OPCODE_ISCODE,OPCODE_OR,OPCODE_AND}
 	Duel.SetTargetParam(code)
+	Duel.SetOperationInfo(0,CATEGORY_ANNOUNCE,nil,0,tp,0)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK+LOCATION_HAND+LOCATION_GRAVE)
 end
 function s.smop(e,tp,eg,ep,ev,re,r,rp)
