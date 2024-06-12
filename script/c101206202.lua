@@ -84,7 +84,7 @@ function s.initial_effect(c)
 									end
 								end
 					end
-					aux.AddXyzProcedureLevelFree(card_c,s.f(function_f,int_lv,card_c),s.gf(int_ct),int_ct-1,int_ct,function_alterf,int_dese,function_op)
+					aux.AddXyzProcedureLevelFree(card_c,s.f(function_f,int_lv,card_c),s.gf(int_ct,card_c:GetOwner()),int_ct-1,int_ct,function_alterf,int_dese,function_op)
 					Auxiliary.XyzLevelFreeOperationAlter=Drake_shark_XyzLevelFreeOperationAlter
 				else
 					Drake_shark_XyzLevelFreeOperation=Auxiliary.XyzLevelFreeOperation
