@@ -74,10 +74,6 @@ end
 function s.drcon(e)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_ADVANCE)
 end
-function s.rmfilter(c)
-	return c:IsFaceup()
-	and Duel.IsExistingMatchingCard(s.rmfilter2,1-c:GetControler(),LOCATION_GRAVE,0,1,nil,c:GetRace(),c:GetAttribute())
-end
 function s.rmfilter1(c)
 	return c:IsFaceup() and c:IsAbleToRemove()
 	and Duel.IsExistingMatchingCard(s.rmfilter2,1-c:GetControler(),LOCATION_GRAVE,0,1,nil,c:GetRace(),c:GetAttribute())
@@ -114,6 +110,6 @@ function s.drop(e,tp,eg,ep,ev,re,r,rp)
 		tc=g:GetNext()
 	end
 	Duel.BreakEffect()
-	local g2=Duel.GetMatchingGroup(s.rmfilter,tp,0,LOCATION_MZONE,nil)
+	local g2=Duel.GetMatchingGroup(s.rmfilter1,tp,0,LOCATION_MZONE,nil)
 	Duel.Remove(g2,POS_FACEUP,REASON_EFFECT)
 end
