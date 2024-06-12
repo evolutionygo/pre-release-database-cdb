@@ -1,4 +1,4 @@
---真魔六武衆-シエン
+--真魔六武衆－シエン
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddSynchroProcedure(c,aux.FilterBoolFunction(Card.IsRace,RACE_WARRIOR),aux.NonTuner(Card.IsSetCard,0x3d),1)
