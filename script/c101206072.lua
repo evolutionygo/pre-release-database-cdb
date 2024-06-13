@@ -45,7 +45,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			and Duel.SelectYesNo(tp,aux.Stringid(tp,2)) then
 			Duel.BreakEffect()
 			local sg=Duel.GetMatchingGroup(aux.TRUE,tp,0,LOCATION_MZONE,nil)
-			if Duel.Destroy(sg,REASON_EFFECT)~=0 and tc:GetAttack()>0 and Duel.SelectYesNo(tp,aux.Stringid(tp,2)) then
+			if Duel.Destroy(sg,REASON_EFFECT)~=0 and tc:GetAttack()>0 and Duel.SelectYesNo(tp,aux.Stringid(tp,3)) then
 				Duel.BreakEffect()
 				Duel.Damage(1-tp,tc:GetAttack(),REASON_EFFECT)
 			end
