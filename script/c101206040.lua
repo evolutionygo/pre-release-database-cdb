@@ -63,9 +63,12 @@ function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local g=Duel.SelectTarget(tp,Card.IsAbleToHand,tp,0,LOCATION_MZONE,cg,cg,nil)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,#g,0,0)
 end
+function s.thfilter(c,e)
+	return c:IsRelateToEffect(e) and c:IsType(TYPE_MONSTER)
+end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	local tg=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
-	local rg=tg:Filter(Card.IsRelateToEffect,nil,e)
+	local rg=tg:Filter(s.thfilter,nil,e)
 	if #rg>0 then
 		Duel.SendtoHand(rg,nil,REASON_EFFECT)
 	end
