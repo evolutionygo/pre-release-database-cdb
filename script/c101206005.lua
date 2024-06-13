@@ -63,7 +63,7 @@ function s.negcon(e,tp,eg,ep,ev,re,r,rp)
 	return not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) and rp==1-tp and Duel.IsChainNegatable(ev)
 end
 function s.damfilter(c)
-	return c:IsAttackAbove(1) and c:IsPosition(POS_FACEUP_ATTACK)
+	return c:GetBaseAttack()>0 and c:IsPosition(POS_FACEUP_ATTACK)
 end
 function s.negtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
