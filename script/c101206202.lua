@@ -141,7 +141,7 @@ function s.initial_effect(c)
 				if function_alterf then
 					Drake_shark_AddXyzProcedure(card_c,function_f,int_lv,int_ct,function_alterf,int_dese,int_maxc,function_op)
 				else
-					Drake_shark_AddXyzProcedure(card_c,function_f,int_lv,int_ct)
+					Drake_shark_AddXyzProcedure(card_c,function_f,int_lv,int_ct,nil,nil,int_maxc,nil)
 				end
 			end
 		end
