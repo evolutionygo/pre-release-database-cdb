@@ -11,6 +11,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
+	e2:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH+CATEGORY_TODECK)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_GRAVE)
 	e2:SetCost(aux.bfgcost)
@@ -39,10 +40,15 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_FIELD)
 	e3:SetCode(EFFECT_CHANGE_BATTLE_DAMAGE)
-	e3:SetTargetRange(LOCATION_MZONE,0)
+	e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e3:SetTargetRange(1,0)
+	e3:SetCondition(s.dcon)
 	e3:SetValue(aux.ChangeBattleDamage(1,DOUBLE_DAMAGE))
 	Duel.RegisterEffect(e3,tp)
 	Duel.RegisterFlagEffect(tp,id,0,0,1)
+end
+function s.dcon(e)
+	return Duel.GetAttackTarget()
 end
 function s.aclimit(e,re,tp)
 	return re:GetActivateLocation()==LOCATION_HAND and re:IsActiveType(TYPE_MONSTER)
@@ -67,7 +73,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 		local sg=Duel.SelectMatchingCard(tp,Card.IsAbleToDeck,tp,LOCATION_HAND,0,1,1,nil)
 		if sg:GetCount()>0 then
 			Duel.BreakEffect()
-			Duel.SendtoDeck(sg,nil,SEQ_DECKTOP,REASON_EFFECT)
+			Duel.SendtoDeck(sg,nil,SEQ_DECKBOTTOM,REASON_EFFECT)
 		end
 	end
 end
