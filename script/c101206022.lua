@@ -1,7 +1,7 @@
 --ユニオン・パイロット
 local s,id,o=GetID()
 function s.initial_effect(c)
-	aux.EnableUnionAttribute(c,aux.TRUE)
+	aux.EnableUnionAttribute(c,s.eqfilter)
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,2))
 	e2:SetCategory(CATEGORY_EQUIP+CATEGORY_SPECIAL_SUMMON)
@@ -14,6 +14,9 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 s.has_text_type=TYPE_UNION
+function s.eqfilter(c)
+	return c:IsType(TYPE_EFFECT)
+end
 function s.recost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local tc=e:GetHandler():GetEquipTarget()
 	e:SetLabelObject(tc)
@@ -30,12 +33,12 @@ function s.cfilter(c,ec,tp)
 end
 function s.retg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsPlayerCanSpecialSummonMonster(tp,id,0,TYPE_EFFECT+TYPE_MONSTER,2100,1000,4,RACE_MACHINE,ATTRIBUTE_LIGHT) and Duel.IsExistingMatchingCard(s.tgfilter,tp,LOCATION_MZONE,0,1,nil,e,tp) end
+		and Duel.IsPlayerCanSpecialSummonMonster(tp,id,0,TYPE_EFFECT+TYPE_MONSTER,2100,1000,5,RACE_MACHINE,ATTRIBUTE_LIGHT) and Duel.IsExistingMatchingCard(s.tgfilter,tp,LOCATION_MZONE,0,1,nil,e,tp) end
 	Duel.SetTargetCard(e:GetHandler())
 end
 function s.reop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
-	local g=Duel.SelectMatchingCard(tp,s.tgfilter,tp,LOCATION_MZONE,0,1,1,nil,tp)
+	local g=Duel.SelectMatchingCard(tp,s.tgfilter,tp,LOCATION_MZONE,0,1,1,nil,e,tp)
 	local tc=g:GetFirst()
 	if tc then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EQUIP)
@@ -43,7 +46,7 @@ function s.reop(e,tp,eg,ep,ev,re,r,rp)
 		local ec=sg:GetFirst()
 		if ec and Duel.Equip(tp,ec,tc) then
 			aux.SetUnionState(ec)
-			if e:GetHandler():IsRelateToChain() and e:GetHandler():IsLocation(LOCATION_HAND) and 
+			if e:GetHandler():IsRelateToChain() and e:GetHandler():IsLocation(LOCATION_HAND) then 
 				Duel.SpecialSummon(e:GetHandler(),0,tp,tp,false,false,POS_FACEUP)
 			end
 		end
