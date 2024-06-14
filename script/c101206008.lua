@@ -38,8 +38,7 @@ end
 function s.settg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0
-		and Duel.IsExistingMatchingCard(s.setfilter,tp,LOCATION_DECK,0,1,nil)
-		and c:IsAbleToDeck() end
+		and Duel.IsExistingMatchingCard(s.setfilter,tp,LOCATION_DECK,0,1,nil) end
 end
 function s.setop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -58,17 +57,18 @@ function s.lvcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.racetg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATTRIBUTE)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RACE)
 	local race=Duel.AnnounceRace(tp,1,RACE_ALL&~e:GetHandler():GetRace())
 	e:SetLabel(race)
 end
 function s.raceop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) and c:IsFaceup() then
+	local race=e:GetLabel()
+	if c:IsRelateToEffect(e) and c:IsFaceup() and bit.band(c:GetRace(),race)==0 then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_CHANGE_RACE)
-		e1:SetValue(e:GetLabel())
+		e1:SetValue(race)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_DISABLE+RESET_PHASE+PHASE_END+RESET_OPPO_TURN)
 		c:RegisterEffect(e1)
 	end
