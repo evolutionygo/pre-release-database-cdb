@@ -29,10 +29,10 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
 	local seq=tc:GetSequence()
-	if tc:IsControler(tp) and tc:IsRelateToEffect(e) and Duel.Destroy(tc,REASON_EFFECT)>0 and c:IsRelateToEffect(e) and Duel.SpecialSummon(c,0,tp,p,false,false,POS_FACEUP,1<<seq)~=0 then
+	if tc:IsControler(tp) and tc:IsType(TYPE_MONSTER) and tc:IsRelateToEffect(e) and Duel.Destroy(tc,REASON_EFFECT)>0 and c:IsRelateToEffect(e) and Duel.SpecialSummon(c,0,tp,p,false,false,POS_FACEUP,1<<seq)~=0 then
 		Duel.AdjustAll()
-		local g=c:GetColumnGroup():Filter(aux.AND(Card.IsFaceup,Card.IsControler),nil,tp)
-		if g:GetCount()>0 and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
+		local g=c:GetColumnGroup():Filter(aux.AND(Card.IsFaceup,Card.IsControler),nil,1-tp)
+		if g:GetCount()>0 and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
 			Duel.BreakEffect()
 			Duel.Destroy(g,REASON_EFFECT)
 		end
