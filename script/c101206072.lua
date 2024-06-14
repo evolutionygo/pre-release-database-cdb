@@ -1,4 +1,4 @@
---時の機械-タイム・エンジン
+--時の機械－タイム・エンジン
 local s,id,o=GetID()
 function s.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
@@ -35,19 +35,23 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetTargetCard(g)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
 end
+function s.dcfilter(c,e)
+	return not c:IsRelateToEffect(e) and c:IsFaceupEx() and c:IsSetCard(0x2bb) and c:IsType(TYPE_TRAP)
+end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then
 		if Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)~=0
-			and tc:IsRace(RACE_MACHINE)
-			and tc:IsLevelAbove(5)
+			and tc:IsRace(RACE_MACHINE) and tc:IsLevelAbove(5)
 			and Duel.IsExistingMatchingCard(aux.TRUE,tp,0,LOCATION_MZONE,1,nil)
-			and Duel.SelectYesNo(tp,aux.Stringid(tp,2)) then
+			and Duel.IsExistingMatchingCard(s.dcfilter,tp,LOCATION_SZONE+LOCATION_GRAVE,1,nil,e)
+			and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 			Duel.BreakEffect()
 			local sg=Duel.GetMatchingGroup(aux.TRUE,tp,0,LOCATION_MZONE,nil)
-			if Duel.Destroy(sg,REASON_EFFECT)~=0 and tc:GetAttack()>0 and Duel.SelectYesNo(tp,aux.Stringid(tp,3)) then
+			if sg:GetCount()>0 and Duel.Destroy(sg,REASON_EFFECT)~=0
+				and tc:GetBaseAttack()>0 and Duel.SelectYesNo(tp,aux.Stringid(id,3)) then
 				Duel.BreakEffect()
-				Duel.Damage(1-tp,tc:GetAttack(),REASON_EFFECT)
+				Duel.Damage(1-tp,tc:GetBaseAttack(),REASON_EFFECT)
 			end
 		end
 	end
