@@ -34,6 +34,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local ac=Duel.AnnounceCard(tp,table.unpack(getmetatable(e:GetHandler()).announce_filter))
 	Duel.SetTargetParam(ac)
 	Duel.SetOperationInfo(0,CATEGORY_ANNOUNCE,nil,0,tp,0)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK)
 end
 function s.ptfilter(e,c)
 	return c:IsSetCard(0x2b9) or (c:IsCode(e:GetLabel()) and c:IsType(TYPE_NORMAL))
