@@ -55,7 +55,7 @@ function s.xyzfilter(c,tp,e)
 end
 function s.xtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and s.xfilter(chkc,tp,e) and chkc~=c end
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and s.xfilter(chkc) and chkc~=c end
 	if chk==0 then return Duel.IsExistingTarget(s.xfilter,tp,LOCATION_MZONE,0,1,c)
 		and s.xyzfilter(c,tp,e) and Duel.IsExistingMatchingCard(s.xyzfilter,tp,LOCATION_MZONE+LOCATION_HAND+LOCATION_GRAVE,0,1,c,tp,e) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
