@@ -107,7 +107,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	if not tc:IsRelateToEffect(e) then return end
 	local mg=tc:GetOverlayGroup()
 	if mg:GetCount()>0 and tc:RemoveOverlayCard(tp,1,1,REASON_EFFECT)~=0 and c:IsRelateToEffect(e) and Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)>0 then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVEXYZ)
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
 		local g=Duel.SelectMatchingCard(tp,s.xfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
 		if #g>0 then
 			Duel.HintSelection(g)
