@@ -17,7 +17,7 @@ function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 end
 function s.filter1(c,e,tp)
-	return Duel.GetMZoneCount(tp,c)>0
+	return c:IsFaceup() and Duel.GetMZoneCount(tp,c)>0
 		and Duel.IsExistingMatchingCard(s.filter2,tp,LOCATION_DECK+LOCATION_HAND+LOCATION_GRAVE,0,1,nil,e,tp,1,c:GetLevel(),c:GetRace(),c:GetAttribute())
 end
 function s.filter2(c,e,tp,ft,lv,race,att)
