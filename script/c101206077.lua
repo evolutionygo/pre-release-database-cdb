@@ -62,11 +62,17 @@ function s.settg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_TODECK,nil,2,tp,LOCATION_GRAVE+LOCATION_REMOVED)
 end
 function s.setop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
+	local rg=Duel.GetMatchingGroup(aux.NecroValleyFilter(s.tdfilter),tp,LOCATION_GRAVE+LOCATION_REMOVED,0,nil)
+	if rg:GetCount()<2 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.tdfilter),tp,LOCATION_GRAVE+LOCATION_REMOVED,0,2,2,nil)
-	if g:GetCount()>0 and Duel.SendtoDeck(g,nil,SEQ_DECKSHUFFLE,REASON_EFFECT) and g:FilterCount(Card.IsLocation,nil,LOCATION_DECK+LOCATION_EXTRA)>0
-		and c:IsRelateToEffect(e) then
-		Duel.SSet(tp,c)
+	local sg=rg:Select(tp,2,2,nil)
+	if sg:GetCount()>0 then
+		Duel.HintSelection(sg)
+		local c=e:GetHandler()
+		if Duel.SendtoDeck(sg,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)
+			and sg:FilterCount(Card.IsLocation,nil,LOCATION_DECK+LOCATION_EXTRA)>0
+			and c:IsRelateToEffect(e) then
+			Duel.SSet(tp,c)
+		end
 	end
 end
