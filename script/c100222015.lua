@@ -1,6 +1,7 @@
 --カツト・イン・シャーク
 local s,id,o=GetID()
 function s.initial_effect(c)
+	-- spsummon
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
@@ -17,6 +18,7 @@ function s.initial_effect(c)
 	e2:SetCode(EVENT_BE_BATTLE_TARGET)
 	e2:SetCondition(s.spcon2)
 	c:RegisterEffect(e2)
+	-- recycle
 	local e3=Effect.CreateEffect(c)
 	e3:SetCategory(CATEGORY_TOHAND+CATEGORY_GRAVE_ACTION)
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
