@@ -5,7 +5,7 @@ function s.initial_effect(c)
 	--fusion material
 	aux.AddFusionProcFun2(c,s.mfilter1,s.mfilter2,true)
 	--special summon rule
-	aux.AddContactFusionProcedure(c,s.cfilter,LOCATION_ONFIELD,0,Duel.SendtoGrave,REASON_COST)
+	aux.AddContactFusionProcedure(c,s.cfilter,LOCATION_ONFIELD,0,Duel.SendtoGrave,REASON_SPSUMMON)
 	--special summon condition
 	local e0=Effect.CreateEffect(c)
 	e0:SetType(EFFECT_TYPE_SINGLE)
