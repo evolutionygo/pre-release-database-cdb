@@ -78,23 +78,22 @@ function s.atkfilter(c,atk)
 end
 function s.atktg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local qc=e:GetHandler():GetEquipTarget()
-	local atk=qc:GetAttack()
-	if chk==0 then return qc and Duel.IsExistingMatchingCard(s.atkfilter,tp,0,LOCATION_MZONE,1,nil,atk) end
+	if chk==0 then return qc and Duel.IsExistingMatchingCard(s.atkfilter,tp,0,LOCATION_MZONE,1,nil,qc:GetAttack()) end
 end
 function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local qc=e:GetHandler():GetEquipTarget()
-	local atk=qc:GetAttack()
-	local c=e:GetHandler()
-	local g=Duel.GetMatchingGroup(s.atkfilter,tp,0,LOCATION_MZONE,nil,atk)
-	local tc=g:GetFirst()
-	for tc in aux.Next(g) do
-		local e1=Effect.CreateEffect(c)
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_SET_ATTACK_FINAL)
-		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-		e1:SetValue(atk)
-		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
-		tc:RegisterEffect(e1)
+	if qc and qc:IsType(TYPE_MONSTER) and qc:IsFaceup() then
+		local atk=qc:GetAttack()
+		local g=Duel.GetMatchingGroup(s.atkfilter,tp,0,LOCATION_MZONE,nil,atk)
+		for tc in aux.Next(g) do
+			local e1=Effect.CreateEffect(e:GetHandler())
+			e1:SetType(EFFECT_TYPE_SINGLE)
+			e1:SetCode(EFFECT_SET_ATTACK_FINAL)
+			e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+			e1:SetValue(atk)
+			e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+			tc:RegisterEffect(e1)
+		end
 	end
 end
 function s.atkcon2(e,tp,eg,ep,ev,re,r,rp)
