@@ -1,10 +1,12 @@
 --魅惑の宮殿
 local s,id,o=GetID()
 function s.initial_effect(c)
+	--activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	c:RegisterEffect(e1)
+	--update atk/def
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD)
 	e2:SetCode(EFFECT_UPDATE_ATTACK)
@@ -16,6 +18,7 @@ function s.initial_effect(c)
 	local e3=e2:Clone()
 	e3:SetCode(EFFECT_UPDATE_DEFENSE)
 	c:RegisterEffect(e3)
+	--spsummon
 	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(id,0))
 	e4:SetCategory(CATEGORY_SPECIAL_SUMMON)
@@ -24,6 +27,7 @@ function s.initial_effect(c)
 	e4:SetCost(s.spcost)
 	e4:SetTarget(s.sptg)
 	e4:SetOperation(s.spop)
+	--grant effect
 	local e5=Effect.CreateEffect(c)
 	e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_GRANT)
 	e5:SetRange(LOCATION_FZONE)
@@ -31,6 +35,7 @@ function s.initial_effect(c)
 	e5:SetTarget(s.eftg)
 	e5:SetLabelObject(e4)
 	c:RegisterEffect(e5)
+	--search or spsummon
 	local e6=Effect.CreateEffect(c)
 	e6:SetDescription(aux.Stringid(id,1))
 	e6:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH+CATEGORY_SPECIAL_SUMMON)

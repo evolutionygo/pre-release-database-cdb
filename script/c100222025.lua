@@ -58,7 +58,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 				Duel.Overlay(sc,Group.FromCards(tc))
 				Duel.SpecialSummonStep(sc,SUMMON_TYPE_XYZ,tp,tp,false,false,POS_FACEUP)
 				sc:CompleteProcedure()
-				if c:IsRelateToEffect(e) and c:IsCanBeXyzMaterial(sc) and c:IsCanOverlay() then
+				if c:IsRelateToEffect(e) and c:IsCanOverlay() then
 					c:CancelToGrave()
 					Duel.Overlay(sc,Group.FromCards(c))
 				end
