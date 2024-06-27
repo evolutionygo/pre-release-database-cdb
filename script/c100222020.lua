@@ -2,7 +2,7 @@
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.EnablePendulumAttribute(c)
-	-- pendulum effect
+	--pendulum effect
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetRange(LOCATION_PZONE)
@@ -11,7 +11,7 @@ function s.initial_effect(c)
 	e1:SetTarget(s.lvtg)
 	e1:SetOperation(s.lvop)
 	c:RegisterEffect(e1)
-	-- spsummon
+	--spsummon
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,2))
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
@@ -22,7 +22,7 @@ function s.initial_effect(c)
 	e2:SetTarget(s.sptg)
 	e2:SetOperation(s.spop)
 	c:RegisterEffect(e2)
-	-- decrease level
+	--decrease level
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,3))
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
@@ -31,7 +31,7 @@ function s.initial_effect(c)
 	e3:SetTarget(s.lvtg2)
 	e3:SetOperation(s.lvop2)
 	c:RegisterEffect(e3)
-	-- change level
+	--change level
 	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(id,4))
 	e4:SetType(EFFECT_TYPE_IGNITION)

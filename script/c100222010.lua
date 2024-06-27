@@ -2,12 +2,12 @@
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddCodeList(c,33900648)
-	-- activate
+	--activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	c:RegisterEffect(e1)
-	-- search
+	--search
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,0))
 	e2:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND)
@@ -18,7 +18,7 @@ function s.initial_effect(c)
 	e2:SetTarget(s.thtg)
 	e2:SetOperation(s.thop)
 	c:RegisterEffect(e2)
-	-- indestructable
+	--indestructable
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_FIELD)
 	e3:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
@@ -27,7 +27,7 @@ function s.initial_effect(c)
 	e3:SetTarget(s.indestg)
 	e3:SetValue(1)
 	c:RegisterEffect(e3)
-	-- avoid battle damage
+	--avoid battle damage
 	local e4=e3:Clone()
 	e4:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
 	e4:SetCode(EFFECT_AVOID_BATTLE_DAMAGE)
@@ -37,7 +37,7 @@ function s.initial_effect(c)
 	e5:SetCode(EFFECT_NO_BATTLE_DAMAGE)
 	e5:SetTargetRange(0,LOCATION_MZONE)
 	c:RegisterEffect(e5)
-	-- affected
+	--affected
 	local e6=Effect.CreateEffect(c)
 	e6:SetType(EFFECT_TYPE_FIELD)
 	e6:SetProperty(EFFECT_FLAG_PLAYER_TARGET)

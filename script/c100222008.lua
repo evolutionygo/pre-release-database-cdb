@@ -2,7 +2,7 @@
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddCodeList(c,33900648)
-	-- unaffected
+	--unaffected
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
@@ -10,7 +10,7 @@ function s.initial_effect(c)
 	e1:SetTargetRange(1,0)
 	e1:SetCode(97811903)
 	c:RegisterEffect(e1)
-	-- summon
+	--summon
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,2))
 	e2:SetType(EFFECT_TYPE_FIELD)
@@ -19,7 +19,7 @@ function s.initial_effect(c)
 	e2:SetTargetRange(LOCATION_HAND+LOCATION_MZONE,0)
 	e2:SetTarget(s.suntg)
 	c:RegisterEffect(e2)
-	-- spsummon
+	--spsummon
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,1))
 	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)

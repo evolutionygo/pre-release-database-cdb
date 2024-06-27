@@ -1,7 +1,7 @@
 --嘆きの石版
 local s,id,o=GetID()
 function s.initial_effect(c)
-	-- equip
+	--equip
 	local e0=Effect.CreateEffect(c)
 	e0:SetCategory(CATEGORY_EQUIP)
 	e0:SetType(EFFECT_TYPE_ACTIVATE)
@@ -11,7 +11,7 @@ function s.initial_effect(c)
 	e0:SetTarget(s.target)
 	e0:SetOperation(s.activate)
 	c:RegisterEffect(e0)
-	-- lock
+	--lock
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_EQUIP)
 	e1:SetCode(EFFECT_CANNOT_ATTACK)
@@ -28,7 +28,7 @@ function s.initial_effect(c)
 	local e4=e3:Clone()
 	e4:SetCode(EFFECT_UNRELEASABLE_NONSUM)
 	c:RegisterEffect(e4)
-	-- search
+	--search
 	local e5=Effect.CreateEffect(c)
 	e5:SetDescription(aux.Stringid(id,1))
 	e5:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
@@ -39,7 +39,7 @@ function s.initial_effect(c)
 	e5:SetTarget(s.thtg)
 	e5:SetOperation(s.thop)
 	c:RegisterEffect(e5)
-	-- inflict damage
+	--inflict damage
 	local e6=Effect.CreateEffect(c)
 	e6:SetDescription(aux.Stringid(id,2))
 	e6:SetCategory(CATEGORY_DAMAGE)
@@ -50,7 +50,7 @@ function s.initial_effect(c)
 	e6:SetTarget(s.damtg)
 	e6:SetOperation(s.damop)
 	c:RegisterEffect(e6)
-	-- equip limit
+	--equip limit
 	local e7=Effect.CreateEffect(c)
 	e7:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 	e7:SetType(EFFECT_TYPE_SINGLE)

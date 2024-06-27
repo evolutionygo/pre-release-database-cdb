@@ -1,12 +1,12 @@
 --ブレイク・ザ・シール
 local s,id,o=GetID()
 function s.initial_effect(c)
-	-- activate
+	--activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	c:RegisterEffect(e1)
-	-- place
+	--place
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,0))
 	e2:SetType(EFFECT_TYPE_QUICK_O)
@@ -16,7 +16,7 @@ function s.initial_effect(c)
 	e2:SetTarget(s.totg)
 	e2:SetOperation(s.toop)
 	c:RegisterEffect(e2)
-	-- search
+	--search
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,1))
 	e3:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND)
@@ -28,7 +28,7 @@ function s.initial_effect(c)
 	e3:SetTarget(s.thtg)
 	e3:SetOperation(s.thop)
 	c:RegisterEffect(e3)
-	-- bounce
+	--bounce
 	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(id,3))
 	e4:SetCategory(CATEGORY_TOHAND)
