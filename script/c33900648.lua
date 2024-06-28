@@ -110,8 +110,8 @@ function c33900648.attributechk(tp)
 		local g=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,0,nil)
 		local tc=g:GetFirst()
 		while tc do
-				rac=bit.bor(rac,tc:GetAttribute())
-				tc=g:GetNext()
+			rac=bit.bor(rac,tc:GetAttribute())
+			tc=g:GetNext()
 		end
 		attchk=rac
 	end
@@ -124,14 +124,14 @@ end
 function c33900648.darkcon1(e)
 	local tp=e:GetHandlerPlayer()
 	return bit.band(c33900648.attributechk(tp),ATTRIBUTE_DARK)~=0
-		and Duel.GetFieldGroupCount(e:GetHandlerPlayer(),LOCATION_MZONE,0)>=2
-		and not Duel.IsPlayerAffectedByEffect(e:GetHandlerPlayer(),97811903)
+		and Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)>=2
+		and not Duel.IsPlayerAffectedByEffect(tp,97811903)
 end
 function c33900648.darkcon2(e)
 	local tp=e:GetHandlerPlayer()
 	return bit.band(c33900648.attributechk(1-tp),ATTRIBUTE_DARK)~=0
-		and Duel.GetFieldGroupCount(e:GetHandlerPlayer(),0,LOCATION_MZONE)>=2
-		and not Duel.IsPlayerAffectedByEffect(1-e:GetHandlerPlayer(),97811903)
+		and Duel.GetFieldGroupCount(tp,0,LOCATION_MZONE)>=2
+		and not Duel.IsPlayerAffectedByEffect(1-tp,97811903)
 end
 function c33900648.descon(e,tp,eg,ep,ev,re,r,rp)
 	return bit.band(c33900648.attributechk(Duel.GetTurnPlayer()),ATTRIBUTE_EARTH)~=0
@@ -188,12 +188,12 @@ end
 function c33900648.windcon1(e)
 	local tp=e:GetHandlerPlayer()
 	return bit.band(c33900648.attributechk(tp),ATTRIBUTE_WIND)~=0
-		and not Duel.IsPlayerAffectedByEffect(e:GetHandlerPlayer(),97811903)
+		and not Duel.IsPlayerAffectedByEffect(tp,97811903)
 end
 function c33900648.windcon2(e)
 	local tp=e:GetHandlerPlayer()
 	return bit.band(c33900648.attributechk(1-tp),ATTRIBUTE_WIND)~=0
-		and not Duel.IsPlayerAffectedByEffect(1-e:GetHandlerPlayer(),97811903)
+		and not Duel.IsPlayerAffectedByEffect(1-tp,97811903)
 end
 function c33900648.actarget(e,te,tp)
 	return te:IsHasType(EFFECT_TYPE_ACTIVATE) and te:IsActiveType(TYPE_SPELL)
@@ -204,4 +204,3 @@ end
 function c33900648.costop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.PayLPCost(tp,500)
 end
-
