@@ -1,5 +1,6 @@
 --魅惑の女王 LV5
 function c23756165.initial_effect(c)
+	aux.AddCodeList(c,87257460,50140163)
 	--equip
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
