@@ -57,12 +57,11 @@ function s.initial_effect(c)
 										Duel.Overlay(c,og)
 									else
 										local mg=e:GetLabelObject()
-										if mg:GetCount()==minct and mg:IsExists(s.xfilter,1,nil) then
+										if mg:GetCount()==minc and mg:IsExists(s.xfilter,1,nil) then
 											local ttc=mg:Filter(s.xfilter,nil):GetFirst()
 											local tte=ttc:IsHasEffect(id,tp)
 											tte:UseCountLimit(tp)
 										end
-										local mg=e:GetLabelObject()
 										if e:GetLabel()==1 then
 											local mg2=mg:GetFirst():GetOverlayGroup()
 											if mg2:GetCount()~=0 then
