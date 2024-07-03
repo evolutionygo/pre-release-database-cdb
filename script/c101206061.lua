@@ -37,7 +37,7 @@ function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	local tc=rc:GetBattleTarget()
 	return rc:IsControler(tp)
 		and rc:IsRace(RACE_DRAGON) and rc:IsAttribute(ATTRIBUTE_FIRE)
-		and tc:IsType(TYPE_MONSTER) and tc:IsReason(REASON_BATTLE)
+		and tc:IsType(TYPE_MONSTER) and tc:IsReason(REASON_BATTLE) and not tc:IsType(TYPE_TOKEN)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local rc=eg:GetFirst()
