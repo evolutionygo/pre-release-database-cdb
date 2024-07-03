@@ -11,7 +11,7 @@ function s.initial_effect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e1:SetRange(LOCATION_SZONE)
-	e1:SetCode(EVENT_BATTLE_DESTROYING)
+	e1:SetCode(EVENT_BATTLE_DESTROYED)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetCountLimit(1)
 	e1:SetCondition(s.spcon)
@@ -32,20 +32,27 @@ function s.initial_effect(c)
 	e2:SetOperation(s.setop)
 	c:RegisterEffect(e2)
 end
+function s.spfilter(c,tp,e)
+	if c:IsRace(RACE_DRAGON) and c:IsAttribute(ATTRIBUTE_FIRE) and c:IsPreviousControler(tp) then return true end
+	local rc=c:GetBattleTarget()
+	return rc:IsRace(RACE_DRAGON) and rc:IsAttribute(ATTRIBUTE_FIRE)
+		and (not rc:IsLocation(LOCATION_MZONE) and rc:IsPreviousControler(tp)
+			or rc:IsLocation(LOCATION_MZONE) and rc:IsControler(tp))
+end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
-	local rc=eg:GetFirst()
-	local tc=rc:GetBattleTarget()
-	return rc:IsControler(tp)
-		and rc:IsRace(RACE_DRAGON) and rc:IsAttribute(ATTRIBUTE_FIRE)
-		and tc:IsType(TYPE_MONSTER) and tc:IsReason(REASON_BATTLE) and not tc:IsType(TYPE_TOKEN)
+	return not eg:IsContains(e:GetHandler()) and eg:IsExists(s.spfilter,1,nil,tp,e)
+end
+function s.tgfilter(c,e)
+	return not c:IsType(TYPE_TOKEN) and c:IsFaceupEx() and c:IsType(TYPE_MONSTER) and c:IsCanBeEffectTarget(e)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	local rc=eg:GetFirst()
-	local bc=rc:GetBattleTarget()
 	if chkc then return false end
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and bc:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE)
-		and bc:IsCanBeEffectTarget(e) end
+	local g=eg:Filter(s.tgfilter,nil,e)
+	if chk==0 then return g:GetCount()>0 end
+	local bc=g:GetFirst()
+	if g:GetCount()>1 then
+		bc=g:FilterSelect(tp,s.tgfilter,1,1,nil,e):GetFirst()
+	end
 	Duel.SetTargetCard(bc)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,bc,1,0,0)
 end
