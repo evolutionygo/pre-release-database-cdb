@@ -35,7 +35,7 @@ merge_databases:
     - linux
   script:
     - apt update && apt -y install sqlite3
-    - ls -1 *.cdb | sed '/test-update.cdb/d' | xargs -I '{}' sqlite3 '{}' .dump | sqlite3 test-release.cdb || true
+    - ls -1 *.cdb | sed '/test-update.cdb/d' | sed '/script-fix.cdb/d' | xargs -I '{}' sqlite3 '{}' .dump | sqlite3 test-release.cdb || true
   artifacts:
     paths:
       - test-release.cdb
