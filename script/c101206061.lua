@@ -32,15 +32,12 @@ function s.initial_effect(c)
 	e2:SetOperation(s.setop)
 	c:RegisterEffect(e2)
 end
-function s.spfilter(c,tp,e)
-	if c:IsRace(RACE_DRAGON) and c:IsAttribute(ATTRIBUTE_FIRE) and c:IsPreviousControler(tp) then return true end
-	local rc=c:GetBattleTarget()
-	return rc:IsRace(RACE_DRAGON) and rc:IsAttribute(ATTRIBUTE_FIRE)
-		and (not rc:IsLocation(LOCATION_MZONE) and rc:IsPreviousControler(tp)
-			or rc:IsLocation(LOCATION_MZONE) and rc:IsControler(tp))
-end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return not eg:IsContains(e:GetHandler()) and eg:IsExists(s.spfilter,1,nil,tp,e)
+	local a=Duel.GetBattleMonster(tp)
+	return a and (a:IsLocation(LOCATION_MZONE) and a:IsRace(RACE_DRAGON) and a:IsAttribute(ATTRIBUTE_FIRE)
+		or not a:IsLocation(LOCATION_MZONE) and a:IsPreviousControler(tp)
+			and a:GetPreviousRaceOnField()&RACE_DRAGON~=0
+			and a:GetPreviousAttributeOnField()&ATTRIBUTE_FIRE~=0)
 end
 function s.tgfilter(c,e)
 	return not c:IsType(TYPE_TOKEN) and c:IsFaceupEx() and c:IsType(TYPE_MONSTER) and c:IsCanBeEffectTarget(e)
