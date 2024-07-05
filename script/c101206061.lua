@@ -46,7 +46,7 @@ end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chkc then return false end
 	local g=eg:Filter(s.tgfilter,nil,e,tp)
-	if chk==0 then return g:GetCount()>0 end
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and g:GetCount()>0 end
 	local bc=g:GetFirst()
 	if g:GetCount()>1 then
 		bc=g:FilterSelect(tp,s.tgfilter,1,1,nil,e,tp):GetFirst()
