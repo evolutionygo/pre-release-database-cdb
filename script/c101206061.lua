@@ -39,16 +39,17 @@ function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 			and a:GetPreviousRaceOnField()&RACE_DRAGON~=0
 			and a:GetPreviousAttributeOnField()&ATTRIBUTE_FIRE~=0)
 end
-function s.tgfilter(c,e)
-	return not c:IsType(TYPE_TOKEN) and c:IsFaceupEx() and c:IsType(TYPE_MONSTER) and c:IsCanBeEffectTarget(e)
+function s.tgfilter(c,e,tp)
+	return not c:IsType(TYPE_TOKEN) and c:IsFaceupEx() and c:IsType(TYPE_MONSTER)
+		and c:IsCanBeEffectTarget(e) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chkc then return false end
-	local g=eg:Filter(s.tgfilter,nil,e)
+	local g=eg:Filter(s.tgfilter,nil,e,tp)
 	if chk==0 then return g:GetCount()>0 end
 	local bc=g:GetFirst()
 	if g:GetCount()>1 then
-		bc=g:FilterSelect(tp,s.tgfilter,1,1,nil,e):GetFirst()
+		bc=g:FilterSelect(tp,s.tgfilter,1,1,nil,e,tp):GetFirst()
 	end
 	Duel.SetTargetCard(bc)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,bc,1,0,0)
