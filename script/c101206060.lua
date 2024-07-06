@@ -14,11 +14,6 @@ function s.initial_effect(c)
 	e1:SetTarget(s.target)
 	e1:SetOperation(s.activate)
 	c:RegisterEffect(e1)
-	local e2=e1:Clone()
-	e2:SetDescription(aux.Stringid(id,1))
-	e2:SetCost(s.cost1)
-	e2:SetCondition(s.con)
-	c:RegisterEffect(e2)
 	--set
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,2))
@@ -33,22 +28,19 @@ end
 function s.cfilter(c)
 	return not c:IsCode(id) and (c:IsSetCard(0x2b9) or c:IsType(TYPE_NORMAL)) and not c:IsPublic()
 end
-function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_HAND,0,1,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONFIRM)
-	local g=Duel.SelectMatchingCard(tp,s.cfilter,tp,LOCATION_HAND,0,1,1,nil)
-	Duel.ConfirmCards(1-tp,g)
-	Duel.ShuffleHand(tp)
-end
-function s.cost1(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
-end
 function s.confilter(c)
 	return c:IsFaceup() and not c:IsType(TYPE_TOKEN)
 		and (c:IsType(TYPE_NORMAL) or c:IsSetCard(0x2b9) and c:IsLevelAbove(5))
 end
-function s.con(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetMatchingGroupCount(s.confilter,tp,LOCATION_MZONE,0,nil)>0
+function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
+	local b1 = Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_HAND,0,1,nil)
+	local b2 = Duel.GetMatchingGroupCount(s.confilter,tp,LOCATION_MZONE,0,nil)>0
+	if chk==0 then return b1 or b2 end
+	if b2 and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then return end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONFIRM)
+	local g=Duel.SelectMatchingCard(tp,s.cfilter,tp,LOCATION_HAND,0,1,1,nil)
+	Duel.ConfirmCards(1-tp,g)
+	Duel.ShuffleHand(tp)
 end
 function s.nbfilter(c)
 	return c:IsFaceup() and aux.NegateAnyFilter(c) and c:IsAbleToRemove()
