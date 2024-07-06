@@ -3,7 +3,6 @@ local s,id,o=GetID()
 function s.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_DISABLE+CATEGORY_REMOVE)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
@@ -16,7 +15,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 	--set
 	local e3=Effect.CreateEffect(c)
-	e3:SetDescription(aux.Stringid(id,2))
+	e3:SetDescription(aux.Stringid(id,1))
 	e3:SetType(EFFECT_TYPE_IGNITION)
 	e3:SetRange(LOCATION_GRAVE)
 	e3:SetCountLimit(1,id+o)
@@ -36,11 +35,13 @@ function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local b1 = Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_HAND,0,1,nil)
 	local b2 = Duel.GetMatchingGroupCount(s.confilter,tp,LOCATION_MZONE,0,nil)>0
 	if chk==0 then return b1 or b2 end
-	if b2 and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then return end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONFIRM)
-	local g=Duel.SelectMatchingCard(tp,s.cfilter,tp,LOCATION_HAND,0,1,1,nil)
-	Duel.ConfirmCards(1-tp,g)
-	Duel.ShuffleHand(tp)
+	if b1 then
+		if b2 and not Duel.SelectYesNo(tp,aux.Stringid(id,0)) then return end
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONFIRM)
+		local g=Duel.SelectMatchingCard(tp,s.cfilter,tp,LOCATION_HAND,0,1,1,nil)
+		Duel.ConfirmCards(1-tp,g)
+		Duel.ShuffleHand(tp)
+	end
 end
 function s.nbfilter(c)
 	return c:IsFaceup() and aux.NegateAnyFilter(c) and c:IsAbleToRemove()
