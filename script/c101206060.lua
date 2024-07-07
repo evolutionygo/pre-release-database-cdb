@@ -32,8 +32,8 @@ function s.confilter(c)
 		and (c:IsType(TYPE_NORMAL) or c:IsSetCard(0x2b9) and c:IsLevelAbove(5))
 end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	local b1 = Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_HAND,0,1,nil)
-	local b2 = Duel.GetMatchingGroupCount(s.confilter,tp,LOCATION_MZONE,0,nil)>0
+	local b1=Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_HAND,0,1,nil)
+	local b2=Duel.IsExistingMatchingCard(s.confilter,tp,LOCATION_MZONE,0,1,nil)
 	if chk==0 then return b1 or b2 end
 	if b1 then
 		if b2 and not Duel.SelectYesNo(tp,aux.Stringid(id,0)) then return end
