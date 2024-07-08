@@ -43,7 +43,7 @@ function s.mfilter(c)
 	return c:IsFusionAttribute(ATTRIBUTE_LIGHT) and c:IsRace(RACE_SPELLCASTER)
 end
 function s.damtg(e,c)
-	return c:IsSetCard(0x2bd) and c:GetBattleTarget()~=nil and not c:IsCode(id)
+	return c:IsSetCard(0x2bd) and not c:IsCode(id)
 end
 function s.discon(e,tp,eg,ep,ev,re,r,rp)
 	return ep~=tp and Duel.IsChainDisablable(ev)
