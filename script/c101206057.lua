@@ -69,7 +69,8 @@ function s.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 	if chk==0 then return xg:GetCount()>0 and aux.bfgcost(e,tp,eg,ep,ev,re,r,rp,chk) end
 	aux.bfgcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	local at=Duel.SendtoGrave(xg,REASON_COST)
+	local sg=xg:FilterSelect(tp,aux.TRUE,1,xg:GetCount(),nil)
+	local at=Duel.SendtoGrave(sg,nil,REASON_COST)
 	for tc in aux.Next(cg) do
 		Duel.RaiseSingleEvent(tc,EVENT_DETACH_MATERIAL,e,0,0,0,0)
 	end
