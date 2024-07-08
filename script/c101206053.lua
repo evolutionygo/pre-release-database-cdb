@@ -71,7 +71,7 @@ function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		and c:IsAbleToHand() end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
 	local g=Duel.SelectTarget(tp,s.tdfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,1,nil,tp)
-	Duel.SetOperationInfo(0,CATEGORY_TOEXTRA,g,#g,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_TODECK,g,#g,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,c,1,0,0)
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)

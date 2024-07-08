@@ -63,7 +63,7 @@ function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Remove(tg,POS_FACEUP,REASON_EFFECT)
 	end
 end
-function s.thcon(e,tp,eg,ep,ev,re,r,rp)
+function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsStatus(STATUS_EFFECT_ENABLED)
 end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
