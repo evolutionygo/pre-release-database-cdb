@@ -71,16 +71,18 @@ function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SendtoGrave(e:GetHandler(),REASON_COST)
 end
 function s.spfilter(c,e,tp)
-	return c:IsSetCard(0xac) and c:IsFaceup() and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsSetCard(0xac) and c:IsFaceup() and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsCanBeEffectTarget(e)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_REMOVED) and chkc:IsControler(tp) and s.spfilter(chkc,e,tp) end
+	local g=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_REMOVED,0,nil,e,tp)
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
-	if chk==0 then return ft>=5 and Duel.IsExistingTarget(s.spfilter,tp,LOCATION_REMOVED,0,5,nil,e,tp)
+	if chk==0 then return ft>=5 and Duel.IsExistingTarget(s.spfilter,tp,LOCATION_REMOVED,0,5,nil,e,tp) and g:GetClassCount(Card.GetCode)>=5
 		and not Duel.IsPlayerAffectedByEffect(tp,59822133) end
-	local g=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_REMOVED,0,nil,e,tp):Filter(Card.IsCanBeEffectTarget,nil,e)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local tg=g:SelectSubGroup(tp,aux.dncheck,false,5,5)
+	aux.GCheckAdditional=aux.dncheck
+	local tg=g:SelectSubGroup(tp,aux.TRUE,false,5,5)
+	aux.GCheckAdditional=nil
 	Duel.SetTargetCard(tg)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,tg,tg:GetCount(),0,0)
 end

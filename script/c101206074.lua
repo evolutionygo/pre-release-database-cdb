@@ -33,8 +33,11 @@ end
 function s.cfilter(c,e,tp)
 	return c:IsSummonPlayer(1-tp) and c:IsSummonLocation(LOCATION_DECK+LOCATION_EXTRA)
 end
+function s.confilter(c)
+	return c:IsSetCard(0x19b) and c:IsFaceup() and c:GetOriginalType()&TYPE_MONSTER>0
+end
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(aux.AND(Card.IsSetCard,Card.IsFaceup),tp,LOCATION_MZONE,0,1,nil,0x19b)
+	return Duel.IsExistingMatchingCard(s.confilter,tp,LOCATION_ONFIELD,0,1,nil)
 		and eg:IsExists(s.cfilter,1,nil,e,tp)
 end
 function s.tdfilter(c)
