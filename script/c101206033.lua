@@ -51,7 +51,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.descon(e,tp,eg,ep,ev,re,r,rp)
-	return re:GetHandler():IsSetCard(0x19e) and not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED)
+	return re:GetHandler():IsSetCard(0x2bd,0x19e) and not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED)
 end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_ONFIELD) end

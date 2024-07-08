@@ -61,7 +61,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.tdfilter(c)
-	return c:IsFaceupEx() and c:IsType(TYPE_MONSTER) 
+	return c:IsFaceupEx() and c:IsType(TYPE_MONSTER)
 		and c:IsAbleToDeck() and c:IsSetCard(0x2bd)
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)

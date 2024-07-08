@@ -26,7 +26,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 	--def down
 	local e3=e2:Clone()
-	e3:SetCode(EFFECT_UPDATE_ATTACK)
+	e3:SetCode(EFFECT_UPDATE_DEFENSE)
 	c:RegisterEffect(e3)
 	--Search
 	local e4=Effect.CreateEffect(c)
