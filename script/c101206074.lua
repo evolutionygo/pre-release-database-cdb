@@ -68,7 +68,7 @@ function s.atkcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.atktg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local d=e:GetLabelObject()
-	if chk==0 then return not d:IsAttack(0) end
+	if chk==0 then return d end
 end
 function s.atkop(e,tp,ep,ev,re,r,rp)
 	local a=Duel.GetAttacker()
