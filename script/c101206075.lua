@@ -28,12 +28,13 @@ function s.initial_effect(c)
 	e3:SetHintTiming(0,TIMING_BATTLE_START+TIMING_BATTLE_END)
 	e3:SetRange(LOCATION_SZONE)
 	e3:SetCountLimit(1,id)
+	e3:SetCondition(s.spcon)
 	e3:SetCost(s.spcost)
 	e3:SetTarget(s.sptg)
 	e3:SetOperation(s.spop)
 	c:RegisterEffect(e3)
 end
-function s.rmfilter1(c)
+function s.rmfilter1(c,tp)
 	local loc=c:GetLocation()
 	return c:IsFaceupEx() and c:IsSetCard(0xac) and c:IsAbleToRemove()
 		and Duel.IsExistingTarget(s.rmfilter2,tp,0,loc,1,nil)
@@ -43,21 +44,27 @@ function s.rmfilter2(c)
 end
 function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end
-	if chk==0 then return Duel.IsExistingTarget(s.rmfilter1,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,nil) end
+	if chk==0 then return Duel.IsExistingTarget(s.rmfilter1,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,nil,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g1=Duel.SelectTarget(tp,s.rmfilter1,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,1,nil)
+	local g1=Duel.SelectTarget(tp,s.rmfilter1,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,1,nil,tp)
 	local loc=g1:GetFirst():GetLocation()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local g2=Duel.SelectTarget(tp,s.rmfilter2,tp,0,loc,1,1,nil)
 	g1:Merge(g2)
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g1,g1:GetCount(),0,0)
+	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g1,g1:GetCount(),0,0)
+end
+function s.rmopfilter(c,e)
+	return c:IsType(TYPE_MONSTER) and c:IsRelateToEffect(e)
 end
 function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
-	local tg=g:Filter(Card.IsRelateToEffect,nil,e)
-	if tg:GetCount()>0 then
+	local tg=g:Filter(s.rmopfilter,nil,e)
+	if tg:GetCount()==2 then
 		Duel.Remove(tg,POS_FACEUP,REASON_EFFECT)
 	end
+end
+function s.thcon(e,tp,eg,ep,ev,re,r,rp)
+	return e:GetHandler():IsStatus(STATUS_EFFECT_ENABLED)
 end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToGraveAsCost() end

@@ -56,16 +56,19 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		local ct=math.floor(tc:GetLevel()/4)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
 		local sg=mg:SelectSubGroup(tp,s.gcheck,false,ct,ct,tp,tc)
-		if Duel.SendtoDeck(sg,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)~=0 and sg:FilterCount(Card.IsLocation,nil,LOCATION_DECK+LOCATION_EXTRA)~=0 then
-			Duel.BreakEffect()
-			if Duel.SpecialSummon(tc,SUMMON_TYPE_FUSION,tp,tp,false,false,POS_FACEUP) then
-				tc:CompleteProcedure()
+		if sg:GetCount()>0 then
+			Duel.HintSelection(sg)
+			if Duel.SendtoDeck(sg,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)~=0 and sg:FilterCount(Card.IsLocation,nil,LOCATION_DECK+LOCATION_EXTRA)~=0 then
+				Duel.BreakEffect()
+				if Duel.SpecialSummon(tc,SUMMON_TYPE_FUSION,tp,tp,false,false,POS_FACEUP) then
+					tc:CompleteProcedure()
+				end
 			end
 		end
 	end
 end
 function s.setfilter(c)
-	return c:GetType()==TYPE_TRAP and c:IsSSetable()
+	return c:IsSetCard(0x19e) and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsSSetable()
 end
 function s.settg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and s.setfilter(chkc) end

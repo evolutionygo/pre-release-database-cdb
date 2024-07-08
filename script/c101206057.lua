@@ -3,6 +3,7 @@ local s,id,o=GetID()
 function s.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
@@ -25,19 +26,18 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.CheckReleaseGroup(tp,s.costfilter,1,nil,e,tp) end
-	local g=Duel.SelectReleaseGroup(tp,s.costfilter,1,1,nil,e,tp)
+	if chk==0 then return Duel.CheckReleaseGroup(tp,s.costfilter,1,nil,tp) end
+	local g=Duel.SelectReleaseGroup(tp,s.costfilter,1,1,nil,tp)
 	Duel.Release(g,REASON_COST)
 end
-function s.costfilter(c,e,tp)
+function s.costfilter(c,tp)
 	return Duel.GetMZoneCount(tp,c)>0
 end
 function s.spfilter(c,e,tp)
 	return c:IsSetCard(0xac) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_DECK,0,1,nil,e,tp) end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_DECK,0,1,nil,e,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
@@ -69,7 +69,7 @@ function s.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 	if chk==0 then return xg:GetCount()>0 and aux.bfgcost(e,tp,eg,ep,ev,re,r,rp,chk) end
 	aux.bfgcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	local at=Duel.SendtoGrave(xg,nil,REASON_COST)
+	local at=Duel.SendtoGrave(xg,REASON_COST)
 	for tc in aux.Next(cg) do
 		Duel.RaiseSingleEvent(tc,EVENT_DETACH_MATERIAL,e,0,0,0,0)
 	end

@@ -73,12 +73,12 @@ function s.atkop(e,tp,ep,ev,re,r,rp)
 	local a=Duel.GetAttacker()
 	local d=a:GetBattleTarget()
 	if a:IsControler(1-tp) then a,d=d,a end
-	if e:GetHandler():IsRelateToEffect(e)
-		and d:IsFaceup() and d:IsRelateToBattle() then
+	if d:IsFaceup() and d:IsRelateToBattle() then
+		local atk=d:GetAttack()
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_UPDATE_ATTACK)
-		e1:SetValue(-1000)
+		e1:SetCode(EFFECT_SET_ATTACK_FINAL)
+		e1:SetValue(math.ceil(atk/2))
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
 		d:RegisterEffect(e1)
 	end

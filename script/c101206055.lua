@@ -35,12 +35,12 @@ function s.initial_effect(c)
 	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
 	e4:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 	e4:SetCode(EVENT_TO_GRAVE)
-	e4:SetOperation(s.tgop)
+	e4:SetCondition(s.regcon)
+	e4:SetOperation(s.regop)
 	c:RegisterEffect(e4)
 	--set
 	local e5=Effect.CreateEffect(c)
 	e5:SetDescription(aux.Stringid(id,2))
-	e5:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e5:SetCode(EVENT_PHASE+PHASE_END)
 	e5:SetRange(LOCATION_GRAVE)
@@ -50,13 +50,13 @@ function s.initial_effect(c)
 	e5:SetOperation(s.setop)
 	c:RegisterEffect(e5)
 end
-function s.cfilter(c,tp)
+function s.cfilter1(c,tp)
 	return c:IsType(TYPE_MONSTER)
 end
 function s.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.CheckReleaseGroupEx(tp,s.cfilter,1,REASON_COST,true,nil,tp) end
+	if chk==0 then return Duel.CheckReleaseGroupEx(tp,s.cfilter1,1,REASON_COST,true,nil,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
-	local g=Duel.SelectReleaseGroupEx(tp,s.cfilter,1,1,REASON_COST,true,nil,tp)
+	local g=Duel.SelectReleaseGroupEx(tp,s.cfilter1,1,1,REASON_COST,true,nil,tp)
 	Duel.Release(g,REASON_COST)
 end
 function s.thfilter(c)
@@ -74,15 +74,14 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.ConfirmCards(1-tp,g)
 	end
 end
-function s.cfilter(c,tp)
+function s.cfilter2(c,tp)
 	return c:IsControler(tp) and c:IsType(TYPE_MONSTER)
 end
 function s.lpcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(aux.AND(Card.IsSetCard,Card.IsFaceup),tp,LOCATION_MZONE,0,1,nil,0x2bd)
-		and eg:IsExists(s.cfilter,1,nil,1-tp)
+	return eg:IsExists(s.cfilter2,1,nil,1-tp)
 end
 function s.lptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
+	if chk==0 then return Duel.IsExistingMatchingCard(aux.AND(Card.IsSetCard,Card.IsFaceup),tp,LOCATION_MZONE,0,1,nil,0x2bd) end
 	Duel.SetOperationInfo(0,CATEGORY_RECOVER,nil,0,tp,1500)
 end
 function s.lpop(e,tp,eg,ep,ev,re,r,rp)
@@ -90,11 +89,11 @@ function s.lpop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.SetLP(1-tp,lp-1500)
 	if Duel.GetLP(1-tp)<lp then Duel.Recover(tp,1500,REASON_EFFECT) end
 end
-function s.tgop(e,tp,eg,ep,ev,re,r,rp)
-	if bit.band(r,REASON_RETURN+REASON_ADJUST)~=0 then return end
-	if e:GetHandler():IsPreviousLocation(LOCATION_SZONE) then
-		e:GetHandler():RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,1)
-	end
+function s.regcon(e,tp,eg,ep,ev,re,r,rp)
+	return e:GetHandler():IsPreviousLocation(LOCATION_SZONE) and e:GetHandler():IsPreviousPosition(POS_FACEUP)
+end
+function s.regop(e,tp,eg,ep,ev,re,r,rp)
+	e:GetHandler():RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,1)
 end
 function s.setcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetFlagEffect(id)~=0
