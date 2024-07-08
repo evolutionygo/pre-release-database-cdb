@@ -66,10 +66,8 @@ function s.atkcon(e,tp,eg,ep,ev,re,r,rp)
 	e:SetLabelObject(d)
 	return a:IsControler(tp) and a:IsFaceup() and a:IsSetCard(0x19b) and d:IsControler(1-tp) and d:IsFaceup() and d:IsRelateToBattle()
 end
-function s.atktg(e,tp,ep,ev,re,r,rp,chk)
-	local a=Duel.GetAttacker()
-	local d=a:GetBattleTarget()
-	if a:IsControler(1-tp) then a,d=d,a end
+function s.atktg(e,tp,eg,ep,ev,re,r,rp,chk)
+	local d=e:GetLabelObject()
 	if chk==0 then return not d:IsAttack(0) end
 end
 function s.atkop(e,tp,ep,ev,re,r,rp)
