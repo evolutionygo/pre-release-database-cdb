@@ -36,7 +36,7 @@ function s.initial_effect(c)
 end
 function s.rmfilter1(c,tp)
 	local loc=c:GetLocation()
-	return c:IsFaceupEx() and c:IsSetCard(0xac) and c:IsAbleToRemove()
+	return c:IsFaceupEx() and c:IsSetCard(0xac) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemove()
 		and Duel.IsExistingTarget(s.rmfilter2,tp,0,loc,1,nil)
 end
 function s.rmfilter2(c)
