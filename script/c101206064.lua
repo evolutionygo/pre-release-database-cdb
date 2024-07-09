@@ -15,8 +15,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function s.desfilter(c,tp,ec)
-	return c:IsFaceup()
-		and Duel.IsExistingTarget(nil,tp,0,LOCATION_ONFIELD,1,Group.FromCards(c,ec))
+	return c:IsType(TYPE_MONSTER) and Duel.IsExistingTarget(nil,tp,0,LOCATION_ONFIELD,1,Group.FromCards(c,ec))
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()
