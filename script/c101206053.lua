@@ -22,6 +22,7 @@ function s.initial_effect(c)
 	e2:SetOperation(s.thop)
 	c:RegisterEffect(e2)
 end
+s.fusion_effect=true
 function s.filter(c,e,tp,mg)
 	if c:GetLevel()<4 then return false end
 	local ct=math.floor(c:GetLevel()/4)
