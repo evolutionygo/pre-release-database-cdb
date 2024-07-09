@@ -17,7 +17,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 	--destroy
 	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(id,0))
+	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetCategory(CATEGORY_DESTROY)
 	e2:SetType(EFFECT_TYPE_QUICK_O)
 	e2:SetCode(EVENT_CHAINING)
@@ -51,7 +51,8 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.descon(e,tp,eg,ep,ev,re,r,rp)
-	return re:GetHandler():IsSetCard(0x2bd,0x19e) and not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED)
+	return not re:GetHandler():IsCode(id) and re:GetHandler():IsSetCard(0x2bd,0x19e)
+		and not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED)
 end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_ONFIELD) end
