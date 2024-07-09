@@ -42,18 +42,18 @@ function s.initial_effect(c)
 	c:RegisterEffect(e5)
 end
 function s.cfilter1(c)
-	return c:IsFaceup() and c:IsSetCard(2be) and not c:IsCode(id)
+	return c:IsFaceup() and c:IsSetCard(0x2be) and not c:IsCode(id)
 end
 function s.cfilter2(c)
 	return c:IsFacedown()
 end
-function s.indcon(e)
+function s.indescon(e)
 	local tp=e:GetHandlerPlayer()
 	return Duel.IsExistingMatchingCard(s.cfilter1,tp,LOCATION_MZONE,0,1,nil)
 		or Duel.IsExistingMatchingCard(s.cfilter2,tp,0,LOCATION_MZONE,1,nil)
 end
 function s.thfilter(c)
-	return c:IsSetCard(2be) and not c:IsCode(id) and c:IsAbleToHand()
+	return c:IsSetCard(0x2be) and not c:IsCode(id) and c:IsAbleToHand()
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil) end
