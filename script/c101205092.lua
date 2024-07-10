@@ -29,15 +29,11 @@ function s.initial_effect(c)
 	e3:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
 	e3:SetTargetRange(LOCATION_ONFIELD,0)
 	e3:SetTarget(aux.TargetBoolFunction(aux.AND(Card.IsType,Card.IsFaceup),TYPE_SPELL))
-	e3:SetValue(1)
+	e3:SetValue(aux.tgoval)
 	c:RegisterEffect(e3)
-end
-function s.filter(c)
-	return c:IsFaceup() and not c:IsSetCard(0x2be)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
-	local g=Duel.GetMatchingGroup(s.filter,tp,LOCATION_MZONE,0,nil)
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,3,tp,LOCATION_DECK)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_REMOVED)
 	Duel.SetOperationInfo(0,CATEGORY_CONTROL,e:GetHandler(),1,0,0)
