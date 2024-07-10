@@ -57,9 +57,6 @@ end
 function s.descon(e,tp,eg,ep,ev,re,r,rp)
 	return re:GetHandlerPlayer()~=e:GetHandlerPlayer()
 end
-function s.cfilter(c)
-	return c:IsSetCard(0x46) and c:IsType(TYPE_SPELL) and c:IsAbleToRemoveAsCost()
-end
 function s.descost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end
 	e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_COST)
