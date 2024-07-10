@@ -39,7 +39,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_CONTROL,e:GetHandler(),1,0,0)
 end
 function s.spfilter(c,e,tp)
-	return c:IsFaceup() and c:IsCanBeSpecialSummoned(e,0,tp,false,false,1-tp,POS_FACEUP_DEFENSE)
+	return c:IsFaceup() and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE,1-tp)
 end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	if (Duel.GetCurrentPhase()==PHASE_MAIN1 or Duel.GetCurrentPhase()==PHASE_MAIN2) then
