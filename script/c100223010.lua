@@ -72,7 +72,7 @@ function s.xyztg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return mg:CheckSubGroup(s.fselect,1,mg:GetCount(),tp) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 end
-function s.xyzfilter2(c)
+function s.xyzfilter2(c,mg)
 	return mg:CheckSubGroup(s.gselect,1,#mg,c)
 end
 function s.gselect(sg,c)
@@ -81,7 +81,7 @@ function s.gselect(sg,c)
 end
 function s.xyzop(e,tp,eg,ep,ev,re,r,rp)
 	local mg=Duel.GetMatchingGroup(s.filter,tp,LOCATION_MZONE,0,nil)
-	local exg=Duel.GetMatchingGroup(s.xyzfilter2,tp,LOCATION_EXTRA,0,nil)
+	local exg=Duel.GetMatchingGroup(s.xyzfilter2,tp,LOCATION_EXTRA,0,nil,mg)
 	local xyzg=exg:Filter(s.ovfilter,nil,tp,mg)
 	if g:GetCount()>0 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
