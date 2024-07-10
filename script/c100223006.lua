@@ -38,7 +38,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 function s.mtfilter(c,e)
-	return c:IsSetCard(0x2c0) and c:IsType(TYPE_MONSTER)
+	return c:IsSetCard(0x2bf) and c:IsType(TYPE_MONSTER)
 		and c:IsCanOverlay() and not (e and c:IsImmuneToEffect(e))
 end
 function s.mttg(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -61,7 +61,7 @@ function s.val2(e,c)
 	return e:GetHandler():GetOverlayCount()*(-100)
 end
 function s.thfilter(c)
-	return c:IsSetCard(0x2c0) and c:IsAbleToHand()
+	return c:IsSetCard(0x2bf) and c:IsAbleToHand()
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 		local g=Duel.GetMatchingGroup(s.thfilter,tp,LOCATION_DECK,0,nil)

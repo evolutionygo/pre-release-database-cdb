@@ -27,7 +27,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function s.cfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x2c0) and c:IsType(TYPE_XYZ)
+	return c:IsFaceup() and c:IsSetCard(0x2bf) and c:IsType(TYPE_XYZ)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() and chkc:IsControler(1-tp) end
@@ -61,7 +61,7 @@ function s.fselect(sg,tp)
 	return mg:CheckSubGroup(s.matfilter,1,#mg,tp,sg)
 end
 function s.matfilter(sg,tp,g)
-	if sg:Filter(Card.IsSetCard,nil,0x2c0):GetCount()==0 then return false end
+	if sg:Filter(Card.IsSetCard,nil,0x2bf):GetCount()==0 then return false end
 	return Duel.IsExistingMatchingCard(s.xyzfilter,tp,LOCATION_EXTRA,0,1,nil,sg)
 end
 function s.xyzfilter(c,mg)
@@ -76,7 +76,7 @@ function s.xyzfilter2(c)
 	return mg:CheckSubGroup(s.gselect,1,#mg,c)
 end
 function s.gselect(sg,c)
-	if sg:Filter(Card.IsSetCard,nil,0x2c0):GetCount()==0 then return false end
+	if sg:Filter(Card.IsSetCard,nil,0x2bf):GetCount()==0 then return false end
 	return c:IsXyzSummonable(sg,#sg,#sg)
 end
 function s.xyzop(e,tp,eg,ep,ev,re,r,rp)

@@ -35,7 +35,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function s.cfilter(c,tp)
-	return (c:IsAbleToDeckAsCost() or c:IsAbleToExtraAsCost()) and c:IsSetCard(0x2c0)
+	return (c:IsAbleToDeckAsCost() or c:IsAbleToExtraAsCost()) and c:IsSetCard(0x2bf)
 end
 function s.spcon(e,c)
 	if c==nil then return true end

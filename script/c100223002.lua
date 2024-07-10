@@ -54,7 +54,7 @@ function s.spcost2(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SendtoGrave(g,REASON_COST)
 end
 function s.spfilter2(c,e,tp)
-	return not c:IsCode(id) and c:IsSetCard(0x2c0)
+	return not c:IsCode(id) and c:IsSetCard(0x2bf)
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE)
 end
 function s.sptg2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)

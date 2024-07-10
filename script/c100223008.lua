@@ -13,7 +13,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function s.spfilter(c,e,tp)
-	return c:IsFaceupEx() and (c:IsSetCard(0x2c0) or c:IsType(TYPE_XYZ))
+	return c:IsFaceupEx() and (c:IsSetCard(0x2bf) or c:IsType(TYPE_XYZ))
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
@@ -29,7 +29,7 @@ function s.xyzfilter(c,e,tp)
 		and Duel.IsExistingMatchingCard(s.mtfilter,tp,LOCATION_DECK,0,1,nil,e)
 end
 function s.mtfilter(c,e)
-	return c:IsSetCard(0x2c0)
+	return c:IsSetCard(0x2bf)
 		and c:IsCanOverlay() and not (e and c:IsImmuneToEffect(e))
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
