@@ -1,4 +1,4 @@
---六武衆の破戒僧
+--六武式襲雙陣
 local s,id,o=GetID()
 function s.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
