@@ -27,7 +27,7 @@ function s.initial_effect(c)
 	e2:SetCondition(s.sccon)
 	e2:SetTarget(s.sctarg)
 	e2:SetOperation(s.scop)
-	c:RegisterEffect(e2)	
+	c:RegisterEffect(e2)
 end
 function s.spcost1(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToGraveAsCost,tp,LOCATION_HAND+LOCATION_ONFIELD,0,1,e:GetHandler()) end
@@ -39,7 +39,7 @@ function s.filter(c)
 	return c:IsType(TYPE_SPELL+TYPE_TRAP)
 end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsOnField() and s.filter(chkc) end
+	if chkc then return chkc:IsOnField() and chkc:IsControler(1-tp) and s.filter(chkc) end
 	if chk==0 then return true end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 	local g=Duel.SelectTarget(tp,s.filter,tp,0,LOCATION_ONFIELD,1,1,nil)

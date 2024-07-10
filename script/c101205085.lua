@@ -11,7 +11,7 @@ function s.initial_effect(c)
 	e1:SetCode(EFFECT_SPSUMMON_CONDITION)
 	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 	e1:SetValue(s.splimit)
-	c:RegisterEffect(e1)   
+	c:RegisterEffect(e1)
 	--to hand or spsummon
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,0))
@@ -20,10 +20,11 @@ function s.initial_effect(c)
 	e2:SetCode(EVENT_TO_GRAVE)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetProperty(EFFECT_FLAG_DELAY)
+	e2:SetCountLimit(1,id)
 	e2:SetCondition(s.tscon)
 	e2:SetTarget(s.tstg)
 	e2:SetOperation(s.tsop)
-	c:RegisterEffect(e2) 
+	c:RegisterEffect(e2)
 end
 function s.splimit(e,se,sp,st)
 	return not e:GetHandler():IsLocation(LOCATION_EXTRA)
@@ -35,7 +36,7 @@ function s.ffilter1(c,fc,sub,mg,sg)
 	return c:GetEquipGroup():IsExists(s.eqilter,1,nil)
 end
 function s.ffilter2(c,fc,sub,mg,sg)
-	return c:GetOriginalType()&TYPE_MONSTER~=0 and c:IsRace(RACE_FIEND)
+	return c:GetOriginalType()&TYPE_MONSTER~=0 and c:GetOriginalRace()&RACE_FIEND~=0
 end
 function s.tgfilter(c)
 	return c:IsPreviousLocation(LOCATION_HAND) and c:IsType(TYPE_MONSTER)
@@ -43,15 +44,15 @@ end
 function s.tscon(e,tp,eg,ep,ev,re,r,rp)
 	if not re then return false end
 	local rc=re:GetHandler()
-	return rp==tp and r&REASON_COST>0 and eg:IsExists(s.tgfilter,1,nil)
+	return r&REASON_COST~=0 and eg:IsExists(s.tgfilter,1,nil)
 end
 function s.eqfilter(c)
 	return c:IsPreviousLocation(LOCATION_HAND) and c:IsType(TYPE_MONSTER) and not c:IsForbidden()
 end
 function s.tstg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-	local b1=eg:IsExists(s.eqfilter,1,nil) and Duel.GetFlagEffect(tp,id)==0
-	local b2=Duel.IsPlayerCanDraw(tp,1) and Duel.GetFlagEffect(tp,id+o)==0
+	local b1=eg:IsExists(s.eqfilter,1,nil) and Duel.GetLocationCount(tp,LOCATION_SZONE)>0
+	local b2=Duel.IsPlayerCanDraw(tp,1)
 	if chk==0 then return b1 or b2 end
 	local op=0
 	if b1 and b2 then
@@ -63,17 +64,15 @@ function s.tstg(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 	e:SetLabel(op)
 	if op==0 then
-		Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1)
 		Duel.SetOperationInfo(0,CATEGORY_LEAVE_GRAVE,nil,1,0,0)
 	else
-		Duel.RegisterFlagEffect(tp,id+o,RESET_PHASE+PHASE_END,0,1)
 		Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
 	end
 end
 function s.tsop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if e:GetLabel()==0 then
-		if c:IsFaceup() and c:IsRelateToEffect(e) then
+		if c:IsFaceup() and c:IsRelateToEffect(e) and Duel.GetLocationCount(tp,LOCATION_SZONE)>0 then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EQUIP)
 			local ec=eg:FilterSelect(tp,s.eqfilter,1,1,nil):GetFirst()
 			if not Duel.Equip(tp,ec,c) then return end

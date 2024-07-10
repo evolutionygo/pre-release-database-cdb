@@ -10,14 +10,14 @@ function s.initial_effect(c)
 	e1:SetCountLimit(1,id+EFFECT_COUNT_CODE_OATH)
 	e1:SetTarget(s.target)
 	e1:SetOperation(s.activate)
-	c:RegisterEffect(e1)	
+	c:RegisterEffect(e1)
 end
 function s.filter(c,tp)
 	local code=c:GetOriginalCode()
 	return c:IsFaceup() and Duel.IsExistingMatchingCard(s.eqfilter,tp,LOCATION_DECK+LOCATION_GRAVE+LOCATION_HAND,0,2,nil,code)
 end
 function s.eqfilter(c,code)
-	return c:IsOriginalCodeRule(code) and not c:IsForbidden()
+	return c:IsOriginalCodeRule(code) and c:IsType(TYPE_MONSTER) and not c:IsForbidden()
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and s.filter(chkc,tp) end
@@ -32,7 +32,8 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and tc:IsFaceup() and Duel.GetLocationCount(tp,LOCATION_SZONE)>1 then
+	if tc:IsRelateToEffect(e) and tc:IsFaceup() and tc:IsType(TYPE_MONSTER) and Duel.GetLocationCount(tp,LOCATION_SZONE)>1
+		and Duel.GetMatchingGroupCount(aux.NecroValleyFilter(s.eqfilter),tp,LOCATION_DECK+LOCATION_HAND+LOCATION_GRAVE,0,nil,tc:GetOriginalCode())>1 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EQUIP)
 		local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.eqfilter),tp,LOCATION_DECK+LOCATION_HAND+LOCATION_GRAVE,0,2,2,nil,tc:GetOriginalCode())
 		if #g<2 then return end
