@@ -36,7 +36,7 @@ function s.ffilter1(c,fc,sub,mg,sg)
 	return c:GetEquipGroup():IsExists(s.eqilter,1,nil)
 end
 function s.ffilter2(c,fc,sub,mg,sg)
-	return c:GetOriginalType()&TYPE_MONSTER~=0 and c:GetOriginalRace()&RACE_FIEND>0
+	return c:GetOriginalType()&TYPE_MONSTER~=0 and c:GetOriginalRace()&RACE_FIEND~=0
 end
 function s.tgfilter(c)
 	return c:IsPreviousLocation(LOCATION_HAND) and c:IsType(TYPE_MONSTER)
@@ -44,7 +44,7 @@ end
 function s.tscon(e,tp,eg,ep,ev,re,r,rp)
 	if not re then return false end
 	local rc=re:GetHandler()
-	return r&REASON_COST>0 and eg:IsExists(s.tgfilter,1,nil)
+	return r&REASON_COST~=0 and eg:IsExists(s.tgfilter,1,nil)
 end
 function s.eqfilter(c)
 	return c:IsPreviousLocation(LOCATION_HAND) and c:IsType(TYPE_MONSTER) and not c:IsForbidden()
