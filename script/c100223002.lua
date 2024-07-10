@@ -29,7 +29,7 @@ function s.spcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
 	return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.GetFieldGroupCount(aux.AND(Card.IsType,Card.IsFaceupEx),tp,LOCATION_MZONE+LOCATION_GRAVE,0,nil,TYPE_XYZ)==0
+		and Duel.GetMatchingGroupCount(aux.AND(Card.IsType,Card.IsFaceupEx),tp,LOCATION_MZONE+LOCATION_GRAVE,0,nil,TYPE_XYZ)==0
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp,c)
 	local e1=Effect.CreateEffect(c)
