@@ -5,7 +5,7 @@ function s.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
-	c:RegisterEffect(e1)   
+	c:RegisterEffect(e1)
 	--can not spsummon
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD)
@@ -75,7 +75,7 @@ function s.atkval(e,c)
 	return c:GetBaseDefense()
 end
 function s.atktarget(e,c)
-	return c:GetFlagEffect(id+1)>0
+	return c:GetFlagEffect(id+1)>0 and Duel.IsExistingMatchingCard(Card.IsFacedown,c:GetControler(),LOCATION_MZONE,0,1,nil)
 end
 function s.effcon1(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(Card.IsFacedown,tp,LOCATION_MZONE,0,1,nil)
