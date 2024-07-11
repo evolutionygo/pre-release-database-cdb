@@ -53,7 +53,7 @@ function s.indescon(e)
 		or Duel.IsExistingMatchingCard(s.cfilter2,tp,0,LOCATION_MZONE,1,nil)
 end
 function s.thfilter(c)
-	return c:IsSetCard(0x2be) and not c:IsCode(id) and c:IsAbleToHand()
+	return c:IsSetCard(0x2be) and c:IsType(TYPE_MONSTER) and not c:IsCode(id) and c:IsAbleToHand()
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil) end

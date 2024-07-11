@@ -94,7 +94,8 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	local c=e:GetHandler()
 	if tc and tc:IsRelateToEffect(e) and Duel.SendtoHand(tc,nil,REASON_EFFECT)~=0 then
-		if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsRelateToEffect(e) and c:IsLocation(LOCATION_PZONE) and Duel.SelectYesNo(tp,aux.Stringid(id,3)) then
+		if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false)
+			and c:IsRelateToEffect(e) and c:IsLocation(LOCATION_PZONE) and Duel.SelectYesNo(tp,aux.Stringid(id,3)) then
 			Duel.BreakEffect()
 			Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
 		end
