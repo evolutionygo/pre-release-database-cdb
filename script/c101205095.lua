@@ -89,7 +89,7 @@ function s.posop(e,tp,eg,ep,ev,re,r,rp)
 		elseif tc:IsPosition(POS_FACEUP_DEFENCE) and tc:IsCanChangePosition() then
 			Duel.ChangePosition(tc,POS_FACEUP_ATTACK)
 		else
-			local pos=Duel.SelectPosition(tp,tc,POS_FACEUP_ATTACK+POS_FACEUP_DEFENSE)
+			local pos=Duel.SelectPosition(tp,tc,POS_FACEUP)
 			Duel.ChangePosition(tc,pos)
 		end
 	end

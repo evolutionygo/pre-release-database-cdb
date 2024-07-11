@@ -84,7 +84,7 @@ function s.posop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=g:GetFirst()
 	if tc then
 		Duel.HintSelection(g)
-		local pos=Duel.SelectPosition(tp,tc,POS_FACEUP_ATTACK+POS_FACEUP_DEFENSE)
+		local pos=Duel.SelectPosition(tp,tc,POS_FACEUP)
 		Duel.ChangePosition(tc,pos)
 	end
 end
