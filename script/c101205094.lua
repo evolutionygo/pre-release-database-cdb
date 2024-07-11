@@ -77,10 +77,12 @@ end
 function s.atktarget(e,c)
 	return c:GetFlagEffect(id+1)>0 and Duel.IsExistingMatchingCard(Card.IsFacedown,c:GetControler(),LOCATION_MZONE,0,1,nil)
 end
-function s.effcon1(e,tp,eg,ep,ev,re,r,rp)
+function s.effcon1(e)
+	local tp=e:GetHandlerPlayer()
 	return Duel.IsExistingMatchingCard(Card.IsFacedown,tp,LOCATION_MZONE,0,1,nil)
 end
-function s.effcon2(e,tp,eg,ep,ev,re,r,rp)
+function s.effcon2(e)
+	local tp=e:GetHandlerPlayer()
 	return Duel.IsExistingMatchingCard(Card.IsFacedown,tp,0,LOCATION_MZONE,1,nil)
 end
 function s.thfilter(c)
