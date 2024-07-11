@@ -94,7 +94,7 @@ function s.xyzop(e,tp,eg,ep,ev,re,r,rp)
 	if exg:GetCount()>0 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
 		local tg=exg:Select(tp,1,1,nil)
-		local sg=mg:SelectSubGroup(tp,s.gselect,false,1,127,tg:GetFirst())
+		local sg=mg:SelectSubGroup(tp,s.gselect,false,1,mg:GetCount(),tg:GetFirst())
 		Duel.XyzSummon(tp,tg:GetFirst(),sg)
 	end
 end
