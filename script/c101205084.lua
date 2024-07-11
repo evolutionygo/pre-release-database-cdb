@@ -36,7 +36,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	if not c:IsRelateToEffect(e) then return end
 	local b1=Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 	local b2=Duel.GetLocationCount(1-tp,LOCATION_MZONE)>0 and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP,1-tp)
-	local op=0
+	local op=-1
 	if b1 and b2 then
 		op=Duel.SelectOption(tp,aux.Stringid(id,1),aux.Stringid(id,2))
 	elseif b1 then
@@ -46,14 +46,14 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	else
 		Duel.SendtoGrave(c,REASON_RULE)
 	end
-	local sp=0
+	local sp=nil
 	if op==0 then
 		sp=Duel.SpecialSummonStep(c,0,tp,tp,false,false,POS_FACEUP)
-	else
+	elseif op==1 then
 		sp=Duel.SpecialSummonStep(c,0,tp,1-tp,false,false,POS_FACEUP)
 	end
 	local att=e:GetLabel()
-	if sp~=0 then
+	if sp~=nil then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_CHANGE_ATTRIBUTE)
@@ -61,14 +61,14 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_DISABLE+RESET_PHASE+PHASE_END)
 		c:RegisterEffect(e1)
 	end
-	Duel.SpecialSummonComplete()
+	if op>=0 then Duel.SpecialSummonComplete() end
 	if op==1 and Duel.GetMZoneCount(tp,e:GetHandler())>0
 		and Duel.IsExistingMatchingCard(aux.NecroValleyFilter(s.spfilter),tp,LOCATION_HAND+LOCATION_GRAVE,0,1,nil,e,tp,att)
 		and Duel.SelectYesNo(tp,aux.Stringid(id,3)) then
-		Duel.BreakEffect()
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.spfilter),tp,LOCATION_HAND+LOCATION_GRAVE,0,1,1,nil,e,tp,att)
 		if g:GetCount()>0 then
+			Duel.BreakEffect()
 			Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 		end
 	end
