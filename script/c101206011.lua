@@ -1,4 +1,4 @@
---混沌魅惑の女王
+--混沌なる魅惑の女王
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--special summon
@@ -32,13 +32,13 @@ function s.initial_effect(c)
 end
 function s.costfilter(c)
 	return c:IsAttribute(ATTRIBUTE_LIGHT+ATTRIBUTE_DARK)
-		and c:IsAbleToGraveAsCost()
+		and c:IsDiscardable()
 end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.costfilter,tp,LOCATION_HAND,0,1,e:GetHandler()) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
 	local g=Duel.SelectMatchingCard(tp,s.costfilter,tp,LOCATION_HAND,0,1,1,e:GetHandler(),tp)
-	Duel.SendtoGrave(g,REASON_COST)
+	Duel.SendtoGrave(g,REASON_COST+REASON_DISCARD)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
@@ -72,7 +72,7 @@ function s.eqtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	end
 end
 function s.spfilter(c,e,tp)
-	return c:IsSetCard(0x3,0x2b6) and c:IsAttribute(ATTRIBUTE_DARK)
+	return c:IsSetCard(0x3) and c:IsAttribute(ATTRIBUTE_DARK)
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.eqop(e,tp,eg,ep,ev,re,r,rp)
@@ -92,7 +92,7 @@ function s.eqop(e,tp,eg,ep,ev,re,r,rp)
 		e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 		e2:SetCode(EFFECT_CHANGE_CODE)
 		e2:SetValue(tc:GetCode())
-		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+		e2:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
 		c:RegisterEffect(e2)
 		if bit.band(tc:GetOriginalAttribute(),ATTRIBUTE_LIGHT+ATTRIBUTE_DARK)~=0
 			and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
