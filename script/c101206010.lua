@@ -51,6 +51,7 @@ function s.initial_effect(c)
 end
 function s.tgfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0xc6) and c:IsType(TYPE_PENDULUM) and c:IsAbleToGraveAsCost()
+		and c:GetLeftScale()>0
 end
 function s.ptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.tgfilter,tp,LOCATION_EXTRA,0,1,nil) end
