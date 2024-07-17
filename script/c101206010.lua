@@ -65,6 +65,7 @@ function s.pop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=g:GetFirst()
 	if tc and Duel.SendtoGrave(tc,REASON_EFFECT)~=0 and tc:IsLocation(LOCATION_GRAVE)
 		and Duel.SelectYesNo(tp,aux.Stringid(id,8)) then
+		Duel.BreakEffect()
 		local ct=tc:GetLeftScale()
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
@@ -103,8 +104,8 @@ function s.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then
 		local sel=0
-		if Duel.IsExistingMatchingCard(s.desfilter,tp,LOCATION_ONFIELD,0,1,nil) then sel=sel+1 end
-		if Duel.IsExistingMatchingCard(s.schfilter,tp,LOCATION_DECK,0,1,nil) then sel=sel+2 end
+		if Duel.IsExistingMatchingCard(s.schfilter,tp,LOCATION_DECK,0,1,nil) then sel=sel+1 end
+		if Duel.IsExistingMatchingCard(s.desfilter,tp,LOCATION_ONFIELD,0,1,nil) then sel=sel+2 end
 		e:SetLabel(sel)
 		return sel~=0
 	end
@@ -114,35 +115,35 @@ function s.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 		sel=Duel.SelectOption(tp,aux.Stringid(id,5),aux.Stringid(id,6))+1
 	elseif sel==1 then
 		Duel.SelectOption(tp,aux.Stringid(id,5))
-	else
+	elseif sel==2 then
 		Duel.SelectOption(tp,aux.Stringid(id,6))
 	end
 	e:SetLabel(sel)
 	if sel==1 then
+		e:SetCategory(CATEGORY_TOEXTRA)
+		Duel.SetOperationInfo(0,CATEGORY_TOEXTRA,nil,1,tp,LOCATION_DECK)
+	elseif sel==2 then
 		local g=Duel.GetMatchingGroup(s.desfilter,tp,LOCATION_ONFIELD,0,nil)
 		e:SetCategory(CATEGORY_DESTROY)
 		Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
-	else
-		e:SetCategory(CATEGORY_TOEXTRA)
-		Duel.SetOperationInfo(0,CATEGORY_TOEXTRA,nil,1,tp,LOCATION_DECK)
 	end
 end
 function s.op(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local sel=e:GetLabel()
 	if sel==1 then
+		Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,7))
+		local g=Duel.SelectMatchingCard(tp,s.schfilter,tp,LOCATION_DECK,0,1,1,nil)
+		if g:GetCount()>0 then
+			Duel.SendtoExtraP(g,nil,REASON_EFFECT)
+		end
+	elseif sel==2 then
 		local g=Duel.GetMatchingGroup(s.desfilter,tp,LOCATION_ONFIELD,0,nil)
 		if g:GetCount()>0 then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 			local dg=g:Select(tp,1,1,nil)
 			Duel.HintSelection(dg)
 			Duel.Destroy(dg,REASON_EFFECT)
-		end
-	else
-		Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,7))
-		local g=Duel.SelectMatchingCard(tp,s.schfilter,tp,LOCATION_DECK,0,1,1,nil)
-		if g:GetCount()>0 then
-			Duel.SendtoExtraP(g,nil,REASON_EFFECT)
 		end
 	end
 end
