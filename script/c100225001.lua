@@ -17,7 +17,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1) 
 	--special summon(self)
 	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(56174248,1))
+	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_GRAVE)
@@ -75,7 +75,7 @@ function s.sptg1(e,tp,eg,ep,ev,re,r,rp,chk)
 		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
-function s.spop1(e,tp,eg,ep,ev,re,r,rp,c)
+function s.spop1(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	if c:IsRelateToEffect(e) then
