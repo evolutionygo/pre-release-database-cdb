@@ -41,7 +41,7 @@ function s.cfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0x2bb) and c:IsType(TYPE_TRAP)
 end
 function s.poscon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingTarget(s.cfilter,tp,LOCATION_ONFIELD,0,1,nil)
+	return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_ONFIELD,0,1,nil)
 end
 function s.posfilter(c)
 	return c:IsPosition(POS_DEFENSE) and c:IsCanChangePosition()
