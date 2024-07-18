@@ -1,4 +1,4 @@
---异色眼日耀龙
+--オッドアイズ・ソルブレイズ・ドラゴン
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--Synchro summon
@@ -17,7 +17,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1) 
 	--special summon(self)
 	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(56174248,0))
+	e2:SetDescription(aux.Stringid(56174248,1))
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_GRAVE)
