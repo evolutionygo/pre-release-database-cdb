@@ -41,7 +41,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) and Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)~=0
 		and c:IsRelateToEffect(e) and c:IsFaceup() and c:IsControler(tp) then
-		if Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 or tc:IsControler(1-tp) or not tc:IsLocation(LOCATION_MZONE) then
+		if Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 or not tc:IsLocation(LOCATION_MZONE) then
 			Duel.SendtoGrave(c,REASON_EFFECT)
 			return
 		end
