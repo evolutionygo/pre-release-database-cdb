@@ -72,5 +72,5 @@ end
 function s.value(e,c)
 	local tc=e:GetHandler():GetEquipTarget()
 	local g=tc:GetEquipGroup()
-	return g:GetSum(Card.GetLink)*800
+	return g:GetSum(Card.GetLink)*600
 end
