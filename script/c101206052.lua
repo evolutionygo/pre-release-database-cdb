@@ -38,13 +38,12 @@ function s.tgfilter(c,e,tp,chk)
 		and (chk or Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil,c:GetAttack(),tp))
 end
 function s.thfilter(c,atk,tp)
-	return c:IsSetCard(0x12f) and c:IsAttackBelow(atk-1)
-		and c:IsAbleToHand()
+	return c:IsSetCard(0x12f) and c:IsAttackBelow(atk-1) and c:IsAbleToHand()
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return eg:IsContains(chkc) and s.tgfilter(chkc,e,tp,true) end
 	local g=eg:Filter(s.tgfilter,nil,e,tp,false)
-	if chk==0 then return g:GetCount()>0 and Duel.GetLocationCount(tp,LOCATION_SZONE)>0 end
+	if chk==0 then return g:GetCount()>0 end
 	if g:GetCount()==1 then
 		Duel.SetTargetCard(g:GetFirst())
 	else
@@ -52,10 +51,11 @@ function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		local tc=g:Select(tp,1,1,nil)
 		Duel.SetTargetCard(tc)
 	end
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and tc:IsFaceup() and tc:IsControler(tp) then
+	if tc:IsRelateToEffect(e) and tc:IsFaceup() then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 		local sg=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_DECK,0,1,1,nil,tc:GetAttack(),tp)
 		if sg:GetCount()>0 then
