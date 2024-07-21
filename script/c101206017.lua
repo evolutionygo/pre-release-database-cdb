@@ -4,7 +4,7 @@ function s.initial_effect(c)
 	--to hand or special summon
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
-	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH+CATEGORY_SPECIAL_SUMMON)
+	e1:SetCategory(CATEGORY_SEARCH+CATEGORY_SPECIAL_SUMMON+CATEGORY_DECKDES)
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetRange(LOCATION_HAND)
@@ -34,8 +34,8 @@ end
 function s.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	e:SetLabel(100)
-	if chk==0 then return c:IsReleasable() and Duel.CheckReleaseGroup(tp,s.cfilter,1,c,tp) end
-	local g=Duel.SelectReleaseGroup(tp,s.cfilter,1,1,c,tp)
+	if chk==0 then return c:IsReleasable() and Duel.CheckReleaseGroupEx(tp,s.cfilter,1,REASON_COST,true,c,tp) end
+	local g=Duel.SelectReleaseGroupEx(tp,s.cfilter,1,1,REASON_COST,true,c,tp)
 	g:AddCard(c)
 	Duel.Release(g,REASON_COST)
 end
