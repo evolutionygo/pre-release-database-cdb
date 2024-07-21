@@ -34,7 +34,6 @@ function s.initial_effect(c)
 	--destroy
 	local e5=Effect.CreateEffect(c)
 	e5:SetCategory(CATEGORY_DESTROY)
-	e5:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e5:SetType(EFFECT_TYPE_IGNITION)
 	e5:SetCountLimit(1)
 	e5:SetRange(LOCATION_MZONE)
