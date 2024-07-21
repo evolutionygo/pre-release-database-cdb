@@ -92,7 +92,7 @@ function s.damtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local dam=Duel.GetMatchingGroupCount(s.damfilter,tp,LOCATION_REMOVED,0,nil)*100
 	if chk==0 then return dam>0 end
 	Duel.SetTargetPlayer(1-tp)
-	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,dma)
+	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,dam)
 end
 function s.damop(e,tp,eg,ep,ev,re,r,rp)
 	local dam=Duel.GetMatchingGroup(s.damfilter,tp,LOCATION_REMOVED,0,nil)*100

@@ -14,10 +14,11 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.CheckRemoveOverlayCard(tp,1,1,1,REASON_EFFECT) and Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>=4 and (Duel.GetDecktopGroup(tp,4):IsExists(Card.IsAbleToHand,1,nil) or Duel.GetLocationCount(tp,LOCATION_SZONE)>0) end
+	if chk==0 then return Duel.CheckRemoveOverlayCard(tp,1,1,1,REASON_EFFECT) and Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>=4 end
 end
 function s.thfilter(c,tp)
-	return c:IsType(TYPE_TRAP) and Duel.GetLocationCount(tp,LOCATION_SZONE)>0 or c:IsAbleToHand() 
+	return c:IsType(TYPE_TRAP) and Duel.GetLocationCount(tp,LOCATION_SZONE)>0
+		or c:IsType(TYPE_MONSTER+TYPE_SPELL) and c:IsAbleToHand() 
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
