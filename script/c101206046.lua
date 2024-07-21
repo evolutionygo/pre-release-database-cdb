@@ -1,4 +1,4 @@
---成皇水精鳞-尼普深渊王
+--皇たる水精鱗－ネプトアビス
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--link summon
@@ -48,9 +48,7 @@ function s.etlimit(e,c)
 		and c:IsFaceup()
 end
 function s.cfilter(c,tp,re)
-	return c:IsReason(REASON_COST) and re:IsActivated() and re:IsActiveType(TYPE_MONSTER) and c:GetOriginalAttribute()==ATTRIBUTE_WATER
-		and re:GetHandler():IsAttribute(ATTRIBUTE_WATER)
-		and c:IsControler(tp)
+	return c:IsReason(REASON_COST) and re:IsActivated() and c:GetOriginalAttribute()==ATTRIBUTE_WATER
 end
 function s.thcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
