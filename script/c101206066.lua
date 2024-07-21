@@ -63,7 +63,7 @@ end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetLabel()==1 then
 		local tc=Duel.GetFirstTarget()
-		if tc:IsRelateToEffect(e) then
+		if tc:IsRelateToEffect(e) and tc:IsType(TYPE_MONSTER) then
 			Duel.Destroy(tc,REASON_EFFECT)
 		end
 	else
@@ -81,7 +81,7 @@ function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 		and Duel.GetFieldGroupCount(tp,0,LOCATION_MZONE)>0
 end
 function s.spfilter(c,e,tp)
-	return (c:IsAttribute(ATTRIBUTE_WATER+ATTRIBUTE_FIRE)) and c:IsLevel(7,8) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsAttribute(ATTRIBUTE_WATER+ATTRIBUTE_FIRE) and c:IsLevel(7,8) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and s.spfilter(chkc,e,tp) end
