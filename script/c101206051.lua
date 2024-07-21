@@ -1,8 +1,10 @@
 --武装蜂起
 local s,id,o=GetID()
 function s.initial_effect(c)
+	aux.AddCodeList(c,52838896)
 	--Activate
 	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_TOGRAVE)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
@@ -20,7 +22,6 @@ function s.initial_effect(c)
 	e2:SetCode(EVENT_DESTROYED)
 	e2:SetRange(LOCATION_GRAVE)
 	e2:SetLabelObject(e0)
-	e2:SetCountLimit(1,id)
 	e2:SetCondition(s.thcon)
 	e2:SetCost(aux.bfgcost)
 	e2:SetTarget(s.thtg)
@@ -65,7 +66,7 @@ function s.splimit(e,c)
 end
 function s.cfilter(c,se)
 	return c:IsReason(REASON_BATTLE+REASON_EFFECT) and c:IsType(TYPE_SYNCHRO)
-		and c:IsRace(RACE_INSECT) and c:IsPreviousPosition(POS_FACEUP)
+		and bit.band(c:GetPreviousRaceOnField(),RACE_INSECT)~=0 and c:IsPreviousPosition(POS_FACEUP)
 		and c:IsPreviousLocation(LOCATION_MZONE) and (se==nil or c:GetReasonEffect()~=se)
 end
 function s.thcon(e,tp,eg,ep,ev,re,r,rp)
