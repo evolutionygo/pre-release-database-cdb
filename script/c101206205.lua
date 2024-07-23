@@ -2,8 +2,10 @@
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddCodeList(c,101206208)
+	--xyz summon
 	aux.AddXyzProcedure(c,nil,3,2)
 	c:EnableReviveLimit()
+	--search
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
@@ -14,6 +16,7 @@ function s.initial_effect(c)
 	e1:SetTarget(s.thtg)
 	e1:SetOperation(s.thop)
 	c:RegisterEffect(e1)
+	--detach
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetCategory(CATEGORY_TOHAND)
@@ -23,6 +26,7 @@ function s.initial_effect(c)
 	e2:SetTarget(s.thtg2)
 	e2:SetOperation(s.thop2)
 	c:RegisterEffect(e2)
+	--move material
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,2))
 	e3:SetType(EFFECT_TYPE_IGNITION)

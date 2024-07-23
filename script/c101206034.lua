@@ -1,8 +1,10 @@
 --空隙の原星竜
 local s,id,o=GetID()
 function s.initial_effect(c)
+	--material
 	aux.AddFusionProcFun2(c,s.mfilter1,s.mfilter2,true)
 	c:EnableReviveLimit()
+	--destroy
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_DESTROY)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
@@ -13,6 +15,7 @@ function s.initial_effect(c)
 	e1:SetTarget(s.destg)
 	e1:SetOperation(s.desop)
 	c:RegisterEffect(e1)
+	--change level
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)

@@ -1,6 +1,7 @@
 --メタル化・強化反射装甲
 local s,id,o=GetID()
 function s.initial_effect(c)
+	--activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)

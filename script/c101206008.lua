@@ -2,6 +2,7 @@
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddCodeList(c,101206071)
+	--set
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_DRAW)
@@ -15,6 +16,7 @@ function s.initial_effect(c)
 	local e2=e1:Clone()
 	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
 	c:RegisterEffect(e2)
+	--level up
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_SINGLE)
 	e3:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
@@ -23,6 +25,7 @@ function s.initial_effect(c)
 	e3:SetCondition(s.lvcon)
 	e3:SetValue(4)
 	c:RegisterEffect(e3)
+	--change race
 	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(id,1))
 	e4:SetType(EFFECT_TYPE_IGNITION)

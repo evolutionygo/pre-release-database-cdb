@@ -1,6 +1,7 @@
 --ヴァーチュ・ストリーム
 local s,id,o=GetID()
 function s.initial_effect(c)
+	--destroy
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_DESTROY)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
@@ -11,6 +12,7 @@ function s.initial_effect(c)
 	e1:SetTarget(s.destg)
 	e1:SetOperation(s.desop)
 	c:RegisterEffect(e1)
+	--target effect
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetType(EFFECT_TYPE_QUICK_O)

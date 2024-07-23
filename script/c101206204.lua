@@ -1,8 +1,10 @@
 --CNo.32 海咬龍シャーク・ドレイク・リバイス
 local s,id,o=GetID()
 function s.initial_effect(c)
+	--xyz summon
 	aux.AddXyzProcedure(c,nil,5,4,s.ovfilter,aux.Stringid(id,0),4,s.xyzop)
 	c:EnableReviveLimit()
+	--negate
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,1))
 	e1:SetCategory(CATEGORY_DISABLE)
@@ -15,11 +17,13 @@ function s.initial_effect(c)
 	e1:SetTarget(s.distg)
 	e1:SetOperation(s.disop)
 	c:RegisterEffect(e1)
+	--extra attack
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE)
 	e2:SetCode(EFFECT_EXTRA_ATTACK)
 	e2:SetValue(1)
 	c:RegisterEffect(e2)
+	--pierce
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_SINGLE)
 	e3:SetCode(EFFECT_PIERCE)

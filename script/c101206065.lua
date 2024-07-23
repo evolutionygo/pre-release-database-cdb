@@ -1,6 +1,7 @@
 --死を謳う魔瞳
 local s,id,o=GetID()
 function s.initial_effect(c)
+	--activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
@@ -9,6 +10,7 @@ function s.initial_effect(c)
 	e1:SetOperation(s.activate)
 	e1:SetLabel(id)
 	c:RegisterEffect(e1)
+	--search
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH+CATEGORY_TODECK)
