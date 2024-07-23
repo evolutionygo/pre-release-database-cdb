@@ -1382,7 +1382,6 @@ function Auxiliary.FShaddollCondition(attr)
 					exg=Duel.GetMatchingGroup(Auxiliary.FShaddollExFilter,tp,0,LOCATION_MZONE,mg,c,attr,fe)
 				end
 				if gc then
-					Debug.Message(tostring(gc:GetOriginalCode()))
 					if not mg:IsContains(gc) then return false end
 					return Auxiliary.FShaddollSpFilter1(gc,c,tp,mg,exg,attr,chkf)
 				end
