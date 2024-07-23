@@ -64,6 +64,7 @@ function s.thdop(e,tp,eg,ep,ev,re,r,rp)
 				local dg2=g2:Select(tp,1,1,nil)
 				dg1:Merge(dg2)
 				Duel.HintSelection(dg1)
+				Duel.BreakEffect()
 				Duel.Destroy(dg1,REASON_EFFECT)
 			end
 		end
