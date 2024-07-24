@@ -26,11 +26,11 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function s.dfilter(c,tp)
-	return c:IsAttribute(ATTRIBUTE_FIRE) and c:IsDiscardable()
+	return c:IsAttribute(ATTRIBUTE_WATER) and c:IsDiscardable()
 		and Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil,c:GetLevel())
 end
 function s.thfilter(c,lv)
-	return c:IsAttribute(ATTRIBUTE_FIRE) and c:IsLevelAbove(lv) and c:IsAbleToHand()
+	return c:IsAttribute(ATTRIBUTE_WATER) and c:IsLevelAbove(lv) and c:IsAbleToHand()
 end
 function s.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
