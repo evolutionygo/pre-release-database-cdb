@@ -46,13 +46,8 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		local op=aux.SelectFromOptions(tp,
 		{s1,aux.Stringid(id,2),tp},
 		{s2,aux.Stringid(id,3),1-tp})
-		local sp = 0
-		if op==0 then
-			sp = Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
-		else
-			sp = Duel.SpecialSummon(tc,0,tp,1-tp,false,false,POS_FACEDOWN_DEFENSE)
-		end
-		if sp~=0 and Duel.IsExistingMatchingCard(s.posfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil)
+		if Duel.SpecialSummon(tc,0,tp,op,false,false,op==tp and POS_FACEUP or POS_FACEDOWN_DEFENCE)~=0
+			and Duel.IsExistingMatchingCard(s.posfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil)
 			and Duel.SelectYesNo(tp,aux.Stringid(id,4)) then
 			Duel.BreakEffect()
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
