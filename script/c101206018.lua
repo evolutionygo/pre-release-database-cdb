@@ -24,8 +24,11 @@ function s.initial_effect(c)
 	e2:SetOperation(s.spop)
 	c:RegisterEffect(e2)
 end
+function s.lvcfilter(c)
+	return c:IsAbleToGraveAsCost() and c:IsDiscardable()
+end
 function s.lvcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToGraveAsCost,tp,LOCATION_HAND,0,1,e:GetHandler()) end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.lvcfilter,tp,LOCATION_HAND,0,1,e:GetHandler()) end
 	Duel.DiscardHand(tp,Card.IsAbleToGraveAsCost,1,1,REASON_COST)
 end
 function s.lvfilter(c)
