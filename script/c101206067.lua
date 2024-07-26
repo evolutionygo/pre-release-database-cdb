@@ -40,7 +40,7 @@ function s.checkop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetCurrentPhase()>=PHASE_BATTLE_START and Duel.GetCurrentPhase()<=PHASE_BATTLE then
 		for tc in aux.Next(eg) do
 			if tc:IsType(TYPE_TOKEN) then
-				Duel.RegisterFlagEffect(0,id,RESET_PHASE+PHASE_END,0,1)
+				Duel.RegisterFlagEffect(0,id,RESET_PHASE+PHASE_BATTLE,0,1)
 			end
 		end
 	end
