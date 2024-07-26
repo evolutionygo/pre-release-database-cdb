@@ -82,6 +82,7 @@ end
 function s.disop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=re:GetHandler()
 	if not Duel.IsChainDisablable(ev) then return end
+	if ep==tp then return end
 	if not re:IsHasProperty(EFFECT_FLAG_CARD_TARGET) then return end
 	local g=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)
 	if g and g:IsExists(s.disfilter,1,nil,e,tp) then Duel.NegateEffect(ev,true) end
