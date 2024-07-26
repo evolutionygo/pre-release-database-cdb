@@ -1,4 +1,4 @@
---ニュービー!
+--ニュービー！
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--spsummon
@@ -64,6 +64,7 @@ function s.acop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
 		local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.tdfilter),tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,1,nil)
 		if g:GetCount()>0 then
+			Duel.HintSelection(g)
 			if Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)==0 then
 				Duel.SendtoDeck(g,nil,SEQ_DECKBOTTOM,REASON_EFFECT)
 			else
