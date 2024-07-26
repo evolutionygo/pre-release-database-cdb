@@ -104,8 +104,9 @@ function s.tkcon(e,tp,eg,ep,ev,re,r,rp,chk)
 	return Duel.GetTurnPlayer()==1-tp
 end
 function s.tktg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetFlagEffect(0,id)>0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+	if chk==0 then return Duel.GetFlagEffect(0,id)>0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and e:GetHandler():GetFlagEffect(id)==0
 		and Duel.IsPlayerCanSpecialSummonMonster(tp,id+o,0,TYPES_TOKEN_MONSTER,0,0,1,RACE_BEAST,ATTRIBUTE_EARTH) end
+	e:GetHandler():RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_BATTLE,0,1)
 	Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,1,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,0,0)
 end
