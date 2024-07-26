@@ -36,7 +36,7 @@ function s.accon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonLocation(LOCATION_HAND)
 end
 function s.thfilter(c)
-	return not c:IsCode(id) and c:IsRace(RACE_ILLUSION) and c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsAbleToHand()
+	return not c:IsCode(id) and c:IsRace(RACE_INSECT) and c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsAbleToHand()
 end
 function s.tdfilter(c)
 	return c:IsFaceupEx() and c:IsType(TYPE_TRAP) and c:IsAbleToDeck()
@@ -62,7 +62,7 @@ function s.acop(e,tp,eg,ep,ev,re,r,rp)
 			Duel.BreakEffect()
 		end
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-		local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.tdfilter),tp,LOCATION_HAND,0,1,1,nil)
+		local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.tdfilter),tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,1,nil)
 		if g:GetCount()>0 then
 			if Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)==0 then
 				Duel.SendtoDeck(g,nil,SEQ_DECKBOTTOM,REASON_EFFECT)
