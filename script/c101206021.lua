@@ -36,8 +36,8 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 	Duel.SetChainLimit(s.climit)
 end
-function s.climit(c)
-	return not c:IsType(TYPE_MONSTER)
+function s.climit(re,rp,tp)
+	return not re:GetHandler():IsType(TYPE_MONSTER)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local sg=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_ONFIELD,0,nil)
