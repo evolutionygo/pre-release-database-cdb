@@ -52,7 +52,7 @@ function s.ctg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 end
 function s.setfilter(c)
-	return c:IsSetCard(0xc0) and c:IsType(TYPE_TRAP) and c:IsSSetable()
+	return c:IsSetCard(0x2c0) and c:IsType(TYPE_TRAP) and c:IsSSetable()
 end
 function s.cop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
