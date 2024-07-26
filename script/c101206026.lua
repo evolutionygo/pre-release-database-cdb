@@ -50,7 +50,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.spfilter(c,e,tp)
-	return c:IsPreviousLocation(LOCATION_DECK+LOCATION_HAND) and c:IsPreviousControler(tp)
+	return c:IsPreviousLocation(LOCATION_DECK+LOCATION_HAND) and c:IsControler(tp) and c:IsLocation(LOCATION_GRAVE)
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEDOWN_DEFENSE) and c:IsCanBeEffectTarget(e)
 end
 function s.spcon2(e,tp,eg,ep,ev,re,r,rp)
