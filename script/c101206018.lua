@@ -29,7 +29,7 @@ function s.lvcfilter(c)
 end
 function s.lvcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.lvcfilter,tp,LOCATION_HAND,0,1,e:GetHandler()) end
-	Duel.DiscardHand(tp,Card.IsAbleToGraveAsCost,1,1,REASON_COST)
+	Duel.DiscardHand(tp,s.lvcfilter,1,1,REASON_COST+REASON_DISCARD)
 end
 function s.lvfilter(c)
 	return c:IsAttribute(ATTRIBUTE_WATER) and c:IsFaceup() and c:IsLevelAbove(1) and not c:IsLevel(7)
