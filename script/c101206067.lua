@@ -23,7 +23,6 @@ function s.initial_effect(c)
 	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e3:SetCode(EVENT_PHASE+PHASE_BATTLE)
 	e3:SetRange(LOCATION_SZONE)
-	e3:SetCountLimit(1)
 	e3:SetCondition(s.tkcon)
 	e3:SetTarget(s.tktg)
 	e3:SetOperation(s.tkop)
@@ -38,9 +37,11 @@ function s.initial_effect(c)
 	end
 end
 function s.checkop(e,tp,eg,ep,ev,re,r,rp)
-	for tc in aux.Next(eg) do
-		if tc:IsType(TYPE_TOKEN) then
-			Duel.RegisterFlagEffect(0,id,RESET_PHASE+PHASE_END,0,1)
+	if Duel.GetCurrentPhase()>=PHASE_BATTLE_START and Duel.GetCurrentPhase()<=PHASE_BATTLE then
+		for tc in aux.Next(eg) do
+			if tc:IsType(TYPE_TOKEN) then
+				Duel.RegisterFlagEffect(0,id,RESET_PHASE+PHASE_END,0,1)
+			end
 		end
 	end
 end
