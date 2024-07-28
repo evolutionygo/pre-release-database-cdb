@@ -38,6 +38,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EQUIP)
 		local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.eqfilter),tp,LOCATION_DECK+LOCATION_HAND+LOCATION_GRAVE,0,2,2,nil,code,tp)
 		if #g<2 then return end
+		g:KeepAlive()
 		local ec=g:GetFirst()
 		while ec do
 			if Duel.Equip(tp,ec,tc) then
@@ -57,12 +58,14 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_CANNOT_ATTACK)
+		e1:SetLabelObject(g)
 		e1:SetCondition(s.chkcon)
 		tc:RegisterEffect(e1)
 		local e2=Effect.CreateEffect(e:GetHandler())
 		e2:SetType(EFFECT_TYPE_SINGLE)
 		e2:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
 		e2:SetValue(1)
+		e2:SetLabelObject(g)
 		e2:SetCondition(s.chkcon)
 		tc:RegisterEffect(e2)
 	end
@@ -81,9 +84,13 @@ end
 function s.splimit(e,c)
 	return c:GetOriginalRace()&e:GetLabel()==0
 end
+function s.chkfilter(c,id,eg)
+	return c:GetFlagEffect(id)>0 and eg:IsContains(c)
+end
 function s.chkcon(e)
-	local c=e:GetHandler()
-	return c:GetEquipGroup():Filter(Card.GetFlagEffect,nil,id):GetCount()>=2
+	local eg=e:GetHandler():GetEquipGroup()
+	local g=e:GetLabelObject()
+	return g:Filter(s.chkfilter,nil,id,eg):GetCount()==2
 end
 function s.eqlimit(e,c)
 	return c==e:GetLabelObject()
