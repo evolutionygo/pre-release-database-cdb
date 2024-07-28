@@ -49,13 +49,13 @@ function s.tgop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.rfilter(c)
-	return c:IsRace(RACE_FIEND) and c:IsLevelAbove(6) and c:IsAbleToRemoveAsCost()
+	return not c:IsCode(id) and c:IsRace(RACE_FIEND) and c:IsLevelAbove(6) and c:IsAbleToRemoveAsCost()
 end
 function s.rselect(g)
 	return g:GetClassCount(Card.GetAttributeInGrave)==1
 end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	local g=Duel.GetMatchingGroup(s.rfilter,tp,LOCATION_GRAVE,0,e:GetHandler())
+	local g=Duel.GetMatchingGroup(s.rfilter,tp,LOCATION_GRAVE,0,nil)
 	if chk==0 then return g:CheckSubGroup(s.rselect,2,2) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local sg=g:SelectSubGroup(tp,s.rselect,false,2,2)
