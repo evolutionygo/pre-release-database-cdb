@@ -36,7 +36,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function s.tbfilter(c)
-	return c:IsType(TYPE_NORMAL) and c:IsFaceup()
+	return c:IsType(TYPE_NORMAL)
 end
 function s.ttcon(e,c,minc)
 	if c==nil then return true end
