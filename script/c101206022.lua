@@ -33,7 +33,8 @@ function s.cfilter(c,ec,tp,exclude_modern_count)
 end
 function s.retg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsPlayerCanSpecialSummonMonster(tp,id,0,TYPE_EFFECT+TYPE_MONSTER,2100,1000,5,RACE_MACHINE,ATTRIBUTE_LIGHT) and Duel.IsExistingMatchingCard(s.tgfilter,tp,LOCATION_MZONE,0,1,nil,e,tp) end
+		and Duel.IsPlayerCanSpecialSummonMonster(tp,id,0,TYPE_EFFECT+TYPE_MONSTER,2100,1000,5,RACE_MACHINE,ATTRIBUTE_LIGHT)
+		and Duel.IsExistingMatchingCard(s.tgfilter,tp,LOCATION_MZONE,0,1,nil,e,tp) end
 	Duel.SetTargetCard(e:GetHandler())
 	Duel.SetOperationInfo(0,CATEGORY_EQUIP,nil,1,tp,LOCATION_REMOVED)
 end
@@ -47,7 +48,7 @@ function s.reop(e,tp,eg,ep,ev,re,r,rp)
 		local ec=sg:GetFirst()
 		if ec and Duel.Equip(tp,ec,tc) then
 			aux.SetUnionState(ec)
-			if e:GetHandler():IsRelateToChain() and e:GetHandler():IsLocation(LOCATION_HAND) then 
+			if e:GetHandler():IsRelateToChain() and e:GetHandler():IsLocation(LOCATION_HAND) then
 				Duel.SpecialSummon(e:GetHandler(),0,tp,tp,false,false,POS_FACEUP)
 			end
 		end
