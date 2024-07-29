@@ -1,4 +1,4 @@
---天下天下百鬼羅刹
+--天上天下百鬼羅刹
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--summon with no tribute
@@ -84,6 +84,7 @@ function s.mtop(e,tp,eg,ep,ev,re,r,rp)
 		if og:GetCount()>0 then
 			Duel.SendtoGrave(og,REASON_RULE)
 		end
+		tc:CancelToGrave()
 		Duel.Overlay(g:GetFirst(),Group.FromCards(tc))
 	end
 end
