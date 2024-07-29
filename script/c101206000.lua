@@ -50,7 +50,7 @@ function s.indcon(e,tp,eg,ep,ev,re,r,rp)
 	return c:IsSummonType(SUMMON_TYPE_FUSION)
 end
 function s.atkcon(e)
-	return Duel.GetFieldGroupCount(e:GetHandlerPlayer(),LOCATION_GRAVE,0)>=25
+	return e:GetHandler():IsSummonType(SUMMON_TYPE_FUSION) and Duel.GetFieldGroupCount(e:GetHandlerPlayer(),LOCATION_GRAVE,0)>=25
 end
 function s.descon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetFieldGroupCount(e:GetHandlerPlayer(),0,LOCATION_GRAVE)>=25
