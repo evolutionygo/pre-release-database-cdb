@@ -60,6 +60,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 			Duel.HintSelection(sg)
 			local dam=Duel.Destroy(sg,REASON_EFFECT)
 			if dam>0 then
+				Duel.BreakEffect()
 				Duel.Damage(1-tp,dam*500,REASON_EFFECT)
 			end
 		end
