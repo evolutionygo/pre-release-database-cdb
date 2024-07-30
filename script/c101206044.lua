@@ -36,11 +36,14 @@ function s.initial_effect(c)
 	e3:SetOperation(s.drepop)
 	c:RegisterEffect(e3)
 end
+function s.ofilter(c,attr)
+	return c:IsType(TYPE_MONSTER) and c:IsAttribute(attr)
+end
 function s.atkcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local bc=Duel.GetAttackTarget()
 	return bc and bc:IsFaceup() and bc:GetAttack()>c:GetAttack()
-		and c:GetOverlayGroup():IsExists(Card.IsAttribute,1,nil,ATTRIBUTE_FIRE)
+		and c:GetOverlayGroup():IsExists(s.ofilter,1,nil,ATTRIBUTE_FIRE)
 end
 function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -55,7 +58,7 @@ function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.negcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	return c:GetOverlayGroup():IsExists(Card.IsAttribute,1,nil,ATTRIBUTE_WATER)
+	return c:GetOverlayGroup():IsExists(s.ofilter,1,nil,ATTRIBUTE_WATER)
 		and Duel.GetTurnPlayer()==1-tp
 end
 function s.negtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
@@ -67,12 +70,14 @@ end
 function s.negop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) then
-		tc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,1)
+		tc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD-RESET_TURN_SET+RESET_PHASE+PHASE_END,0,1)
+		tc:RegisterFlagEffect(0,RESET_EVENT+RESETS_STANDARD-RESET_TURN_SET+RESET_PHASE+PHASE_END,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id,2))
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 		e1:SetCode(EVENT_CHAIN_SOLVING)
-		e1:SetLabelObject(tc)
 		e1:SetOperation(s.disop)
+		e1:SetReset(RESET_PHASE+PHASE_END)
+		e1:SetLabelObject(tc)
 		Duel.RegisterEffect(e1,tp)
 	end
 end
@@ -81,8 +86,7 @@ function s.disfilter(c,e,tp)
 end
 function s.disop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=re:GetHandler()
-	if not Duel.IsChainDisablable(ev) then return end
-	if ep==tp then return end
+	if ep==tp or not Duel.IsChainDisablable(ev) then return end
 	if not re:IsHasProperty(EFFECT_FLAG_CARD_TARGET) then return end
 	local g=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)
 	if g and g:IsExists(s.disfilter,1,nil,e,tp) then Duel.NegateEffect(ev,true) end
