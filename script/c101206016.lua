@@ -29,11 +29,11 @@ end
 function s.chcon(e,tp,eg,ep,ev,re,r,rp)
 	return rp==1-tp and re:IsActiveType(TYPE_MONSTER) and Duel.GetCurrentChain()>=2
 end
-function s.mfilter(c)
-	return c:IsSetCard(0x1a2) and c:IsType(TYPE_MONSTER) and not c:IsForbidden() and c:IsFaceupEx()
+function s.mfilter(c,tp)
+	return c:IsSetCard(0x1a2) and c:IsType(TYPE_MONSTER) and not c:IsForbidden() and c:IsFaceupEx() and c:CheckUniqueOnField(tp)
 end
 function s.chtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.mfilter,rp,0,LOCATION_MZONE+LOCATION_GRAVE,1,nil) and Duel.GetLocationCount(1-rp,LOCATION_SZONE)>0 end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.mfilter,rp,0,LOCATION_MZONE+LOCATION_GRAVE,1,nil,rp) and Duel.GetLocationCount(1-rp,LOCATION_SZONE)>0 end
 end
 function s.chop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Group.CreateGroup()
@@ -52,7 +52,7 @@ function s.repop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if Duel.GetLocationCount(1-tp,LOCATION_SZONE)==0 then return end
 	Duel.Hint(HINT_SELECTMSG,1-tp,HINTMSG_TOFIELD)
-	local g=Duel.SelectMatchingCard(1-tp,aux.NecroValleyFilter(s.mfilter),1-tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(1-tp,aux.NecroValleyFilter(s.mfilter),1-tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,1,nil,1-tp)
 	local tc=g:GetFirst()
 	if tc then
 		Duel.MoveToField(tc,1-tp,1-tp,LOCATION_SZONE,POS_FACEUP,true)

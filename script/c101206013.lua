@@ -35,16 +35,16 @@ function s.initial_effect(c)
 	e3:SetOperation(s.drop)
 	c:RegisterEffect(e3)
 end
-function s.tbfilter(c)
-	return c:IsType(TYPE_NORMAL) and c:IsFaceup()
+function s.tbfilter(c,tp)
+	return c:IsType(TYPE_NORMAL) and (c:IsControler(tp) or c:IsFaceup())
 end
 function s.ttcon(e,c,minc)
 	if c==nil then return true end
-	local g=Duel.GetMatchingGroup(s.tbfilter,c:GetControler(),LOCATION_MZONE,0,nil)
+	local g=Duel.GetMatchingGroup(s.tbfilter,c:GetControler(),LOCATION_MZONE,LOCATION_MZONE,nil,c:GetControler())
 	return minc<=1 and Duel.CheckTribute(c,1,1,g,c:GetControler())
 end
 function s.ttop(e,tp,eg,ep,ev,re,r,rp,c)
-	local g=Duel.GetMatchingGroup(s.tbfilter,tp,LOCATION_MZONE,0,nil)
+	local g=Duel.GetMatchingGroup(s.tbfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil,tp)
 	local tg=Duel.SelectTribute(tp,c,1,1,g)
 	c:SetMaterial(tg)
 	Duel.Release(tg,REASON_SUMMON+REASON_MATERIAL)
@@ -109,6 +109,7 @@ function s.drop(e,tp,eg,ep,ev,re,r,rp)
 		tc:RegisterEffect(e2)
 		tc=g:GetNext()
 	end
+	Duel.AdjustInstantly()
 	Duel.BreakEffect()
 	local g2=Duel.GetMatchingGroup(s.rmfilter1,tp,0,LOCATION_MZONE,nil)
 	Duel.Remove(g2,POS_FACEUP,REASON_EFFECT)

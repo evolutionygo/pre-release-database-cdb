@@ -40,11 +40,12 @@ function s.climit(re,rp,tp)
 	return not re:GetHandler():IsType(TYPE_MONSTER)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
 	local sg=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_ONFIELD,0,nil)
 	if Duel.SendtoGrave(sg,REASON_EFFECT)~=0 then
 		local g=Duel.GetOperatedGroup()
 		local ct=g:Filter(Card.IsLocation,nil,LOCATION_GRAVE):GetCount()
-		if ct~=0 and e:GetHandler():IsRelateToEffect(e) and Duel.SpecialSummon(e:GetHandler(),0,tp,tp,false,false,POS_FACEUP)~=0
+		if ct~=0 and c:IsRelateToEffect(e) and Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)~=0
 			and Duel.IsExistingMatchingCard(Card.IsAbleToGrave,tp,0,LOCATION_ONFIELD,1,nil) then
 			Duel.BreakEffect()
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)

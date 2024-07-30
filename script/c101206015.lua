@@ -8,7 +8,7 @@ function s.initial_effect(c)
 	e1:SetProperty(EFFECT_FLAG_DELAY)
 	e1:SetCode(EVENT_SUMMON_SUCCESS)
 	e1:SetCountLimit(1,id)
-	e1:SetCondition(s.dacon)
+	e1:SetCondition(aux.bpcon)
 	e1:SetTarget(s.datg)
 	e1:SetOperation(s.daop)
 	c:RegisterEffect(e1)
@@ -40,9 +40,6 @@ function s.initial_effect(c)
 	e4:SetTarget(s.sptg)
 	e4:SetOperation(s.spop)
 	c:RegisterEffect(e4)
-end
-function s.dacon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsAbleToEnterBP()
 end
 function s.datg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetFlagEffect(tp,id)==0 end
