@@ -44,10 +44,10 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		if tc and Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)~=0
 			and tc:IsSummonLocation(LOCATION_DECK) then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-			local g=Duel.SelectMatchingCard(tp,Card.IsAbleToGrave,tp,LOCATION_MZONE,0,1,1,nil)
-			local gc=g:GetFirst()
+			local sg=Duel.SelectMatchingCard(tp,Card.IsAbleToGrave,tp,LOCATION_MZONE,0,1,1,nil)
+			local gc=sg:GetFirst()
 			if gc then
-				Duel.HintSelection(g)
+				Duel.HintSelection(sg)
 				Duel.SendtoGrave(gc,REASON_EFFECT)
 			end
 		end
