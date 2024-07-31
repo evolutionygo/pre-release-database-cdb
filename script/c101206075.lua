@@ -25,8 +25,9 @@ function s.initial_effect(c)
 	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e3:SetType(EFFECT_TYPE_QUICK_O)
 	e3:SetCode(EVENT_FREE_CHAIN)
-	e3:SetHintTiming(0,TIMING_BATTLE_START+TIMING_BATTLE_END)
+	e3:SetHintTiming(0,TIMING_END_PHASE)
 	e3:SetRange(LOCATION_SZONE)
+	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e3:SetCountLimit(1,id)
 	e3:SetCondition(s.spcon)
 	e3:SetCost(s.spcost)
@@ -80,31 +81,20 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return ft>=5 and Duel.IsExistingTarget(s.spfilter,tp,LOCATION_REMOVED,0,5,nil,e,tp) and g:GetClassCount(Card.GetCode)>=5
 		and not Duel.IsPlayerAffectedByEffect(tp,59822133) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	aux.GCheckAdditional=aux.dncheck
-	local tg=g:SelectSubGroup(tp,aux.TRUE,false,5,5)
-	aux.GCheckAdditional=nil
+	local tg=g:SelectSubGroup(tp,aux.dncheck,false,5,5)
 	Duel.SetTargetCard(tg)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,tg,tg:GetCount(),0,0)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	local fid=c:GetFieldID()
-	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e)
-	if ft<1 or g:GetCount()<1 or (g:GetCount()>1 and Duel.IsPlayerAffectedByEffect(tp,59822133)) then return end
+	if g:GetCount()>1 and Duel.IsPlayerAffectedByEffect(tp,59822133) then return end
+	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	if g:GetCount()<=ft then
-		for tc in aux.Next(g) do
-			Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP)
-		end
-		Duel.SpecialSummonComplete()
+		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 	else
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local sg=g:Select(tp,ft,ft,nil)
-		for tc in aux.Next(sg) do
-			Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP)
-			tc:RegisterFlagEffect(84218527,RESET_EVENT+RESETS_STANDARD,0,1,fid)
-		end
-		Duel.SpecialSummonComplete()
+		Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP)
 		g:Sub(sg)
 		Duel.SendtoGrave(g,REASON_RULE)
 	end
