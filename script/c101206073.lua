@@ -7,9 +7,8 @@ function s.initial_effect(c)
 	e1:SetCategory(CATEGORY_GRAVE_ACTION+CATEGORY_SPECIAL_SUMMON+CATEGORY_FUSION_SUMMON+CATEGORY_TODECK)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
-	e1:SetHintTiming(0,TIMING_MAIN_END)
+	e1:SetHintTiming(0,TIMING_END_PHASE)
 	e1:SetCountLimit(1,id)
-	e1:SetCondition(s.condition)
 	e1:SetTarget(s.target)
 	e1:SetOperation(s.activate)
 	c:RegisterEffect(e1)
@@ -27,9 +26,6 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 s.fusion_effect=true
-function s.condition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetCurrentPhase()==PHASE_MAIN1 or Duel.GetCurrentPhase()==PHASE_MAIN2
-end
 function s.filter(c,e,tp,mg)
 	if c:GetLevel()<4 then return false end
 	local ct=math.floor(c:GetLevel()/4)
