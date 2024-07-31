@@ -8,7 +8,7 @@ function s.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetCountLimit(1,id+EFFECT_COUNT_CODE_OATH)
-	e1:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_MAIN_END)
+	e1:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_END_PHASE)
 	e1:SetTarget(s.thtg)
 	e1:SetOperation(s.thop)
 	c:RegisterEffect(e1)
@@ -18,7 +18,7 @@ function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.thfilter(c,tp)
 	return c:IsType(TYPE_TRAP) and Duel.GetLocationCount(tp,LOCATION_SZONE)>0
-		or c:IsType(TYPE_MONSTER+TYPE_SPELL) and c:IsAbleToHand() 
+		or c:IsType(TYPE_MONSTER+TYPE_SPELL) and c:IsAbleToHand()
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -27,8 +27,10 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 		local g=Duel.GetDecktopGroup(tp,4):Filter(s.thfilter,nil,tp)
 		if #g>0 then
 			Duel.DisableShuffleCheck()
-			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_OPERATECARD)
+			Duel.PreserveSelectDeckSequence(true)
 			local sc=g:Select(tp,1,1,nil):GetFirst()
+			Duel.PreserveSelectDeckSequence(false)
 			if sc:IsType(TYPE_TRAP) then
 				if Duel.SSet(tp,sc)>0 then
 					local e1=Effect.CreateEffect(c)
