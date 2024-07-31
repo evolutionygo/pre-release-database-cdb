@@ -44,6 +44,7 @@ function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return eg:IsContains(chkc) and s.tgfilter(chkc,e,tp,true) end
 	local g=eg:Filter(s.tgfilter,nil,e,tp,false)
 	if chk==0 then return g:GetCount()>0 end
+	Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
 	if g:GetCount()==1 then
 		Duel.SetTargetCard(g:GetFirst())
 	else
@@ -71,6 +72,7 @@ end
 function s.tntg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and s.tfilter(chkc) end
 	if chk==0 then return Duel.IsExistingTarget(s.tfilter,tp,LOCATION_MZONE,0,1,nil) end
+	Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
 	Duel.SelectTarget(tp,s.tfilter,tp,LOCATION_MZONE,0,1,1,nil)
 end
