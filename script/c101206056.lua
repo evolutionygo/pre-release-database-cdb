@@ -55,7 +55,7 @@ function s.negtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_DISABLE,g,1,0,0)
 	if l==100 then
 		e:SetCategory(CATEGORY_DISABLE+CATEGORY_SPECIAL_SUMMON+CATEGORY_GRAVE_SPSUMMON)
-	end	
+	end
 end
 function s.negop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()

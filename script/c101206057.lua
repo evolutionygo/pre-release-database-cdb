@@ -54,8 +54,11 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 	Duel.SpecialSummonComplete()
 end
+function s.atkfilter(c)
+	return c:IsFaceup() and c:IsSetCard(0xac) and c:IsType(TYPE_XYZ)
+end
 function s.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	local mg=Duel.GetMatchingGroup(aux.AND(Card.IsSetCard,Card.IsFaceup),tp,LOCATION_MZONE,0,nil,0xac)
+	local mg=Duel.GetMatchingGroup(s.atkfilter,tp,LOCATION_MZONE,0,nil)
 	local xg=Group.FromCards()
 	local cg=Group.FromCards()
 	for tc in aux.Next(mg) do
@@ -70,8 +73,18 @@ function s.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return xg:GetCount()>0 and aux.bfgcost(e,tp,eg,ep,ev,re,r,rp,chk) end
 	aux.bfgcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local sg=xg:FilterSelect(tp,aux.TRUE,1,xg:GetCount(),nil)
-	local at=Duel.SendtoGrave(sg,REASON_COST)
+	local tg=Group.CreateGroup()
 	for tc in aux.Next(cg) do
+		local vg=tc:GetOverlayGroup()
+		for c in aux.Next(sg) do
+			if vg:IsContains(c) then
+				tg:AddCard(tc)
+				break
+			end
+		end
+	end
+	local at=Duel.SendtoGrave(sg,REASON_COST)
+	for tc in aux.Next(tg) do
 		Duel.RaiseSingleEvent(tc,EVENT_DETACH_MATERIAL,e,0,0,0,0)
 	end
 	e:SetLabel(at)
