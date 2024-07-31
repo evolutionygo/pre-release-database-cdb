@@ -10,6 +10,7 @@ function s.initial_effect(c)
 	local e2=Effect.CreateEffect(c)
 	e2:SetCategory(CATEGORY_ATKCHANGE)
 	e2:SetType(EFFECT_TYPE_IGNITION)
+	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e2:SetRange(LOCATION_SZONE)
 	e2:SetCountLimit(1,id)
 	e2:SetCost(s.atkcost)
@@ -50,20 +51,17 @@ function s.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	return true
 end
 function s.costfilter(c,tp)
-	return c:IsType(TYPE_TOKEN) and Duel.IsExistingTarget(s.matfilter1,tp,LOCATION_MZONE,0,1,c,tp,Group.FromCards(c))
+	return c:IsType(TYPE_TOKEN) and Duel.IsExistingTarget(s.matfilter1,tp,LOCATION_MZONE,0,1,c)
 end
-function s.matfilter1(c,tp,g)
-	local sg=g:Clone()
-	sg:AddCard(c)
+function s.matfilter1(c)
 	return c:IsFaceup() and c:IsAttack(0)
 end
 function s.fselect(g,tp)
-	return Duel.IsExistingTarget(s.matfilter1,tp,LOCATION_MZONE,0,1,g,tp,g)
+	return Duel.IsExistingTarget(s.matfilter1,tp,LOCATION_MZONE,0,1,g)
 		and Duel.CheckReleaseGroup(tp,aux.IsInGroup,#g,nil,g)
 end
 function s.atktg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	local g=e:GetLabelObject()
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and s.matfilter1(chkc,tp,g) end
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and s.matfilter1(chkc) end
 	if chk==0 then
 		if e:GetLabel()~=100 then return false end
 		return Duel.CheckReleaseGroup(tp,s.costfilter,1,nil,tp)
@@ -71,13 +69,11 @@ function s.atktg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local rg=Duel.GetReleaseGroup(tp):Filter(s.costfilter,nil,tp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
 	local sg=rg:SelectSubGroup(tp,s.fselect,false,1,rg:GetCount(),tp)
-	sg:KeepAlive()
-	e:SetLabelObject(sg)
 	aux.UseExtraReleaseCount(sg,tp)
 	local ct=Duel.Release(sg,REASON_COST)
 	e:SetLabel(ct)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-	Duel.SelectTarget(tp,s.matfilter1,tp,LOCATION_MZONE,0,1,1,nil,tp,sg)
+	Duel.SelectTarget(tp,s.matfilter1,tp,LOCATION_MZONE,0,1,1,nil)
 end
 function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
@@ -88,7 +84,7 @@ function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetValue(e:GetLabel()*1000)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
 		tc:RegisterEffect(e1)
-		if e:GetLabel()>1 then
+		if not tc:IsHasEffect(EFFECT_REVERSE_UPDATE) and e:GetLabel()>1 then
 			local e2=Effect.CreateEffect(e:GetHandler())
 			e2:SetType(EFFECT_TYPE_SINGLE)
 			e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
