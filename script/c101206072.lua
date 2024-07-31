@@ -6,12 +6,13 @@ function s.initial_effect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_DESTROY+CATEGORY_DAMAGE)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
-	e1:SetCode(EVENT_DESTROYED)
+	e1:SetCode(EVENT_CUSTOM+id)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
 	e1:SetCondition(s.condition)
 	e1:SetTarget(s.target)
 	e1:SetOperation(s.activate)
 	c:RegisterEffect(e1)
+	aux.RegisterMergedDelayedEvent(c,id,EVENT_DESTROYED)
 end
 function s.cfilter(c,tp)
 	return c:IsPreviousControler(tp) and c:IsPreviousLocation(LOCATION_MZONE)
@@ -36,16 +37,16 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetTargetCard(g)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
 end
-function s.dcfilter(c,e)
-	return not c:IsRelateToEffect(e) and c:IsFaceupEx() and c:IsSetCard(0x2bb) and c:IsType(TYPE_TRAP)
+function s.dcfilter(c)
+	return c:IsFaceupEx() and c:IsSetCard(0x2bb) and c:IsType(TYPE_TRAP)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then
+	if tc:IsRelateToEffect(e) and aux.NecroValleyFilter()(tc) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then
 		if Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)~=0
 			and tc:IsRace(RACE_MACHINE) and tc:IsLevelAbove(5)
 			and Duel.IsExistingMatchingCard(aux.TRUE,tp,0,LOCATION_MZONE,1,nil)
-			and Duel.IsExistingMatchingCard(s.dcfilter,tp,LOCATION_SZONE+LOCATION_GRAVE,0,1,nil,e)
+			and Duel.IsExistingMatchingCard(s.dcfilter,tp,LOCATION_SZONE+LOCATION_GRAVE,0,1,aux.ExceptThisCard(e))
 			and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 			Duel.BreakEffect()
 			local sg=Duel.GetMatchingGroup(aux.TRUE,tp,0,LOCATION_MZONE,nil)
