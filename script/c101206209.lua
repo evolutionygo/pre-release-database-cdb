@@ -3,6 +3,7 @@ local s,id,o=GetID()
 function s.initial_effect(c)
 	--destroy
 	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_DESTROY)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
@@ -28,16 +29,16 @@ function s.mfilter(c)
 	return c:IsType(TYPE_XYZ)
 end
 function s.ffilter(c)
-	return c:IsType(TYPE_XYZ) and c:GetOverlayGroup():IsExists(s.mfilter,1,nil)
+	return c:IsFaceup() and c:IsType(TYPE_XYZ) and c:GetOverlayGroup():IsExists(s.mfilter,1,nil)
 end
 function s.descon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(s.ffilter,tp,LOCATION_MZONE,0,1,nil)
 end
 function s.desfilter(c,attr)
-	return c:IsFaceup() and c:IsAttribute(attr) and c:GetEquipGroup():Filter(Card.IsType,nil,TYPE_SPELL):GetCount() == 0
+	return c:IsFaceup() and c:IsAttribute(attr) and c:GetEquipGroup():Filter(Card.IsType,nil,TYPE_SPELL):GetCount()==0
 end
 function s.dmfilter(c)
-	return c:IsFaceup() and c:GetEquipGroup():Filter(Card.IsType,nil,TYPE_SPELL):GetCount() == 0
+	return c:IsFaceup() and c:GetEquipGroup():Filter(Card.IsType,nil,TYPE_SPELL):GetCount()==0
 end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.dmfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
@@ -80,7 +81,9 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=g:GetFirst()
 	if tc then
 		Duel.HintSelection(g)
-		if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and tc:IsCanBeSpecialSummoned(e,0,tp,false,false) and (not (Duel.GetLocationCount(1-tp,LOCATION_MZONE)>0 and tc:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP,1-tp)) or Duel.SelectYesNo(tp,aux.Stringid(id,2))) then
+		if Duel.GetLocationCount(1-tp,LOCATION_MZONE)>0 and tc:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP,1-tp)
+			and (not (Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and tc:IsCanBeSpecialSummoned(e,0,tp,false,false))
+				or Duel.SelectYesNo(tp,aux.Stringid(id,2))) then
 			Duel.SpecialSummon(tc,0,tp,1-tp,false,false,POS_FACEUP)
 		else
 			Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
