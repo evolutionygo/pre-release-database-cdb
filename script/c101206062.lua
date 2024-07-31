@@ -1,4 +1,4 @@
---深渊尖枪-三叉
+--アビスティング－トリアイナ
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--activate
