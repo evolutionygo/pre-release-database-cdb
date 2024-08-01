@@ -70,11 +70,8 @@ end
 function s.gcfilter2(c,atk)
 	return c:IsFaceup() and c:GetAttack()>atk and c:IsControlerCanBeChanged()
 end
-function s.gcfilter3(c,atk)
-	return c:IsFaceup() and c:GetAttack()>atk
-end
 function s.gctg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_MZONE+LOCATION_GRAVE) and chkc:IsFaceup() end
+	if chkc then return chkc:IsLocation(LOCATION_MZONE+LOCATION_GRAVE) and chkc:IsControler(tp) and s.gcfilter1(chkc,tp) end
 	if chk==0 then return Duel.IsExistingTarget(s.gcfilter1,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,nil,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SELECT)
 	aux.SelectTargetFromFieldFirst(tp,s.gcfilter1,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,1,nil,tp)
@@ -84,7 +81,7 @@ function s.gcop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetTargetsRelateToChain():GetFirst()
 	if tc and tc:IsFaceup() and tc:IsType(TYPE_MONSTER) and Duel.IsExistingMatchingCard(s.gcfilter2,tp,0,LOCATION_MZONE,1,nil,tc:GetAttack()) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONTROL)
-		local g=Duel.SelectMatchingCard(tp,s.gcfilter3,tp,0,LOCATION_MZONE,1,1,nil,tc:GetAttack())
+		local g=Duel.SelectMatchingCard(tp,s.gcfilter2,tp,0,LOCATION_MZONE,1,1,nil,tc:GetAttack())
 		if g:GetCount()>0 then
 			Duel.HintSelection(g)
 			Duel.GetControl(g:GetFirst(),tp,PHASE_END,1)
