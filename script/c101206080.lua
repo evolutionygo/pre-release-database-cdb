@@ -23,7 +23,6 @@ function s.initial_effect(c)
 	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e3:SetRange(LOCATION_SZONE)
 	e3:SetCondition(s.ccon1)
-	e3:SetOperation(s.ctg)
 	e3:SetOperation(s.cop)
 	c:RegisterEffect(e3)
 	local e4=e3:Clone()
@@ -47,9 +46,6 @@ end
 function s.ccon2(e,tp,eg,ep,ev,re,r,rp)
 	return re and re:IsActiveType(TYPE_TRAP+TYPE_SPELL)
 		and eg:IsExists(Card.IsPreviousLocation,1,nil,LOCATION_DECK)
-end
-function s.ctg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
 end
 function s.setfilter(c)
 	return c:IsSetCard(0x2c0) and c:IsType(TYPE_TRAP) and c:IsSSetable()
