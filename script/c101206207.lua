@@ -27,6 +27,13 @@ function s.initial_effect(c)
 	e3:SetTarget(s.eftg)
 	e3:SetLabelObject(e2)
 	c:RegisterEffect(e3)
+	--add type
+	local e6=Effect.CreateEffect(c)
+	e6:SetType(EFFECT_TYPE_EQUIP)
+	e6:SetCode(EFFECT_ADD_TYPE)
+	e6:SetCondition(s.addcon)
+	e6:SetValue(TYPE_EFFECT)
+	c:RegisterEffect(e6)
 	--equip from grave
 	local e4=Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
@@ -48,6 +55,9 @@ end
 function s.ibcon(e,tp,eg,ep,ev,re,r,rp)
 	local ec=e:GetHandler():GetEquipTarget()
 	return ec:IsType(TYPE_XYZ) and not ec:IsDisabled()
+end
+function s.addcon(e)
+	return not e:GetHandler():IsType(TYPE_EFFECT)
 end
 function s.xyzcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetBattledGroupCount()>0
