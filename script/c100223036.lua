@@ -37,7 +37,7 @@ function s.thfiter(c,g)
 	return c:IsAbleToHand() and g:IsExists(s.tgfiter,1,c,g,c)
 end
 function s.tgfiter(c,g,tc)
-	return c:IsAbleToGrave() and g:IsExists(s.rmfiter,1,Group.FromCards(c,tg))
+	return c:IsAbleToGrave() and g:IsExists(s.rmfiter,1,Group.FromCards(c,tc))
 end
 function s.rmfiter(c)
 	return c:IsAbleToRemove()

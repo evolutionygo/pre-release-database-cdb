@@ -73,7 +73,7 @@ function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local race=g:GetFirst():GetOriginalRace()
 	g:AddCard(e:GetHandler())
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
-	e:SetLabel(100,rece)
+	e:SetLabel(100,race)
 end
 function s.spnfilter(c,code)
 	return c:IsType(TYPE_LINK) and c:IsRace(RACE_PLANT) and c:IsCode(code)
