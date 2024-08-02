@@ -1,4 +1,4 @@
---海瀧竜華-淵巴
+--海瀧竜華－淵巴
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddCodeList(c,100223038)
@@ -84,12 +84,12 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) then
+	if c:IsRelateToEffect(e) and aux.NecroValleyFilter()(c) then
 		Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
 	end
 end
 function s.costfilter(c)
-	return c:IsCode(100223038) and c:IsAbleToDeckAsCost()
+	return c:IsFaceup() and c:IsCode(100223038) and c:IsAbleToDeckAsCost()
 end
 function s.drcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()

@@ -1,4 +1,4 @@
---恐巄竜華-㟴巴
+--恐巄竜華－㟴巴
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddCodeList(c,100223037)

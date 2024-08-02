@@ -1,4 +1,4 @@
---幻朧竜華-覇巴
+--幻朧竜華－覇巴
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddCodeList(c,100223039)
@@ -66,11 +66,11 @@ function s.cfilter2(c)
 	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and not c:IsCode(id)
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(s.cfilter1,1,e:GetHandler()) and Duel.IsExistingMatchingCard(s.cfilter2,tp,LOCATION_REMOVED,0,2,nil)
+	return eg:IsExists(s.cfilter1,1,e:GetHandler())
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.cfilter2,tp,LOCATION_REMOVED,LOCATION_REMOVED,2,nil)
+		and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
@@ -80,7 +80,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.costfilter(c)
-	return c:IsCode(100223039) and c:IsAbleToDeckAsCost()
+	return c:IsFaceup() and c:IsCode(100223039) and c:IsAbleToDeckAsCost()
 end
 function s.thcost2(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
@@ -90,7 +90,7 @@ function s.thcost2(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SendtoDeck(g,nil,SEQ_DECKBOTTOM,REASON_COST)
 end
 function s.thfilter2(c)
-	return c:IsSetCard(0x2c1) and c:IsAbleToHand()
+	return c:IsFaceupEx() and c:IsSetCard(0x2c1) and c:IsAbleToHand()
 		and not c:IsCode(id)
 end
 function s.thtg2(e,tp,eg,ep,ev,re,r,rp,chk)
