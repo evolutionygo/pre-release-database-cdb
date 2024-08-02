@@ -50,8 +50,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e6)
 end
 function s.negcon(e,tp,eg,ep,ev,re,r,rp)
-	local atk=e:GetHandler():GetAttack()
-	local loc=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_LOCATION)
+	local loc,atk=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_LOCATION,CHAININFO_TRIGGERING_ATTACK)
 	return re:IsActiveType(TYPE_MONSTER) and Duel.IsChainNegatable(ev)
 		and not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED)
 		and (LOCATION_ONFIELD)&loc~=0
@@ -64,8 +63,10 @@ end
 function s.negcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then return Duel.IsExistingMatchingCard(s.costfilter,tp,LOCATION_ONFIELD,0,1,nil) end
+	Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
 	local g=Duel.SelectMatchingCard(tp,s.costfilter,tp,LOCATION_ONFIELD,0,1,1,nil)
+	Duel.HintSelection(g)
 	Duel.SendtoDeck(g,nil,SEQ_DECKBOTTOM,REASON_COST)
 end
 function s.negtg(e,tp,eg,ep,ev,re,r,rp,chk)
