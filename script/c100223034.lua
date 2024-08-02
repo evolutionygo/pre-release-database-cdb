@@ -70,7 +70,7 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,c,1,0,0)
 end
 function s.desfilter(c,tp)
-	return Duel.GetLocationCount(tp,LOCATION_SZONE)>0 or c:IsLocation(LOCATION_ONFIELD) and not c:IsLocation(LOCATION_FZONE)
+	return Duel.GetLocationCount(tp,LOCATION_SZONE)>0 or c:IsLocation(LOCATION_SZONE) and not c:IsLocation(LOCATION_FZONE)
 end
 function s.gcheck1(g,tp)
 	return g:IsExists(s.desfilter,1,nil,tp)
