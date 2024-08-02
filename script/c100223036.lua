@@ -1,4 +1,4 @@
---登龙华转生纹
+--登竜華転生紋
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddCodeList(c,100223034)

@@ -1,4 +1,4 @@
---创星龙华-光巴
+--創星竜華-光巴
 local s,id,o=GetID()
 function s.initial_effect(c)
 	c:SetSPSummonOnce(id)

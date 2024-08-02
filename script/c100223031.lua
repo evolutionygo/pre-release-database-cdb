@@ -88,8 +88,8 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.costfilter(c,tp,ec)
-	return c:IsCode(100223037) and c:IsAbleToDeckAsCost()
-		and Duel.IsExistingMatchingCard(aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,ec)
+	return c:IsFaceup() and c:IsCode(100223037) and c:IsAbleToDeckAsCost()
+		and Duel.IsExistingMatchingCard(aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,Group.FromCards(c,ec))
 end
 function s.descost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
