@@ -52,7 +52,8 @@ function s.initial_effect(c)
 	e6:SetValue(TYPE_NORMAL)
 	c:RegisterEffect(e6)
 end
-function s.rmcon(e,tp,eg,ep,ev,re,r,rp)
+function s.rmcon(e)
+	local tp=e:GetHandlerPlayer()
 	return Duel.GetTurnPlayer()==1-tp
 end
 function s.rmtarget(e,c)
