@@ -13,6 +13,7 @@ function s.initial_effect(c)
 	e2:SetProperty(EFFECT_FLAG_SET_AVAILABLE+EFFECT_FLAG_IGNORE_RANGE+EFFECT_FLAG_IGNORE_IMMUNE)
 	e2:SetCode(EFFECT_TO_GRAVE_REDIRECT)
 	e2:SetRange(LOCATION_SZONE)
+	e2:SetCondition(s.rmcon)
 	e2:SetTarget(s.rmtarget)
 	e2:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
 	e2:SetValue(LOCATION_REMOVED)
@@ -37,6 +38,9 @@ function s.initial_effect(c)
 	e4:SetLabelObject(e3)
 	c:RegisterEffect(e4)
 end
+function s.rmcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetTurnPlayer()==1-tp
+end
 function s.rmtarget(e,c)
 	return c:IsLocation(LOCATION_MZONE) and not c:IsType(TYPE_SPELL+TYPE_TRAP)
 end
@@ -46,7 +50,6 @@ end
 function s.costfilter(c,tp)
 	return c:IsSetCard(0x2c1) and c:IsAbleToDeckAsCost()
 		and bit.band(c:GetType(),TYPE_SPELL+TYPE_CONTINUOUS)==TYPE_SPELL+TYPE_CONTINUOUS
-		and Duel.IsExistingMatchingCard(Card.IsAbleToHand,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,c)
 end
 function s.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()

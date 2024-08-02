@@ -66,7 +66,7 @@ function s.rfilter(c,tp,ec)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-	local g=Duel.GetMatchingGroup(s.rfilter,tp,LOCATION_MZONE,0,c,tp)
+	local g=Duel.GetMatchingGroup(s.rfilter,tp,LOCATION_MZONE,0,c,tp,c)
 	if chk==0 then return #g>0 and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_RITUAL,tp,true,true) end
 	Duel.SetOperationInfo(0,CATEGORY_RELEASE,g,1,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,c,1,0,0)
