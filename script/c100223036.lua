@@ -18,7 +18,7 @@ function s.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_FZONE)
 	e2:SetCountLimit(1,id+o)
-	e2:SetTarget(s.spcon)
+	e2:SetCondition(s.spcon)
 	e2:SetTarget(s.sptg)
 	e2:SetOperation(s.spop)
 	c:RegisterEffect(e2)
@@ -91,10 +91,7 @@ function s.spgcheck(g,tp)
 	return g:FilterCount(Card.IsLocation,nil,LOCATION_DECK)==1
 		and g:FilterCount(Card.IsLocation,nil,LOCATION_GRAVE)==1
 		and g:FilterCount(Card.IsLocation,nil,LOCATION_REMOVED)==1
-		and not g:IsExists(s.nracefiter,1,nil,g)
-end
-function s.nracefiter(c,g)
-	return g:IsExists(Card.IsRace,1,c,c:GetRace())
+		and g:GetClassCount(Card.GetRace)==#g
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_DECK+LOCATION_GRAVE+LOCATION_REMOVED,0,nil,e,tp)
