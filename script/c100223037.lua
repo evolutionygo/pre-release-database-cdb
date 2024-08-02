@@ -1,4 +1,4 @@
---登龙华恐‌巄门
+--登竜華恐巄門
 local s,id,o=GetID()
 function s.initial_effect(c)
 	c:SetUniqueOnField(1,0,id)

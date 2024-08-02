@@ -1,4 +1,4 @@
---登龙华海泷门
+--登竜華海瀧門
 local s,id,o=GetID()
 function s.initial_effect(c)
 	c:SetUniqueOnField(1,0,id)

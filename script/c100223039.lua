@@ -1,4 +1,4 @@
---登龙华幻胧门
+--登竜華幻朧門
 local s,id,o=GetID()
 function s.initial_effect(c)
 	c:SetUniqueOnField(1,0,id)
