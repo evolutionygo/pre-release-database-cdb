@@ -57,7 +57,7 @@ function s.negcon(e,tp,eg,ep,ev,re,r,rp)
 		and e:GetHandler():GetAttack()>atk
 end
 function s.costfilter(c)
-	return c:IsSetCard(0x2c1) and c:IsAbleToDeckAsCost()
+	return c:IsFaceup() and c:IsSetCard(0x2c1) and c:IsAbleToDeckAsCost()
 		and bit.band(c:GetType(),TYPE_SPELL+TYPE_CONTINUOUS)==TYPE_SPELL+TYPE_CONTINUOUS
 end
 function s.negcost(e,tp,eg,ep,ev,re,r,rp,chk)

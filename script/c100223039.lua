@@ -63,7 +63,7 @@ function s.atkcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetTurnPlayer()==1-tp
 end
 function s.costfilter(c,tp)
-	return c:IsSetCard(0x2c1) and c:IsAbleToDeckAsCost()
+	return c:IsFaceup() and c:IsSetCard(0x2c1) and c:IsAbleToDeckAsCost()
 		and bit.band(c:GetType(),TYPE_SPELL+TYPE_CONTINUOUS)==TYPE_SPELL+TYPE_CONTINUOUS
 end
 function s.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
