@@ -54,7 +54,7 @@ function s.negcon(e,tp,eg,ep,ev,re,r,rp)
 	return re:IsActiveType(TYPE_MONSTER) and Duel.IsChainNegatable(ev)
 		and not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED)
 		and (LOCATION_ONFIELD)&loc~=0
-		and re:GetHandler():GetAttack()<atk
+		and e:GetHandler():GetAttack()>atk
 end
 function s.costfilter(c)
 	return c:IsSetCard(0x2c1) and c:IsAbleToDeckAsCost()
