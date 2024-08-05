@@ -41,11 +41,11 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONFIRM)
 	local rg=g:Select(tp,1,ct,nil)
 	if rg:GetCount()>0 then
-		local hg=g:Filter(Card.IsLocation,nil,LOCATION_HAND)
-		local og=g-hg
+		local hg=rg:Filter(Card.IsLocation,nil,LOCATION_HAND)
+		local og=rg-hg
 		Duel.ConfirmCards(1-tp,hg)
 		Duel.HintSelection(og)
-		if g:FilterCount(Card.IsLocation,nil,LOCATION_HAND)>=1 then
+		if hg:GetCount()>=1 then
 			Duel.ShuffleHand(tp)
 		end
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
