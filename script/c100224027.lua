@@ -55,5 +55,5 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.mfilter(c,e,tp,chk)
-	return not chk or c~=e:GetHandler() and c:IsCode(89631139)
+	return (not chk or c~=e:GetHandler()) and c:IsCode(89631139)
 end
