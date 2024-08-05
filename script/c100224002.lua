@@ -63,7 +63,7 @@ function s.pop(e,tp,eg,ep,ev,re,r,rp)
 	if tc then Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true) end
 end
 function s.cfilter(c,tp,se)
-	return c:IsFaceup() and c:IsControler(tp) and c:IsCode(89631139)
+	return c:IsFaceup() and c:IsSummonPlayer(tp) and c:IsCode(89631139)
 		and (se==nil or c:GetReasonEffect()~=se)
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
@@ -77,7 +77,7 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if not c:IsRelateToEffect(e) then return end
+	if not c:IsRelateToEffect(e) or not aux.NecroValleyFilter()(c) then return end
 	Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
 end
 function s.spcon2(e,tp,eg,ep,ev,re,r,rp)
