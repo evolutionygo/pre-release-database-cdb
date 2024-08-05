@@ -87,10 +87,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.spfilter),tp,LOCATION_GRAVE+LOCATION_HAND,0,1,1,nil,e,tp)
 	local tc=g:GetFirst()
-	if tc:IsLocation(LOCATION_HAND) or tc:IsType(TYPE_NORMAL) then
-		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
-	end
-	if tc:IsLocation(LOCATION_GRAVE) and tc:IsType(TYPE_EFFECT) and Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP) then
+	if Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP) and tc:IsSummonLocation(LOCATION_GRAVE) and tc:IsType(TYPE_EFFECT) then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_DISABLE)
