@@ -1,0 +1,53 @@
+--白之龙的威光
+local s,id,o=GetID()
+function s.initial_effect(c)
+	aux.AddCodeList(c,89631139)
+	--destroy
+	local e1=Effect.CreateEffect(c)
+	e1:SetCategory(CATEGORY_DESTROY+CATEGORY_REMOVE)
+	e1:SetType(EFFECT_TYPE_ACTIVATE)
+	e1:SetCode(EVENT_FREE_CHAIN)
+	e1:SetCountLimit(1,id)
+	e1:SetTarget(s.target)
+	e1:SetOperation(s.activate)
+	c:RegisterEffect(e1)
+	--spsummon
+	local e2=aux.AddRitualProcEqual2(c,nil,nil,nil,s.mfilter,true)
+	e2:SetType(EFFECT_TYPE_QUICK_O)
+	e2:SetCode(EVENT_FREE_CHAIN)
+	e2:SetCountLimit(1,id+o)
+	e2:SetRange(LOCATION_GRAVE)
+	e2:SetCost(aux.bfgcost)
+	c:RegisterEffect(e2)
+end
+function s.chkfilter(c)
+	return c:IsFaceupEx() and c:IsCode(89631139)
+end
+function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(s.chkfilter,tp,LOCATION_HAND+LOCATION_GRAVE+LOCATION_MZONE,0,1,nil)
+		and Duel.IsExistingMatchingCard(nil,tp,0,LOCATION_MZONE,1,nil) end
+	local g=Duel.GetMatchingGroup(nil,tp,0,LOCATION_ONFIELD,nil)
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
+end
+function s.activate(e,tp,eg,ep,ev,re,r,rp)
+	local dg=Duel.GetMatchingGroup(nil,tp,0,LOCATION_ONFIELD,nil)
+	local ct=dg:GetCount()
+	local g=Duel.GetMatchingGroup(s.chkfilter,tp,LOCATION_HAND+LOCATION_GRAVE+LOCATION_MZONE,0,nil)
+	if ct==0 or g:GetCount()==0 then return end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONFIRM)
+	local rg=g:SelectSubGroup(tp,aux.TRUE,false,1,ct)
+	if rg:GetCount()>0 then
+		Duel.ConfirmCards(tp,rg)
+		Duel.ConfirmCards(1-tp,rg)
+		if g:FilterCount(Card.IsLocation,nil,LOCATION_HAND)>=1 then
+			Duel.ShuffleHand(tp)
+		end
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
+		local sg=dg:Select(tp,rg:GetCount(),rg:GetCount(),nil)
+		Duel.HintSelection(sg)
+		Duel.Destroy(sg,REASON_EFFECT)
+	end
+end
+function s.mfilter(c,e,tp,chk)
+	return not chk or c~=e:GetHandler() and c:IsCode(89631139)
+end
