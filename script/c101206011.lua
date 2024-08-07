@@ -51,10 +51,10 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
 end
 function s.eqcon1(e,tp,eg,ep,ev,re,r,rp)
-	return not aux.GoldenAllureQueenCondition(e:GetHandler(),tp)
+	return not aux.IsCanBeQuickEffect(e:GetHandler(),tp,95937545)
 end
 function s.eqcon2(e,tp,eg,ep,ev,re,r,rp)
-	return aux.GoldenAllureQueenCondition(e:GetHandler(),tp)
+	return aux.IsCanBeQuickEffect(e:GetHandler(),tp,95937545)
 end
 function s.eqfilter(c,tp)
 	return c:IsType(TYPE_MONSTER) and not c:IsForbidden() and c:CheckUniqueOnField(tp)
