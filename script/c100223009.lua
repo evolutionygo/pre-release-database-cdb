@@ -33,6 +33,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 	--negate
 	local e3=Effect.CreateEffect(c)
+	e3:SetDescription(aux.Stringid(id,2))
 	e3:SetCategory(CATEGORY_DISABLE)
 	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e3:SetCode(EVENT_CHAIN_SOLVING)
@@ -75,12 +76,13 @@ function s.discon(e,tp,eg,ep,ev,re,r,rp)
 		and e:GetHandler():GetFlagEffect(id)<=0
 end
 function s.disop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.SelectEffectYesNo(tp,e:GetHandler(),aux.Stringid(id,2)) then
+	if Duel.SelectEffectYesNo(tp,e:GetHandler(),aux.Stringid(id,3)) then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DEATTACHFROM)
 		local tc = Duel.SelectMatchingCard(tp,s.disfilter,tp,LOCATION_MZONE,0,1,1,nil):GetFirst()
 		if tc and tc:RemoveOverlayCard(tp,1,1,REASON_EFFECT) then
 			Duel.Hint(HINT_CARD,0,id)
 			Duel.NegateEffect(ev)
-			e:GetHandler():RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id,3))
+			e:GetHandler():RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id,4))
 		end
 	end
 end
