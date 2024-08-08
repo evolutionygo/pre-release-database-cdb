@@ -37,14 +37,17 @@ function s.initial_effect(c)
 	e3:SetOperation(s.disop)
 	c:RegisterEffect(e3)
 end
-function s.splimit(e,c,sump,sumtype,sumpos,targetp,se)
-	return sumtype==SUMMON_TYPE_XYZ and Duel.IsExistingMatchingCard(Card.IsCode,e:GetHandlerPlayer(),LOCATION_ONFIELD,0,1,nil,c:GetCode())
+function s.spfilter(c,code)
+	return c:IsFaceup() and c:IsCode(code)
 end
-function s.tdfilter(c,code)
-	return not c:IsCode(code) and c:IsSetCard(0x2bf) and c:IsAbleToDeck() and c:IsLocation(LOCATION_GRAVE)
+function s.splimit(e,c,sump,sumtype,sumpos,targetp,se)
+	return sumtype==SUMMON_TYPE_XYZ and Duel.IsExistingMatchingCard(s.spfilter,e:GetHandlerPlayer(),LOCATION_ONFIELD,0,1,nil,c:GetCode())
+end
+function s.tdfilter(c)
+	return not c:IsCode(id) and c:IsSetCard(0x2bf) and c:IsAbleToDeck() and c:IsLocation(LOCATION_GRAVE)
 end
 function s.drtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and s.tdfilter(chkc,id) end
+	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and s.tdfilter(chkc) end
 	if chk==0 then return Duel.IsPlayerCanDraw(tp,1)
 		and Duel.IsExistingTarget(s.tdfilter,tp,LOCATION_GRAVE,0,2,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
@@ -53,10 +56,10 @@ function s.drtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
 end
 function s.drop(e,tp,eg,ep,ev,re,r,rp)
-	local tg=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e)
+	local tg=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(aux.NecroValleyFilter(Card.IsRelateToEffect),nil,e)
 	if #tg>0 then
 		local ct=aux.PlaceCardsOnDeckBottom(tp,tg)
-		if ct>0 then
+		if ct>0 and tg:IsExists(Card.IsLocation,1,nil,LOCATION_DECK+LOCATION_EXTRA) then
 			Duel.BreakEffect()
 			Duel.Draw(tp,1,REASON_EFFECT)
 		end
@@ -73,7 +76,7 @@ end
 function s.disop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.SelectEffectYesNo(tp,e:GetHandler(),aux.Stringid(id,3)) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DEATTACHFROM)
-		local tc = Duel.SelectMatchingCard(tp,s.disfilter,tp,LOCATION_MZONE,0,1,1,nil):GetFirst()
+		local tc=Duel.SelectMatchingCard(tp,s.disfilter,tp,LOCATION_MZONE,0,1,1,nil):GetFirst()
 		if tc and tc:RemoveOverlayCard(tp,1,1,REASON_EFFECT) then
 			Duel.Hint(HINT_CARD,0,id)
 			Duel.NegateEffect(ev)
