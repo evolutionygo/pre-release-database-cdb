@@ -60,7 +60,7 @@ function s.cfilter(c,e,tp,co)
 		and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_DECK+LOCATION_EXTRA,0,1,nil,e,tp,co,c)
 end
 function s.condition(e)
-	return e:GetHandler():IsStatus(STATUS_SET_TURN)
+	return e:GetHandler():IsStatus(STATUS_SET_TURN) and e:GetHandler():IsLocation(LOCATION_ONFIELD)
 end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local co=Duel.GetMatchingGroupCount(aux.TRUE,tp,0,LOCATION_ONFIELD,nil)
