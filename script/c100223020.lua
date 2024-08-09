@@ -1,4 +1,4 @@
---M∀LICE<Q>HEARTS OF CRYPTER
+--M∀LICE＜Q＞HEARTS OF CRYPTER
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--link summon
@@ -47,6 +47,8 @@ function s.tdtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local lg=e:GetHandler():GetLinkedGroup()
 	if lg and lg:FilterCount(Card.IsType,nil,TYPE_MONSTER)>0 then
 		e:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_CANNOT_INACTIVATE+EFFECT_FLAG_CAN_FORBIDDEN)
+	else
+		e:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	end
 end
 function s.tdop(e,tp,eg,ep,ev,re,r,rp)
@@ -57,6 +59,7 @@ function s.tdop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 		local g=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil):Select(tp,1,1,nil)
 		if #g>0 then
+			Duel.HintSelection(g)
 			Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
 		end
 	end

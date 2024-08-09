@@ -1,4 +1,4 @@
---M∀LICE<P>Dormouse
+--M∀LICE＜P＞Dormouse
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--remove

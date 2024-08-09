@@ -1,4 +1,4 @@
---M∀LICE<Q>RED RANSOM
+--M∀LICE＜Q＞RED RANSOM
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--link summon

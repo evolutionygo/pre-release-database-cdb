@@ -1,4 +1,4 @@
---M∀LICE<C>TB－11
+--M∀LICE＜C＞TB－11
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--Activate

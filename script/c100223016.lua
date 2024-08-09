@@ -1,4 +1,4 @@
---M∀LICE<P>Cheshire Cat
+--M∀LICE＜P＞Cheshire Cat
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--remove and draw
