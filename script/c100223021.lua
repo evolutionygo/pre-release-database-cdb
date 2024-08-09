@@ -53,12 +53,12 @@ end
 function s.atktg(e,c)
 	return c:IsSetCard(0x2c2) and c:IsType(TYPE_LINK)
 end
-function s.cfilter1(c,tp)
+function s.cfilter1(c)
 	return c:IsFaceup() and c:IsType(TYPE_LINK) and c:IsSetCard(0x2c2)
 end
 function s.condition(e)
 	local tp=e:GetHandlerPlayer()
-	return Duel.IsExistingMatchingCard(s.cfilter1,tp,LOCATION_ONFIELD,0,1,nil,tp)
+	return Duel.IsExistingMatchingCard(s.cfilter1,tp,LOCATION_ONFIELD,0,1,nil)
 end
 function s.alimit(e,c)
 	return c:IsFacedown() or not (c:IsType(TYPE_LINK) and c:IsSetCard(0x2c2))

@@ -61,7 +61,7 @@ end
 function s.immtg(e,c)
 	local lg=c:GetLinkedGroup()
 	return c:IsFaceup() and c:IsType(TYPE_LINK) and c:IsSetCard(0x2c2)
-		and lg and lg:IsContains(e:GetHandler())
+		and lg and lg:IsContains(e:GetHandler()) and not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED)
 end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.CheckLPCost(tp,300) end

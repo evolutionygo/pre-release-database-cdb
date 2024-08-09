@@ -41,7 +41,7 @@ function s.initial_effect(c)
 	e5:SetOperation(s.spop)
 	c:RegisterEffect(e5)
 end
-function s.setfilter(c)
+function s.setfilter(c,tp)
 	return c:IsSetCard(0x2c2) and c:IsType(TYPE_TRAP) and c:IsSSetable()
 		and not Duel.IsExistingMatchingCard(Card.IsCode,tp,LOCATION_GRAVE,0,1,nil,c:GetCode())
 end
@@ -58,7 +58,7 @@ end
 function s.damfilter(e,c)
 	local lg=c:GetLinkedGroup()
 	return c:IsFaceup() and c:IsType(TYPE_LINK) and c:IsSetCard(0x2c2)
-		and lg and lg:IsContains(e:GetHandler())
+		and lg and lg:IsContains(e:GetHandler()) and not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED)
 end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.CheckLPCost(tp,300) end

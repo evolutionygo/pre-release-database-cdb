@@ -35,14 +35,14 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	if g:GetCount()>0 then
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,g)
-		if Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_MZONE,0,1,nil) 
-			and Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) 
+		if Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_MZONE,0,1,nil)
+			and Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,aux.ExceptThisCard(e))
 			and Duel.SelectYesNo(tp,aux.Stringid(id,3)) then
 			Duel.BreakEffect()
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-			local g=Duel.SelectMatchingCard(tp,Card.IsAbleToRemove,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
-			Duel.HintSelection(g)
-			Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
+			local rg=Duel.SelectMatchingCard(tp,Card.IsAbleToRemove,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,aux.ExceptThisCard(e))
+			Duel.HintSelection(rg)
+			Duel.Remove(rg,POS_FACEUP,REASON_EFFECT)
 		end
 	end
 end
