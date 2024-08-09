@@ -30,7 +30,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	local co=Duel.GetMatchingGroupCount(aux.TRUE,tp,0,LOCATION_ONFIELD,nil)
 	local res=e:GetHandler():IsHasEffect(EFFECT_TRAP_ACT_IN_SET_TURN,tp)
-	if chk==0 then return res and res:GetHandler()==c and res:GetValue()==id
+	if chk==0 then return res and res:GetOwner()==c and res:GetValue()==id
 		or Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_DECK+LOCATION_EXTRA,0,1,nil,e,tp,co,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK+LOCATION_EXTRA)
 end
@@ -60,7 +60,7 @@ function s.cfilter(c,e,tp,co)
 		and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_DECK+LOCATION_EXTRA,0,1,nil,e,tp,co,c)
 end
 function s.condition(e)
-	return e:GetHandler():IsStatus(STATUS_SET_TURN)
+	return e:GetHandler():IsStatus(STATUS_SET_TURN) and e:GetHandler():IsLocation(LOCATION_ONFIELD)
 end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local co=Duel.GetMatchingGroupCount(aux.TRUE,tp,0,LOCATION_ONFIELD,nil)
