@@ -1,4 +1,4 @@
---M∀LICE<C>MTP-07
+--M∀LICE<C>MTP－07
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--Activate

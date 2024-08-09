@@ -1,4 +1,4 @@
---M∀LICE<C>GWC-06
+--M∀LICE<C>GWC－06
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--Activate
