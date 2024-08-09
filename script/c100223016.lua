@@ -18,6 +18,7 @@ function s.initial_effect(c)
 	e2:SetValue(LOCATION_REMOVED)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
+	e2:SetCondition(s.immcon)
 	e2:SetTarget(s.immtg)
 	c:RegisterEffect(e2)
 	--special summon
@@ -51,10 +52,13 @@ function s.drop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Draw(tp,2,REASON_EFFECT)
 	end
 end
+function s.immcon(e)
+	return not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED)
+end
 function s.immtg(e,c)
 	local lg=c:GetLinkedGroup()
 	return c:IsFaceup() and c:IsType(TYPE_LINK) and c:IsSetCard(0x2c2)
-		and lg and lg:IsContains(e:GetHandler()) and not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED)
+		and lg and lg:IsContains(e:GetHandler())
 end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.CheckLPCost(tp,300) end
