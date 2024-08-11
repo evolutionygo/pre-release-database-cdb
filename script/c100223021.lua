@@ -46,8 +46,8 @@ end
 function s.cfilter(c)
 	return c:IsSetCard(0x2c2) and c:IsType(TYPE_TRAP) and c:IsFaceup()
 end
-function s.atkcon(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetMatchingGroup(s.cfilter,tp,LOCATION_REMOVED,0,nil)
+function s.atkcon(e)
+	local g=Duel.GetMatchingGroup(s.cfilter,e:GetHandlerPlayer(),LOCATION_REMOVED,0,nil)
 	return g:GetClassCount(Card.GetCode)>=3
 end
 function s.atktg(e,c)
