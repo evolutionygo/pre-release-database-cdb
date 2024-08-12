@@ -13,7 +13,7 @@ function s.initial_effect(c)
 	e1:SetCode(EFFECT_SPSUMMON_CONDITION)
 	e1:SetValue(aux.DarkFusionLimit)
 	c:RegisterEffect(e1)
-	--Negate
+	--gain control
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,0))
 	e2:SetCategory(CATEGORY_CONTROL)
@@ -74,7 +74,7 @@ function s.contg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function s.conop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
+	if tc:IsType(TYPE_MONSTER) and tc:IsRelateToEffect(e) then
 		Duel.GetControl(tc,tp)
 	end
 end

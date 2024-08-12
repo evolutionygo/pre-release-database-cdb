@@ -38,17 +38,17 @@ function s.initial_effect(c)
 	e4:SetOperation(s.spop)
 	c:RegisterEffect(e4)
 end
-s.DarkFusion_Limit=true
+s.dark_calling=true
 function s.atkval(e,c)
-	local c=e:GetHandler()
-	local g=c:GetMaterial()
+	local ec=e:GetHandler()
+	local g=ec:GetMaterial()
 	local mg=g:Filter(Card.IsType,nil,TYPE_MONSTER)
 	local atk=mg:GetSum(Card.GetBaseAttack)
 	return -atk
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	return c:IsSummonType(SUMMON_TYPE_SPECIAL) and c:IsPreviousLocation(LOCATION_MZONE)
+	return c:IsSummonType(SUMMON_TYPE_SPECIAL) and c:IsPreviousLocation(LOCATION_MZONE) and c:IsPreviousPosition(POS_FACEUP)
 		and c:IsPreviousControler(tp) and c:GetReasonPlayer()==1-tp
 end
 function s.filter(c,e,tp)
@@ -64,7 +64,7 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
+	if tc:IsRelateToEffect(e) and aux.NecroValleyFilter()(tc) then
 		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
 	end
 end
