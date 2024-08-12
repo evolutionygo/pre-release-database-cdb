@@ -49,6 +49,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetValue(s.subval)
 	e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
 	c:RegisterEffect(e1)
+	c:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id,2))
 end
 function s.subval(e,c)
 	return c:IsSetCard(0x8)
