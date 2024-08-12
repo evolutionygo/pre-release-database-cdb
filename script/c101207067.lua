@@ -30,7 +30,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function s.cfilter(c)
-	return (c:IsCode(94820406) or aux.IsCodeListed(c,94820406)) and c:IsType(TYPE_SPELL+TYPE_TRAP)
+	return (c:IsCode(94820406) or aux.IsCodeListed(c,94820406)) and c:IsType(TYPE_SPELL)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local ct=Duel.GetMatchingGroupCount(s.cfilter,tp,LOCATION_GRAVE,0,nil)
