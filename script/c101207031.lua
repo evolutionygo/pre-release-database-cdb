@@ -51,7 +51,7 @@ end
 s.dark_calling=true
 s.material_setcode=0x8
 function s.matfilter1(c)
-	return c:IsFusionCode(89943723) or aux.IsCodeListed(c,89943723) --or c:IsHasEffect(EFFECT_FUSION_SUBSTITUTE)
+	return aux.IsCodeListed(c,89943723)
 end
 function s.matfilter2(c)
 	return c:IsFusionType(TYPE_EFFECT) and c:IsLocation(LOCATION_ONFIELD)
