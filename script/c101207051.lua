@@ -11,9 +11,6 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 s.fusion_effect=true
-function s.filter0(c)
-	return (c:IsLocation(LOCATION_ONFIELD+LOCATION_GRAVE) or c:IsFaceup()) and c:IsType(TYPE_MONSTER) and c:IsCanBeFusionMaterial() and c:IsAbleToDeck()
-end
 function s.filter1(c,e)
 	return (c:IsLocation(LOCATION_ONFIELD+LOCATION_GRAVE) or c:IsFaceup()) and c:IsType(TYPE_MONSTER) and c:IsCanBeFusionMaterial() and c:IsAbleToDeck()
 		and not c:IsImmuneToEffect(e)
@@ -24,7 +21,7 @@ function s.filter2(c,e,tp,m,f,chkf)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local chkf=tp
-	local mg=Duel.GetMatchingGroup(s.filter0,tp,LOCATION_ONFIELD+LOCATION_GRAVE+LOCATION_REMOVED,0,nil)
+	local mg=Duel.GetMatchingGroup(s.filter1,tp,LOCATION_ONFIELD+LOCATION_GRAVE+LOCATION_REMOVED,0,nil)
 	local b1=Duel.GetFlagEffect(tp,id)==0 and Duel.IsExistingMatchingCard(s.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,mg,nil,chkf)
 	if Duel.GetFlagEffect(tp,id)==0 and not b1 then
 		local ce=Duel.GetChainMaterial(tp)
