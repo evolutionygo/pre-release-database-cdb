@@ -38,21 +38,20 @@ function s.initial_effect(c)
 end
 s.dark_calling=true
 function s.matcheck(e,c)
-	local c=e:GetHandler()
-	local e1=Effect.CreateEffect(c)
+	local ec=e:GetHandler()
+	local e1=Effect.CreateEffect(ec)
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetCode(EFFECT_UPDATE_ATTACK)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetTargetRange(0,LOCATION_MZONE)
 	e1:SetValue(s.atkval)
 	e1:SetReset(RESET_EVENT+RESETS_STANDARD-RESET_TOFIELD)
-	c:RegisterEffect(e1)
+	ec:RegisterEffect(e1)
 end
 function s.atkval(e,c)
 	local ec=e:GetHandler()
 	local g=ec:GetMaterial()
-	local mg=g:Filter(Card.IsType,nil,TYPE_MONSTER)
-	local atk=mg:GetSum(Card.GetBaseAttack)
+	local atk=g:GetSum(Card.GetTextAttack)
 	return -atk
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
