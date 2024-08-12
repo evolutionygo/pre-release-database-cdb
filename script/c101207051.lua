@@ -21,7 +21,7 @@ function s.filter2(c,e,tp,m,f,chkf)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local chkf=tp
-	local mg=Duel.GetMatchingGroup(s.filter1,tp,LOCATION_ONFIELD+LOCATION_GRAVE+LOCATION_REMOVED,0,nil)
+	local mg=Duel.GetMatchingGroup(s.filter1,tp,LOCATION_ONFIELD+LOCATION_GRAVE+LOCATION_REMOVED,0,nil,e)
 	local b1=Duel.GetFlagEffect(tp,id)==0 and Duel.IsExistingMatchingCard(s.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,mg,nil,chkf)
 	if Duel.GetFlagEffect(tp,id)==0 and not b1 then
 		local ce=Duel.GetChainMaterial(tp)
