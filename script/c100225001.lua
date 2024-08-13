@@ -59,7 +59,7 @@ function s.splimitcon(e)
 	return e:GetHandler():IsControler(e:GetOwnerPlayer())
 end
 function s.splimit(e,c)
-	return not c:IsType(TYPE_PENDULUM)
+	return c:GetOriginalType()&TYPE_PENDULUM~=TYPE_PENDULUM
 end
 function s.rfilter(c)
 	return c:IsType(TYPE_FUSION+TYPE_SYNCHRO+TYPE_XYZ+TYPE_PENDULUM) and c:IsAbleToRemoveAsCost()
