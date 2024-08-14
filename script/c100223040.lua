@@ -19,6 +19,7 @@ function s.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_QUICK_O)
 	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetRange(LOCATION_GRAVE)
+	e2:SetHintTiming(0,TIMING_END_PHASE)
 	e2:SetCountLimit(1,id+o)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e2:SetCost(aux.bfgcost)
@@ -84,9 +85,8 @@ function s.drtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function s.drop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetTargetsRelateToChain()
-	if Duel.SendtoDeck(g,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)<1
+	if Duel.SendtoDeck(g,nil,SEQ_DECKBOTTOM,REASON_EFFECT)<1
 		or not g:IsExists(Card.IsLocation,1,nil,LOCATION_DECK+LOCATION_EXTRA) then return end
-	if g:IsExists(Card.IsLocation,1,nil,LOCATION_DECK) then Duel.ShuffleDeck(tp) end
 	Duel.BreakEffect()
 	Duel.Draw(tp,1,REASON_EFFECT)
 end
