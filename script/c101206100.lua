@@ -25,11 +25,11 @@ end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.cfilter2,1,nil,tp) and (Duel.GetCurrentPhase()==PHASE_MAIN1 or Duel.GetCurrentPhase()==PHASE_MAIN2)
 end
-function s.spfilter(c,e,tp)
-	return c:IsFacedown()
+function s.spfilter(c)
+	return c:IsFacedown() and c:IsAbleToRemove()
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.spfilter,tp,0,LOCATION_EXTRA,1,nil,e,tp) and e:GetHandler():GetFlagEffect(id)==0 end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.spfilter,tp,0,LOCATION_EXTRA,1,nil) and e:GetHandler():GetFlagEffect(id)==0 end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 	e:GetHandler():RegisterFlagEffect(id,RESET_CHAIN,0,1)
 end
