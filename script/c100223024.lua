@@ -24,7 +24,7 @@ end
 function s.spfilter(c,e,tp,co,res)
 	return c:IsSetCard(0x2c2) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 		and ((c:IsLocation(LOCATION_DECK) and (Duel.GetLocationCount(tp,LOCATION_MZONE)>0 or res and Duel.GetMZoneCount(tp,res)>0))
-		or (c:IsLocation(LOCATION_EXTRA) and c:IsType(TYPE_LINK) and Duel.GetLocationCountFromEx(tp,tp,res,c) and co>2))
+		or (c:IsLocation(LOCATION_EXTRA) and c:IsType(TYPE_LINK) and Duel.GetLocationCountFromEx(tp,tp,res,c)>0 and co>2))
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
