@@ -53,14 +53,12 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,c)
 	else return false end
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp,c)
-	local g=e:GetLabelObject()
-	local hg=g:Filter(Card.IsLocation,nil,LOCATION_HAND)
-	if #hg>0 then
-		Duel.ConfirmCards(1-tp,hg)
+	local dc=e:GetLabelObject()
+	if dc:IsLocation(LOCATION_HAND) then
+		Duel.ConfirmCards(1-tp,dc)
 	end
-	local gg=g:Filter(Card.IsLocation,nil,LOCATION_GRAVE)
-	if #gg>0 then
-		Duel.HintSelection(gg)
+	if dc:IsLocation(LOCATION_GRAVE) then
+		Duel.HintSelection(Group.FromCards(dc))
 	end
 	Duel.SendtoDeck(g,nil,SEQ_DECKSHUFFLE,REASON_SPSUMMON)
 end
