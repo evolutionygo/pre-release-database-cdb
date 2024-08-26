@@ -60,7 +60,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp,c)
 	if dc:IsLocation(LOCATION_GRAVE) then
 		Duel.HintSelection(Group.FromCards(dc))
 	end
-	Duel.SendtoDeck(g,nil,SEQ_DECKSHUFFLE,REASON_SPSUMMON)
+	Duel.SendtoDeck(dc,nil,SEQ_DECKSHUFFLE,REASON_SPSUMMON)
 end
 function s.splimit(e,c,sump,sumtype,sumpos,targetp,se)
 	return not (c:IsType(TYPE_XYZ) and c:IsRank(4)) and c:IsLocation(LOCATION_EXTRA)
