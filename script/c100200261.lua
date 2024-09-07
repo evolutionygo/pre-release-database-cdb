@@ -1,4 +1,5 @@
 --玲珑龙 紫锂辉石龙
+local s,id,o=GetID()
 function s.initial_effect(c)
 	--spsummon
 	local e1=Effect.CreateEffect(c)
