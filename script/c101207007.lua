@@ -7,14 +7,14 @@ function s.initial_effect(c)
 	--special summon
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
-	e1:SetCategory(CATEGORY_DESTROY+CATEGORY_TOHAND+CATEGORY_SEARCH)
+	e1:SetCategory(CATEGORY_DESTROY+CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetRange(LOCATION_PZONE)
 	e1:SetCountLimit(1)
 	e1:SetTarget(s.sptg)
 	e1:SetOperation(s.spop)
 	c:RegisterEffect(e1)
-	--tp grave
+	--to grave
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetCategory(CATEGORY_TOGRAVE)
@@ -45,18 +45,18 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if not c:IsRelateToEffect(e) then return end
-	local dg=Duel.GetFieldGroup(tp,LOCATION_PZONE,0)
-	if dg:GetCount()<2 then return end
-	if Duel.Destroy(dg,REASON_EFFECT)~=2 then return end
-	if not aux.MustMaterialCheck(nil,tp,EFFECT_MUST_BE_SMATERIAL) then return end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_EXTRA,0,1,1,nil,e,tp)
-	local tc=g:GetFirst()
-	if tc then
-		tc:SetMaterial(nil)
-		if Duel.SpecialSummon(tc,SUMMON_TYPE_SYNCHRO,tp,tp,false,false,POS_FACEUP)>0 then
-			tc:CompleteProcedure()
+	if c:IsRelateToEffect(e) and c:IsLocation(LOCATION_PZONE) and Duel.IsExistingMatchingCard(s.desfilter,tp,LOCATION_PZONE,0,1,e:GetHandler()) then
+		local dg=Duel.GetFieldGroup(tp,LOCATION_PZONE,0)
+		if dg:GetCount()>=2 and Duel.Destroy(dg,REASON_EFFECT)==2 and aux.MustMaterialCheck(nil,tp,EFFECT_MUST_BE_SMATERIAL) then
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+			local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_EXTRA,0,1,1,nil,e,tp)
+			local tc=g:GetFirst()
+			if tc then
+				tc:SetMaterial(nil)
+				if Duel.SpecialSummon(tc,SUMMON_TYPE_SYNCHRO,tp,tp,false,false,POS_FACEUP)>0 then
+					tc:CompleteProcedure()
+				end
+			end
 		end
 	end
 	local e1=Effect.CreateEffect(e:GetHandler())
@@ -78,24 +78,22 @@ end
 function s.splimit(e,c,tp,sumtp,sumpos)
 	return not c:IsAttribute(ATTRIBUTE_WIND)
 end
-function s.cfilter1(c,tp)
+function s.cfilter(c,tp)
 	return c:IsFaceup() and c:IsType(TYPE_SYNCHRO) and c:IsAttribute(ATTRIBUTE_WIND)
-		and Duel.IsExistingMatchingCard(s.cfilter2,tp,LOCATION_MZONE,0,1,nil,c:GetCode())
-end
-function s.cfilter2(c,code)
-	return c:IsFaceup() and c:IsType(TYPE_SYNCHRO) and c:IsAttribute(ATTRIBUTE_WIND)
-		and not c:IsCode(code)
 end
 function s.tgcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	return c:IsLocation(LOCATION_EXTRA) and c:IsFaceup()
-		and Duel.IsExistingMatchingCard(s.cfilter1,tp,LOCATION_MZONE,0,1,nil,tp)
 end
 function s.tgfilter(c)
 	return c:IsSetCard(0x2016) and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToGrave()
 end
 function s.tgtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.tgfilter,tp,LOCATION_DECK,0,1,nil) end
+	if chk==0 then
+		if not Duel.IsExistingMatchingCard(s.tgfilter,tp,LOCATION_DECK,0,1,nil) then return false end
+		local g=Duel.GetMatchingGroup(s.cfilter,tp,LOCATION_MZONE,0,nil)
+		return g:GetClassCount(Card.GetRace)>=2
+	end
 	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_DECK)
 end
 function s.tgop(e,tp,eg,ep,ev,re,r,rp)
