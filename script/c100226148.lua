@@ -1,6 +1,6 @@
 --Theia, the Primal Being
 local s,id,o=GetID()
-function s.initial_effect(c)	
+function s.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e1:SetRange(LOCATION_MZONE)
@@ -94,7 +94,9 @@ end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if not c:IsRelateToEffect(e) then return end
-	if Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP) and not Duel.IsExistingMatchingCard(aux.TRUE,tp,LOCATION_MZONE,0,1,e:GetHandler()) and Duel.GetMatchingGroupCount(Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,nil)>0 and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
+	if Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP) and not Duel.IsExistingMatchingCard(aux.TRUE,tp,LOCATION_MZONE,0,1,e:GetHandler())
+		and Duel.GetMatchingGroupCount(Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,nil)>0
+		and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
 		local g=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 		if g:GetCount()>0 then
 			local tg=g:GetMaxGroup(Card.GetAttack)
@@ -103,7 +105,9 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 				local sg=tg:Select(tp,1,1,nil)
 				Duel.HintSelection(sg)
 				Duel.Destroy(sg,REASON_EFFECT)
-			else Duel.Destroy(tg,REASON_EFFECT) end
-		end   
+			else
+				Duel.Destroy(tg,REASON_EFFECT)
+			end
+		end
 	end
 end

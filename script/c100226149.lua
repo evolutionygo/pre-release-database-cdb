@@ -35,7 +35,9 @@ function s.swapfilter(c)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(1-tp) and s.swapfilter(chkc) end
-	if chk==0 then return Duel.GetMZoneCount(tp,e:GetHandler(),tp,LOCATION_REASON_CONTROL)>0 and Duel.IsExistingTarget(s.swapfilter,tp,0,LOCATION_MZONE,1,nil) end
+	if chk==0 then return e:GetHandler():IsAbleToChangeControler()
+		and Duel.GetMZoneCount(tp,e:GetHandler(),tp,LOCATION_REASON_CONTROL)>0
+		and Duel.IsExistingTarget(s.swapfilter,tp,0,LOCATION_MZONE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONTROL)
 	local mon=Duel.SelectTarget(tp,s.swapfilter,tp,0,LOCATION_MZONE,1,1,nil)
 	mon:AddCard(e:GetHandler())
@@ -72,6 +74,6 @@ function s.ctop(e,tp,eg,ep,ev,re,r,rp)
 	local a=g:GetFirst()
 	local b=g:GetNext()
 	if a:IsRelateToEffect(e) and b:IsRelateToEffect(e) then
-		Duel.SwapControl(a,b) 
+		Duel.SwapControl(a,b)
 	end
 end
