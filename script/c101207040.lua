@@ -37,7 +37,7 @@ function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_SYNCHRO)
 end
 function s.spfilter(c,e,tp)
-	return not c:IsType(TYPE_TUNER) and c:IsType(TYPE_SYNCHRO)
+	return not c:IsType(TYPE_TUNER) and c:IsType(TYPE_SYNCHRO) and c:IsLevelBelow(7)
 		and c:IsAttribute(ATTRIBUTE_WIND)
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
