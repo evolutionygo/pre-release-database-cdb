@@ -1,4 +1,4 @@
---HSRグライダー２
+--HSRグライダー2
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--synchro summon
@@ -50,7 +50,6 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) then
 		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
@@ -61,13 +60,13 @@ function s.cfilter(c)
 end
 function s.lvcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(Card.IsSummonPlayer,1,nil,1-tp)
-		and Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_MZONE,0,1,nil)
 end
 function s.lvfilter(c)
 	return c:IsFaceup() and c:GetLevel()>0
 end
 function s.lvtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.lvfilter,tp,0,LOCATION_MZONE,1,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.lvfilter,tp,0,LOCATION_MZONE,1,nil)
+		and Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_MZONE,0,1,nil) end
 end
 function s.lvop(e,tp,eg,ep,ev,re,r,rp)
 	local tg=Duel.GetMatchingGroup(s.lvfilter,tp,0,LOCATION_MZONE,nil)
