@@ -5,10 +5,10 @@ function s.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_ATKCHANGE)
-	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
 	e1:SetType(EFFECT_TYPE_QUICK_O)
 	e1:SetCode(EVENT_FREE_CHAIN)
-	e1:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_MAIN_END)
+	e1:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_DAMAGE_STEP)
 	e1:SetRange(LOCATION_HAND)
 	e1:SetCondition(s.atkcon)
 	e1:SetCost(aux.bfgcost)
@@ -52,11 +52,12 @@ function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(aux.nzatk,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil):Select(tp,1,1,nil)
 	local tc=g:GetFirst()
 	if tc then
+		Duel.HintSelection(g)
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_SET_ATTACK_FINAL)
 		e1:SetValue(0)
-		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
 		tc:RegisterEffect(e1)
 	end
 end
@@ -77,22 +78,20 @@ end
 function s.chainlm(e,rp,tp)
 	return tp==rp
 end
-function s.setfilter(c)
-	return c:IsSetCard(0x2c3) and not c:IsForbidden()
+function s.setfilter(c,tp)
+	return c:IsSetCard(0x2c3) and c:CheckUniqueOnField(tp) and not c:IsForbidden()
 		and bit.band(c:GetType(),TYPE_TRAP+TYPE_CONTINUOUS)==TYPE_TRAP+TYPE_CONTINUOUS
 end
 function s.settg(e,tp,eg,ep,ev,re,r,rp,chk)
-	local g=Duel.GetMatchingGroup(s.setfilter,tp,LOCATION_DECK+LOCATION_HAND,0,nil)
-	if chk==0 then return g:GetClassCount(Card.GetCode)>=1
-		and Duel.GetLocationCount(tp,LOCATION_SZONE)>1 end
+	local g=Duel.GetMatchingGroup(s.setfilter,tp,LOCATION_DECK+LOCATION_HAND,0,nil,tp)
+	if chk==0 then return #g>0 and Duel.GetLocationCount(tp,LOCATION_SZONE)>0 end
 end
 function s.setop(e,tp,eg,ep,ev,re,r,rp)
 	local ct=Duel.GetLocationCount(tp,LOCATION_SZONE)
-	if ct<2 then return end
-	local g=Duel.GetMatchingGroup(s.setfilter,tp,LOCATION_DECK+LOCATION_HAND,0,nil)
-	if g:GetClassCount(Card.GetCode)<1 then return end
+	if ct<1 then return end
+	local g=Duel.GetMatchingGroup(s.setfilter,tp,LOCATION_DECK+LOCATION_HAND,0,nil,tp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
-	local tg1=g:SelectSubGroup(tp,aux.dncheck,false,1,2)
+	local tg1=g:SelectSubGroup(tp,aux.dncheck,false,1,ct)
 	for tc in aux.Next(tg1) do
 		Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
 	end
