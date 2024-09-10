@@ -25,9 +25,7 @@ function s.initial_effect(c)
 	--set
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,2))
-	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e3:SetType(EFFECT_TYPE_IGNITION)
-	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetCountLimit(1,id)
 	e3:SetCost(aux.bfgcost)
@@ -89,6 +87,7 @@ end
 function s.setop(e,tp,eg,ep,ev,re,r,rp)
 	local ct=Duel.GetLocationCount(tp,LOCATION_SZONE)
 	if ct<1 then return end
+	if ct>2 then ct=2 end
 	local g=Duel.GetMatchingGroup(s.setfilter,tp,LOCATION_DECK+LOCATION_HAND,0,nil,tp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
 	local tg1=g:SelectSubGroup(tp,aux.dncheck,false,1,ct)

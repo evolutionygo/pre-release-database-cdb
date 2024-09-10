@@ -48,12 +48,12 @@ function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsPlayerCanSpecialSummonMonster(tp,id,0x2c3,TYPES_EFFECT_TRAP_MONSTER,1800,1800,4,RACE_WARRIOR,ATTRIBUTE_LIGHT) end
+		and Duel.IsPlayerCanSpecialSummonMonster(tp,id,0x2c3,TYPES_EFFECT_TRAP_MONSTER,800,800,4,RACE_WARRIOR,ATTRIBUTE_LIGHT) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if not Duel.IsPlayerCanSpecialSummonMonster(tp,id,0x2c3,TYPES_EFFECT_TRAP_MONSTER,1800,1800,4,RACE_WARRIOR,ATTRIBUTE_LIGHT) then return end
+	if not Duel.IsPlayerCanSpecialSummonMonster(tp,id,0x2c3,TYPES_EFFECT_TRAP_MONSTER,800,800,4,RACE_WARRIOR,ATTRIBUTE_LIGHT) then return end
 	c:AddMonsterAttribute(TYPE_EFFECT+TYPE_TRAP)
 	if Duel.SpecialSummon(c,SUMMON_VALUE_SELF,tp,tp,true,false,POS_FACEUP)~=0
 		and Duel.IsExistingMatchingCard(s.cfilter2,tp,LOCATION_REMOVED,0,1,nil)
