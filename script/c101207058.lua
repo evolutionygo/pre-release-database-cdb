@@ -77,7 +77,7 @@ function s.discon(e,tp,eg,ep,ev,re,r,rp)
 	local rc=re:GetHandler()
 	local loc=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_LOCATION)
 	return bit.band(rc:GetType(),TYPE_TRAP+TYPE_CONTINUOUS)==TYPE_TRAP+TYPE_CONTINUOUS
-		and bit.band(loc,LOCATION_MZONE)==LOCATION_MZONE
+		and loc and bit.band(loc,LOCATION_MZONE)==LOCATION_MZONE
 		and Duel.IsExistingMatchingCard(s.cfilter2,tp,LOCATION_REMOVED,0,1,nil)
 end
 function s.distg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
