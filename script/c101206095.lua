@@ -28,7 +28,7 @@ function s.filter(c)
 	local p=c:GetOwner()
 	return c:IsPosition(POS_FACEDOWN_DEFENSE) and (c:IsCanChangePosition() or (c:IsAbleToGrave() and Duel.IsPlayerCanDraw(p,2)))
 end
-function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
+function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsPosition(POS_FACEDOWN_DEFENSE) and chkc:IsControler(1-tp) end
 	if chk==0 then return Duel.IsExistingTarget(s.filter,tp,0,LOCATION_MZONE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEDOWNDEFENSE)
@@ -37,11 +37,15 @@ end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	local p=tc:GetOwner()
-	local a=tc:IsCanChangePosition() and not c:IsPosition(POS_FACEUP_ATTACK)
+	local a=tc:IsCanChangePosition()
 	local b=tc:IsAbleToGrave() and Duel.IsPlayerCanDraw(p,2)
-	op=aux.SelectFromOptions(1-tp,{a,aux.Stringid(id,1)},{b,aux.Stringid(id,2)})
+	local op=aux.SelectFromOptions(1-tp,{a,aux.Stringid(id,1)},{b,aux.Stringid(id,2)})
 	if op==1 then
-		Duel.ChangePosition(tc,POS_FACEUP_ATTACK)
+		local pos1=0
+		if not tc:IsPosition(POS_FACEUP_ATTACK) then pos1=pos1+POS_FACEUP_ATTACK end
+		if not tc:IsPosition(POS_FACEUP_DEFENSE) then pos1=pos1+POS_FACEUP_DEFENSE end
+		local pos=Duel.SelectPosition(tp,tc,pos1)
+		Duel.ChangePosition(tc,pos)
 	else
 		Duel.SendtoGrave(tc,REASON_EFFECT)
 		Duel.BreakEffect()
