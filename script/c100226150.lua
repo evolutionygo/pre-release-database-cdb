@@ -30,8 +30,8 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 		local mg2=Duel.GetMatchingGroup(s.filter0,tp,LOCATION_EXTRA,0,nil)
 		if mg2:GetCount()>0 then
 			mg:Merge(mg2)
-			aux.FGoalCheckAdditional=s.fcheck
 		end
+		aux.FGoalCheckAdditional=s.fcheck
 		local res=Duel.IsExistingMatchingCard(s.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,mg,nil,chkf)
 		aux.FGoalCheckAdditional=nil
 		if not res then
@@ -52,8 +52,8 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local mg2=Duel.GetMatchingGroup(s.filter0,tp,LOCATION_EXTRA,0,nil)
 	if mg2:GetCount()>0 then
 		mg1:Merge(mg2)
-		aux.FGoalCheckAdditional=s.fcheck
 	end
+	aux.FGoalCheckAdditional=s.fcheck
 	local sg1=Duel.GetMatchingGroup(s.filter2,tp,LOCATION_EXTRA,0,nil,e,tp,mg1,nil,chkf)
 	aux.FGoalCheckAdditional=nil
 	local mg2=nil
