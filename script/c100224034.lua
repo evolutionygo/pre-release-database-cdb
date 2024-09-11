@@ -13,9 +13,9 @@ function s.initial_effect(c)
 	e1:SetProperty(EFFECT_FLAG_DELAY)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e1:SetCountLimit(1,id)
+	e1:SetCondition(s.condition)
 	e1:SetTarget(s.target)
 	e1:SetOperation(s.operation)
-	e1:SetCondition(s.condition)
 	c:RegisterEffect(e1)
 	--splimit
 	local e2=Effect.CreateEffect(c)
@@ -41,6 +41,9 @@ end
 function s.mfilter(c)
 	return (c:IsLinkRace(RACE_DRAGON) or c:IsLinkRace(RACE_SPELLCASTER)) and c:IsLevelBelow(4)
 end
+function s.condition(e,tp,eg,ep,ev,re,r,rp)
+	return e:GetHandler():IsSummonType(SUMMON_TYPE_LINK)
+end
 function s.cfilter(c)
 	return c:IsCode(24382602) and (c:IsAbleToHand() or c:IsAbleToGrave())
 end
@@ -61,9 +64,6 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 			Duel.SendtoGrave(tc,REASON_EFFECT)
 		end
 	end
-end
-function s.condition(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():IsSummonType(SUMMON_TYPE_LINK)
 end
 function s.splimit(e,c,sump,sumtype,sumpos,targetp)
 	return not c:IsRace(RACE_DRAGON)
