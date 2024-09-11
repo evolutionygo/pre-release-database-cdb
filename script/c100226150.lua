@@ -12,14 +12,17 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 s.fusion_effect=true
-function s.fcheck(ct)
+function s.fcheck1(ct)
 	return function(tp,sg,fc)
 				if ct>0 and sg:FilterCount(Card.IsLocation,nil,LOCATION_EXTRA)>ct then
 					return false
 				end
-				return #sg>=3
+				return true
 			end
 				
+end
+function s.fcheck2(tp,sg,fc)
+	return sg:GetCount()>=3
 end
 function s.filter0(c)
 	return c:IsType(TYPE_MONSTER) and c:IsCanBeFusionMaterial() and c:IsAbleToRemove()
@@ -39,8 +42,10 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 				mg:Merge(mg2)
 			end
 		end
-		aux.FGoalCheckAdditional=s.fcheck(ct)
+		aux.FCheckAdditional=s.fcheck1(ct)
+		aux.FGoalCheckAdditional=s.fcheck2
 		local res=Duel.IsExistingMatchingCard(s.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,mg,nil,chkf)
+		aux.FCheckAdditional=nil
 		aux.FGoalCheckAdditional=nil
 		if not res then
 			local ce=Duel.GetChainMaterial(tp)
@@ -64,9 +69,9 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			mg1:Merge(mg2)
 		end
 	end
-	aux.FGoalCheckAdditional=s.fcheck(ct)
+	aux.FCheckAdditional=s.fcheck1(ct)
+	aux.FGoalCheckAdditional=s.fcheck2
 	local sg1=Duel.GetMatchingGroup(s.filter2,tp,LOCATION_EXTRA,0,nil,e,tp,mg1,nil,chkf)
-	aux.FGoalCheckAdditional=nil
 	local mg2=nil
 	local sg2=nil
 	local ce=Duel.GetChainMaterial(tp)
@@ -83,8 +88,10 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=tg:GetFirst()
 	if not tc then return end
 	if sg1:IsContains(tc) and (sg2==nil or not sg2:IsContains(tc) or ce and not Duel.SelectYesNo(tp,ce:GetDescription())) then
-		aux.FGoalCheckAdditional=s.fcheck
+		aux.FCheckAdditional=s.fcheck1(ct)
+		aux.FGoalCheckAdditional=s.fcheck2
 		local mat1=Duel.SelectFusionMaterial(tp,tc,mg1,nil,chkf)
+		aux.FCheckAdditional=nil
 		aux.FGoalCheckAdditional=nil
 		tc:SetMaterial(mat1)
 		local rg=mat1:Filter(Card.IsLocation,nil,LOCATION_EXTRA)
@@ -110,4 +117,6 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 	Duel.SpecialSummonComplete()
 	tc:CompleteProcedure()
+	aux.FCheckAdditional=nil
+	aux.FGoalCheckAdditional=nil
 end
