@@ -32,7 +32,7 @@ function s.cfilter(c,tc)
 	return c:IsSynchroSummonable(tc)
 end
 function s.spfilter(c,e,tp)
-	return c:IsCode(id) and c:Is(0xea) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return not c:IsCode(id) and c:IsSetCard(0xea) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 		and Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_EXTRA,0,1,nil,c)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
