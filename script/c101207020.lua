@@ -68,7 +68,9 @@ function s.tgtg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.tgop(e,tp,eg,ep,ev,re,r,rp)
 	local tg=Duel.GetMatchingGroup(s.tgfilter,tp,LOCATION_DECK,0,nil)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local sg=tg:SelectSubGroup(tp,aux.dncheck,false,1,2)
-	if sg then Duel.SendtoGrave(sg,REASON_EFFECT) end
+	if #tg>0 then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
+		local sg=tg:SelectSubGroup(tp,aux.dncheck,false,1,2)
+		if sg then Duel.SendtoGrave(sg,REASON_EFFECT) end
+	end
 end

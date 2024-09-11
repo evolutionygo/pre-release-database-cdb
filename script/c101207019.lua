@@ -64,7 +64,7 @@ function s.desfilter(c,tp)
 	return c:IsFaceup() and c:IsType(TYPE_SYNCHRO) and Duel.GetMZoneCount(tp,c)>1
 end
 function s.spfilter2(c,e,tp)
-	return c:IsSetCard(0xea) and c:IsType(TYPE_MONSTER)
+	return c:IsSetCard(0xea) and c:IsType(TYPE_MONSTER) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.sptg2(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.GetMatchingGroup(s.desfilter,tp,LOCATION_MZONE,0,nil)
