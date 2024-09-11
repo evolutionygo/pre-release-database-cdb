@@ -3,6 +3,7 @@ local s,id,o=GetID()
 function s.initial_effect(c)
 	--special summon
 	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_DESTROY)
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
@@ -27,8 +28,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function s.desfilter(c,tp)
-	return c:IsFaceup() and c:IsSetCard(0xea)
-		and Duel.GetMZoneCount(tp,c)>0
+	return c:IsFaceup() and c:IsSetCard(0xea) and Duel.GetMZoneCount(tp,c)>0
 end
 function s.spdtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()
@@ -44,9 +44,20 @@ function s.spdop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) and Duel.Destroy(tc,REASON_EFFECT)~=0
-		and c:IsRelateToEffect(e) then
+		and c:IsRelateToEffect(e) and aux.NecroValleyFilter()(c) then
 		Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
 	end
+	local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+	e1:SetTargetRange(1,0)
+	e1:SetTarget(s.splimit)
+	e1:SetReset(RESET_PHASE+PHASE_END)
+	Duel.RegisterEffect(e1,tp)
+end
+function s.splimit(e,c)
+	return not c:IsRace(RACE_MACHINE) and c:IsLocation(LOCATION_EXTRA)
 end
 function s.tgfilter(c)
 	return c:IsSetCard(0xea) and c:IsAbleToGrave() and not c:IsCode(id)
