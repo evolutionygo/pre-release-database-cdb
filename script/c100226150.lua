@@ -12,9 +12,14 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 s.fusion_effect=true
-function s.fcheck(tp,sg,fc)
-	local ct=Duel.GetFieldGroupCount(tp,0,LOCATION_MZONE)
-	return #sg>=3 and sg:FilterCount(Card.IsLocation,nil,LOCATION_EXTRA)<=ct
+function s.fcheck(ct)
+	return function(tp,sg,fc)
+				if ct>0 and sg:FilterCount(Card.IsLocation,nil,LOCATION_EXTRA)>ct then
+					return false
+				end
+				return #sg>=3
+			end
+				
 end
 function s.filter0(c)
 	return c:IsType(TYPE_MONSTER) and c:IsCanBeFusionMaterial() and c:IsAbleToRemove()
@@ -27,11 +32,14 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		local chkf=tp
 		local mg=Duel.GetFusionMaterial(tp):Filter(aux.NOT(Card.IsImmuneToEffect),nil,e)
-		local mg2=Duel.GetMatchingGroup(s.filter0,tp,LOCATION_EXTRA,0,nil)
-		if mg2:GetCount()>0 then
-			mg:Merge(mg2)
+		local ct=Duel.GetFieldGroupCount(tp,0,LOCATION_MZONE)
+		if ct>0 then
+			local mg2=Duel.GetMatchingGroup(s.filter0,tp,LOCATION_EXTRA,0,nil)
+			if mg2:GetCount()>0 then
+				mg:Merge(mg2)
+			end
 		end
-		aux.FGoalCheckAdditional=s.fcheck
+		aux.FGoalCheckAdditional=s.fcheck(ct)
 		local res=Duel.IsExistingMatchingCard(s.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,mg,nil,chkf)
 		aux.FGoalCheckAdditional=nil
 		if not res then
@@ -49,11 +57,14 @@ end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local chkf=tp
 	local mg1=Duel.GetFusionMaterial(tp):Filter(aux.NOT(Card.IsImmuneToEffect),nil,e)
-	local mg2=Duel.GetMatchingGroup(s.filter0,tp,LOCATION_EXTRA,0,nil)
-	if mg2:GetCount()>0 then
-		mg1:Merge(mg2)
+	local ct=Duel.GetFieldGroupCount(tp,0,LOCATION_MZONE)
+	if ct>0 then
+		local mg2=Duel.GetMatchingGroup(s.filter0,tp,LOCATION_EXTRA,0,nil)
+		if mg2:GetCount()>0 then
+			mg1:Merge(mg2)
+		end
 	end
-	aux.FGoalCheckAdditional=s.fcheck
+	aux.FGoalCheckAdditional=s.fcheck(ct)
 	local sg1=Duel.GetMatchingGroup(s.filter2,tp,LOCATION_EXTRA,0,nil,e,tp,mg1,nil,chkf)
 	aux.FGoalCheckAdditional=nil
 	local mg2=nil
@@ -81,13 +92,12 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SendtoGrave(mat1,REASON_EFFECT+REASON_MATERIAL+REASON_FUSION)
 		Duel.Remove(rg,POS_FACEUP,REASON_EFFECT+REASON_MATERIAL+REASON_FUSION)
 		Duel.BreakEffect()
-		Duel.SpecialSummon(tc,SUMMON_TYPE_FUSION,tp,tp,false,false,POS_FACEUP)
+		Duel.SpecialSummonStep(tc,SUMMON_TYPE_FUSION,tp,tp,false,false,POS_FACEUP)
 	elseif ce then
 		local mat2=Duel.SelectFusionMaterial(tp,tc,mg2,nil,chkf)
 		local fop=ce:GetOperation()
 		fop(ce,e,tp,tc,mat2)
 	end
-	tc:CompleteProcedure()
 	local exmat=tc:GetMaterial():Filter(Card.IsPreviousLocation,nil,LOCATION_EXTRA)
 	if #exmat>0 then
 		local dam=exmat:GetSum(Card.GetAttack)
@@ -98,4 +108,6 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			Duel.SetLP(tp,0)
 		end
 	end
+	Duel.SpecialSummonComplete()
+	tc:CompleteProcedure()
 end
