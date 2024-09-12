@@ -29,7 +29,7 @@ function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return rp==1-tp
 end
 function s.cfilter(c,tc)
-	return c:IsSynchroSummonable(tc)
+	return c:IsRace(RACE_MACHINE) and c:IsSynchroSummonable(tc)
 end
 function s.spfilter(c,e,tp)
 	return not c:IsCode(id) and c:IsSetCard(0xea) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
