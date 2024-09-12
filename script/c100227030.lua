@@ -44,13 +44,30 @@ function s.initial_effect(c)
 		local ge1=Effect.CreateEffect(c)
 		ge1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 		ge1:SetCode(EVENT_CHAINING)
-		ge1:SetOperation(s.checkop)
+		ge1:SetOperation(s.checkop1)
 		Duel.RegisterEffect(ge1,0)
+		local ge2=ge1:Clone()
+		ge2:SetCode(EVENT_CHAIN_NEGATED)
+		ge2:SetOperation(s.checkop2)
+		Duel.RegisterEffect(ge2,0)
 	end
 end
-function s.checkop(e,tp,eg,ep,ev,re,r,rp)
-	if re and re:GetHandlerPlayer() then
+function s.checkop1(e,tp,eg,ep,ev,re,r,rp)
+	if re and re:GetHandlerPlayer() and re:IsActiveType(TYPE_MONSTER) then
 		Duel.RegisterFlagEffect(re:GetHandlerPlayer(),id,RESET_PHASE+PHASE_END,0,1)
+	end
+end
+function s.checkop2(e,tp,eg,ep,ev,re,r,rp)
+	if re and re:GetHandlerPlayer() and re:IsActiveType(TYPE_MONSTER) then
+		local ct=Duel.GetFlagEffect(re:GetHandlerPlayer(),id)
+		Duel.ResetFlagEffect(re:GetHandlerPlayer(),id)
+		if ct>1 then
+			local ra=0
+			while ra<ct do
+				Duel.RegisterFlagEffect(re:GetHandlerPlayer(),id,RESET_PHASE+PHASE_END,0,1)
+				ra=ra+1
+			end
+		end
 	end
 end
 function s.dfilter(c,tp)
