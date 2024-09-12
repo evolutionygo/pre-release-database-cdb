@@ -80,7 +80,7 @@ function s.cfilter(c,tp)
 	return c:IsSummonPlayer(1-tp)
 end
 function s.spcon2(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(s.cfilter,1,nil,tp) and Duel.GetFlagEffect(1-tp,id)>=4
+	return eg:IsExists(s.cfilter,1,nil,tp)
 end
 function s.spfilter2(c,e,tp)
 	return c:IsCode(17548456) and c:IsType(TYPE_SYNCHRO) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_SYNCHRO,tp,false,false)
@@ -88,6 +88,7 @@ function s.spfilter2(c,e,tp)
 end
 function s.sptg2(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return aux.MustMaterialCheck(nil,tp,EFFECT_MUST_BE_SMATERIAL)
+		and Duel.GetFlagEffect(1-tp,id)>=4
 		and Duel.IsExistingMatchingCard(s.spfilter2,tp,LOCATION_EXTRA,0,1,nil,e,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 end

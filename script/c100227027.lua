@@ -1,6 +1,7 @@
 --ジュラック・メガロ
 local s,id,o=GetID()
 function s.initial_effect(c)
+	aux.AddCodeList(c,id)
 	--spsummon
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
@@ -63,15 +64,15 @@ function s.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,2)
 end
 function s.gselect(g)
-	return g:IsExists(Card.IsSetCard,1,nil,0x22)
+	return g:IsExists(Card.IsSetCard,1,nil,0x22) and g:FilterCount(Card.IsDiscardable,nil)==2
 end
 function s.drop(e,tp,eg,ep,ev,re,r,rp)
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
-	local g=Duel.GetMatchingGroup(Card.IsDiscardable,tp,LOCATION_HAND,0,nil)
-	if #g>=2 and g:IsExists(Card.IsSetCard,1,nil,0x22) and g:CheckSubGroup(s.gselect,2,2) then
+	local g=Duel.GetFieldGroup(p,LOCATION_HAND,0)
+	if #g>=2 and g:CheckSubGroup(s.gselect,2,2) then
 		Duel.Hint(HINT_SELECTMSG,p,HINTMSG_DISCARD)
 		local g1=g:SelectSubGroup(tp,s.gselect,false,2,2)
-		if Duel.SendtoGrave(g1,REASON_DISCARD+REASON_EFFECT)~=0 then
+		if g1 and g1:GetCount()>0 and Duel.SendtoGrave(g1,REASON_DISCARD+REASON_EFFECT)~=0 then
 			Duel.BreakEffect()
 			Duel.Draw(p,d,REASON_EFFECT)
 		end
