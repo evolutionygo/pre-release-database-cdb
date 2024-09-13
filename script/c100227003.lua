@@ -6,7 +6,7 @@ function s.initial_effect(c)
 	--get 
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
-	e1:SetCategory(CATEGORY_CONTROL+CATEGORY_RELEASE)
+	e1:SetCategory(CATEGORY_RELEASE+CATEGORY_CONTROL)
 	e1:SetType(EFFECT_TYPE_QUICK_O)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetHintTiming(TIMING_ATTACK,0x11e0)
@@ -27,23 +27,25 @@ function s.initial_effect(c)
 	e2:SetOperation(s.thop)
 	c:RegisterEffect(e2)
 end
-function s.costfilter(c,tp)
+function s.costfilter(c)
 	return c:IsSetCard(0x35) and c:IsType(TYPE_MONSTER)
 end
 function s.cttg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chk==0 then return Duel.CheckReleaseGroup(tp,s.costfilter,1,nil,tp) end	
-	Duel.SetOperationInfo(0,CATEGORY_CONTROL,nil,0,0,0)
+	if chk==0 then return Duel.CheckReleaseGroupEx(tp,s.costfilter,1,REASON_EFFECT,false,nil) end
+	Duel.SetOperationInfo(0,CATEGORY_RELEASE,nil,1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_CONTROL,nil,1,0,0)
 end
 function s.ctop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local rg=Duel.GetReleaseGroup(tp):Filter(s.costfilter,nil,tp)
-	local tg=Duel.GetMatchingGroup(Card.IsControlerCanBeChanged,tp,0,LOCATION_MZONE,nil,true)
+	local rg=Duel.GetReleaseGroup(tp,false,REASON_EFFECT):Filter(s.costfilter,nil)
+	local og=Duel.GetMatchingGroup(Card.IsControlerCanBeChanged,tp,0,LOCATION_MZONE,nil,true)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
-	local sg=rg:Select(tp,1,tg:GetCount(),nil)
+	local sg=rg:Select(tp,1,og:GetCount(),nil)
 	local ct=Duel.Release(sg,REASON_EFFECT)
 	if ct>0 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONTROL)
 		local tg=Duel.SelectMatchingCard(tp,Card.IsControlerCanBeChanged,tp,0,LOCATION_MZONE,ct,ct,nil)
+		Duel.HintSelection(tg)
 		if not Duel.GetControl(tg,tp) then return end
 		local cg=tg:Filter(Card.IsControler,nil,tp)
 		for tc in aux.Next(cg) do
@@ -76,8 +78,8 @@ end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) and Duel.SendtoDeck(c,nil,2,REASON_EFFECT)~=0
-		and c:IsLocation(LOCATION_EXTRA) and tc:IsRelateToEffect(e) then
+	if c:IsRelateToEffect(e) and aux.NecroValleyFilter()(c) and Duel.SendtoDeck(c,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)~=0
+		and c:IsLocation(LOCATION_EXTRA) and tc:IsRelateToEffect(e) and aux.NecroValleyFilter()(tc) then
 		Duel.SendtoHand(tc,nil,REASON_EFFECT)
 	end
 end
