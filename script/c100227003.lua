@@ -36,7 +36,8 @@ function s.costfilter(c)
 	return c:IsSetCard(0x35) and c:IsType(TYPE_MONSTER)
 end
 function s.cttg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chk==0 then return Duel.CheckReleaseGroupEx(tp,s.costfilter,1,REASON_EFFECT,false,nil) end
+	if chk==0 then return Duel.CheckReleaseGroupEx(tp,s.costfilter,1,REASON_EFFECT,false,nil) 
+		and Duel.IsExistingMatchingCard(Card.IsControlerCanBeChanged,tp,0,LOCATION_MZONE,1,nil,true) end
 	Duel.SetOperationInfo(0,CATEGORY_RELEASE,nil,1,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_CONTROL,nil,1,0,0)
 end
