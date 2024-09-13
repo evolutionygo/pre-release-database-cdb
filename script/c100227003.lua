@@ -32,27 +32,28 @@ function s.ctcon(e,tp,eg,ep,ev,re,r,rp)
 	local ph=Duel.GetCurrentPhase()
 	return ph==PHASE_MAIN1 or ph==PHASE_MAIN2
 end
-function s.costfilter(c,tp)
-	return c:IsSetCard(0x35) and c:IsType(TYPE_MONSTER) and Duel.GetMZoneCount(tp,c,tp,LOCATION_REASON_CONTROL)>0 and Duel.IsExistingTarget(s.ntrfilter,tp,0,LOCATION_MZONE,1,c)
+function s.rfilter(c,tp)
+	return c:IsSetCard(0x35) and c:IsType(TYPE_MONSTER) and Duel.GetMZoneCount(tp,c,tp,LOCATION_REASON_CONTROL)>0
+		and Duel.IsExistingMatchingCard(s.ctfilter,tp,0,LOCATION_MZONE,1,c)
 end
-function s.ntrfilter(c)
+function s.ctfilter(c)
 	return c:IsFaceup() and c:IsControlerCanBeChanged(true)
 end
 function s.cttg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chk==0 then return Duel.CheckReleaseGroupEx(tp,s.costfilter,1,REASON_EFFECT,false,nil,tp) end
+	if chk==0 then return Duel.CheckReleaseGroupEx(tp,s.rfilter,1,REASON_EFFECT,false,nil,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_RELEASE,nil,1,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_CONTROL,nil,1,0,0)
 end
 function s.ctop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local rg=Duel.GetReleaseGroup(tp,false,REASON_EFFECT):Filter(s.costfilter,nil,tp)
-	local og=Duel.GetMatchingGroup(s.ntrfilter,tp,0,LOCATION_MZONE,nil)
+	local rg=Duel.GetReleaseGroup(tp,false,REASON_EFFECT):Filter(s.rfilter,nil,tp)
+	local og=Duel.GetMatchingGroup(s.ctfilter,tp,0,LOCATION_MZONE,nil)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
 	local sg=rg:Select(tp,1,og:GetCount(),nil)
 	local ct=Duel.Release(sg,REASON_EFFECT)
 	if ct>0 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONTROL)
-		local tg=Duel.SelectMatchingCard(tp,s.ntrfilter,tp,0,LOCATION_MZONE,ct,ct,nil)
+		local tg=Duel.SelectMatchingCard(tp,s.ctfilter,tp,0,LOCATION_MZONE,ct,ct,nil)
 		Duel.HintSelection(tg)
 		if not Duel.GetControl(tg,tp) then return end
 		local cg=tg:Filter(Card.IsControler,nil,tp)
