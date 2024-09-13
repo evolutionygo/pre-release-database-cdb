@@ -65,13 +65,15 @@ end
 function s.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local ct=Duel.GetMatchingGroupCount(s.drfilter,tp,LOCATION_MZONE,0,nil)
 	if chk==0 then return ct>0 and Duel.IsPlayerCanDraw(tp,ct) end
+	Duel.SetTargetPlayer(tp)
 	Duel.SetOperationInfo(0,CATEGORY_HANDES,nil,1,tp,LOCATION_HAND)
 	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,ct,tp,1)
 end
 function s.drop(e,tp,eg,ep,ev,re,r,rp)
 	local ct=Duel.GetMatchingGroupCount(s.drfilter,tp,LOCATION_MZONE,0,nil)
 	if ct==0 then return end
-	Duel.Draw(tp,ct,REASON_EFFECT)
+	local p=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER)
+	Duel.Draw(p,ct,REASON_EFFECT)
 	Duel.BreakEffect()
-	Duel.DiscardHand(tp,nil,1,1,REASON_EFFECT+REASON_DISCARD)
+	Duel.DiscardHand(p,nil,1,1,REASON_EFFECT+REASON_DISCARD)
 end
