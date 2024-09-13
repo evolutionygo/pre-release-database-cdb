@@ -12,6 +12,7 @@ function s.initial_effect(c)
 	e1:SetHintTiming(TIMING_ATTACK,0x11e0)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCountLimit(1)
+	e1:SetCondition(s.ctcon)
 	e1:SetTarget(s.cttg)
 	e1:SetOperation(s.ctop)
 	c:RegisterEffect(e1)
@@ -26,6 +27,10 @@ function s.initial_effect(c)
 	e2:SetTarget(s.thtg)
 	e2:SetOperation(s.thop)
 	c:RegisterEffect(e2)
+end
+function s.ctcon(e,tp,eg,ep,ev,re,r,rp)
+	local ph=Duel.GetCurrentPhase()
+	return ph==PHASE_MAIN1 or ph==PHASE_MAIN2
 end
 function s.costfilter(c)
 	return c:IsSetCard(0x35) and c:IsType(TYPE_MONSTER)
