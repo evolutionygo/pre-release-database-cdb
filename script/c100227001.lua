@@ -3,7 +3,7 @@ local s,id,o=GetID()
 function s.initial_effect(c)
 	--synchro summon
 	local e1=Effect.CreateEffect(c)
-	e1:SetCategory(CATEGORY_DECKDES+CATEGORY_SPECIAL_SUMMON)
+	e1:SetCategory(CATEGORY_HANDES+CATEGORY_SPECIAL_SUMMON)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetRange(LOCATION_HAND)
@@ -44,7 +44,7 @@ function s.syntg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.synop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(s.dfilter,tp,LOCATION_HAND,0,nil)
-	if g:GetCount()<2 then return end
+	if not g:CheckSubGroup(s.fselect,2,99,e,tp) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DISCARD)
 	local sg=g:SelectSubGroup(tp,s.fselect,true,2,99,e,tp)
 	if sg and sg:GetCount()>=2 then
