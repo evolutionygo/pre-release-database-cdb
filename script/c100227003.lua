@@ -1,15 +1,17 @@
 --魔轟神レヴェルゼブル
 local s,id,o=GetID()
 function s.initial_effect(c)
+	aux.AddSynchroProcedure(c,nil,aux.NonTuner(nil),1)
+	c:EnableReviveLimit()
 	--get 
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
-	e1:SetCategory(CATEGORY_CONTROL)
+	e1:SetCategory(CATEGORY_CONTROL+CATEGORY_RELEASE)
 	e1:SetType(EFFECT_TYPE_QUICK_O)
 	e1:SetCode(EVENT_FREE_CHAIN)
+	e1:SetHintTiming(TIMING_ATTACK,0x11e0)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCountLimit(1)
-	e1:SetCost(s.ctcost)
 	e1:SetTarget(s.cttg)
 	e1:SetOperation(s.ctop)
 	c:RegisterEffect(e1)
@@ -28,40 +30,35 @@ end
 function s.costfilter(c,tp)
 	return c:IsSetCard(0x35) and c:IsType(TYPE_MONSTER)
 end
-function s.ctcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.CheckReleaseGroup(tp,s.costfilter,1,nil,tp) end
+function s.cttg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chk==0 then return Duel.CheckReleaseGroup(tp,s.costfilter,1,nil,tp) end	
+	Duel.SetOperationInfo(0,CATEGORY_CONTROL,nil,0,0,0)
+end
+function s.ctop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
 	local rg=Duel.GetReleaseGroup(tp):Filter(s.costfilter,nil,tp)
 	local tg=Duel.GetMatchingGroup(Card.IsControlerCanBeChanged,tp,0,LOCATION_MZONE,nil,true)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
 	local sg=rg:Select(tp,1,tg:GetCount(),nil)
-	local ct=Duel.Release(sg,REASON_COST)
-	e:SetLabel(ct)
-end
-function s.cttg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsControlerCanBeChanged() and chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp) end
-	if chk==0 then return true end
-	local ct=e:GetLabel()
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONTROL)
-	local g=Duel.SelectTarget(tp,Card.IsControlerCanBeChanged,tp,0,LOCATION_MZONE,ct,ct,nil)
-	Duel.SetOperationInfo(0,CATEGORY_CONTROL,g,g:GetCount(),0,0)
-end
-function s.ctop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	local tg=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e)
-	if not Duel.GetControl(tg,tp) then return end
-	local cg=tg:Filter(Card.IsControler,nil,tp)
-	for tc in aux.Next(cg) do
-		local e1=Effect.CreateEffect(c)
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_DISABLE)
-		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
-		tc:RegisterEffect(e1)
-		local e2=Effect.CreateEffect(c)
-		e2:SetType(EFFECT_TYPE_SINGLE)
-		e2:SetCode(EFFECT_DISABLE_EFFECT)
-		e2:SetValue(RESET_TURN_SET)
-		e2:SetReset(RESET_EVENT+RESETS_STANDARD)
-		tc:RegisterEffect(e2)
+	local ct=Duel.Release(sg,REASON_EFFECT)
+	if ct>0 then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONTROL)
+		local tg=Duel.SelectMatchingCard(tp,Card.IsControlerCanBeChanged,tp,0,LOCATION_MZONE,ct,ct,nil)
+		if not Duel.GetControl(tg,tp) then return end
+		local cg=tg:Filter(Card.IsControler,nil,tp)
+		for tc in aux.Next(cg) do
+			local e1=Effect.CreateEffect(c)
+			e1:SetType(EFFECT_TYPE_SINGLE)
+			e1:SetCode(EFFECT_DISABLE)
+			e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+			tc:RegisterEffect(e1)
+			local e2=Effect.CreateEffect(c)
+			e2:SetType(EFFECT_TYPE_SINGLE)
+			e2:SetCode(EFFECT_DISABLE_EFFECT)
+			e2:SetValue(RESET_TURN_SET)
+			e2:SetReset(RESET_EVENT+RESETS_STANDARD)
+			tc:RegisterEffect(e2)
+		end
 	end
 end
 function s.thfilter(c)
