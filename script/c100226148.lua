@@ -18,6 +18,7 @@ function s.initial_effect(c)
 	e3:SetRange(LOCATION_HAND)
 	e3:SetCode(EVENT_FREE_CHAIN)
 	e3:SetCountLimit(1,id)
+	e3:SetCondition(s.spcon)
 	e3:SetCost(s.spcost)
 	e3:SetTarget(s.sptg)
 	e3:SetOperation(s.spop)
@@ -79,8 +80,15 @@ function s.relgoal(sg,tp)
 	Duel.SetSelectedCard(sg)
 	return sg:CheckWithSumGreater(Card.GetLevel,11) and aux.mzctcheckrel(sg,tp)
 end
+function s.spcon(e,tp,eg,ep,ev,re,r,rp)
+	local ph=Duel.GetCurrentPhase()
+	return ph==PHASE_MAIN1 or ph==PHASE_MAIN2
+end
+function s.rfilter(c)
+	return c:IsType(TYPE_MONSTER) and c:IsLevelAbove(1)
+end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	local mg=Duel.GetReleaseGroup(tp):Filter(Card.IsType,nil,TYPE_MONSTER)
+	local mg=Duel.GetReleaseGroup(tp):Filter(s.rfilter,nil)
 	if chk==0 then return mg:CheckSubGroup(s.relgoal,1,12,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
 	local sg=mg:SelectSubGroup(tp,s.relgoal,false,1,12,tp)
