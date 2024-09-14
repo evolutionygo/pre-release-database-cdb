@@ -30,10 +30,10 @@ function s.dfilter(c,g,e,tp)
 	return c:IsSetCard(0x35) and c:IsType(TYPE_MONSTER) and c:IsDiscardable(REASON_EFFECT+REASON_DISCARD)
 end
 function s.fselect(g,e,tp)
-	return g:IsContains(e:GetHandler()) and Duel.IsExistingMatchingCard(s.synfilter,tp,LOCATION_EXTRA,0,1,nil,g,e,tp)
-end
-function s.synfilter(c,g,e,tp)
 	local lv=g:GetSum(Card.GetLevel)
+	return g:IsContains(e:GetHandler()) and Duel.IsExistingMatchingCard(s.synfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp,lv)
+end
+function s.synfilter(c,e,tp,lv)
 	return c:IsSetCard(0x35) and c:IsLevel(lv) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_SYNCHRO,tp,false,false) and c:IsType(TYPE_SYNCHRO)
 		and Duel.GetLocationCountFromEx(tp,tp,nil,c)>0
 end
@@ -50,9 +50,9 @@ function s.synop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.SetSelectedCard(e:GetHandler())
 	local sg=g:SelectSubGroup(tp,s.fselect,false,2,99,e,tp)
 	if sg and sg:GetCount()>=2 then
+		local lv=sg:GetSum(Card.GetLevel)
 		Duel.SendtoGrave(sg,REASON_EFFECT+REASON_DISCARD)
-		local dg=Duel.GetOperatedGroup()
-		local sc=Duel.SelectMatchingCard(tp,s.synfilter,tp,LOCATION_EXTRA,0,1,1,nil,dg,e,tp):GetFirst()
+		local sc=Duel.SelectMatchingCard(tp,s.synfilter,tp,LOCATION_EXTRA,0,1,1,nil,e,tp,lv):GetFirst()
 		if not sc then return end
 		sc:SetMaterial(nil)
 		Duel.SpecialSummon(sc,SUMMON_TYPE_SYNCHRO,tp,tp,false,false,POS_FACEUP)
