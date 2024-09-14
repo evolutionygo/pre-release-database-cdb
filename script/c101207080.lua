@@ -35,7 +35,7 @@ function s.rmlimit(e,c,rp,r,re)
 		and r&REASON_EFFECT~=0 and re:GetOwnerPlayer()~=tp
 end
 function s.cfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0xea)
+	return c:IsFaceup() and c:IsSetCard(0xea) and c:IsType(TYPE_SYNCHRO)
 end
 function s.tdfilter(c)
 	return not c:IsCode(id) and c:IsFaceupEx() and c:IsSetCard(0xea) and c:IsAbleToDeck()
