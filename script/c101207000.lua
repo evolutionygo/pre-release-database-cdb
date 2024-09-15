@@ -10,6 +10,7 @@ function s.initial_effect(c)
 	e1:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
 	e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
 	e1:SetRange(LOCATION_MZONE)
+	e1:SetCondition(s.indcon)
 	e1:SetValue(aux.indoval)
 	c:RegisterEffect(e1)
 	--cannot target
@@ -18,6 +19,7 @@ function s.initial_effect(c)
 	e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
+	e2:SetCondition(s.indcon)
 	e2:SetValue(aux.tgoval)
 	c:RegisterEffect(e2)
 	--Atk up
@@ -46,6 +48,9 @@ function s.initial_effect(c)
 	e5:SetOperation(s.negop)
 	c:RegisterEffect(e5)
 end
+function s.indcon(e)
+	return e:GetHandler():IsSummonType(SUMMON_TYPE_SYNCHRO)
+end
 function s.synfilter(c)
 	return c:GetBaseAttack()==2500 and c:GetBaseDefense()==2500
 end
@@ -57,8 +62,8 @@ function s.atkval(e,c)
 	return Duel.GetFieldGroupCount(c:GetControler(),LOCATION_GRAVE+LOCATION_MZONE,LOCATION_GRAVE+LOCATION_MZONE)*100
 end
 function s.negcon(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetFieldGroupCount(tp,0,LOCATION_GRAVE)>=25 and e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) then return false end
-	return ep~=tp and re:IsActiveType(TYPE_SPELL) and re:IsHasType(EFFECT_TYPE_ACTIVATE) and Duel.IsChainNegatable(ev)
+	if e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) then return false end
+	return Duel.GetFieldGroupCount(tp,0,LOCATION_GRAVE)>=25 and re:IsActiveType(TYPE_SPELL) and re:IsHasType(EFFECT_TYPE_ACTIVATE) and Duel.IsChainNegatable(ev)
 end
 function s.negtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
