@@ -39,7 +39,7 @@ function s.synfilter(c,e,tp,lv)
 end
 function s.syntg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.GetMatchingGroup(s.dfilter,tp,LOCATION_HAND,0,nil)
-	if chk==0 then return g:CheckSubGroup(s.fselect,2,99,e,tp) end
+	if chk==0 then return aux.MustMaterialCheck(nil,tp,EFFECT_MUST_BE_SMATERIAL) and g:CheckSubGroup(s.fselect,2,99,e,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_HANDES,nil,0,tp,LOCATION_HAND)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 end
