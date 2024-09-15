@@ -45,7 +45,7 @@ function s.syntg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.synop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(s.dfilter,tp,LOCATION_HAND,0,nil)
-	if not g:CheckSubGroup(s.fselect,2,99,e,tp) then return end
+	if not g:CheckSubGroup(s.fselect,2,99,e,tp) or not aux.MustMaterialCheck(nil,tp,EFFECT_MUST_BE_SMATERIAL) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DISCARD)
 	Duel.SetSelectedCard(e:GetHandler())
 	local sg=g:SelectSubGroup(tp,s.fselect,false,2,99,e,tp)
