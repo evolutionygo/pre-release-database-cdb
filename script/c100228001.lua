@@ -37,26 +37,25 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local b1=Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_DECK,0,1,nil)
 	local b2=Duel.IsExistingMatchingCard(Card.IsFaceup,tp,0,LOCATION_MZONE,1,nil)
 	if chk==0 then return b1 or b2 end
-	local off=1
-	local ops={}
-	local opval={}
-	if b1 then
-		ops[off]=aux.Stringid(id,2)
-		opval[off-1]=1
-		off=off+1
+	local op=0
+	if b1 and not b2 then
+		Duel.Hint(HINT_OPSELECTED,1-tp,aux.Stringid(id,2))
+		op=1
 	end
-	if b2 then
-		ops[off]=aux.Stringid(id,3)
-		opval[off-1]=2
-		off=off+1
+	if b2 and not b1 then
+		Duel.Hint(HINT_OPSELECTED,1-tp,aux.Stringid(id,3))
+		op=2
 	end
-	if off==1 then return end
-	local op=Duel.SelectOption(tp,table.unpack(ops))
-	if opval[op]==1 then
+	if b1 and b2 then
+		op=aux.SelectFromOptions(tp,
+			{b1,aux.Stringid(id,2),1},
+			{b2,aux.Stringid(id,3),2})
+	end
+	if op==1 then
 		e:SetLabel(1)
 		e:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
 		Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
-	elseif opval[op]==2 then
+	elseif op==2 then
 		e:SetLabel(2)
 		e:SetCategory(CATEGORY_ATKCHANGE)
 	end
