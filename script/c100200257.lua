@@ -41,7 +41,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.atkfilter(c,ac)
-	return c:IsFaceup() and c:IsRace(RACE_PLANT) and not c:IsCode(id) and not c==ac and c:GetBaseAttack()+ac:GetBaseAttack()>0
+	return c:IsFaceup() and c:IsRace(RACE_PLANT) and not c:IsCode(id) and c~=ac and c:GetBaseAttack()+ac:GetBaseAttack()>0
 end
 function s.atktg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()
