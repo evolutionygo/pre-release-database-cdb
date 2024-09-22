@@ -123,7 +123,7 @@ function s.spop2(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.repfilter(c,tp)
-	return c:IsFaceup() and c:IsControler(tp) and c:IsType(TYPE_MONSTER) and c:IsSetCard(0x22) and c:IsReason(REASON_EFFECT) and not c:IsReason(REASON_REPLACE)
+	return c:IsLocation(LOCATION_MZONE) and c:IsFaceup() and c:IsControler(tp) and c:IsType(TYPE_MONSTER) and c:IsSetCard(0x22) and c:IsReason(REASON_EFFECT) and not c:IsReason(REASON_REPLACE)
 end
 function s.rmfilter(c)
 	return c:IsRace(RACE_DINOSAUR) and c:IsAbleToRemove()
