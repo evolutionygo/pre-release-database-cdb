@@ -59,7 +59,7 @@ function s.atkcon(e)
 	return c:IsSummonType(SUMMON_TYPE_SYNCHRO) and Duel.GetFieldGroupCount(c:GetControler(),LOCATION_GRAVE,0)>=25
 end
 function s.atkval(e,c)
-	return Duel.GetFieldGroupCount(c:GetControler(),LOCATION_GRAVE+LOCATION_MZONE,LOCATION_GRAVE+LOCATION_MZONE)*100
+	return Duel.GetFieldGroupCount(c:GetControler(),LOCATION_GRAVE+LOCATION_ONFIELD,LOCATION_GRAVE+LOCATION_ONFIELD)*100
 end
 function s.negcon(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) then return false end
