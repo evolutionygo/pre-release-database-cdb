@@ -60,8 +60,8 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP))
 	local b2=Duel.GetLocationCount(1-tp,LOCATION_MZONE)>0 and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEDOWN_DEFENSE,1-tp)
 	local toplayer=aux.SelectFromOptions(tp,
-		{b1,aux.Stringid(id,3),tp},
-		{b2,aux.Stringid(id,4),1-tp})
+		{b1,aux.Stringid(id,2),tp},
+		{b2,aux.Stringid(id,3),1-tp})
 	if toplayer==tp then
 		Duel.SpecialSummon(c,0,tp,toplayer,false,false,POS_FACEUP)
 	elseif toplayer==1-tp then
