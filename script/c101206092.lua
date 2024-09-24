@@ -34,7 +34,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	if (Duel.GetCurrentPhase()==PHASE_MAIN1 or Duel.GetCurrentPhase()==PHASE_MAIN2) then
 		if Duel.GetLocationCount(1-tp,LOCATION_MZONE)>0
 			and Duel.IsExistingMatchingCard(s.spfilter,tp,0,LOCATION_DECK,1,nil,e,1-tp)
-			and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
+			and Duel.SelectYesNo(1-tp,aux.Stringid(id,2)) then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 			local g=Duel.SelectMatchingCard(1-tp,s.spfilter,tp,0,LOCATION_DECK,1,1,nil,e,1-tp)
 			if g:GetCount()>0 then
