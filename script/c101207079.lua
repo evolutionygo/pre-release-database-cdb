@@ -6,6 +6,7 @@ function s.initial_effect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
+	e1:SetCondition(aux.bpcon)
 	e1:SetTarget(s.target)
 	e1:SetOperation(s.activate)
 	c:RegisterEffect(e1)
@@ -63,10 +64,7 @@ end
 function s.filter2(c,e)
 	return not c:IsImmuneToEffect(e)
 end
-function s.fcheck(tp,sg,fc)
-	return sg:IsExists(Card.IsRace,nil,1,RACE_SPELLCASTER)
-end
-function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
+function s.fstg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		local me=Effect.CreateEffect(e:GetHandler())
 		me:SetType(EFFECT_TYPE_FIELD)
@@ -77,7 +75,6 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 		Duel.RegisterEffect(me,tp)
 		local chkf=tp
 		local mg1=Duel.GetFusionMaterial(tp):Filter(Card.IsOnField,nil)
-		aux.FCheckAdditional=s.fcheck
 		local res=Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_EXTRA,0,1,nil,e,tp,mg1,nil,chkf)
 		if not res then
 			local ce=Duel.GetChainMaterial(tp)
@@ -88,13 +85,12 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 				res=Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_EXTRA,0,1,nil,e,tp,mg3,mf,chkf)
 			end
 		end
-		aux.FCheckAdditional=nil
 		me:Reset()
 		return res
 	end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 end
-function s.activate(e,tp,eg,ep,ev,re,r,rp)
+function s.fsop(e,tp,eg,ep,ev,re,r,rp)
 	local me=Effect.CreateEffect(e:GetHandler())
 	me:SetType(EFFECT_TYPE_FIELD)
 	me:SetCode(EFFECT_EXTRA_FUSION_MATERIAL)
@@ -104,7 +100,6 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RegisterEffect(me,tp)
 	local chkf=tp
 	local mg1=Duel.GetFusionMaterial(tp):Filter(Card.IsOnField,nil):Filter(s.filter2,nil,e)
-	aux.FCheckAdditional=s.fcheck
 	local sg1=Duel.GetMatchingGroup(s.filter,tp,LOCATION_EXTRA,0,nil,e,tp,mg1,nil,chkf)
 	local mg3=nil
 	local sg2=nil
@@ -134,6 +129,5 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		end
 		tc:CompleteProcedure()
 	end
-	aux.FCheckAdditional=nil
 	me:Reset()
 end
