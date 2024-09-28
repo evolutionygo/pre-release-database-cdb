@@ -27,7 +27,7 @@ function s.initial_effect(c)
 end
 function s.spfilter(c,e,tp)
 	return not c:IsCode(id) and c:IsLevel(9) and not c:IsPublic()
-		and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE13)
+		and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
