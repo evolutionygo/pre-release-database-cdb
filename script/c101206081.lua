@@ -56,7 +56,7 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RegisterEffect(e1,tp)
 end
 function s.splimit(e,c)
-	return not c:IsRace(RACE_INSECT)
+	return c:IsLocation(LOCATION_EXTRA) and not c:IsRace(RACE_INSECT)
 end
 function s.spfilter1(c,e)
 	return not c:IsImmuneToEffect(e)
