@@ -8,7 +8,7 @@ function s.initial_effect(c)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DELAY)
 	e1:SetCountLimit(1,id+EFFECT_COUNT_CODE_OATH)
 	e1:SetTarget(s.target)
-	e1:SetOperation(s.operation)
+	e1:SetOperation(s.activate)
 	c:RegisterEffect(e1)
 end
 function s.crbfilter(c,tp)
