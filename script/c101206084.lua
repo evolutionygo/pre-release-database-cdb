@@ -57,7 +57,7 @@ function s.initial_effect(c)
 	end
 end
 function s.cfilter(c,tp)
-	return c:GetOwner()==tp
+	return c:GetOwner()==tp and c:IsFaceup()
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(s.cfilter,tp,0,LOCATION_MZONE,1,nil,tp)
