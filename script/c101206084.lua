@@ -32,7 +32,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e4)
 	--return
 	local e5=Effect.CreateEffect(c)
-	e5:SetDescription(aux.Stringid(id,2))
+	e5:SetDescription(aux.Stringid(id,1))
 	e5:SetCategory(CATEGORY_TOHAND)
 	e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e5:SetRange(LOCATION_MZONE)
@@ -80,17 +80,17 @@ function s.thfilter(c,tp)
 	return c:GetOwner()==tp and c:IsAbleToHand()
 end
 function s.rettg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsAbleToDeck()
-		and Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,e:GetHandler(),tp) end
-	local g=Duel.GetMatchingGroup(s.thfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,e:GetHandler().tp)
-	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,1,0,0)
+	if chk==0 then return e:GetHandler():IsAbleToDeck() end
 	Duel.SetOperationInfo(0,CATEGORY_TODECK,e:GetHandler(),1,0,0)
 end
 function s.retop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) and Duel.SendtoDeck(c,nil,1,REASON_EFFECT)~=0
-		and c:IsLocation(LOCATION_DECK+LOCATION_EXTRA) then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+		and c:IsLocation(LOCATION_DECK+LOCATION_EXTRA)
+		and Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,enil,tp)
+		and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
+		Duel.BreakEffect()
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 		local sg=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil,tp)
 		if #sg>0 then
 			Duel.HintSelection(sg)
