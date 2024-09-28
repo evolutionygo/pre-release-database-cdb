@@ -25,7 +25,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 	--remove
 	local e3=Effect.CreateEffect(c)
-	e3:SetDescription(aux.Stringid(id,0))
+	e3:SetDescription(aux.Stringid(id,2))
 	e3:SetCategory(CATEGORY_REMOVE)
 	e3:SetType(EFFECT_TYPE_IGNITION)
 	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
@@ -40,13 +40,16 @@ function s.indcon(e,tp,eg,ep,ev,re,r,rp)
 	return c:IsSummonType(SUMMON_TYPE_FUSION)
 end
 function s.cfilter(c,tp)
-	return c:IsFaceupEx() and Duel.IsExistingMatchingCard(aux.AND(Card.IsFaceupEx,Card.IsCode),tp,0,LOCATION_MZONE+LOCATION_GRAVE,1,nil,c:GetCode())
+	return c:IsFaceupEx() and Duel.IsExistingMatchingCard(s.codefilter,tp,0,LOCATION_MZONE+LOCATION_GRAVE,1,nil,c:GetOriginalCode())
+end
+function s.codefilter(c,code)
+	return c:IsFaceupEx() and c:IsType(TYPE_MONSTER) and c:GetOriginalCode()==code
 end
 function s.indcon2(e,tp,eg,ep,ev,re,r,rp)
 	return not Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,nil,tp)
 end
 function s.cfilter1(c,tp)
-	return c:IsType(TYPE_MONSTER) and Duel.IsExistingMatchingCard(aux.AND(Card.IsFaceupEx,Card.IsCode),tp,0,LOCATION_MZONE+LOCATION_GRAVE,1,nil,c:GetCode())
+	return c:IsType(TYPE_MONSTER) and Duel.IsExistingMatchingCard(s.codefilter,tp,0,LOCATION_MZONE+LOCATION_GRAVE,1,nil,c:GetOriginalCode())
 		and c:IsAbleToGraveAsCost()
 end
 function s.rmcost(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -56,13 +59,13 @@ function s.rmcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SendtoGrave(g,REASON_COST)
 end
 function s.rmfilter(c)
-	return c:IsFaceup() and c:IsAttribute(ATTRIBUTE_WATER) and c:IsType(TYPE_XYZ)
+	return c:IsType(TYPE_MONSTER) and c:IsAbleToRemove()
 end
 function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE+LOCATION_GRAVE) and chkc:IsControler(1-tp) and chkc:IsAbleToRemove() end
-	if chk==0 then return Duel.IsExistingTarget(Card.IsAbleToRemove,tp,0,LOCATION_MZONE+LOCATION_GRAVE,1,nil) end
+	if chk==0 then return Duel.IsExistingTarget(s.rmfilter,tp,0,LOCATION_MZONE+LOCATION_GRAVE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectTarget(tp,Card.IsAbleToRemove,tp,0,LOCATION_MZONE+LOCATION_GRAVE,1,1,nil)
+	local g=Duel.SelectTarget(tp,s.rmfilter,tp,0,LOCATION_MZONE+LOCATION_GRAVE,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,1,0,0)
 end
 function s.rmop(e,tp,eg,ep,ev,re,r,rp)
