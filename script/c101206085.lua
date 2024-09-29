@@ -17,7 +17,7 @@ end
 function s.thcon(e,tp,eg,ep,ev,re,r,rp)
 	local g1=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,0,nil)
 	local g2=Duel.GetMatchingGroup(Card.IsFaceup,tp,0,LOCATION_MZONE,nil)
-	return g1:GetSum(Card.IsLevel)<=g2:GetSum(Card.IsLevel)
+	return g1:GetSum(Card.GetLevel)<=g2:GetSum(Card.GetLevel)
 end
 function s.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsReleasable() end
