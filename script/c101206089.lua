@@ -65,5 +65,6 @@ function s.splimit(e,c)
 	return c:IsLocation(LOCATION_EXTRA) and not (c:IsType(TYPE_XYZ) and c:IsRankAbove(9))
 end
 function s.gfcon(e)
-	return e:GetHandler():IsRankAbove(9)
+	local c=e:GetHandler()
+	return c:IsType(TYPE_XYZ) and c:IsRankAbove(9)
 end

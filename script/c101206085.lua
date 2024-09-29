@@ -66,7 +66,8 @@ function s.regop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.damcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetLabelObject():GetLabel()~=0 and e:GetLabelObject():GetLabelObject():GetLabel()~=0
+	local lo=e:GetLabelObject()
+	return lo:GetLabel()~=0 and lo:GetLabelObject():GetLabel()~=0
 end
 function s.damop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Damage(tp,2700,REASON_EFFECT)
