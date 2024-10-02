@@ -1,4 +1,4 @@
---運否の天賦羅-EBI
+--運否の天賦羅－EBI
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.EnablePendulumAttribute(c)
@@ -14,11 +14,14 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 s.toss_coin=true
+function s.cofilter(c,e,tp)
+	return c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP)
+end
 function s.cotg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_PZONE) end
-	if chk==0 then return Duel.IsExistingTarget(aux.TRUE,tp,LOCATION_PZONE,0,1,nil) end
+	if chkc then return chkc:IsLocation(LOCATION_PZONE) and s.cofilter(chkc,e,tp) end
+	if chk==0 then return Duel.IsExistingTarget(s.cofilter,tp,LOCATION_PZONE,0,1,nil,e,tp) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
-	Duel.SelectTarget(tp,aux.TRUE,tp,LOCATION_PZONE,0,1,1,nil)
+	Duel.SelectTarget(tp,s.cofilter,tp,LOCATION_PZONE,0,1,1,nil,e,tp)
 end
 function s.coop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
