@@ -4,7 +4,7 @@ function s.initial_effect(c)
 	aux.EnablePendulumAttribute(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
-	e1:SetCategory(CATEGORY_DESTROY+CATEGORY_HANDES+CATEGORY_COIN)
+	e1:SetCategory(CATEGORY_DESTROY+CATEGORY_SPECIAL_SUMMON+CATEGORY_COIN)
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetRange(LOCATION_PZONE)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
@@ -27,6 +27,9 @@ function s.coop(e,tp,eg,ep,ev,re,r,rp)
 	if c1==1 then
 		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
 	elseif c1==0 then
-		Duel.Destroy(tc,REASON_EFFECT)
+		if Duel.Destroy(tc,REASON_EFFECT)~=0 then
+			local lp=Duel.GetLP(tp)
+			Duel.SetLP(tp,lp-tc:GetCurrentScale()*300)
+		end
 	end
 end
