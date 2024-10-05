@@ -46,10 +46,11 @@ function s.spval(e,c)
 	return 0,zone
 end
 function s.rmfilter(c,tc)
-	return c:IsType(RACE_CYBERSE) and not c:IsCode(tc:GetLinkCode()) and c:IsAbleToRemove()
+	return c:IsRace(RACE_CYBERSE) and c:IsAbleToRemove() and not c:IsCode(tc:GetLinkCode())
 end
 function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.rmfilter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,nil,e:GetHandler()) end
+	Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,1,tp,LOCATION_HAND+LOCATION_GRAVE)
 end
 function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
