@@ -1,4 +1,4 @@
---暗黒海龍-ドライアグル
+--暗黒海龍－ドライアグル
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--special summon
@@ -48,7 +48,15 @@ function s.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if g:GetFirst():IsType(TYPE_MONSTER) then
 		e:SetLabel(100)
 	else
-		e:SetLabel(1)
+		e:SetLabel(200)
+	end
+end
+function s.atktg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return e:GetLabel()>0 end
+	if e:GetLabel()==100 then
+		e:SetCategory(CATEGORY_ATKCHANGE+CATEGORY_DAMAGE)
+	elseif e:GetLabel()==200 then
+		e:SetCategory(CATEGORY_ATKCHANGE+CATEGORY_TOGRAVE+CATEGORY_DECKDES)
 	end
 end
 function s.atkop(e,tp,eg,ep,ev,re,r,rp)
@@ -63,7 +71,7 @@ function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 		if e:GetLabel()==100 then
 			Duel.BreakEffect()
 			Duel.Damage(1-tp,1000,REASON_EFFECT)
-		elseif Duel.IsPlayerCanDiscardDeck(tp,1) and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
+		elseif e:GetLabel()==200 and Duel.IsPlayerCanDiscardDeck(tp,1) and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 			Duel.BreakEffect()
 			Duel.DiscardDeck(tp,1,REASON_EFFECT)
 		end
