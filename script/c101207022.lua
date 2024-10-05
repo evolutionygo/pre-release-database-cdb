@@ -21,7 +21,6 @@ function s.initial_effect(c)
 	e2:SetProperty(EFFECT_FLAG_DELAY)
 	e1:SetCountLimit(1,id+o)
 	e2:SetCost(s.atkcost)
-	e2:SetTarget(s.atktg)
 	e2:SetOperation(s.atkop)
 	c:RegisterEffect(e2)
 end
@@ -51,10 +50,6 @@ function s.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	else
 		e:SetLabel(1)
 	end
-end
-function s.spop(e,tp,eg,ep,ev,re,r,rp,c)
-	local g=e:GetLabelObject()
-	Duel.Release(g,REASON_SPSUMMON)
 end
 function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
