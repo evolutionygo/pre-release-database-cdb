@@ -53,6 +53,7 @@ function s.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 end
 function s.atktg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
 	if e:GetLabel()==100 then
 		e:SetCategory(CATEGORY_ATKCHANGE+CATEGORY_DAMAGE)
 	elseif e:GetLabel()==200 then

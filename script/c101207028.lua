@@ -24,7 +24,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function s.cfilter(c)
-	return c:IsFaceup() and c:IsRACE(RACE_CYBERSE) and c:IsType(TYPE_LINK)
+	return c:IsFaceup() and c:IsRace(RACE_CYBERSE) and c:IsType(TYPE_LINK)
 end
 function s.checkzone(tp)
 	local zone=0
