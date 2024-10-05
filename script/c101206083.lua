@@ -35,24 +35,9 @@ function s.initial_effect(c)
 	e4:SetCondition(s.regcon)
 	e4:SetOperation(s.regop)
 	c:RegisterEffect(e4)
-	if not s.global_check then
-		s.global_check=true
-		local ge1=Effect.CreateEffect(c)
-		ge1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		ge1:SetCode(EVENT_SUMMON_SUCCESS)
-		ge1:SetOperation(s.checkop)
-		Duel.RegisterEffect(ge1,0)
-	end
-end
-function s.checkop(e,tp,eg,ep,ev,re,r,rp)
-	local tc=eg:GetFirst()
-	while tc do
-		tc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD-RESET_TEMP_REMOVE+RESET_PHASE+PHASE_END,0,1)
-		tc=eg:GetNext()
-	end
 end
 function s.racetg(e,c)
-	return c:GetFlagEffect(id)==0
+	return not c:IsStatus(STATUS_SUMMON_TURN+STATUS_FLIP_SUMMON_TURN+STATUS_SPSUMMON_TURN)
 end
 function s.tdfilter(c)
 	return c:IsFaceupEx() and c:IsRace(RACE_INSECT) and c:IsAbleToDeck()
