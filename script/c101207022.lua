@@ -21,6 +21,7 @@ function s.initial_effect(c)
 	e2:SetProperty(EFFECT_FLAG_DELAY)
 	e1:SetCountLimit(1,id+o)
 	e2:SetCost(s.atkcost)
+	e2:SetTarget(s.atktg)
 	e2:SetOperation(s.atkop)
 	c:RegisterEffect(e2)
 end
@@ -38,7 +39,7 @@ end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) then
-		Duel.SpecialSummonStep(c,0,tp,tp,false,false,POS_FACEUP)
+		Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
 	end
 end
 function s.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -52,7 +53,6 @@ function s.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 end
 function s.atktg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetLabel()>0 end
 	if e:GetLabel()==100 then
 		e:SetCategory(CATEGORY_ATKCHANGE+CATEGORY_DAMAGE)
 	elseif e:GetLabel()==200 then
