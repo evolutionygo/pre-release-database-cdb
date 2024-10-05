@@ -76,7 +76,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	if #g~=2 then return end
 	local exg=nil
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then
-		exg=g:Filter(Card.IsCanBeSpecialSummoned,nil,e,0,tp,false,false)
+		exg=g:Filter(aux.NOT(Card.IsCanBeSpecialSummoned),nil,e,0,tp,false,false)
 		if #exg==2 then exg=nil end
 	end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
