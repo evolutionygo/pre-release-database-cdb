@@ -53,7 +53,7 @@ function s.xatkop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.tgfilter(c,e,tp)
-	return c:IsCanBeEffectTarget(e) and c:IsRank(4)
+	return c:IsCanBeEffectTarget(e) and c:IsRankBelow(4)
 		and (c:IsCanOverlay() or c:IsCanBeSpecialSummoned(e,0,tp,false,false))
 end
 function s.spfilter(c,g,e,tp)
