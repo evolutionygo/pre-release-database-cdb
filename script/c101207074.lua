@@ -32,7 +32,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 			rg:Merge(hg)
 		end
 	end
-	if chk==0 then return rg and rg:Filter(s.ovfilter,nil,tp) end
+	if chk==0 then return rg and rg:Filter(s.ovfilter,nil,tp):GetCount()>0 end
 	Duel.SetOperationInfo(0,CATEGORY_NEGATE,eg,1,0,0)
 end
 function s.atkfilter(c,e)
@@ -50,7 +50,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			rg:Merge(hg)
 		end
 	end
-	if rg and rg:Filter(s.ovfilter,nil,tp) then
+	if rg and rg:Filter(s.ovfilter,nil,tp):GetCount()>0 then
 		Duel.BreakEffect()
 		local tc=rg:FilterSelect(tp,s.ovfilter,1,1,nil,tp):GetFirst()
 		if Duel.SendtoHand(tc,nil,REASON_EFFECT)~=0 and tc:IsLocation(LOCATION_HAND) then

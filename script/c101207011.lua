@@ -52,10 +52,10 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	if hc and Duel.SendtoHand(hc,nil,REASON_EFFECT)~=0 and hc:IsLocation(LOCATION_HAND) then
 		Duel.ConfirmCards(1-tp,g)
 		if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and c:IsRelateToEffect(e)
-			and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENCE)
+			and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE)
 			and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 			Duel.BreakEffect()
-			Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP_DEFENCE)
+			Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
 		end
 	end
 end
