@@ -6,6 +6,7 @@ function s.initial_effect(c)
 	e1:SetCategory(CATEGORY_NEGATE+CATEGORY_TOHAND+CATEGORY_TODECK+CATEGORY_ATKCHANGE)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_CHAINING)
+	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
 	e1:SetCountLimit(1,id+EFFECT_COUNT_CODE_OATH)
 	e1:SetCondition(s.condition)
 	e1:SetTarget(s.target)
@@ -16,11 +17,14 @@ function s.condition(e,tp,eg,ep,ev,re,r,rp)
 	return (re:IsActiveType(TYPE_MONSTER) or re:IsHasType(EFFECT_TYPE_ACTIVATE)) and Duel.IsChainNegatable(ev)
 end
 function s.xyzfilter(c)
-	return c:IsFaceup() and c:IsRank(3)
+	return c:IsFaceup() and c:IsSetCard(0x160)
+end
+function s.ovfilter(c,tp)
+	return c:IsAbleToHand() and c:GetOwner()==tp
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local rg=Group.CreateGroup()
-	local xg=Duel.GetMatchingGroup(s.xyzfilter,tp,LOCATION_MZONE,0,1,nil)
+	local xg=Duel.GetMatchingGroup(s.xyzfilter,tp,LOCATION_MZONE,0,nil)
 	if xg:GetCount()<1 then return false end
 	for tc in aux.Next(xg) do
 		local hg=tc:GetOverlayGroup()
@@ -28,9 +32,8 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 			rg:Merge(hg)
 		end
 	end
-	if chk==0 then return rg and rg:Filter(Card.IsAbleToHand,1,nil)
-		and aux.nbtg(e,tp,eg,ep,ev,re,r,rp,chk) end
-	aux.nbtg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return rg and rg:Filter(s.ovfilter,nil,tp) end
+	Duel.SetOperationInfo(0,CATEGORY_NEGATE,eg,1,0,0)
 end
 function s.atkfilter(c,e)
 	return c:IsFaceup() and c:IsType(TYPE_XYZ) and c:IsSetCard(0x160)
@@ -39,7 +42,7 @@ end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local rg=Group.CreateGroup()
-	local xg=Duel.GetMatchingGroup(s.xyzfilter,tp,LOCATION_MZONE,0,1,nil)
+	local xg=Duel.GetMatchingGroup(s.xyzfilter,tp,LOCATION_MZONE,0,nil)
 	if xg:GetCount()<1 then return end
 	for tc in aux.Next(xg) do
 		local hg=tc:GetOverlayGroup()
@@ -47,16 +50,17 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			rg:Merge(hg)
 		end
 	end
-	if rg and rg:Filter(Card.IsAbleToHand,1,nil) then
+	if rg and rg:Filter(s.ovfilter,nil,tp) then
 		Duel.BreakEffect()
-		local tc=rg:FilterSelect(tp,Card.IsAbleToHand,1,1,nil)
+		local tc=rg:FilterSelect(tp,s.ovfilter,1,1,nil,tp):GetFirst()
 		if Duel.SendtoHand(tc,nil,REASON_EFFECT)~=0 and tc:IsLocation(LOCATION_HAND) then
 			Duel.ConfirmCards(1-tp,tc)
 			if Duel.NegateActivation(ev) then
 				Duel.BreakEffect()
 				local res=0
 				if tc:IsType(TYPE_MONSTER) and Duel.IsExistingMatchingCard(Card.IsAbleToDeck,tp,LOCATION_HAND,0,1,nil) then
-					local g=Duel.SelectMatchingCard(tp,Card.IsAbleToDeck,tp,LOCATION_HAND,0,1,1,nil)
+					local sg=Duel.SelectMatchingCard(tp,Card.IsAbleToDeck,tp,LOCATION_HAND,0,1,1,nil)
+					Duel.ShuffleHand(tp)
 					Duel.SendtoDeck(sg,nil,SEQ_DECKBOTTOM,REASON_EFFECT)
 					res=1
 				end
@@ -68,14 +72,14 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 						else
 							res=1
 						end
-						for tc in aux.Next(g) do
+						for ac in aux.Next(g) do
 							local e1=Effect.CreateEffect(c)
 							e1:SetType(EFFECT_TYPE_SINGLE)
 							e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 							e1:SetCode(EFFECT_UPDATE_ATTACK)
 							e1:SetValue(1000)
 							e1:SetReset(RESET_EVENT+RESETS_STANDARD)
-							tc:RegisterEffect(e1)
+							ac:RegisterEffect(e1)
 						end
 					end
 				end

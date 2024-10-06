@@ -19,7 +19,7 @@ function s.initial_effect(c)
 	--add overlay
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,1))
-	e3:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_TOKEN)
+	e3:SetCategory(CATEGORY_TOHAND)
 	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e3:SetProperty(EFFECT_FLAG_DELAY)
 	e3:SetCode(EVENT_CHAINING)
@@ -32,6 +32,7 @@ function s.initial_effect(c)
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>5 end
+	Duel.Hint(HINT_OPSELECTED,1-tp,aux.Stringid(id,0))
 end
 function s.thfilter(c)
 	return c:IsSetCard(0x160) and c:IsAbleToHand()
@@ -41,8 +42,8 @@ function s.xyzfilter(c)
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)<6 then return end
+	Duel.ConfirmDecktop(tp,6)
 	local g=Duel.GetDecktopGroup(tp,6)
-	Duel.ConfirmCards(tp,g)
 	if g:IsExists(s.thfilter,1,nil) and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 		local sg=g:FilterSelect(tp,s.thfilter,1,1,nil)
@@ -53,7 +54,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SortDecktop(tp,tp,5)
 	else Duel.SortDecktop(tp,tp,6) end
 	local rg=Group.CreateGroup()
-	local xg=Duel.GetMatchingGroup(s.xyzfilter,tp,LOCATION_MZONE,0,1,nil)
+	local xg=Duel.GetMatchingGroup(s.xyzfilter,tp,LOCATION_MZONE,0,nil)
 	if xg:GetCount()<1 then return end
 	for tc in aux.Next(xg) do
 		local hg=tc:GetOverlayGroup()
@@ -61,7 +62,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 			rg:Merge(hg)
 		end
 	end
-	if rg and rg:Filter(Card.IsAbleToHand,1,nil) and Duel.SelectYesNo(tp,aux.Stringid(id,3)) then
+	if rg and rg:Filter(Card.IsAbleToHand,nil) and Duel.SelectYesNo(tp,aux.Stringid(id,3)) then
 		Duel.BreakEffect()
 		local thg=rg:FilterSelect(tp,Card.IsAbleToHand,1,1,nil)
 		Duel.SendtoHand(thg,nil,REASON_EFFECT)
@@ -78,6 +79,7 @@ end
 function s.ovtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.matfilter,tp,LOCATION_MZONE,0,1,nil)
 		and Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>0 end
+	Duel.Hint(HINT_OPSELECTED,1-tp,aux.Stringid(id,1))
 end
 function s.ovop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()

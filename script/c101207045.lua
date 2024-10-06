@@ -38,9 +38,8 @@ function s.thorspcost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.thorspfilter(c,e,tp)
 	if not c:IsSetCard(0x160) then return false end
-	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	if c:IsType(TYPE_MONSTER) then
-		return ft>0 and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+		return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 	elseif c:IsType(TYPE_SPELL+TYPE_TRAP) then
 		return c:IsAbleToHand()
 	end
@@ -52,7 +51,6 @@ end
 function s.thorspop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_OPERATECARD)
 	local g=Duel.SelectMatchingCard(tp,s.thorspfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp)
-	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	local tc=g:GetFirst()
 	if tc then
 		if tc:IsType(TYPE_MONSTER) then
@@ -68,9 +66,6 @@ function s.cfilter(c,sp)
 end
 function s.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.cfilter,1,nil,1-tp)
-end
-function s.thfilter(c)
-	return c:IsAbleToHand()
 end
 function s.cthfilter(c)
 	return c:IsSetCard(0x160)
@@ -88,14 +83,14 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	if not c:IsRelateToEffect(e) then return false end
 	local g=c:GetOverlayGroup()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local tc=g:SelectSubGroup(tp,s.thcheck,false,1,2)
-	if tg and Duel.SendtoHand(tg,nil,REASON_EFFECT)~=0 and g:IsExists(Card.IsLocation,1,nil,LOCATION_HAND) then
+	local tg=g:SelectSubGroup(tp,s.thcheck,false,1,2)
+	if #tg>0 and Duel.SendtoHand(tg,nil,REASON_EFFECT)~=0 and g:IsExists(Card.IsLocation,1,nil,LOCATION_HAND) then
 		Duel.ConfirmCards(1-tp,tg)
 		if Duel.IsExistingMatchingCard(Card.IsType,tp,LOCATION_GRAVE,0,1,nil,TYPE_NORMAL)
 			and Duel.IsExistingMatchingCard(Card.IsAbleToHand,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil)
 			and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 			Duel.BreakEffect()
-			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
 			local sg=Duel.SelectMatchingCard(tp,Card.IsAbleToHand,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
 			if #sg>0 then
 				Duel.HintSelection(sg)

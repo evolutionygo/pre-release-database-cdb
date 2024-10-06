@@ -37,9 +37,10 @@ function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_ONFIELD,0,1,nil)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
+	local c=e:GetHandler()
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
+		and c:IsCanBeSpecialSummoned(e,0,tp,false,false) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,c,1,0,0)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -69,9 +70,9 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 			and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 			Duel.BreakEffect()
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_OPERATECARD)
-			local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.thorspfilter),tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
+			local gg=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.thorspfilter),tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
 			local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
-			local hc=g:GetFirst()
+			local hc=gg:GetFirst()
 			if hc then
 				if hc:IsAbleToHand() and (not hc:IsCanBeSpecialSummoned(e,0,tp,false,false) or ft<=0 or Duel.SelectOption(tp,1190,1152)==0) then
 					Duel.SendtoHand(hc,nil,REASON_EFFECT)
