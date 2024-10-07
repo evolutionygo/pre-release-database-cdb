@@ -61,7 +61,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 			rg:Merge(hg)
 		end
 	end
-	if rg and rg:Filter(Card.IsAbleToHand,nil) and Duel.SelectYesNo(tp,aux.Stringid(id,3)) then
+	if rg:FilterCount(Card.IsAbleToHand,nil)>0 and Duel.SelectYesNo(tp,aux.Stringid(id,3)) then
 		Duel.BreakEffect()
 		local thg=rg:FilterSelect(tp,Card.IsAbleToHand,1,1,nil)
 		Duel.SendtoHand(thg,nil,REASON_EFFECT)
