@@ -82,6 +82,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if not c:IsRelateToEffect(e) then return false end
 	local g=c:GetOverlayGroup()
+	if g:CheckSubGroup(s.thcheck,1)==false then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	local tg=g:SelectSubGroup(tp,s.thcheck,false,1,2)
 	if #tg>0 and Duel.SendtoHand(tg,nil,REASON_EFFECT)~=0 and g:IsExists(Card.IsLocation,1,nil,LOCATION_HAND) then
