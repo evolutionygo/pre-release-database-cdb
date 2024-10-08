@@ -62,5 +62,5 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.intcon(e)
-	return Duel.IsExistingMatchingCard(aux.AND(aux.NOT(Card.IsType),Card.IsFaceup),e:GetHandlerPlayer(),LOCATION_MZONE,0,1,nil,TYPE_EFFECT)
+	return Duel.IsExistingMatchingCard(aux.AND(aux.NOT(Card.IsType),Card.IsFaceup),e:GetHandlerPlayer(),LOCATION_MZONE,LOCATION_MZONE,1,nil,TYPE_EFFECT)
 end
