@@ -1,4 +1,4 @@
---天威龍-ムーラ・アーダラ
+--天威龍－ムーラ・アーダラ
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--Synchro summon
@@ -44,13 +44,15 @@ function s.initial_effect(c)
 end
 function s.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_SYNCHRO)
-		and Duel.IsExistingMatchingCard(aux.AND(Card.IsFaceupEx,Card.IsRace),tp,LOCATION_GRAVE+LOCATION_REMOVED,0,2,nil,RACE_WYRM)
 end
 function s.thfilter(c)
 	return c:IsType(TYPE_FIELD) and c:IsAbleToHand()
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil) end
+	if chk==0 then
+		return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil)
+			and Duel.IsExistingMatchingCard(aux.AND(Card.IsFaceupEx,Card.IsRace),tp,LOCATION_GRAVE+LOCATION_REMOVED,0,2,nil,RACE_WYRM)
+	end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)

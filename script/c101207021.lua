@@ -1,4 +1,4 @@
---天威龍-スールヤ
+--天威龍－スールヤ
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--special summon
@@ -13,16 +13,17 @@ function s.initial_effect(c)
 	e1:SetOperation(s.spop)
 	c:RegisterEffect(e1)
 	--special summon 2
-	local e3=Effect.CreateEffect(c)
-	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
-	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e3:SetProperty(EFFECT_FLAG_DELAY)
-	e3:SetCode(EVENT_BE_MATERIAL)
-	e3:SetCountLimit(1,id+o)
-	e3:SetCondition(s.spcon2)
-	e3:SetTarget(s.sptg2)
-	e3:SetOperation(s.spop2)
-	c:RegisterEffect(e3)
+	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(aux.Stringid(id,1))
+	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e2:SetProperty(EFFECT_FLAG_DELAY)
+	e2:SetCode(EVENT_BE_MATERIAL)
+	e2:SetCountLimit(1,id+o)
+	e2:SetCondition(s.spcon2)
+	e2:SetTarget(s.sptg2)
+	e2:SetOperation(s.spop2)
+	c:RegisterEffect(e2)
 end
 function s.cfilter(c)
 	return c:IsFaceup() and (c:IsRace(RACE_WYRM) or not c:IsType(TYPE_EFFECT))
@@ -68,6 +69,6 @@ function s.spop2(e,tp,eg,ep,ev,re,r,rp)
 		tc:RegisterEffect(e1,true)
 		Duel.SpecialSummonComplete()
 		Duel.BreakEffect()
-		Duel.SetLP(tp,Duel.GetLP(tp)-tc:GetLink()*1000)   
+		Duel.SetLP(tp,Duel.GetLP(tp)-tc:GetLink()*1000)
 	end
 end
