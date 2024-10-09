@@ -55,12 +55,12 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		local tc=rg:FilterSelect(tp,s.ovfilter,1,1,nil,tp):GetFirst()
 		if Duel.SendtoHand(tc,nil,REASON_EFFECT)~=0 and tc:IsLocation(LOCATION_HAND) then
 			Duel.ConfirmCards(1-tp,tc)
+			Duel.ShuffleHand(tp)
 			if Duel.NegateActivation(ev) then
 				Duel.BreakEffect()
 				local res=0
 				if tc:IsType(TYPE_MONSTER) and Duel.IsExistingMatchingCard(Card.IsAbleToDeck,tp,LOCATION_HAND,0,1,nil) then
 					local sg=Duel.SelectMatchingCard(tp,Card.IsAbleToDeck,tp,LOCATION_HAND,0,1,1,nil)
-					Duel.ShuffleHand(tp)
 					Duel.SendtoDeck(sg,nil,SEQ_DECKBOTTOM,REASON_EFFECT)
 					res=1
 				end

@@ -87,6 +87,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	local tg=g:SelectSubGroup(tp,s.thcheck,false,1,2)
 	if #tg>0 and Duel.SendtoHand(tg,nil,REASON_EFFECT)~=0 and g:IsExists(Card.IsLocation,1,nil,LOCATION_HAND) then
 		Duel.ConfirmCards(1-tp,tg)
+		Duel.ShuffleHand(tp)
 		if Duel.IsExistingMatchingCard(Card.IsType,tp,LOCATION_GRAVE,0,1,nil,TYPE_NORMAL)
 			and Duel.IsExistingMatchingCard(Card.IsAbleToHand,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil)
 			and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
