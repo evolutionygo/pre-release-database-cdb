@@ -25,7 +25,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function s.filter(c)
-	return c:IsSetCard(0x19b) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
+	return c:IsSetCard(0x119b) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil) end
@@ -40,7 +40,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.cfilter(c)
-	return c:IsFaceupEx() and c:IsSetCard(0x119e) and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToDeck()
+	return c:IsFaceupEx() and c:IsSetCard(0x19e) and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToDeck()
 		and not c:IsCode(id)
 end
 function s.drtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
