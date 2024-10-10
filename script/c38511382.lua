@@ -29,7 +29,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function s.filter(c,e,tp)
-	return c:IsFaceupEx() and c:IsSetCard(0x19b) and c:IsType(TYPE_MONSTER) and c:IsAbleToGraveAsCost()
+	return c:IsFaceupEx() and c:IsSetCard(0x119b) and c:IsType(TYPE_MONSTER) and c:IsAbleToGraveAsCost()
 		and Duel.IsExistingTarget(aux.NegateAnyFilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,Group.FromCards(c,e:GetHandler()))
 end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
