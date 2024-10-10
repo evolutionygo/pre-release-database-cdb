@@ -34,7 +34,7 @@ function s.condition(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.cfilter,1,nil,re,tp)
 end
 function s.tgfilter(c)
-	return c:IsRace(RACE_ILLUSION+RACE_SPELLCASTER+RACE_FIEND) and c:IsAbleToGrave()
+	return c:IsRace(RACE_ILLUSION+RACE_SPELLCASTER) and c:IsAbleToGrave()
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.tgfilter,tp,LOCATION_DECK+LOCATION_HAND+LOCATION_EXTRA,0,1,nil) end
