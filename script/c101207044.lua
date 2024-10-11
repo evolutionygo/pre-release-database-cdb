@@ -36,7 +36,7 @@ function s.cfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0xac)
 end
 function s.mttg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	local ct=Duel.GetMatchingGroupCount(s.cfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,nil)
+	local ct=Duel.GetMatchingGroupCount(s.cfilter,tp,LOCATION_MZONE,0,nil)
 	if chkc then return chkc:IsControler(1-tp) and chkc:IsLocation(LOCATION_MZONE) and s.mtfilter(chkc) end
 	if chk==0 then return ct>0 and e:GetHandler():IsType(TYPE_XYZ)
 		and Duel.CheckRemoveOverlayCard(tp,1,0,1,REASON_EFFECT)
@@ -44,12 +44,15 @@ function s.mttg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
 	Duel.SelectTarget(tp,s.mtfilter,tp,0,LOCATION_MZONE,1,ct,e:GetHandler())
 end
+function s.mtopfilter(c,e)
+	return c:IsType(TYPE_MONSTER) and c:IsRelateToEffect(e) and not c:IsImmuneToEffect(e)
+end
 function s.mtop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if Duel.RemoveOverlayCard(tp,1,0,1,1,REASON_EFFECT)==0 then return end
-	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
-	local tg=g:Filter(aux.AND(Card.IsRelateToEffect,aux.NOT(Card.IsImmuneToEffect)),nil,e)
 	if c:IsRelateToEffect(e) then
+		local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
+		local tg=g:Filter(s.mtopfilter,nil,e)
 		for tc in aux.Next(tg) do
 			local og=tc:GetOverlayGroup()
 			if og:GetCount()>0 then
@@ -62,11 +65,11 @@ end
 function s.tgcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetTurnPlayer()==1-tp
 end
-function s.cfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0xac) and c:IsType((TYPE_XYZ))
+function s.cfilter2(c)
+	return c:IsFaceup() and c:IsSetCard(0xac) and c:IsType(TYPE_XYZ)
 end
 function s.tgtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	local ct=Duel.GetMatchingGroupCount(s.cfilter2,tp,LOCATION_MZONE+LOCATION_GRAVE,0,nil)
+	local ct=Duel.GetMatchingGroupCount(s.cfilter2,tp,LOCATION_MZONE,0,nil)
 	if chkc then return chkc:IsControler(1-tp) and chkc:IsOnField() end
 	if chk==0 then return ct>0 and Duel.CheckRemoveOverlayCard(tp,1,0,3,REASON_EFFECT)
 		and Duel.IsExistingTarget(Card.IsAbleToGrave,tp,0,LOCATION_ONFIELD,1,nil) end
