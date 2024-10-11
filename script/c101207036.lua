@@ -41,11 +41,6 @@ end
 function s.mfilter2(c)
 	return c:IsLevelAbove(6) and c:IsFusionType(TYPE_SYNCHRO)
 end
-function s.effcon(e)
-	local c=e:GetHandler()
-	local tc=c:GetEquipTarget()
-	return tc and c:GetControler()==tc:GetControler()
-end
 function s.efftg(e,c)
 	return c==e:GetHandler():GetEquipTarget() or c:GetControler()~=e:GetHandlerPlayer()
 end
