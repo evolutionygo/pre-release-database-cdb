@@ -42,9 +42,9 @@ function s.mfilter2(c)
 	return c:IsLevelAbove(6) and c:IsFusionType(TYPE_SYNCHRO)
 end
 function s.efftg(e,c)
-	return c==e:GetHandler():GetEquipTarget() or c:GetControler()~=e:GetHandlerPlayer()
+	return c==e:GetHandler() or c:GetControler()~=e:GetHandlerPlayer()
 end
-function s.spcon(c,e,tp)
+function s.spcon(e,tp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_FUSION)
 		and e:GetHandler():IsStatus(STATUS_SPSUMMON_TURN)
 end
