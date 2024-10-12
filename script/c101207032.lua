@@ -40,12 +40,6 @@ function s.initial_effect(c)
 end
 s.dark_calling=true
 s.material_setcode=0x8
-function s.matfilter1(c)
-	return c:IsFusionCode(21844576,58932615) or c:IsHasEffect(EFFECT_FUSION_SUBSTITUTE)
-end
-function s.matfilter2(c)
-	return c:IsFusionSetCard(0x8)
-end
 function s.thfilter(c)
 	return (c:IsCode(94820406) or aux.IsCodeListed(c,94820406)) and c:IsAbleToHand()
 		and not c:IsType(TYPE_FUSION)

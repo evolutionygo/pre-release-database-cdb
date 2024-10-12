@@ -14,11 +14,9 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 	--atk down
 	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_FIELD)
-	e2:SetCode(EFFECT_UPDATE_ATTACK)
-	e2:SetRange(LOCATION_MZONE)
-	e2:SetTargetRange(0,LOCATION_MZONE)
-	e2:SetValue(s.atkval)
+	e2:SetType(EFFECT_TYPE_SINGLE)
+	e2:SetCode(EFFECT_MATERIAL_CHECK)
+	e2:SetValue(s.matcheck)
 	c:RegisterEffect(e2)
 	--extra attack
 	local e3=Effect.CreateEffect(c)
@@ -39,11 +37,21 @@ function s.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 s.dark_calling=true
+function s.matcheck(e,c)
+	local ec=e:GetHandler()
+	local e1=Effect.CreateEffect(ec)
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetCode(EFFECT_UPDATE_ATTACK)
+	e1:SetRange(LOCATION_MZONE)
+	e1:SetTargetRange(0,LOCATION_MZONE)
+	e1:SetValue(s.atkval)
+	e1:SetReset(RESET_EVENT+RESETS_STANDARD-RESET_TOFIELD)
+	ec:RegisterEffect(e1)
+end
 function s.atkval(e,c)
 	local ec=e:GetHandler()
 	local g=ec:GetMaterial()
-	local mg=g:Filter(Card.IsType,nil,TYPE_MONSTER)
-	local atk=mg:GetSum(Card.GetBaseAttack)
+	local atk=g:GetSum(Card.GetTextAttack)
 	return -atk
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
