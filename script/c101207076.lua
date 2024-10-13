@@ -15,10 +15,9 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 	--set
 	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_QUICK_O)
-	e3:SetCode(EVENT_FREE_CHAIN)
+	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e3:SetCode(EVENT_PHASE+PHASE_STANDBY)
 	e3:SetRange(LOCATION_GRAVE)
-	e3:SetHintTiming(TIMING_END_PHASE)
 	e3:SetCountLimit(1,id+o)
 	e3:SetCondition(s.setcon)
 	e3:SetTarget(s.settg)
@@ -45,7 +44,7 @@ function s.rccfilter(c)
 	return c:IsFaceupEx() and c:IsSetCard(0x1b9)
 end
 function s.setcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetTurnPlayer()==tp and Duel.GetCurrentPhase()==PHASE_STANDBY
+	return Duel.GetTurnPlayer()==tp
 		and Duel.IsExistingMatchingCard(s.rccfilter,tp,LOCATION_MZONE,0,1,nil)
 end
 function s.settg(e,tp,eg,ep,ev,re,r,rp,chk)
