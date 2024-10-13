@@ -6,7 +6,7 @@ function s.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_SUMMON)
 	e1:SetCountLimit(1,id)
-	e1:SetCondition(s.cndition)
+	e1:SetCondition(s.condition)
 	e1:SetTarget(s.target)
 	e1:SetOperation(s.activate)
 	c:RegisterEffect(e1)
@@ -25,9 +25,10 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function s.cfilter(c)
-	return c:IsFaceup() and (c:IsSetCard(0x1b9) and c:IsLevelAbove(5) or c:IsType(TYPE_NORMAL) and not c:IsType(TYPE_TOKEN))
+	return c:IsFaceup() and not c:IsType(TYPE_TOKEN)
+		and (c:IsSetCard(0x1b9) and c:IsLevelAbove(5) or c:IsType(TYPE_NORMAL))
 end
-function s.cndition(e,tp,eg,ep,ev,re,r,rp)
+function s.condition(e,tp,eg,ep,ev,re,r,rp)
 	return tp~=ep and Duel.GetCurrentChain()==0
 		and Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_MZONE,0,1,nil)
 end
@@ -53,7 +54,7 @@ function s.settg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.setop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) and Duel.SSet(tp,c)~=0 then
+	if c:IsRelateToEffect(e) and aux.NecroValleyFilter(c) and Duel.SSet(tp,c)~=0 then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_LEAVE_FIELD_REDIRECT)
