@@ -65,7 +65,7 @@ function s.exfilter2(c)
 	return c:IsLocation(LOCATION_EXTRA) and (c:IsType(TYPE_LINK) or (c:IsFaceup() and c:IsType(TYPE_PENDULUM)))
 end
 function s.gcheck(g,ft1,ft2,ft3,ect,ft)
-	return #g<=ft
+	return aux.dncheck(g) and #g<=ft
 		and g:FilterCount(Card.IsLocation,nil,LOCATION_GRAVE)<=ft1
 		and g:FilterCount(s.exfilter1,nil)<=ft2
 		and g:FilterCount(s.exfilter2,nil)<=ft3
