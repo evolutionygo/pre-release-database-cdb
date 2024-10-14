@@ -55,7 +55,7 @@ function s.discon(e,tp,eg,ep,ev,re,r,rp)
 		and Duel.IsExistingMatchingCard(s.tfilter,tp,LOCATION_MZONE,0,1,nil)
 end
 function s.costfilter2(c)
-	return c:IsCode(0x1047) and c:IsAbleToRemoveAsCost()
+	return c:IsSetCard(0x1047) and c:IsAbleToRemoveAsCost()
 end
 function s.discost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
