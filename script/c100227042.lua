@@ -58,13 +58,6 @@ function s.spfilter2(c,e,tp)
 		return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 	end
 end
-function s.spfilter(c)
-	return (c:IsFaceup() and c:IsType(TYPE_PENDULUM) or c:IsType(TYPE_LINK))
-		and c:IsLocation(LOCATION_EXTRA)
-end
-function s.gcheck(g,tp,eft,ect)
-	return g:FilterCount(s.spfilter,nil)<=eft and (not ect or g:Filter(Card.IsLocation,nil,LOCATION_EXTRA)<=ect)
-end
 function s.exfilter1(c)
 	return c:IsLocation(LOCATION_EXTRA) and c:IsFacedown() and c:IsType(TYPE_FUSION+TYPE_SYNCHRO+TYPE_XYZ)
 end
