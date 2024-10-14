@@ -45,37 +45,71 @@ function s.spfilter1(c,e,tp,ec)
 		or c:IsLocation(LOCATION_EXTRA) and Duel.GetLocationCountFromEx(tp,tp,ec,c)>0)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.spfilter1,tp,LOCATION_GRAVE+LOCATION_EXTRA,0,1,nil,e,tp,e:GetHandler()) end
+	local ect=c29724053 and Duel.IsPlayerAffectedByEffect(tp,29724053) and c29724053[tp]
+	if chk==0 then return (not ect or ect>0) and Duel.IsExistingMatchingCard(s.spfilter1,tp,LOCATION_GRAVE+LOCATION_EXTRA,0,1,nil,e,tp,e:GetHandler()) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE+LOCATION_EXTRA)
 end
 function s.spfilter2(c,e,tp)
-	return c:IsSetCard(0x47) and not c:IsRace(RACE_ROCK) and c:IsType(TYPE_MONSTER)
-		and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
-		and (c:IsLocation(LOCATION_GRAVE) and Duel.GetMZoneCount(tp)>0
-		or c:IsLocation(LOCATION_EXTRA) and Duel.GetLocationCountFromEx(tp,tp,nil,c)>0)
+	if not (c:IsSetCard(0x47) and not c:IsRace(RACE_ROCK) and c:IsType(TYPE_MONSTER)
+		and c:IsCanBeSpecialSummoned(e,0,tp,true,false)) then return false end
+	if c:IsLocation(LOCATION_EXTRA) then
+		return Duel.GetLocationCountFromEx(tp,tp,nil,c)>0
+	else
+		return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+	end
 end
-function s.ftfilter(c)
+function s.spfilter(c)
 	return (c:IsFaceup() and c:IsType(TYPE_PENDULUM) or c:IsType(TYPE_LINK))
 		and c:IsLocation(LOCATION_EXTRA)
 end
-function s.gcheck(g,tp,eft)
-	return g:FilterCount(s.ftfilter,nil)<=eft
+function s.gcheck(g,tp,eft,ect)
+	return g:FilterCount(s.spfilter,nil)<=eft and (not ect or g:Filter(Card.IsLocation,nil,LOCATION_EXTRA)<=ect)
+end
+function s.exfilter1(c)
+	return c:IsLocation(LOCATION_EXTRA) and c:IsFacedown() and c:IsType(TYPE_FUSION+TYPE_SYNCHRO+TYPE_XYZ)
+end
+function s.exfilter2(c)
+	return c:IsLocation(LOCATION_EXTRA) and (c:IsType(TYPE_LINK) or (c:IsFaceup() and c:IsType(TYPE_PENDULUM)))
+end
+function s.gcheck(g,ft1,ft2,ft3,ect,ft)
+	return #g<=ft
+		and g:FilterCount(Card.IsLocation,nil,LOCATION_GRAVE)<=ft1
+		and g:FilterCount(s.exfilter1,nil)<=ft2
+		and g:FilterCount(s.exfilter2,nil)<=ft3
+		and g:FilterCount(Card.IsLocation,nil,LOCATION_EXTRA)<=ect
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
-	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
-	local eft=Duel.GetLocationCountFromEx(tp,tp,nil,TYPE_PENDULUM)
-	if ft>0 then
-		if ft>=3 then ft=3 end
-		if Duel.IsPlayerAffectedByEffect(tp,59822133) then ft=1 end
-		local g=Duel.GetMatchingGroup(aux.NecroValleyFilter(s.spfilter2),tp,LOCATION_GRAVE+LOCATION_EXTRA,0,nil,e,tp)
+	local eft1=Duel.GetLocationCount(tp,LOCATION_MZONE)
+	local eft2=Duel.GetLocationCountFromEx(tp,tp,nil,TYPE_FUSION+TYPE_SYNCHRO+TYPE_XYZ)
+	local eft3=Duel.GetLocationCountFromEx(tp,tp,nil,TYPE_PENDULUM+TYPE_LINK)
+	local ft=Duel.GetUsableMZoneCount(tp)
+	if Duel.IsPlayerAffectedByEffect(tp,59822133) then
+		if eft1>0 then eft1=1 end
+		if eft2>0 then eft2=1 end
+		if eft3>0 then eft3=1 end
+		ft=1
+	end
+	local ect=(c29724053 and Duel.IsPlayerAffectedByEffect(tp,29724053) and c29724053[tp]) or ft
+	local loc=0
+	if eft1>0 then loc=loc+LOCATION_GRAVE end
+	if ect>0 and (eft2>0 or eft3>0) then loc=loc+LOCATION_EXTRA end
+	if loc~=0 then
+		local g=Duel.GetMatchingGroup(aux.NecroValleyFilter(s.spfilter2),tp,loc,0,nil,e,tp)
 		if g:GetCount()>0 then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-			local sg=g:SelectSubGroup(tp,s.gcheck,false,1,ft,tp,eft)
+			local sg=g:SelectSubGroup(tp,s.gcheck,false,1,3,eft1,eft2,eft3,ect,ft)
 			if sg:GetCount()>0 then
-				local exg=sg:Filter(s.ftfilter,nil)
-				sg:Sub(exg)
-				if exg:GetCount()>0 then
-					for tc in aux.Next(exg) do
+				local exg1=sg:Filter(s.exfilter2,nil)
+				sg:Sub(exg1)
+				if exg1:GetCount()>0 then
+					for tc in aux.Next(exg1) do
+						Duel.SpecialSummonStep(tc,0,tp,tp,true,false,POS_FACEUP)
+					end
+				end
+				local exg2=sg:Filter(s.exfilter1,nil)
+				sg:Sub(exg2)
+				if exg2:GetCount()>0 then
+					for tc in aux.Next(exg2) do
 						Duel.SpecialSummonStep(tc,0,tp,tp,true,false,POS_FACEUP)
 					end
 				end
