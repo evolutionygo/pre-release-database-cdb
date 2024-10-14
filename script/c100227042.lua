@@ -64,27 +64,29 @@ end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	local eft=Duel.GetLocationCountFromEx(tp,tp,nil,TYPE_PENDULUM)
-	if ft<=0 then return end
-	if ft>=3 then ft=3 end
-	if Duel.IsPlayerAffectedByEffect(tp,59822133) then ft=1 end
-	local g=Duel.GetMatchingGroup(s.spfilter2,tp,LOCATION_DECK+LOCATION_EXTRA,0,nil,e,tp)
-	if g:GetCount()==0 then return end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local sg=g:SelectSubGroup(tp,s.gcheck,false,1,ft,tp,eft)
-	if sg:GetCount()>0 then
-		local exg=sg:Filter(s.ftfilter,nil)
-		sg:Sub(exg)
-		if exg:GetCount()>0 then
-			for tc in aux.Next(exg) do
-				Duel.SpecialSummonStep(tc,0,tp,tp,true,false,POS_FACEUP)
+	if ft>0 then
+		if ft>=3 then ft=3 end
+		if Duel.IsPlayerAffectedByEffect(tp,59822133) then ft=1 end
+		local g=Duel.GetMatchingGroup(aux.NecroValleyFilter(s.spfilter2),tp,LOCATION_GRAVE+LOCATION_EXTRA,0,nil,e,tp)
+		if g:GetCount()>0 then
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+			local sg=g:SelectSubGroup(tp,s.gcheck,false,1,ft,tp,eft)
+			if sg:GetCount()>0 then
+				local exg=sg:Filter(s.ftfilter,nil)
+				sg:Sub(exg)
+				if exg:GetCount()>0 then
+					for tc in aux.Next(exg) do
+						Duel.SpecialSummonStep(tc,0,tp,tp,true,false,POS_FACEUP)
+					end
+				end
+				if sg:GetCount()>0 then
+					for tc in aux.Next(sg) do
+						Duel.SpecialSummonStep(tc,0,tp,tp,true,false,POS_FACEUP)
+					end
+				end
+				Duel.SpecialSummonComplete()
 			end
 		end
-		if sg:GetCount()>0 then
-			for tc in aux.Next(sg) do
-				Duel.SpecialSummonStep(tc,0,tp,tp,true,false,POS_FACEUP)
-			end
-		end
-		Duel.SpecialSummonComplete()
 	end
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_FIELD)
@@ -104,7 +106,7 @@ function s.cfilter(c,tp)
 		and c:IsSetCard(0x1047)
 end
 function s.spcon2(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(s.cfilter,1,nil,tp)
+	return eg:IsExists(s.cfilter,1,e:GetHandler(),tp)
 end
 function s.sptg2(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
@@ -114,7 +116,7 @@ function s.sptg2(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.spop2(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) then
+	if c:IsRelateToEffect(e) and aux.NecroValleyFilter()(c) then
 		Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
 	end
 end
