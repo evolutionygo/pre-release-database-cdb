@@ -81,8 +81,9 @@ function s.accon2(e,tp,eg,ep,ev,re,r,rp)
 	return aux.IsCanBeQuickEffect(e:GetHandler(),tp,90351981)
 end
 function s.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToExtraAsCost,tp,LOCATION_HAND,0,1,e:GetHandler()) end
-	local g=Duel.SelectMatchingCard(tp,IsAbleToExtraAsCost,tp,LOCATION_HAND,1,1,nil)
+	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToGraveAsCost,tp,LOCATION_HAND,0,1,e:GetHandler()) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
+	local g=Duel.SelectMatchingCard(tp,Card.IsAbleToGraveAsCost,tp,LOCATION_HAND,0,1,1,nil)
 	Duel.SendtoGrave(g,REASON_COST)
 end
 function s.thfilter(c)
@@ -116,7 +117,7 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) then
+	if c:IsRelateToEffect(e) and aux.NecroValleyFilter()(c) then
 		Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
 	end
 end

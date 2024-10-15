@@ -86,18 +86,18 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	if tc:IsRelateToEffect(e) and Duel.SendtoHand(tc,nil,REASON_EFFECT)>0
 		and tc:IsLocation(LOCATION_HAND)
 		and Duel.IsExistingMatchingCard(Card.IsAbleToDeck,tp,LOCATION_HAND,0,1,nil)
-		and Duel.IsExistingMatchingCard(s.gcfilter2,tp,0,LOCATION_MZONE,1,nil) 
+		and Duel.IsExistingMatchingCard(s.gcfilter2,tp,0,LOCATION_MZONE,1,nil)
 		and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
-		Duel.ShuffleHand(tp)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
 		local g=Duel.SelectMatchingCard(tp,Card.IsAbleToDeck,tp,LOCATION_HAND,0,1,1,nil)
-		if #g>0 and Duel.SendtoDeck(g,nil,2,REASON_EFFECT)~=0 then
-			Duel.BreakEffect()
+		Duel.ShuffleHand(tp)
+		Duel.BreakEffect()
+		if #g>0 and Duel.SendtoDeck(g,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)~=0 then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONTROL)
-			local g=Duel.SelectMatchingCard(tp,s.gcfilter2,tp,0,LOCATION_MZONE,1,1,nil)
-			if g:GetCount()>0 then
-				Duel.HintSelection(g)
-				Duel.GetControl(g:GetFirst(),tp)
+			local cg=Duel.SelectMatchingCard(tp,s.gcfilter2,tp,0,LOCATION_MZONE,1,1,nil)
+			if cg:GetCount()>0 then
+				Duel.HintSelection(cg)
+				Duel.GetControl(cg:GetFirst(),tp)
 			end
 		end
 	end
@@ -112,13 +112,14 @@ function s.tgcon2(e,tp,eg,ep,ev,re,r,rp)
 		and c:GetFlagEffect(id)~=0 and aux.IsCanBeQuickEffect(c,tp,90351981)
 end
 function s.tgtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToGrave,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,0,0)
 end
 function s.tgop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local g=Duel.SelectMatchingCard(tp,aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,Card.IsAbleToGrave,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
 	if g:GetCount()>0 then
+		Duel.HintSelection(g)
 		Duel.SendtoGrave(g,REASON_EFFECT)
 	end
 end
