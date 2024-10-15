@@ -133,15 +133,18 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			Duel.SendtoHand(g,nil,REASON_EFFECT)
 			Duel.ConfirmCards(1-tp,g)
 		end
-		local e1=Effect.CreateEffect(e:GetHandler())
-		e1:SetType(EFFECT_TYPE_FIELD)
-		e1:SetCode(EFFECT_CHANGE_DAMAGE)
-		e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-		e1:SetTargetRange(0,1)
-		e1:SetCondition(s.damcon)
-		e1:SetValue(s.damval)
-		e1:SetReset(RESET_PHASE+PHASE_END)
-		Duel.RegisterEffect(e1,tp)
+		if Duel.GetFlagEffect(tp,100227043)==0 then
+			Duel.RegisterFlagEffect(tp,100227043,RESET_PHASE+PHASE_END,0,1)
+			local e1=Effect.CreateEffect(e:GetHandler())
+			e1:SetType(EFFECT_TYPE_FIELD)
+			e1:SetCode(EFFECT_CHANGE_DAMAGE)
+			e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+			e1:SetTargetRange(0,1)
+			e1:SetCondition(s.damcon)
+			e1:SetValue(s.damval)
+			e1:SetReset(RESET_PHASE+PHASE_END)
+			Duel.RegisterEffect(e1,tp)
+		end
 	end
 end
 function s.damcon(e,tp,eg,ep,ev,re,r,rp)
