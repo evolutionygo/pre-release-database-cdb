@@ -68,7 +68,7 @@ function s.thcon2(e,tp,eg,ep,ev,re,r,rp)
 	return aux.IsCanBeQuickEffect(e:GetHandler(),tp,90351981)
 end
 function s.thfilter(c)
-	return c:IsSetCard(0x11b,0xfe) and not c:IsCode(id) and c:IsAbleToHand() and c:IsFaceupEx()
+	return c:IsSetCard(0x11b,0xfe) and c:IsAbleToHand() and c:IsFaceupEx()
 end
 function s.gcfilter2(c)
 	return c:IsFaceup() and c:IsControlerCanBeChanged()
@@ -91,7 +91,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.ShuffleHand(tp)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
 		local g=Duel.SelectMatchingCard(tp,Card.IsAbleToDeck,tp,LOCATION_HAND,0,1,1,nil)
-		if #g>0 and Duel.SendtoDeck(g,nil,SEQ_DECKBOTTOM,REASON_EFFECT)~=0 then
+		if #g>0 and Duel.SendtoDeck(g,nil,2,REASON_EFFECT)~=0 then
 			Duel.BreakEffect()
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONTROL)
 			local g=Duel.SelectMatchingCard(tp,s.gcfilter2,tp,0,LOCATION_MZONE,1,1,nil)
@@ -103,11 +103,13 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.tgcon1(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():GetFlagEffect(id)~=0 and not aux.IsCanBeQuickEffect(c,tp,90351981)
+	local c=e:GetHandler()
+	return c:GetFlagEffect(id)~=0 and not aux.IsCanBeQuickEffect(c,tp,90351981)
 end
 function s.tgcon2(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
 	return Duel.GetTurnPlayer()==tp and (Duel.GetCurrentPhase()==PHASE_MAIN1 or Duel.GetCurrentPhase()==PHASE_MAIN2)
-		and e:GetHandler():GetFlagEffect(id)~=0 and aux.IsCanBeQuickEffect(c,tp,90351981)
+		and c:GetFlagEffect(id)~=0 and aux.IsCanBeQuickEffect(c,tp,90351981)
 end
 function s.tgtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) end

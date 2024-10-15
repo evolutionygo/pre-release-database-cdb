@@ -81,8 +81,9 @@ function s.accon2(e,tp,eg,ep,ev,re,r,rp)
 	return aux.IsCanBeQuickEffect(e:GetHandler(),tp,90351981)
 end
 function s.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,1,e:GetHandler()) end
-	Duel.DiscardHand(tp,Card.IsDiscardable,1,1,REASON_COST+REASON_DISCARD)
+	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToExtraAsCost,tp,LOCATION_HAND,0,1,e:GetHandler()) end
+	local g=Duel.SelectMatchingCard(tp,IsAbleToExtraAsCost,tp,LOCATION_HAND,1,1,nil)
+	Duel.SendtoGrave(g,REASON_COST)
 end
 function s.thfilter(c)
 	return c:IsAbleToHand() and (c:IsCode(90351981) or (c:IsSetCard(0xfe) and c:IsType(TYPE_MONSTER)))
