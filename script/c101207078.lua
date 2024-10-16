@@ -18,7 +18,7 @@ function s.initial_effect(c)
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetProperty(EFFECT_FLAG_DELAY)
-	e2:SetCode(EVENT_TO_GRAVE)
+	e2:SetCode(EVENT_DESTROYED)
 	e2:SetCountLimit(1,id+o)
 	e2:SetCondition(s.spcon)
 	e2:SetTarget(s.sptg)
@@ -34,9 +34,9 @@ end
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
 	local ct=Duel.GetCounter(tp,1,0,0x3)
 	local rt=3-math.floor(ct/6)
-	if rt==0 then return true end
+	if rt<=0 then return true end
 	local g=Duel.GetMatchingGroup(s.cfilter,tp,LOCATION_MZONE,0,nil)
-	return g:GetCount()>0 and g:GetClassCount(Card.GetCode)<=rt
+	return g:GetCount()>0 and g:GetClassCount(Card.GetCode)>=rt
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(aux.TRUE,tp,0,LOCATION_ONFIELD,1,nil) end
