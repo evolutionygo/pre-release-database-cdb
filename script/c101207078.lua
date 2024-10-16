@@ -3,6 +3,7 @@ local s,id,o=GetID()
 function s.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(id,1))
 	e1:SetCategory(CATEGORY_DESTROY)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
@@ -28,15 +29,11 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function s.cfilter(c)
-	return c:IsSetCard(0x3d) and c:IsType(TYPE_SYNCHRO) and c:IsFaceup()
+	return c:IsSetCard(0x103d) and c:IsType(TYPE_SYNCHRO) and c:IsFaceup()
 end
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
 	local ct=Duel.GetCounter(tp,1,0,0x3)
-	local rt=3
-	while ct>5 and rt>0 do
-		rt=rt-1
-		ct=ct-6
-	end
+	local rt=3-math.floor(ct/6)
 	if rt==0 then return true end
 	local g=Duel.GetMatchingGroup(s.cfilter,tp,LOCATION_MZONE,0,nil)
 	return g:GetCount()>0 and g:GetClassCount(Card.GetCode)<=rt
@@ -53,10 +50,10 @@ end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	return c:IsReason(REASON_EFFECT) and rp==1-tp and c:IsPreviousControler(tp)
-		and c:IsPreviousLocation(LOCATION_ONFIELD) and c:IsPreviousPosition(POS_FACEDOWN)
+		and c:IsPreviousLocation(LOCATION_ONFIELD) and c:IsPreviousPosition(POS_FACEDOWN) and re and re:IsActivated()
 end
 function s.spfilter(c,e,tp)
-	return (c:IsSetCard(0x3d) or c:IsSetCard(0x20) and c:IsType(TYPE_EFFECT))
+	return (c:IsSetCard(0x103d) or c:IsSetCard(0x20) and c:IsType(TYPE_EFFECT))
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 		and (c:IsLocation(LOCATION_DECK) and Duel.GetMZoneCount(tp)>0
 			or c:IsLocation(LOCATION_EXTRA) and Duel.GetLocationCountFromEx(tp,tp,nil,c)>0)
