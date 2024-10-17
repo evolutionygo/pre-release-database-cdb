@@ -86,12 +86,14 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	local tg=g:SelectSubGroup(tp,s.thcheck,false,1,2)
 	if #tg>0 and Duel.SendtoHand(tg,nil,REASON_EFFECT)~=0 and tg:IsExists(Card.IsLocation,1,nil,LOCATION_HAND) then
-		if tg:IsExists(Card.IsControler,1,nil,tp) then
-			Duel.ConfirmCards(1-tp,tg)
+		local sg=tg:Filter(Card.IsControler,nil,tp)
+		if sg:GetCount()>0 then
+			Duel.ConfirmCards(1-tp,sg)
 			Duel.ShuffleHand(tp)
 		end
-		if tg:IsExists(Card.IsControler,1,nil,1-tp) then
-			Duel.ConfirmCards(tp,tg)
+		local og=tg:Filter(Card.IsControler,nil,1-tp)
+		if og:GetCount()>0 then
+			Duel.ConfirmCards(tp,og)
 			Duel.ShuffleHand(1-tp)
 		end
 		if Duel.IsExistingMatchingCard(Card.IsType,tp,LOCATION_GRAVE,0,1,nil,TYPE_NORMAL)
