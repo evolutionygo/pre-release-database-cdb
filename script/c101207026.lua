@@ -36,7 +36,7 @@ function s.acop(e,tp,eg,ep,ev,re,r,rp)
 	if not c:IsRelateToEffect(e) or c:IsFacedown() or c:IsControler(1-tp) then return end
 	local ct=Duel.GetMatchingGroupCount(Card.IsRace,tp,LOCATION_GRAVE,0,nil,RACE_FIEND)
 	if ct==0 then return end
-	local res=Duel.SelectOption(tp,aux.Stringid(id,2),aux.Stringid(id,3))
+	local res=Duel.SelectOption(1-tp,aux.Stringid(id,2),aux.Stringid(id,3))
 	if res==0 then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
