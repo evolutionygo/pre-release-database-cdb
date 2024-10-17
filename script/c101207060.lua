@@ -83,7 +83,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetAttacker():GetControler()~=tp and Duel.GetLP(tp)<Duel.GetLP(1-tp)
+	return Duel.GetAttacker():GetControler()~=tp
 end
 function s.spfilter(c,e,tp)
 	return c:IsSetCard(0x1019) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
