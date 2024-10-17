@@ -40,7 +40,7 @@ end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and (Duel.IsExistingMatchingCard(s.spfilter1,tp,LOCATION_DECK,0,1,nil,e,tp)
-		or Duel.IsExistingMatchingCard(s.spfilter2,tp,0,LOCATION_GRAVE,1,nil,1-tp))end
+		or Duel.IsExistingMatchingCard(s.spfilter2,tp,0,LOCATION_GRAVE,1,nil,e,tp)) end
 	Duel.SetOperationInfo(0,CATEGORY_COIN,nil,0,tp,1)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
@@ -55,7 +55,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			opval[off-1]=0
 			off=off+1
 		end
-		if Duel.IsExistingMatchingCard(aux.NecroValleyFilter(s.spfilter2),tp,0,LOCATION_GRAVE,1,nil,1-tp)then
+		if Duel.IsExistingMatchingCard(aux.NecroValleyFilter(s.spfilter2),tp,0,LOCATION_GRAVE,1,nil,e,tp)then
 			ops[off]=aux.Stringid(id,3)
 			opval[off-1]=1
 			off=off+1
@@ -84,12 +84,12 @@ function s.thfilter(c)
 	return c.toss_coin and c:IsAbleToHand()
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,e:GetHandler()) end
-	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
+	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_GRAVE,0,1,e:GetHandler()) end
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_GRAVE)
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_DECK,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.thfilter),tp,LOCATION_GRAVE,0,1,1,nil)
 	if g:GetCount()>0 then
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,g)

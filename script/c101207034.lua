@@ -1,6 +1,7 @@
 --アルカナフォースEX－THE CHAOS RULER
 local s,id,o=GetID()
 function s.initial_effect(c)
+	aux.AddCodeList(c,73206827)
 	--fusion summon
 	aux.AddFusionProcFunRep(c,s.ffilter,3,false)
 	c:EnableReviveLimit()
