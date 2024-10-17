@@ -51,9 +51,20 @@ function s.fstg(e,tp,eg,ep,ev,re,r,rp,chk)
 		end
 	end
 	if chk==0 then return res1 or res2 end
-	local op=aux.SelectFromOptions(tp,
-		{res1,aux.Stringid(id,2),1},
-		{res2,aux.Stringid(id,3),2})
+	local op=0
+	if res1 and not res2 then
+		Duel.Hint(HINT_OPSELECTED,1-tp,aux.Stringid(id,2))
+		op=1
+	end
+	if res2 and not res1 then
+		Duel.Hint(HINT_OPSELECTED,1-tp,aux.Stringid(id,3))
+		op=2
+	end
+	if res1 and res2 then
+		op=aux.SelectFromOptions(tp,
+			{res1,aux.Stringid(id,2),1},
+			{res2,aux.Stringid(id,3),2})
+	end
 	e:SetLabel(op)
 	if op==1 then
 		e:SetCategory(CATEGORY_SPECIAL_SUMMON)

@@ -14,7 +14,7 @@ function s.initial_effect(c)
 	e1:SetCountLimit(1,id)
 	e1:SetTarget(s.sptg)
 	e1:SetOperation(s.spop)
-	c:RegisterEffect(e1) 
+	c:RegisterEffect(e1)
 	--special summon(self)
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
@@ -25,7 +25,7 @@ function s.initial_effect(c)
 	e2:SetCost(s.spcost)
 	e2:SetTarget(s.sptg1)
 	e2:SetOperation(s.spop1)
-	c:RegisterEffect(e2)   
+	c:RegisterEffect(e2)
 end
 function s.spfilter(c,e,tp)
 	return c:IsFaceup() and c:IsType(TYPE_PENDULUM)
@@ -78,7 +78,7 @@ end
 function s.spop1(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
-	if c:IsRelateToEffect(e) then
+	if c:IsRelateToEffect(e) and aux.NecroValleyFilter()(c) then
 		Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
 	end
 end
