@@ -50,7 +50,7 @@ function s.acop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.tgcon(e,tp,eg,ep,ev,re,r,rp)
-	return bit.band(r,REASON_EFFECT+REASON_BATTLE)~=0 and e:GetHandler():IsPreviousLocation(LOCATION_ONFIELD)
+	return bit.band(r,REASON_EFFECT+REASON_BATTLE)~=0
 end
 function s.tgtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.GetMatchingGroup(nil,tp,0,LOCATION_MZONE,nil)
