@@ -53,8 +53,8 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		end
 		if b1 and b2 then
 			res=aux.SelectFromOptions(tp,
-				{b1,60},
-				{b2,61})
+				{b1,60,1},
+				{b2,61,0})
 		end
 	else
 		res=Duel.TossCoin(tp,1)
