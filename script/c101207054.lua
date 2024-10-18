@@ -42,7 +42,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.IsEnvironment(73206827,tp,LOCATION_FZONE) then
 		if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 		local b1=Duel.IsExistingMatchingCard(s.spfilter1,tp,LOCATION_DECK,0,1,nil,e,tp)
-		local b2=Duel.IsExistingMatchingCard(aux.NecroValleyFilter(s.spfilter2),tp,0,LOCATION_GRAVE,1,nil,e,tp)
+		local b2=Duel.IsExistingMatchingCard(aux.NecroValleyFilter(s.spfilter2),tp,LOCATION_GRAVE,0,1,nil,e,tp)
 		if b1 and not b2 then
 			Duel.Hint(HINT_OPSELECTED,1-tp,60)
 			res=1
