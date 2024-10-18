@@ -59,7 +59,7 @@ function s.desfilter(c)
 end
 function s.coinop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local res=0
+	local res=-1
 	if c:IsHasEffect(73206827) then
 		local b1=Duel.IsExistingMatchingCard(s.setfilter,tp,LOCATION_DECK,0,1,nil)
 		local b2=Duel.IsExistingMatchingCard(s.desfilter,tp,LOCATION_SZONE,LOCATION_SZONE,1,nil)
@@ -69,7 +69,7 @@ function s.coinop(e,tp,eg,ep,ev,re,r,rp)
 		end
 		if b2 and not b1 then
 			Duel.Hint(HINT_OPSELECTED,1-tp,61)
-			res=2
+			res=0
 		end
 		if b1 and b2 then
 			res=aux.SelectFromOptions(tp,
@@ -83,7 +83,7 @@ function s.coinop(e,tp,eg,ep,ev,re,r,rp)
 		if g:GetCount()>0 then
 			Duel.SSet(tp,g:GetFirst())
 		end
-	else
+	elseif res==0 then
 		local sg=Duel.GetMatchingGroup(s.desfilter,tp,LOCATION_SZONE,LOCATION_SZONE,nil)
 		Duel.Destroy(sg,REASON_EFFECT)
 	end
