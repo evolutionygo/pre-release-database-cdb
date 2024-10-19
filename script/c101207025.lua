@@ -1,4 +1,4 @@
---マルチャミー・
+--マルチャミー・ニャルス
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--draw

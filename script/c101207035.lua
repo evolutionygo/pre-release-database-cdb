@@ -1,4 +1,4 @@
---蛇眼の原罪竜
+--蛇眼の原罪龍
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--fusion material
