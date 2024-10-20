@@ -57,9 +57,20 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local b1=res and Duel.GetFlagEffect(tp,id)==0
 	local b2=Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK+LOCATION_REMOVED,0,1,nil) and Duel.GetFlagEffect(tp,id+o)==0
 	if chk==0 then return b1 or b2 end
-	local op=aux.SelectFromOptions(tp,
+	local op=0
+	if b1 and not b2 then
+		Duel.Hint(HINT_OPSELECTED,1-tp,aux.Stringid(id,1))
+		op=1
+	end
+	if b2 and not b1 then
+		Duel.Hint(HINT_OPSELECTED,1-tp,aux.Stringid(id,2))
+		op=2
+	end
+	if b1 and b2 then
+		op=aux.SelectFromOptions(tp,
 			{b1,aux.Stringid(id,1)},
 			{b2,aux.Stringid(id,2)})
+	end
 	e:SetLabel(op)
 	if op==1 then
 		e:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_FUSION_SUMMON+CATEGORY_DECKDES)

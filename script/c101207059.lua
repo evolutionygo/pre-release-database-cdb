@@ -65,7 +65,16 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.BreakEffect()
 		local thg=rg:FilterSelect(tp,Card.IsAbleToHand,1,1,nil)
 		Duel.SendtoHand(thg,nil,REASON_EFFECT)
-		Duel.ConfirmCards(1-tp,thg)
+		local sg=thg:Filter(Card.IsControler,nil,tp)
+		if sg:GetCount()>0 then
+			Duel.ConfirmCards(1-tp,sg)
+			Duel.ShuffleHand(tp)
+		end
+		local og=thg:Filter(Card.IsControler,nil,1-tp)
+		if og:GetCount()>0 then
+			Duel.ConfirmCards(tp,og)
+			Duel.ShuffleHand(1-tp)
+		end
 	end
 end
 function s.ovcon(e,tp,eg,ep,ev,re,r,rp)
