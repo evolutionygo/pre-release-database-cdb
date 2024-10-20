@@ -64,7 +64,7 @@ function s.adjustop(e,tp,eg,ep,ev,re,r,rp)
 		s.Traitor_RegisterEffect=Card.RegisterEffect
 		function Card.RegisterEffect(Card_c,Effect_e,bool)
 			if Effect_e:GetType() and bit.band(Effect_e:GetType(),EFFECT_TYPE_QUICK_O+EFFECT_TYPE_QUICK_F)~=0 then
-				if Effect_e:GetCode() and Effect_e:GetCode()~=EVENT_FREE_CHAIN then
+				if Effect_e:GetCode() and Effect_e:GetCode()==EVENT_CHAINING then
 					Card_c:RegisterFlagEffect(id,0,0,1)
 				end
 			end
