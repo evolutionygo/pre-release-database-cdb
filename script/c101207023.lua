@@ -89,6 +89,7 @@ function s.adjustop(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.cfilter(c)
 	return (c:GetFlagEffect(id)>0 or c.Traitor_chaining_effect) and bit.band(c:GetOriginalType(),TYPE_MONSTER)==TYPE_MONSTER
+		and c:IsFaceupEx()
 end
 function s.spcon(e,c)
     if c==nil then return true end
