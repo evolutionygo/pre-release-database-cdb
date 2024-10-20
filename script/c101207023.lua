@@ -98,7 +98,7 @@ function s.spcon(e,c)
 		and Duel.IsExistingMatchingCard(s.cfilter,c:GetControler(),0,LOCATION_ONFIELD+LOCATION_GRAVE,1,nil)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp,c)
-	Duel.PayLPCost(tp,math.floor(Duel.GetLP(tp)/2))
+	Duel.PayLPCost(c:GetOwner(),math.floor(Duel.GetLP(c:GetOwner())/2))
 end
 function s.fuslimit(e,c,sumtype)
 	return sumtype==SUMMON_TYPE_FUSION
