@@ -60,7 +60,6 @@ function s.initial_effect(c)
 end
 function s.adjustop(e,tp,eg,ep,ev,re,r,rp)
 	if not s.globle_check then
-		Debug.Message(0)
 		s.globle_check=true
 		s.Traitor_RegisterEffect=Card.RegisterEffect
 		function Card.RegisterEffect(Card_c,Effect_e,bool)
