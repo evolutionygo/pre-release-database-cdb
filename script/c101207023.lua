@@ -18,14 +18,14 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 	--spsummon
 	local e2=Effect.CreateEffect(c)
-    e2:SetType(EFFECT_TYPE_FIELD)
-    e2:SetProperty(EFFECT_FLAG_UNCOPYABLE)
-    e2:SetCode(EFFECT_SPSUMMON_PROC)
-    e2:SetRange(LOCATION_HAND+LOCATION_GRAVE)
+	e2:SetType(EFFECT_TYPE_FIELD)
+	e2:SetProperty(EFFECT_FLAG_UNCOPYABLE)
+	e2:SetCode(EFFECT_SPSUMMON_PROC)
+	e2:SetRange(LOCATION_HAND+LOCATION_GRAVE)
 	e2:SetCountLimit(1,id+EFFECT_COUNT_CODE_OATH)
-    e2:SetCondition(s.spcon)
-    e2:SetOperation(s.spop)
-    c:RegisterEffect(e2)
+	e2:SetCondition(s.spcon)
+	e2:SetOperation(s.spop)
+	c:RegisterEffect(e2)
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_SINGLE)
 	e3:SetCode(EFFECT_CANNOT_DISABLE_SPSUMMON)
@@ -92,13 +92,13 @@ function s.cfilter(c)
 		and c:IsFaceupEx()
 end
 function s.spcon(e,c)
-    if c==nil then return true end
-    local tp=c:GetControler()
-    return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+	if c==nil then return true end
+	local tp=c:GetControler()
+	return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and Duel.IsExistingMatchingCard(s.cfilter,c:GetControler(),0,LOCATION_ONFIELD+LOCATION_GRAVE,1,nil)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp,c)
-	Duel.PayLPCost(c:GetOwner(),math.floor(Duel.GetLP(c:GetOwner())/2))
+	Duel.PayLPCost(tp,math.floor(Duel.GetLP(tp)/2))
 end
 function s.fuslimit(e,c,sumtype)
 	return sumtype==SUMMON_TYPE_FUSION
