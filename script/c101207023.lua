@@ -105,7 +105,7 @@ function s.fuslimit(e,c,sumtype)
 end
 function s.efilter(e,re)
 	if Duel.GetTurnPlayer()==e:GetHandlerPlayer() then
-		return e:GetHandlerPlayer()~=re:GetOwnerPlayer() and re:IsActivated() and re:IsActivated(TYPE_MONSTER)
+		return e:GetHandlerPlayer()~=re:GetOwnerPlayer() and re:IsActivated() and re:IsActiveType(TYPE_MONSTER)
 	else
 		return false
 	end
