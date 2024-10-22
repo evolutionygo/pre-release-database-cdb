@@ -64,7 +64,8 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.spfilter(c,e,tp)
-	return c:IsAttackBelow(1000) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE)
+	return c:IsAttackBelow(1000) and c:IsRace(RACE_MACHINE)
+		and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE)
 end
 function s.rspfilter(c,tp)
 	return c:IsRace(RACE_MACHINE) and c:IsReleasableByEffect()
