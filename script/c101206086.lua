@@ -83,5 +83,6 @@ function s.thcon(e,tp,eg,ep,ev,re,r,rp)
 	else return true end
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_CARD,0,id)
 	Duel.SendtoHand(e:GetLabelObject(),nil,REASON_EFFECT)
 end

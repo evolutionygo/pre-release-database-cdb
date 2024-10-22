@@ -70,5 +70,6 @@ function s.damcon(e,tp,eg,ep,ev,re,r,rp)
 	return lo:GetLabel()~=0 and lo:GetLabelObject():GetLabel()~=0
 end
 function s.damop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_CARD,0,id)
 	Duel.Damage(tp,2700,REASON_EFFECT)
 end
