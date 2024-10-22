@@ -40,7 +40,6 @@ function s.acop(e,tp,eg,ep,ev,re,r,rp)
 	if res==0 then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 		e1:SetCode(EFFECT_UPDATE_ATTACK)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 		e1:SetValue(ct*800)
