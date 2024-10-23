@@ -44,7 +44,7 @@ end
 function s.spfilter(c,e,tp)
 	return c:IsAttribute(ATTRIBUTE_DARK+ATTRIBUTE_LIGHT) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
-function s.actarget(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+function s.actarget(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	local b1=Duel.IsExistingMatchingCard(nil,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil)
 	local b2=c:IsAbleToRemove() and Duel.GetMZoneCount(tp,c)>0
@@ -88,7 +88,8 @@ function s.acoperation(e,tp,eg,ep,ev,re,r,rp)
 				e1:SetOperation(s.retop)
 				Duel.RegisterEffect(e1,tp)
 			end
-			if Duel.IsExistingMatchingCard(aux.NecroValleyFilter(s.spfilter),tp,LOCATION_GRAVE,0,1,nil,e,tp) then
+			if Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+				and Duel.IsExistingMatchingCard(aux.NecroValleyFilter(s.spfilter),tp,LOCATION_GRAVE,0,1,nil,e,tp) then
 				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 				local sg=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.spfilter),tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
 				Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP)
