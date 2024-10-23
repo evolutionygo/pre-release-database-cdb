@@ -43,7 +43,7 @@ function s.spfilter(c,e,tp)
 end
 function s.actarget(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()
-	local b1=Duel.IsExistingMatchingCard(aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil)
+	local b1=Duel.IsExistingMatchingCard(nil,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil)
 	local b2=c:IsAbleToRemove() and Duel.GetMZoneCount(tp,c)>0
         and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp)
 	if chk==0 then return b1 or b2 end
@@ -53,7 +53,7 @@ function s.actarget(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	e:SetLabel(op)
 	if op==1 then
 		e:SetCategory(CATEGORY_DESTROY)
-		local g=Duel.SelectTarget(tp,aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
+		local g=Duel.GetMatchingGroup(nil,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)
 		Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
 	elseif op==2 then
 		e:SetCategory(CATEGORY_REMOVE+CATEGORY_SPECIAL_SUMMON)
