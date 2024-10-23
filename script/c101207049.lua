@@ -114,9 +114,9 @@ function s.dract(e,tp,eg,ep,ev,re,r,rp)
 	if ct>0 then
 		Duel.Draw(p,ct,REASON_EFFECT)
 		Duel.BreakEffect()
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-		local g=Duel.GetFieldGroup(p,LOCATION_HAND,0):Select(p,ct,ct,nil)
-		Duel.ShuffleHand(tp)
-		aux.PlaceCardsOnDeckBottom(tp,g)
+		Duel.Hint(HINT_SELECTMSG,p,HINTMSG_TODECK)
+		local rg=Duel.GetFieldGroup(p,LOCATION_HAND,0):Select(p,ct,ct,nil)
+		Duel.ShuffleHand(p)
+		aux.PlaceCardsOnDeckBottom(p,rg)
 	end
 end
