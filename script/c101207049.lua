@@ -119,11 +119,11 @@ function s.dract(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(Card.IsType,tp,LOCATION_GRAVE,0,nil,TYPE_MONSTER)
 	local ct=g:GetClassCount(Card.GetRace)
 	local p=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER)
-	if ct>0 then
-		Duel.Draw(p,ct,REASON_EFFECT)
+	local dc=Duel.Draw(p,ct,REASON_EFFECT)
+	if dc>0 then
 		Duel.BreakEffect()
 		Duel.Hint(HINT_SELECTMSG,p,HINTMSG_TODECK)
-		local rg=Duel.GetFieldGroup(p,LOCATION_HAND,0):Select(p,ct,ct,nil)
+		local rg=Duel.GetFieldGroup(p,LOCATION_HAND,0):Select(p,dc,dc,nil)
 		Duel.ShuffleHand(p)
 		aux.PlaceCardsOnDeckBottom(p,rg)
 	end
