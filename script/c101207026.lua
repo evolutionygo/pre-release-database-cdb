@@ -59,7 +59,6 @@ end
 function s.tgop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetFieldGroup(tp,0,LOCATION_MZONE)
 	if g:GetCount()==0 then return end
-	Duel.BreakEffect()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
 	local sg=g:Select(tp,1,1,nil)
 	Duel.HintSelection(sg)
