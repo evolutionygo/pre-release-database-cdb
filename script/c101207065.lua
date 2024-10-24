@@ -50,7 +50,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			Duel.DiscardHand(tp,s.hdfilter,1,1,REASON_EFFECT,nil,e,tp,rc:GetOriginalRace())
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 			local sg=Duel.SelectMatchingCard(tp,spfilter,tp,LOCATION_HAND,0,1,1,nil,e,tp,rc:GetOriginalRace())
-			Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP)
+			Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
 		end
 	end
 	if e:IsHasType(EFFECT_TYPE_ACTIVATE) then
