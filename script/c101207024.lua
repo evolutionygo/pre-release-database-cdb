@@ -60,7 +60,7 @@ function s.spsop(e,tp,eg,ep,ev,re,r,rp,c)
 		Duel.HintSelection(gg)
 	end
 	Duel.SendtoDeck(g,nil,SEQ_DECKSHUFFLE,REASON_SPSUMMON)
-	local atk=g:Filter(card.IsLocation,nil,LOCATION_DECK):Filter(card.IsType,nil,TYPE_NORMAL)
+	local atk=g:Filter(Card.IsLocation,nil,LOCATION_DECK):Filter(Card.IsType,nil,TYPE_NORMAL)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetCode(EFFECT_UPDATE_ATTACK)
