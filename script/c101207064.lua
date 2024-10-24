@@ -26,12 +26,12 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function s.spfilter(c,e,tp,att)
-	if att and not c:IsAttribute(att) then return false end
+	if att and not c:IsAttribute(ATTRIBUTE_WATER) then return false end
 	return c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE,c:GetOwner())
 		and Duel.IsExistingMatchingCard(s.desfilter,c:GetOwner(),LOCATION_MZONE,0,1,nil,c:GetOwner(),att)
 end
 function s.desfilter(c,tp,att)
-	if not att and not c:IsAttribute(att) then return false end
+	if not att and not c:IsAttribute(ATTRIBUTE_WATER) then return false end
 	return c:IsFaceup()
 		and Duel.GetMZoneCount(tp,c)>0
 end
