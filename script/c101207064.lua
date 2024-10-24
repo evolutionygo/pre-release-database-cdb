@@ -26,15 +26,15 @@ function s.initial_effect(c)
 	e2:SetOperation(s.activate(ATTRIBUTE_WATER))
 	c:RegisterEffect(e2)
 end
-function s.spfilter(c,e,tp,att)
+function s.spfilter(c,e,tp,att,rp)
 	if att and not c:IsAttribute(ATTRIBUTE_WATER) then return false end
 	return c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE,c:GetOwner())
-		and Duel.IsExistingMatchingCard(s.desfilter,c:GetOwner(),LOCATION_MZONE,0,1,nil,c:GetOwner(),att)
+		and Duel.IsExistingMatchingCard(s.desfilter,c:GetOwner(),LOCATION_MZONE,0,1,nil,c:GetOwner(),att,rp)
 end
-function s.desfilter(c,tp,att)
+function s.desfilter(c,tp,att,rp)
 	if not att and not c:IsAttribute(ATTRIBUTE_WATER) then return false end
 	return c:IsFaceup()
-		and Duel.GetMZoneCount(tp,c)>0
+		and Duel.GetMZoneCount(tp,c,rp)>0
 end
 function s.target(att)
 	return function(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
@@ -51,10 +51,12 @@ function s.activate(att)
 			if not tc:IsRelateToEffect(e) then return end
 			local sp=tc:GetOwner()
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-			local g=Duel.SelectMatchingCard(tp,s.desfilter,sp,LOCATION_MZONE,0,1,1,nil,sp,att)
-			if g and Duel.Destroy(g,REASON_EFFECT)~=0
-				and aux.NecroValleyFilter()(tc) then
-				Duel.SpecialSummon(tc,0,tp,sp,false,false,POS_FACEUP_DEFENSE)
+			local g=Duel.SelectMatchingCard(tp,s.desfilter,sp,LOCATION_MZONE,0,1,1,nil,sp,att,tp)
+			if g then
+				Duel.HintSelection(g)
+				if Duel.Destroy(g,REASON_EFFECT)~=0 and aux.NecroValleyFilter()(tc) then
+					Duel.SpecialSummon(tc,0,tp,sp,false,false,POS_FACEUP_DEFENSE)
+				end
 			end
 		end
 end
