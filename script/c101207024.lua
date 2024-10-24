@@ -22,6 +22,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 	--destroy and spsummon
 	local e3=Effect.CreateEffect(c)
+	e3:SetDescription(aux.Stringid(id,1))
 	e3:SetCategory(CATEGORY_DESTROY+CATEGORY_SPECIAL_SUMMON)
 	e3:SetType(EFFECT_TYPE_IGNITION)
 	e3:SetRange(LOCATION_MZONE)
@@ -59,13 +60,14 @@ function s.spsop(e,tp,eg,ep,ev,re,r,rp,c)
 		Duel.HintSelection(gg)
 	end
 	Duel.SendtoDeck(g,nil,SEQ_DECKSHUFFLE,REASON_SPSUMMON)
-	g:DeleteGroup()
+	local atk=g:Filter(card.IsLocation,nil,LOCATION_DECK):Filter(card.IsType,nil,TYPE_NORMAL)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetCode(EFFECT_UPDATE_ATTACK)
 	e1:SetReset(RESET_EVENT+0xff0000)
 	e1:SetValue(g:GetCount()*800)
 	c:RegisterEffect(e1)
+	g:DeleteGroup()
 end
 function s.desfilter(c,tp)
 	return Duel.GetMZoneCount(tp,c)>0
@@ -89,7 +91,7 @@ end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local tc1,tc2=Duel.GetFirstTarget()
 	if tc1~=e:GetLabelObject() then tc1,tc2=tc2,tc1 end
-	if tc1:IsRelateToEffect(e) and Duel.Destroy(tc1,REASON_EFFECT)>0 and tc2:IsRelateToEffect(e) then
+	if tc1:IsRelateToEffect(e) and tc1:IsType(TYPE_MONSTER) and Duel.Destroy(tc1,REASON_EFFECT)>0 and tc2:IsRelateToEffect(e) and aux.NecroValleyFilter()(tc2) then
 		Duel.SpecialSummon(tc2,0,tp,tp,false,false,POS_FACEUP)
 	end
 end
