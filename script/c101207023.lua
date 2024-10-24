@@ -105,7 +105,11 @@ function s.fuslimit(e,c,sumtype)
 end
 function s.efilter(e,re)
 	if Duel.GetTurnPlayer()==e:GetHandlerPlayer() then
-		return e:GetHandlerPlayer()~=re:GetOwnerPlayer() and re:IsActivated() and re:IsActiveType(TYPE_MONSTER)
+		if e:GetHandlerPlayer()~=re:GetOwnerPlayer() and re:IsActivated() and re:IsActiveType(TYPE_MONSTER) then
+			local loc=Duel.GetChainInfo(0,CHAININFO_TRIGGERING_LOCATION)
+			return LOCATION_ONFIELD&loc~=0
+		end
+		return false
 	else
 		return false
 	end
