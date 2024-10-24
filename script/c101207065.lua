@@ -21,12 +21,9 @@ function s.thfilter(c,race)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and s.cfilter(chkc,tp) end
-	if chk==0 then return Duel.IsExistingTarget(s.cfilter,tp,LOCATION_MZONE,0,1,nil,tp)
-	end
-	e:SetLabel(0)
+	if chk==0 then return Duel.IsExistingTarget(s.cfilter,tp,LOCATION_MZONE,0,1,nil,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
-	local g=Duel.SelectTarget(tp,s.cfilter,tp,LOCATION_MZONE,0,1,1,nil,tp)
-	local tc=g:GetFirst()
+	Duel.SelectTarget(tp,s.cfilter,tp,LOCATION_MZONE,0,1,1,nil,tp)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 end
 function s.hdfilter(c,e,tp,race)
@@ -47,10 +44,19 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		local rc=g:GetFirst()
 		if Duel.IsExistingMatchingCard(s.hdfilter,tp,LOCATION_HAND,0,1,nil,e,tp,rc:GetOriginalRace()) and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DISCARD)
-			Duel.DiscardHand(tp,s.hdfilter,1,1,REASON_EFFECT,nil,e,tp,rc:GetOriginalRace())
-			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-			local sg=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_HAND,0,1,1,nil,e,tp,rc:GetOriginalRace())
-			Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
+			local dg=Duel.SelectMatchingCard(tp,s.hdfilter,tp,LOCATION_HAND,0,1,1,nil,e,tp,rc:GetOriginalRace())
+			local sg=nil
+			if dg:GetCount()>0 then
+				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+				sg=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_HAND,0,1,1,dg,e,tp,rc:GetOriginalRace())
+			end
+			Duel.ShuffleHand(tp)
+			if dg:GetCount()>0 then
+				Duel.SendtoGrave(dg,REASON_EFFECT+REASON_DISCARD)
+				if sg and sg:GetCount()>0 then
+					Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
+				end
+			end
 		end
 	end
 	if e:IsHasType(EFFECT_TYPE_ACTIVATE) then
