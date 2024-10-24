@@ -104,13 +104,10 @@ function s.fuslimit(e,c,sumtype)
 	return sumtype==SUMMON_TYPE_FUSION
 end
 function s.efilter(e,re)
-	if Duel.GetTurnPlayer()==e:GetHandlerPlayer() then
-		if e:GetHandlerPlayer()~=re:GetOwnerPlayer() and re:IsActivated() and re:IsActiveType(TYPE_MONSTER) then
-			local loc=Duel.GetChainInfo(0,CHAININFO_TRIGGERING_LOCATION)
-			return LOCATION_ONFIELD&loc~=0
-		end
-		return false
-	else
-		return false
+	if Duel.GetTurnPlayer()==e:GetHandlerPlayer() and e:GetHandlerPlayer()~=re:GetOwnerPlayer()
+		and re:IsActivated() and re:IsActiveType(TYPE_MONSTER) then
+		local loc=Duel.GetChainInfo(0,CHAININFO_TRIGGERING_LOCATION)
+		return LOCATION_ONFIELD&loc~=0
 	end
+	return false
 end
