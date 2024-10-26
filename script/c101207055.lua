@@ -39,7 +39,7 @@ function s.fstg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local res1=Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_HAND,0,1,nil,e,tp)
 	local chkf=tp
-	local mg1=Duel.GetFusionMaterial(tp)
+	local mg1=Duel.GetFusionMaterial(tp):Filter(aux.NOT(Card.IsImmuneToEffect),nil,e)
 	local res2=Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_EXTRA,0,1,nil,e,tp,mg1,nil,chkf)
 	if not res2 then
 		local ce=Duel.GetChainMaterial(tp)

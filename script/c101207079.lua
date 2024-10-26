@@ -74,7 +74,7 @@ function s.fstg(e,tp,eg,ep,ev,re,r,rp,chk)
 		me:SetValue(s.fuslimit)
 		Duel.RegisterEffect(me,tp)
 		local chkf=tp
-		local mg1=Duel.GetFusionMaterial(tp):Filter(Card.IsOnField,nil)
+		local mg1=Duel.GetFusionMaterial(tp):Filter(Card.IsOnField,nil):Filter(s.filter2,nil,e)
 		local res=Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_EXTRA,0,1,nil,e,tp,mg1,nil,chkf)
 		if not res then
 			local ce=Duel.GetChainMaterial(tp)

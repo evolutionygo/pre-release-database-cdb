@@ -26,7 +26,7 @@ function s.filter2(c,e,tp,m,f,chkf)
 end
 function s.fcon(e,tp)
 	local chkf=tp
-	local mg1=Duel.GetFusionMaterial(tp)
+	local mg1=Duel.GetFusionMaterial(tp):Filter(s.filter1,nil,e)
 	local res=Duel.IsExistingMatchingCard(s.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,mg1,nil,chkf)
 	if not res then
 		local ce=Duel.GetChainMaterial(tp)
