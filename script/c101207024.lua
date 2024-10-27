@@ -91,7 +91,8 @@ end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local tc1,tc2=Duel.GetFirstTarget()
 	if tc1~=e:GetLabelObject() then tc1,tc2=tc2,tc1 end
-	if tc1:IsRelateToEffect(e) and tc1:IsType(TYPE_MONSTER) and Duel.Destroy(tc1,REASON_EFFECT)>0 and tc2:IsRelateToEffect(e) and aux.NecroValleyFilter()(tc2) then
+	if tc1:IsRelateToEffect(e) and tc1:IsType(TYPE_MONSTER) and Duel.Destroy(tc1,REASON_EFFECT)>0
+		and tc2:IsRelateToEffect(e) and aux.NecroValleyFilter()(tc2) then
 		Duel.SpecialSummon(tc2,0,tp,tp,false,false,POS_FACEUP)
 	end
 end
