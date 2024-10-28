@@ -65,7 +65,7 @@ function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 			tc:RegisterEffect(e1)
 		end
 	else
-		local g=Duel.GetMatchingGroup(Card.IsAbleToGrave,tp,LOCATION_MZONE,0,nil)
+		local g=Duel.GetMatchingGroup(nil,tp,LOCATION_MZONE,0,nil)
 		if g:GetCount()==0 or Duel.SendtoGrave(g,REASON_EFFECT)==0 then return end
 		local oc=Duel.GetOperatedGroup():FilterCount(Card.IsLocation,nil,LOCATION_GRAVE)
 		if oc==0 then return end
