@@ -101,10 +101,10 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 			and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 			Duel.BreakEffect()
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
-			local sg=Duel.SelectMatchingCard(tp,Card.IsAbleToHand,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
-			if #sg>0 then
-				Duel.HintSelection(sg)
-				Duel.SendtoHand(sg,nil,REASON_EFFECT)
+			local rg=Duel.SelectMatchingCard(tp,Card.IsAbleToHand,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
+			if #rg>0 then
+				Duel.HintSelection(rg)
+				Duel.SendtoHand(rg,nil,REASON_EFFECT)
 			end
 		end
 	end
