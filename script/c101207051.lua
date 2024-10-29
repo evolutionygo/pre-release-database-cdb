@@ -76,11 +76,13 @@ function s.fsop(e,tp,eg,ep,ev,re,r,rp)
 	if sg1:GetCount()>0 or (sg2~=nil and sg2:GetCount()>0) then
 		local sg=sg1:Clone()
 		if sg2 then sg:Merge(sg2) end
+		::cancel::
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local tg=sg:Select(tp,1,1,nil)
 		local tc=tg:GetFirst()
 		if sg1:IsContains(tc) and (sg2==nil or not sg2:IsContains(tc) or (ce and not Duel.SelectYesNo(tp,ce:GetDescription()))) then
 			local mat=Duel.SelectFusionMaterial(tp,tc,mg,nil,chkf)
+			if #mat==0 then goto cancel end
 			tc:SetMaterial(mat)
 			if mat:IsExists(Card.IsFacedown,1,nil) then
 				local cg=mat:Filter(Card.IsFacedown,nil)
@@ -95,6 +97,7 @@ function s.fsop(e,tp,eg,ep,ev,re,r,rp)
 			Duel.SpecialSummon(tc,SUMMON_VALUE_DARK_FUSION,tp,tp,false,false,POS_FACEUP)
 		elseif ce~=nil then
 			local mat2=Duel.SelectFusionMaterial(tp,tc,mg3,nil,chkf)
+			if #mat2==0 then goto cancel end
 			local fop=ce:GetOperation()
 			fop(ce,e,tp,tc,mat2,SUMMON_VALUE_DARK_FUSION)
 		end
