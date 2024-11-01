@@ -49,7 +49,7 @@ merge_databases:
   image: git-registry.mycard.moe/mycard/ygopro-cdb-descgen:master-x86
   variables:
     YGOPRO_PIC_URL_PREFIX: 'https://cdn02.moecube.com:444/ygopro-super-pre/data/pics/'
-    YGOPRO_PIC_URL_SUFFIX: '.jpg'
+    YGOPRO_PIC_URL_SUFFIX: '.jpg?version3.0.0'
     FIELDS: 'name,desc,overallString,picUrl'
     GIT_DEPTH: '1000'
     OUTPUT_FILENAME: test-release.json
