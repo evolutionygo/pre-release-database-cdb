@@ -46,7 +46,7 @@ function s.spval(e,c)
 	return 0,zone
 end
 function s.rmfilter(c,tc)
-	return c:IsRace(RACE_CYBERSE) and c:IsAbleToRemove() and not c:IsCode(tc:GetLinkCode())
+	return c:IsRace(RACE_CYBERSE) and c:IsAbleToRemove()
 end
 function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.rmfilter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,nil,e:GetHandler()) end
@@ -54,12 +54,12 @@ function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if not c:IsRelateToEffect(e) or c:IsFacedown() then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local cg=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.rmfilter),tp,LOCATION_HAND+LOCATION_GRAVE,0,1,1,nil,c)
+	local cg=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.rmfilter),tp,LOCATION_HAND+LOCATION_GRAVE,0,1,1,nil,aux.ExceptThisCard(e))
 	if cg:GetCount()==0 then return end
 	local code1,code2=cg:GetFirst():GetOriginalCodeRule()
-	if Duel.Remove(cg,POS_FACEUP,REASON_EFFECT)~=0 and cg:IsExists(Card.IsLocation,1,nil,LOCATION_REMOVED) then
+	if Duel.Remove(cg,POS_FACEUP,REASON_EFFECT)~=0 and cg:IsExists(Card.IsLocation,1,nil,LOCATION_REMOVED)
+		and c:IsRelateToEffect(e) and c:IsFaceup() and c:IsType(TYPE_MONSTER) then
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_ADD_LINK_CODE)
