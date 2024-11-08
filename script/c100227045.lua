@@ -1,5 +1,6 @@
 --ジェムナイト・ディスパージョン
 local s,id,o=GetID()
+---@param c Card
 function s.initial_effect(c)
 	aux.AddCodeList(c,1264319)
 	--Activate 1
@@ -35,7 +36,7 @@ function s.gcheck(sg)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local chkf=tp
-	local mg1=Duel.GetFusionMaterial(tp)
+	local mg1=Duel.GetFusionMaterial(tp):Filter(s.filter1,nil,e)
 	if Duel.IsExistingMatchingCard(Card.IsCode,tp,LOCATION_GRAVE,0,1,nil,1264319) then
 		local sg=Duel.GetMatchingGroup(s.filter0,tp,LOCATION_DECK+LOCATION_EXTRA,0,nil)
 		mg1:Merge(sg)
