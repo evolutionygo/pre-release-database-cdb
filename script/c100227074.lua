@@ -51,8 +51,7 @@ function s.mat_filter(c)
 	return not c:IsLevel(9)
 end
 function s.cfilter(c,tp)
-	return c:IsPreviousPosition(POS_FACEUP) and c:IsPreviousControler(tp)
-		and c:IsControler(tp) and c:IsSetCard(0xb4)
+	return c:IsPreviousControler(tp) and c:IsControler(tp) and c:IsSetCard(0xb4)
 end
 function s.rmcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.cfilter,1,nil,tp) and e:GetHandler():IsStatus(STATUS_EFFECT_ENABLED)
