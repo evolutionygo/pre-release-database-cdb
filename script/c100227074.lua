@@ -1,5 +1,6 @@
 --メタトロンの影霊衣
 local s,id,o=GetID()
+---@param c Card
 function s.initial_effect(c)
 	aux.EnablePendulumAttribute(c)
 	--Cannot Special Summon
@@ -51,8 +52,7 @@ function s.mat_filter(c)
 end
 function s.cfilter(c,tp)
 	return c:IsPreviousPosition(POS_FACEUP) and c:IsPreviousControler(tp)
-		and c:IsControler(tp)
-		and c:IsSetCard(0xb4)
+		and c:IsControler(tp) and c:IsSetCard(0xb4)
 end
 function s.rmcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.cfilter,1,nil,tp) and e:GetHandler():IsStatus(STATUS_EFFECT_ENABLED)
@@ -62,7 +62,7 @@ function s.rmfilter(c)
 end
 function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() and s.rmfilter(chkc) end
-	if chk==0 then return true end
+	if chk==0 then return Duel.IsExistingTarget(s.rmfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local g=Duel.SelectTarget(tp,s.rmfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,1,0,0)
@@ -81,8 +81,9 @@ function s.rmfilter2(c)
 	return c:IsType(TYPE_MONSTER) and c:IsFaceup() and c:IsAbleToRemove()
 end
 function s.rmtg2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsOnField() and chkc:IsControler(1-tp) and s.rmfilter2(chkc) end
-	if chk==0 then return true end
+	local c=e:GetHandler()
+	if chkc then return c:IsAbleToRemove() and chkc:IsOnField() and chkc:IsControler(1-tp) and s.rmfilter2(chkc) end
+	if chk==0 then return c:IsAbleToRemove() and Duel.IsExistingTarget(s.rmfilter2,tp,0,LOCATION_MZONE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local g=Duel.SelectTarget(tp,s.rmfilter2,tp,0,LOCATION_MZONE,1,1,nil)
 	g:AddCard(e:GetHandler())
@@ -91,8 +92,8 @@ end
 function s.rmop2(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if c:IsFaceup() and c:IsRelateToEffect(e) and c:IsAbleToRemove() then
-		if Duel.Remove(c,0,REASON_EFFECT+REASON_TEMPORARY)~=0 and c:GetOriginalCode()==id then
+	if c:IsRelateToEffect(e) and c:IsAbleToRemove() and Duel.Remove(c,0,REASON_EFFECT+REASON_TEMPORARY)~=0 then
+		if c:GetOriginalCode()==id then
 			local e1=Effect.CreateEffect(c)
 			e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 			e1:SetCode(EVENT_PHASE+PHASE_END)
@@ -101,10 +102,9 @@ function s.rmop2(e,tp,eg,ep,ev,re,r,rp)
 			e1:SetCountLimit(1)
 			e1:SetOperation(s.retop)
 			Duel.RegisterEffect(e1,tp)
-			if tc:IsRelateToEffect(e) then
-				Duel.BreakEffect()
-				Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)
-			end
+		end
+		if tc:IsRelateToEffect(e) and tc:IsType(TYPE_MONSTER) then
+			Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)
 		end
 	end
 end

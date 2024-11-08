@@ -1,5 +1,6 @@
 --魔轟神獣ベヒルモス
 local s,id,o=GetID()
+---@param c Card
 function s.initial_effect(c)
 	--synchro summon
 	local e1=Effect.CreateEffect(c)

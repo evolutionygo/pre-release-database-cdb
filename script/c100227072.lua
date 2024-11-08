@@ -1,5 +1,6 @@
 --影霊衣の魔剣士 アバンス
 local s,id,o=GetID()
+---@param c Card
 function s.initial_effect(c)
 	--special summon
 	local e1=Effect.CreateEffect(c)
@@ -55,7 +56,7 @@ function s.rlevel(e,c)
 	else return lv end
 end
 function s.thcon(e,tp,eg,ep,ev,re,r,rp)
-	return bit.band(r,REASON_EFFECT)~=0
+	return r&REASON_EFFECT~=0
 end
 function s.thfilter(c)
 	return c:IsFaceupEx() and c:IsSetCard(0xb4) and c:IsAbleToHand()

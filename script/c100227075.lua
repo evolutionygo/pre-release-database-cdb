@@ -1,8 +1,10 @@
 --影霊衣の神魔鏡
 local s,id,o=GetID()
+---@param c Card
 function s.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
@@ -13,6 +15,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 	--search
 	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_GRAVE)
@@ -63,9 +66,6 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		if not mat then goto cancel end
 		tc:SetMaterial(mat)
 		local mat2=mat:Filter(Card.IsLocation,nil,LOCATION_EXTRA):Filter(s.mfilter,nil)
-		if #mat2>0 then
-			Duel.HintSelection(mat2)
-		end
 		mat:Sub(mat2)
 		Duel.ReleaseRitualMaterial(mat)
 		Duel.SendtoGrave(mat2,REASON_EFFECT+REASON_MATERIAL+REASON_RITUAL)
@@ -78,11 +78,12 @@ function s.cfilter(c)
 	return c:IsSetCard(0xb4) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost()
 end
 function s.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost()
+	local c=e:GetHandler()
+	if chk==0 then return c:IsAbleToRemoveAsCost()
 		and Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_GRAVE,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local g=Duel.SelectMatchingCard(tp,s.cfilter,tp,LOCATION_GRAVE,0,1,1,nil)
-	g:AddCard(e:GetHandler())
+	g:AddCard(c)
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
 function s.thfilter(c)

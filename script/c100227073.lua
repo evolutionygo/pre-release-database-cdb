@@ -1,5 +1,6 @@
 --影霊衣の舞巫女 エミリア
 local s,id,o=GetID()
+---@param c Card
 function s.initial_effect(c)
 	--special summon
 	local e1=Effect.CreateEffect(c)
@@ -53,8 +54,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.thfilter(c)
 	return c:IsSetCard(0xb4) and c:IsAbleToHand()
-		and (c:GetType()&TYPE_MONSTER+TYPE_RITUAL==TYPE_MONSTER+TYPE_RITUAL
-		or c:IsType(TYPE_SPELL))
+		and (c:IsAllTypes(TYPE_MONSTER+TYPE_RITUAL) or c:IsType(TYPE_SPELL))
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil) end
