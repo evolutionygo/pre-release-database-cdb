@@ -78,7 +78,7 @@ function s.rmcon2(e,tp,eg,ep,ev,re,r,rp)
 	return ph==PHASE_MAIN1 or ph==PHASE_MAIN2
 end
 function s.rmfilter2(c)
-	return c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToRemove()
+	return c:IsType(TYPE_MONSTER) and c:IsFaceup() and c:IsAbleToRemove()
 end
 function s.rmtg2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() and chkc:IsControler(1-tp) and s.rmfilter2(chkc) end
