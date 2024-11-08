@@ -16,7 +16,6 @@ function s.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE)
 	e2:SetCode(EFFECT_RITUAL_LEVEL)
 	e2:SetValue(s.rlevel)
-	e2:SetRange(LOCATION_MZONE)
 	c:RegisterEffect(e2)
 	--tohand
 	local e3=Effect.CreateEffect(c)

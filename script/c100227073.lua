@@ -32,7 +32,6 @@ function s.initial_effect(c)
 	e4:SetType(EFFECT_TYPE_SINGLE)
 	e4:SetCode(EFFECT_RITUAL_LEVEL)
 	e4:SetValue(s.rlevel)
-	e4:SetRange(LOCATION_MZONE)
 	c:RegisterEffect(e4)
 end
 function s.cfilter(c)
