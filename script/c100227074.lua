@@ -2,6 +2,7 @@
 local s,id,o=GetID()
 ---@param c Card
 function s.initial_effect(c)
+	c:EnableReviveLimit()
 	aux.EnablePendulumAttribute(c)
 	--Cannot Special Summon
 	local e0=Effect.CreateEffect(c)
