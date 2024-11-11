@@ -18,6 +18,7 @@ function s.initial_effect(c)
 	e2:SetCategory(CATEGORY_NEGATE+CATEGORY_DESTROY)
 	e2:SetType(EFFECT_TYPE_QUICK_O)
 	e2:SetCode(EVENT_CHAINING)
+	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCountLimit(1,id+o)
 	e2:SetCondition(s.negcon)
@@ -54,7 +55,7 @@ end
 function s.negcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	return Duel.IsChainNegatable(ev) and not c:IsStatus(STATUS_BATTLE_DESTROYED)
-		and re:GetHandler()~=c
+		and re:GetHandler()~=c and re:IsActiveType(TYPE_MONSTER)
 		and Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_GRAVE,0,1,nil)
 end
 function s.negcost(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -63,13 +64,13 @@ function s.negcost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.negtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
-	Duel.SetOperationInfo(0,CATEGORY_DISABLE,eg,1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_NEGATE,eg,1,0,0)
 	if re:GetHandler():IsDestructable() and re:GetHandler():IsRelateToEffect(re) then
 		Duel.SetOperationInfo(0,CATEGORY_DESTROY,eg,1,0,0)
 	end
 end
 function s.negop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToEffect(re) then
-		Duel.Destroy(re:GetHandler(), REASON_EFFECT)
+		Duel.Destroy(re:GetHandler(),REASON_EFFECT)
 	end
 end

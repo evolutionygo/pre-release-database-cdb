@@ -41,14 +41,16 @@ function s.rfilter(c)
 	return c:IsSetCard(0x171) and c:IsAbleToRemoveAsCost()
 end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.rfilter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,e:GetHandler()) end
+	local c=e:GetHandler();
+	if chk==0 then return Duel.IsExistingMatchingCard(s.rfilter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,c) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,s.rfilter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,1,e:GetHandler())
+	local g=Duel.SelectMatchingCard(tp,s.rfilter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,1,c)
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
+	local c=e:GetHandler()
+	if chk==0 then return c:IsCanBeSpecialSummoned(e,0,tp,false,false) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,c,1,0,0)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -67,10 +69,11 @@ function s.thfilter(c,e,tp)
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil,e,tp) end
+	Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK+LOCATION_GRAVE)
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_OPERATECARD)
 	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.thfilter),tp,LOCATION_DECK+LOCATION_GRAVE,0,1,1,nil,e,tp)
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	local tc=g:GetFirst()
@@ -89,7 +92,9 @@ function s.poscon(e,tp,eg,ep,ev,re,r,rp)
 	return ep==1-tp and rc:IsOnField() and rc:IsFaceup() and rc:IsRelateToEffect(re) and re:IsActiveType(TYPE_MONSTER) and rc:IsAttackAbove(2500)
 end
 function s.postg(e,tp,eg,ep,ev,re,r,rp,chk)
+	local rc=re:GetHandler()
 	if chk==0 then return rc:IsCanTurnSet() end
+	Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
 	Duel.SetOperationInfo(0,CATEGORY_POSITION,eg,1,0,0)
 end
 function s.posop(e,tp,eg,ep,ev,re,r,rp)
