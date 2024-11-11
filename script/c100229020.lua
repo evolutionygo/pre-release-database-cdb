@@ -55,7 +55,7 @@ end
 function s.negcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	return Duel.IsChainNegatable(ev) and not c:IsStatus(STATUS_BATTLE_DESTROYED)
-		and re:GetHandler()~=c
+		and re:GetHandler()~=c and re:IsActiveType(TYPE_MONSTER)
 		and Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_GRAVE,0,1,nil)
 end
 function s.negcost(e,tp,eg,ep,ev,re,r,rp,chk)
