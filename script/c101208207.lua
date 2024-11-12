@@ -17,21 +17,21 @@ function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:SetLabel(1)
 	if chk==0 then return true end
 end
-function s.thfilter(c,res,att)
-	if res then
-		if c:IsLevelAbove(5) or not c:IsRace(RACE_CYBERSE) then return false end
-	else
-		if not c:IsSetCard(0x135) then return false end
-	end
-	return not c:IsAttribute(att) and c:IsAbleToHand()
+function s.thdfilter(c)
+	return c:IsAbleToHand() and not c:IsAttribute(ATTRIBUTE_DARK)
+		and c:IsLevelBelow(4) and c:IsRace(RACE_CYBERS)
 end
+function s.thndfilter(c,att)
+	return c:IsAbleToHand() and not c:IsAttribute(att) and c:IsSetCard(0x135)
+end
+---@param c Card
 function s.cfilter(c,e,tp)
 	return c:IsRace(RACE_CYBERSE) and not c:IsPublic()
 		and (c:IsAttribute(ATTRIBUTE_DARK)
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil,true,ATTRIBUTE_DARK)
+		and Duel.IsExistingMatchingCard(s.thdfilter,tp,LOCATION_DECK,0,1,nil)
 		or not c:IsAttribute(ATTRIBUTE_DARK) and c:IsAbleToDeck()
-		and Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil,false,c:GetAttribute()))
+		and Duel.IsExistingMatchingCard(s.thndfilter,tp,LOCATION_DECK,0,1,nil,c:GetAttribute()))
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
@@ -44,31 +44,40 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.SelectMatchingCard(tp,s.cfilter,tp,LOCATION_HAND,0,1,1,nil,e,tp)
 	Duel.ConfirmCards(1-tp,g)
 	Duel.ShuffleHand(tp)
+	local gc=g:GetFirst()
+	if gc:IsAttribute(ATTRIBUTE_DARK) then
+		Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,gc,1,0,0)
+		e:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_SEARCH+CATEGORY_TOHAND)
+	else
+		Duel.SetOperationInfo(0,CATEGORY_TODECK,gc,1,0,0)
+		e:SetCategory(CATEGORY_TODECK+CATEGORY_SEARCH+CATEGORY_TOHAND)
+	end
 	Duel.SetTargetCard(g)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if not tc:IsRelateToEffect(e) then return false end
-	if tc:IsAttribute(ATTRIBUTE_DARK) then
-		if Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)~=0
-			and Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil,true,ATTRIBUTE_DARK) then
-			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-			local g=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_DECK,0,1,1,nil,true,ATTRIBUTE_DARK)
-			if g:GetCount()>0 then
-				Duel.BreakEffect()
-				Duel.SendtoHand(g,nil,REASON_EFFECT)
-				Duel.ConfirmCards(1-tp,g)
+	if tc:IsRelateToEffect(e) then
+		if tc:IsAttribute(ATTRIBUTE_DARK) then
+			if Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)~=0
+				and Duel.IsExistingMatchingCard(s.thdfilter,tp,LOCATION_DECK,0,1,nil) then
+				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+				local g=Duel.SelectMatchingCard(tp,s.thdfilter,tp,LOCATION_DECK,0,1,1,nil)
+				if g:GetCount()>0 then
+					Duel.SendtoHand(g,nil,REASON_EFFECT)
+					Duel.ConfirmCards(1-tp,g)
+				end
 			end
-		end
-	else
-		if Duel.SendtoDeck(tc,nil,2,REASON_EFFECT)~=0 and tc:IsLocation(LOCATION_DECK)
-			and Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil,false,c:GetAttribute()) then
-			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-			local g=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_DECK,0,1,1,nil,false,c:GetAttribute())
-			if g:GetCount()>0 then
-				Duel.SendtoHand(g,nil,REASON_EFFECT)
-				Duel.ConfirmCards(1-tp,g)
+		else
+			local att=tc:GetAttribute()
+			if Duel.SendtoDeck(tc,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)~=0 and tc:IsLocation(LOCATION_DECK)
+				and Duel.IsExistingMatchingCard(s.thndfilter,tp,LOCATION_DECK,0,1,nil,att) then
+				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+				local g=Duel.SelectMatchingCard(tp,s.thndfilter,tp,LOCATION_DECK,0,1,1,nil,att)
+				if g:GetCount()>0 then
+					Duel.SendtoHand(g,nil,REASON_EFFECT)
+					Duel.ConfirmCards(1-tp,g)
+				end
 			end
 		end
 	end
