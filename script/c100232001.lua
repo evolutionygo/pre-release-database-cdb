@@ -13,8 +13,8 @@ function s.initial_effect(c)
 	--attack up
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e2:SetCode(EVENT_CHAIN_SOLVED)
-	e2:SetRange(EVENT_ATTACK_ANNOUNCE)
+	e2:SetCode(EVENT_ATTACK_ANNOUNCE)
+	e2:SetRange(LOCATION_MZONE)
 	e2:SetOperation(s.atkop)
 	c:RegisterEffect(e2)
 	--destroy
@@ -41,6 +41,7 @@ function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetValue(1000)
 	e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_DISABLE)
 	c:RegisterEffect(e1)
+	Duel.AdjustAll()
 end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
