@@ -59,8 +59,10 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	if #g>0 then
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,g)
-		Duel.ShuffleHand(tp)
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DISCARD)
+		local dg=Duel.SelectMatchingCard(tp,Card.IsDiscardable,tp,LOCATION_HAND,0,1,1,nil,REASON_EFFECT)
 		Duel.BreakEffect()
-		Duel.DiscardHand(tp,nil,1,1,REASON_EFFECT+REASON_DISCARD,nil)
+		Duel.ShuffleHand(tp)
+		Duel.SendtoGrave(dg,REASON_EFFECT+REASON_DISCARD)
 	end
 end
