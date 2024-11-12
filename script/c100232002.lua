@@ -18,11 +18,10 @@ function s.initial_effect(c)
 	--set
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
-	e2:SetCategory(CATEGORY_CONTROL)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_PHASE+PHASE_STANDBY)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e2:SetRange(LOCATION_FZONE)
+	e2:SetRange(LOCATION_MZONE)
 	e2:SetCountLimit(1,id+o)
 	e2:SetCondition(s.setcon)
 	e2:SetTarget(s.settg)
@@ -47,16 +46,17 @@ function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e)
 	if Duel.Remove(g,POS_FACEUP,REASON_EFFECT)~=0 and g:IsExists(Card.IsLocation,1,nil,LOCATION_REMOVED) then
 		local rg=Duel.GetOperatedGroup():Filter(Card.IsLocation,nil,LOCATION_REMOVED)
-		rg:KeepAlive()
+		local fid=e:GetHandler():GetFieldID()
 		for rc in aux.Next(rg) do
-			rc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,2)
+			rc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,0,1,fid)
 		end
+		rg:KeepAlive()
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 		e1:SetCode(EVENT_PHASE+PHASE_END)
 		e1:SetCountLimit(1)
 		e1:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
-		e1:SetLabel(Duel.GetTurnCount())
+		e1:SetLabel(fid,Duel.GetTurnCount())
 		e1:SetLabelObject(rg)
 		e1:SetCondition(s.tdcon)
 		e1:SetOperation(s.tdop)
@@ -64,9 +64,18 @@ function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.RegisterEffect(e1,tp)
 	end
 end
+function s.tdfilter(c,fid)
+	return c:GetFlagEffectLabel(id)==fid
+end
 function s.tdcon(e,tp,eg,ep,ev,re,r,rp)
-	local tc=e:GetLabelObject()
-	return Duel.GetTurnCount()~=e:GetLabel() and tc:GetFlagEffect(id)~=0
+	local fid,turnc=e:GetLabel()
+	if Duel.GetTurnCount()==turnc then return false end
+	local g=e:GetLabelObject()
+	if not g:IsExists(s.tdfilter,1,nil,fid) then
+		g:DeleteGroup()
+		e:Reset()
+		return false
+	else return true end
 end
 function s.tdop(e,tp,eg,ep,ev,re,r,rp)
 	local tg=e:GetLabelObject()
