@@ -24,7 +24,6 @@ end
 function s.thndfilter(c,att)
 	return c:IsAbleToHand() and not c:IsAttribute(att) and c:IsSetCard(0x135)
 end
----@param c Card
 function s.cfilter(c,e,tp)
 	return c:IsRace(RACE_CYBERSE) and not c:IsPublic()
 		and (c:IsAttribute(ATTRIBUTE_DARK)
