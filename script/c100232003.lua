@@ -31,7 +31,6 @@ function s.initial_effect(c)
 	--be material from grave
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,2))
-	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e3:SetType(EFFECT_TYPE_TRIGGER_O+EFFECT_TYPE_SINGLE)
 	e3:SetCode(EVENT_DETACH_MATERIAL)
 	e3:SetProperty(EFFECT_FLAG_DELAY)
