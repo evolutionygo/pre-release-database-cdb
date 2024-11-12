@@ -7,6 +7,7 @@ function s.initial_effect(c)
 	c:EnableReviveLimit()
 	--remove
 	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetProperty(EFFECT_FLAG_SET_AVAILABLE+EFFECT_FLAG_IGNORE_RANGE+EFFECT_FLAG_IGNORE_IMMUNE)
 	e1:SetCode(EFFECT_TO_GRAVE_REDIRECT)
@@ -40,7 +41,8 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function s.rmtg(e,c)
-	return c:IsLocation(LOCATION_OVERLAY) or c:IsPreviousLocation(LOCATION_OVERLAY)
+	return (c:IsLocation(LOCATION_OVERLAY) or c:IsPreviousLocation(LOCATION_OVERLAY))
+		and c:IsReason(REASON_COST+REASON_EFFECT)
 end
 function s.ovcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(Card.IsType,1,nil,TYPE_MONSTER)
@@ -50,7 +52,7 @@ function s.ovtg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.ovop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) and c:IsFaceup() then
+	if c:IsRelateToEffect(e) then
 		c:RemoveOverlayCard(tp,1,1,REASON_EFFECT)
 	end
 end
@@ -73,7 +75,7 @@ function s.mafilter(c,e)
 end
 function s.matop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local g=Duel.GetTargetsRelateToChain():Filter(s.mafilter,nil,e)
+	local g=Duel.GetTargetsRelateToChain():Filter(aux.NecroValleyFilter(s.mafilter),nil,e)
 	if c:IsRelateToChain() and #g>0 then
 		Duel.Overlay(c,g)
 	end
