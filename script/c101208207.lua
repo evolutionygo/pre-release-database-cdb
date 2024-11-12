@@ -17,7 +17,7 @@ function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:SetLabel(1)
 	if chk==0 then return true end
 end
-function s.cfilter(c,res,att)
+function s.thfilter(c,res,att)
 	if res then
 		if c:IsLevelAbove(5) or not c:IsRace(RACE_CYBERSE) then return false end
 	else
@@ -28,7 +28,7 @@ end
 function s.cfilter(c,e,tp)
 	return c:IsRace(RACE_CYBERSE) and not c:IsPublic()
 		and (c:IsAttribute(ATTRIBUTE_DARK)
-		and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+		and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil,true,ATTRIBUTE_DARK)
 		or not c:IsAttribute(ATTRIBUTE_DARK) and c:IsAbleToDeck()
 		and Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil,false,c:GetAttribute()))
@@ -62,7 +62,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			end
 		end
 	else
-		if Duel.SendtoDeck(tc,nil,SEQ_DECKBOTTOM,REASON_EFFECT)~=0 and tc:IsLocation(LOCATION_DECK)
+		if Duel.SendtoDeck(tc,nil,2,REASON_EFFECT)~=0 and tc:IsLocation(LOCATION_DECK)
 			and Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil,false,c:GetAttribute()) then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 			local g=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_DECK,0,1,1,nil,false,c:GetAttribute())
