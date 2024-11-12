@@ -47,7 +47,7 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 		if dc>tc:GetLevel() then
 			if Duel.Destroy(tc,REASON_EFFECT)~=0 then
 				local lv=tc:GetOriginalLevel()
-				if Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil,lv)
+				if lv>0 and Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil,lv)
 					and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
 					Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 					local g=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_DECK,0,1,1,nil,lv)
