@@ -78,7 +78,9 @@ function s.tdcon(e,tp,eg,ep,ev,re,r,rp)
 	else return true end
 end
 function s.tdop(e,tp,eg,ep,ev,re,r,rp)
-	local tg=e:GetLabelObject()
+	local fid,turnc=e:GetLabel()
+	local g=e:GetLabelObject()
+	local tg=g:Filter(s.tdfilter,nil,fid)
 	if tg:GetCount()>0 then
 		Duel.Hint(HINT_CARD,0,id)
 		Duel.HintSelection(tg)
