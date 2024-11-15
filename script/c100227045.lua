@@ -6,7 +6,7 @@ function s.initial_effect(c)
 	--Activate 1
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
-	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_FUSION_SUMMON+CATEGORY_SEARCH+CATEGORY_TOHAND+CATEGORY_DECKDES)
+	e1:SetCategory(CATEGORY_SPECIAL_SUMMON|CATEGORY_FUSION_SUMMON|CATEGORY_SEARCH|CATEGORY_TOHAND|CATEGORY_DECKDES)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetTarget(s.target)
@@ -74,12 +74,12 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 	e:SetLabel(op)
 	if op==1 then
-		e:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_FUSION_SUMMON+CATEGORY_DECKDES)
+		e:SetCategory(CATEGORY_SPECIAL_SUMMON|CATEGORY_FUSION_SUMMON|CATEGORY_DECKDES)
 		Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1)
 		Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 	elseif op==2 then
 		e:SetLabel(2)
-		e:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND)
+		e:SetCategory(CATEGORY_SEARCH|CATEGORY_TOHAND)
 		Duel.RegisterFlagEffect(tp,id+o,RESET_PHASE+PHASE_END,0,1)
 		Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK+LOCATION_REMOVED)
 	end
