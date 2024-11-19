@@ -1,4 +1,4 @@
---DD 刻度测量师
+--DDスケール・サーベイヤー
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--pendulum
@@ -58,7 +58,7 @@ function s.scfilter(c)
 	return c:GetLeftScale()~=0
 end
 function s.sctg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_PZONE) and chkc:IsControler(tp) and s.scfilter(chkc) end
+	if chkc then return chkc:IsLocation(LOCATION_PZONE) and s.scfilter(chkc) end
 	if chk==0 then return Duel.IsExistingTarget(s.scfilter,tp,LOCATION_PZONE,LOCATION_PZONE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
 	Duel.SelectTarget(tp,s.scfilter,tp,LOCATION_PZONE,LOCATION_PZONE,1,2,nil)
@@ -119,10 +119,10 @@ function s.thfilter(c)
 		and c:GetOriginalType()&TYPE_PENDULUM~=0
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsOnField() and chkc:IsControler(1-tp) and chkc:IsAbleToHand() end
-	if chk==0 then return Duel.IsExistingTarget(Card.IsAbleToHand,tp,0,LOCATION_ONFIELD,1,nil) end
+	if chkc then return chkc:IsOnField() and chkc:IsControler(tp) and s.thfilter(chkc) end
+	if chk==0 then return Duel.IsExistingTarget(s.thfilter,tp,LOCATION_ONFIELD,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
-	local g=Duel.SelectTarget(tp,Card.IsAbleToHand,tp,0,LOCATION_ONFIELD,1,1,nil)
+	local g=Duel.SelectTarget(tp,s.thfilter,tp,LOCATION_ONFIELD,0,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,1,0,0)
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
