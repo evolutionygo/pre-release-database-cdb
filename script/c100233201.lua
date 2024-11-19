@@ -32,8 +32,8 @@ function s.initial_effect(c)
 	local e4=Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_SINGLE)
 	e4:SetCode(EFFECT_ADD_FUSION_CODE)
+	e4:SetCondition(s.fcon)
 	e4:SetValue(86120751)
-	e4:SetRange(LOCATION_MZONE)
 	c:RegisterEffect(e4)
 end
 s.fusion_effect=true
@@ -110,4 +110,8 @@ function s.fspop(e,tp,eg,ep,ev,re,r,rp)
 		end
 		tc:CompleteProcedure()
 	end
+end
+function s.fcon(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	return c:IsLocation(LOCATION_MZONE) and c:IsFaceup()
 end
