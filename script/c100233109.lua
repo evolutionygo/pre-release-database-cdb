@@ -20,7 +20,7 @@ end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local ch=Duel.GetCurrentChain()
 	local b1=(Duel.GetFlagEffect(tp,id)==0 and Duel.IsExistingMatchingCard(aux.AND(Card.IsFaceup,Card.IsSetCard),tp,LOCATION_MZONE,0,1,nil,0x128,0x150) or not e:IsCostChecked()) and Duel.IsExistingMatchingCard(s.tgfilter,tp,LOCATION_DECK,0,1,nil)
-	local b2=(Duel.GetFlagEffect(tp,id+o)==0 and ch>chk and Duel.GetChainInfo(ch-chk,CHAININFO_TRIGGERING_PLAYER)==1-tp or not e:IsCostChecked()) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_DECK,0,1,nil,e,tp)
+	local b2=(Duel.GetFlagEffect(tp,id+o)==0 and ch>chk and Duel.GetChainInfo(ch-chk,CHAININFO_TRIGGERING_PLAYER)==1-tp or not e:IsCostChecked()) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_DECK+LOCATION_HAND,0,1,nil,e,tp)
 	if chk==0 then return b1 or b2 end
 	local off=1
 	local ops={}
