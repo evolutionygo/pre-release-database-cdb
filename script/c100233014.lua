@@ -49,7 +49,7 @@ function s.rlcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.rlcfilter,1,nil,tp)
 end
 function s.rlfilter(c,e)
-	return c:IsFaceup() and c:IsCanBeEffectTarget(e)
+	return c:IsFaceup() and c:IsCanBeEffectTarget(e) and not c:IsImmuneToEffect(e)
 end
 function s.gcheck(g,tp)
 	return (g:GetClassCount(Card.GetRace)==1 or g:GetClassCount(Card.GetAttribute)==1)
@@ -69,9 +69,12 @@ function s.atkfilter(c,g)
 	sg:Sub(Group.FromCards(c))
 	return sg:FilterCount(Card.IsReleasable,nil)==2
 end
+function s.crlfilteer(c,e)
+	return c:IsRelateToEffect(e) and c:IsFaceup() and not c:IsImmuneToEffect(e)
+end
 function s.rlop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
-	local tg=g:Filter(Card.IsRelateToEffect,nil,e):Filter(Card.IsFaceup,nil)
+	local tg=g:Filter(s.crlfilteer,nil,e)
 	if tg:GetCount()~=3 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,3))
 	local sg=tg:FilterSelect(tp,s.atkfilter,1,1,nil,g)
