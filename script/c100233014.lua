@@ -42,11 +42,11 @@ function s.initial_effect(c)
 	e4:SetCode(EVENT_SPSUMMON_SUCCESS)
 	c:RegisterEffect(e4)
 end
-function s.cfilter(c,tp)
+function s.rlcfilter(c,tp)
 	return c:IsFaceup() and c:IsSetCard(0x10af) and c:IsControler(tp) and c:IsSummonType(SUMMON_TYPE_PENDULUM)
 end
 function s.rlcon(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(s.cfilter,1,nil,tp)
+	return eg:IsExists(s.rlcfilter,1,nil,tp)
 end
 function s.rlfilter(c,e)
 	return c:IsFaceup() and c:IsCanBeEffectTarget(e)
@@ -73,7 +73,7 @@ function s.rlop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
 	local tg=g:Filter(Card.IsRelateToEffect,nil,e):Filter(Card.IsFaceup,nil)
 	if tg:GetCount()~=3 then return end
-	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,2))
+	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,3))
 	local sg=tg:FilterSelect(tp,s.atkfilter,1,1,nil,g)
 	if sg:GetCount()>0 then
 		tg:Sub(sg)
