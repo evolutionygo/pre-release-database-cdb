@@ -70,7 +70,7 @@ function s.atkfilter(c,g)
 	return sg:FilterCount(Card.IsReleasable,nil)==2
 end
 function s.crlfilteer(c,e)
-	return c:IsRelateToEffect(e) and c:IsFaceup() and not c:IsImmuneToEffect(e)
+	return c:IsRelateToEffect(e) and c:IsFaceup() and not c:IsImmuneToEffect(e) and c:IsType(TYPE_MONSTER)
 end
 function s.rlop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
