@@ -19,36 +19,31 @@ function s.spfilter(c,e,tp)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local ch=Duel.GetCurrentChain()
-	local b1=(Duel.GetFlagEffect(tp,id)==0 and Duel.IsExistingMatchingCard(aux.AND(Card.IsFaceup,Card.IsSetCard),tp,LOCATION_MZONE,0,1,nil,0x128,0x150) or not e:IsCostChecked()) and Duel.IsExistingMatchingCard(s.tgfilter,tp,LOCATION_DECK,0,1,nil)
-	local b2=(Duel.GetFlagEffect(tp,id+o)==0 and ch>chk and Duel.GetChainInfo(ch-chk,CHAININFO_TRIGGERING_PLAYER)==1-tp or not e:IsCostChecked()) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_DECK+LOCATION_HAND,0,1,nil,e,tp)
+	local b1=Duel.IsExistingMatchingCard(s.tgfilter,tp,LOCATION_DECK,0,1,nil)
+		and (not e:IsCostChecked()
+			or Duel.GetFlagEffect(tp,id)==0 and Duel.IsExistingMatchingCard(aux.AND(Card.IsFaceup,Card.IsSetCard),tp,LOCATION_MZONE,0,1,nil,0x128,0x150))
+	local b2=Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_DECK+LOCATION_HAND,0,1,nil,e,tp)
+		and (not e:IsCostChecked()
+			or Duel.GetFlagEffect(tp,id+o)==0 and ch>chk and Duel.GetChainInfo(ch-chk,CHAININFO_TRIGGERING_PLAYER)==1-tp)
 	if chk==0 then return b1 or b2 end
-	local off=1
-	local ops={}
-	local opval={}
-	if b1 then
-		ops[off]=aux.Stringid(id,1)
-		opval[off-1]=1
-		off=off+1
+	local op=0
+	if b1 or b2 then
+		op=aux.SelectFromOptions(tp,
+			{b1,aux.Stringid(id,1),1},
+			{b2,aux.Stringid(id,2),2})
 	end
-	if b2 then
-		ops[off]=aux.Stringid(id,2)
-		opval[off-1]=2
-		off=off+1
-	end
-	if off==1 then return end
-	local op=Duel.SelectOption(tp,table.unpack(ops))
-	e:SetLabel(opval[op])
-	if opval[op]==1 then
+	e:SetLabel(op)
+	if op==1 then
 		if e:IsCostChecked() then
+			e:SetCategory(CATEGORY_TOGRAVE)
 			Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1)
 		end
-		e:SetCategory(CATEGORY_TOGRAVE)
 		Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_DECK)
-	else
+	elseif op==2 then
 		if e:IsCostChecked() then
 			Duel.RegisterFlagEffect(tp,id+o,RESET_PHASE+PHASE_END,0,1)
+			e:SetCategory(CATEGORY_SPECIAL_SUMMON)
 		end
-		e:SetCategory(CATEGORY_SPECIAL_SUMMON)
 		Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK+LOCATION_HAND)
 	end
 end
@@ -59,7 +54,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		if g:GetCount()>0 then
 			Duel.SendtoGrave(g,REASON_EFFECT)
 		end
-	else
+	elseif e:GetLabel()==2 then
 		if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_DECK+LOCATION_HAND,0,1,1,nil,e,tp)
