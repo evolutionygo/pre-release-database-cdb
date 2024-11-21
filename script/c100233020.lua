@@ -12,7 +12,7 @@ function s.initial_effect(c)
 end
 function s.tgfilter(c,ec)
 	return c:IsFaceup() and c:IsSetCard(0x150) and c:IsAbleToGraveAsCost()
-		and Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,Group.FromCards(c,ec))
+		and (Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,Group.FromCards(c,ec)) or Duel.GetMZoneCount(tp,c)>0)
 end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local b1=Duel.IsCanRemoveCounter(tp,1,0,0x1,2,REASON_COST)
