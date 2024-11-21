@@ -52,7 +52,7 @@ function s.rlfilter(c,e)
 	return c:IsFaceup() and c:IsCanBeEffectTarget(e)
 end
 function s.gcheck(g)
-	return (g:GetClassCount(Card.GetRace)==1 or g:GetClassCount(Card.GetAttribute)==1)
+	return (Auxiliary.SameValueCheck(g,Card.GetRace) or Auxiliary.SameValueCheck(g,Card.GetAttribute))
 		and g:IsExists(s.atkfilter,1,nil,g)
 end
 function s.rltg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
