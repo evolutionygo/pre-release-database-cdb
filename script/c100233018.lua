@@ -42,7 +42,7 @@ function s.eqtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		and Duel.IsExistingTarget(s.eqfilter,tp,LOCATION_GRAVE,LOCATION_ONFIELD,1,nil,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EQUIP)
 	local g=Duel.SelectTarget(tp,s.eqfilter,tp,LOCATION_GRAVE,LOCATION_ONFIELD,1,1,nil,tp)
-	if g:Filter():IsLocation(LOCATION_GRAVE) then
+	if g:FilterCount(Card.IsLocation,nil,LOCATION_GRAVE)>0 then
 		Duel.SetOperationInfo(0,CATEGORY_LEAVE_GRAVE,g,1,0,0)
 	end
 	Duel.SetOperationInfo(0,CATEGORY_EQUIP,g,1,0,0)

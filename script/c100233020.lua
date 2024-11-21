@@ -10,14 +10,14 @@ function s.initial_effect(c)
 	e1:SetOperation(s.activate)
 	c:RegisterEffect(e1)
 end
-function s.tgfilter(c,ec)
+function s.tgfilter(c,ec,e,tp)
 	return c:IsFaceup() and c:IsSetCard(0x150) and c:IsAbleToGraveAsCost()
 		and (Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,Group.FromCards(c,ec))
 			and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_HAND+LOCATION_EXTRA+LOCATION_GRAVE,0,1,nil,e,tp,c))
 end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local b1=Duel.IsCanRemoveCounter(tp,1,0,0x1,2,REASON_COST)
-	local b2=Duel.IsExistingMatchingCard(s.tgfilter,tp,LOCATION_ONFIELD,0,1,e:GetHandler(),e:GetHandler())
+	local b2=Duel.IsExistingMatchingCard(s.tgfilter,tp,LOCATION_ONFIELD,0,1,e:GetHandler(),e:GetHandler(),e,tp)
 	if chk==0 then return b1 or b2 end
 	local cost=0
 	if b1 or b2 then
@@ -29,7 +29,7 @@ function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 		Duel.RemoveCounter(tp,1,0,0x1,2,REASON_COST)
 	elseif cost==2 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-		local g=Duel.SelectMatchingCard(tp,s.tgfilter,tp,LOCATION_ONFIELD,0,1,1,e:GetHandler(),e:GetHandler())
+		local g=Duel.SelectMatchingCard(tp,s.tgfilter,tp,LOCATION_ONFIELD,0,1,1,e:GetHandler(),e:GetHandler(),e,tp)
 		Duel.SendtoGrave(g,REASON_COST)
 	end
 end
