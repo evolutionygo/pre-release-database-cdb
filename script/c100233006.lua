@@ -45,14 +45,16 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND+LOCATION_DECK)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
-	local g=Duel.SelectMatchingCard(tp,s.cfilter,tp,LOCATION_MZONE,0,1,1,nil,e,tp,nil)
-	local tc=g:GetFirst()
-	if tc then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-		local sg=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_HAND+LOCATION_DECK,0,1,1,nil,e,tp,tc:GetCode())
-		Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP)
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
+		local g=Duel.SelectMatchingCard(tp,s.cfilter,tp,LOCATION_MZONE,0,1,1,nil,e,tp,nil)
+		local tc=g:GetFirst()
+		if tc then
+			Duel.HintSelection(g)
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+			local sg=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_HAND+LOCATION_DECK,0,1,1,nil,e,tp,tc:GetCode())
+			Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP)
+		end
 	end
 	if e:IsHasType(EFFECT_TYPE_ACTIVATE) then
 		local e1=Effect.CreateEffect(e:GetHandler())
@@ -66,7 +68,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.splimit(e,c)
-	return c:IsLocation(LOCATION_EXTRA)
+	return not c:IsAttribute(ATTRIBUTE_WATER)
 end
 function s.thfilter(c)
 	return c:IsCode(100233004) and c:IsAbleToHand()
