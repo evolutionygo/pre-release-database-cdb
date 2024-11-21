@@ -12,7 +12,8 @@ function s.initial_effect(c)
 end
 function s.tgfilter(c,ec)
 	return c:IsFaceup() and c:IsSetCard(0x150) and c:IsAbleToGraveAsCost()
-		and (Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,Group.FromCards(c,ec)) or Duel.GetMZoneCount(tp,c)>0)
+		and (Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,Group.FromCards(c,ec))
+			and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_HAND+LOCATION_EXTRA+LOCATION_GRAVE,0,1,nil,e,tp,c))
 end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local b1=Duel.IsCanRemoveCounter(tp,1,0,0x1,2,REASON_COST)
@@ -24,7 +25,6 @@ function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 			{b1,aux.Stringid(id,1),1},
 			{b2,aux.Stringid(id,2),2})
 	end
-	e:SetLabel(cost)
 	if cost==1 then
 		Duel.RemoveCounter(tp,1,0,0x1,2,REASON_COST)
 	elseif cost==2 then
@@ -35,12 +35,12 @@ function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.spfilter(c,e,tp,rc)
 	return c:IsFaceupEx() and c:IsRace(RACE_SPELLCASTER) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
-		and (not c:IsLocation(LOCATION_EXTRA) and Duel.GetMZoneCount(tp)>0
+		and (not c:IsLocation(LOCATION_EXTRA) and Duel.GetMZoneCount(tp,rc)>0
 			or c:IsLocation(LOCATION_EXTRA) and Duel.GetLocationCountFromEx(tp,tp,rc,c)>0)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	local b1=Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_HAND+LOCATION_EXTRA+LOCATION_GRAVE,0,1,nil,e,tp,nil)
-		and Duel.GetFlagEffect(tp,id)==0
+	local b1=e:IsCostChecked() or (Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_HAND+LOCATION_EXTRA+LOCATION_GRAVE,0,1,nil,e,tp,nil)
+		and Duel.GetFlagEffect(tp,id)==0)
 	local b2=(Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,e:GetHandler()) or not e:IsCostChecked())
 		and Duel.GetFlagEffect(tp,id+o)==0
 	if chk==0 then return b1 or b2 end
