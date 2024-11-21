@@ -39,10 +39,10 @@ function s.spfilter(c,e,tp,rc)
 			or c:IsLocation(LOCATION_EXTRA) and Duel.GetLocationCountFromEx(tp,tp,rc,c)>0)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	local b1=e:IsCostChecked() or (Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_HAND+LOCATION_EXTRA+LOCATION_GRAVE,0,1,nil,e,tp,nil)
-		and Duel.GetFlagEffect(tp,id)==0)
-	local b2=(Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,e:GetHandler()) or not e:IsCostChecked())
-		and Duel.GetFlagEffect(tp,id+o)==0
+	local b1=Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_HAND+LOCATION_EXTRA+LOCATION_GRAVE,0,1,nil,e,tp,nil)
+		and (Duel.GetFlagEffect(tp,id)==0 or not e:IsCostChecked())
+	local b2=Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,e:GetHandler())
+		and (Duel.GetFlagEffect(tp,id+o)==0 or not e:IsCostChecked())
 	if chk==0 then return b1 or b2 end
 	local op=0
 	if b1 or b2 then
