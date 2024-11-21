@@ -88,7 +88,7 @@ function s.datcost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.datop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) and c:IsFaceup() then
+	if c:IsRelateToEffect(e) and c:IsFaceup() and c:GetBaseAttack()~=1500 then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_SET_BASE_ATTACK)
