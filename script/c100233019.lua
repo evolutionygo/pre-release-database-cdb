@@ -1,4 +1,4 @@
---結晶魔術 光の淚
+--結晶魔術 光の涙
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--activate

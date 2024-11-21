@@ -57,11 +57,11 @@ function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,1,0,0)
 end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and Duel.Destroy(tc,REASON_EFFECT)~=0
+	if tc:IsRelateToEffect(e) and tc:IsType(TYPE_MONSTER) and Duel.Destroy(tc,REASON_EFFECT)~=0
 		and Duel.IsPlayerCanSpecialSummonMonster(tp,id+o,0,TYPES_TOKEN_MONSTER,200,200,1,RACE_MACHINE,ATTRIBUTE_EARTH,POS_FACEUP_ATTACK,tp,0)
 		and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
+			Duel.BreakEffect()
 			local token=Duel.CreateToken(tp,id+o)
 			Duel.SpecialSummon(token,0,tp,tp,false,false,POS_FACEUP_ATTACK)
 	end
