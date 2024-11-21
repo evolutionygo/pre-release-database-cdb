@@ -1,7 +1,12 @@
 --銀河超航行
 local s,id,o=GetID()
 function s.initial_effect(c)
-	local e0=aux.AddThisCardInGraveAlreadyCheck(c)
+	local e0=Effect.CreateEffect(c)
+	e0:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+	e0:SetCode(EVENT_TO_GRAVE)
+	e0:SetLabel(0)
+	e0:SetCondition(s.ThisCardInGraveAlreadyCheckReg)
+	c:RegisterEffect(e0)
 	--Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
@@ -42,17 +47,54 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_REMOVED,0,1,1,nil,e,tp)
 	Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 end
-function s.spfilter(c,e,tp,se)
+function s.spfilter(c,e,tp,se,cid)
 	return c:IsType(TYPE_XYZ) and c:IsFaceupEx() and c:IsPreviousPosition(POS_FACEUP) and c:IsPreviousControler(tp)
 		and c:IsCanBeEffectTarget(e) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
-		and (se==nil or c:GetReasonEffect()~=se)
+		and (se==nil or c:GetReasonEffect()~=se) and (cid==nil or c:GetFieldID()>cid)
+end
+function s.ThisCardInGraveAlreadyCheckReg(e,tp,eg,ep,ev,re,r,rp)
+	--condition of continous effect will be checked before other effects
+	if r==0x20000400 then
+		e:SetLabel(e:GetHandler():GetFieldID())
+	end
+	if re==nil then return false end
+	if e:GetLabelObject()~=nil then return false end
+	if (r&REASON_EFFECT)>0 then
+		e:SetLabelObject(re)
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		e1:SetCode(EVENT_CHAIN_END)
+		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+		e1:SetOperation(Auxiliary.ThisCardInGraveAlreadyReset1)
+		e1:SetLabelObject(e)
+		Duel.RegisterEffect(e1,tp)
+		local e2=e1:Clone()
+		e2:SetCode(EVENT_BREAK_EFFECT)
+		e2:SetOperation(Auxiliary.ThisCardInGraveAlreadyReset2)
+		e2:SetReset(RESET_CHAIN)
+		e2:SetLabelObject(e1)
+		Duel.RegisterEffect(e2,tp)
+	elseif (r&REASON_MATERIAL)>0 or not re:IsActivated() and (r&REASON_COST)>0 then
+		e:SetLabelObject(re)
+		local reset_event=EVENT_SPSUMMON
+		if re:GetCode()~=EFFECT_SPSUMMON_PROC then reset_event=EVENT_SUMMON end
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		e1:SetCode(reset_event)
+		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+		e1:SetOperation(Auxiliary.ThisCardInGraveAlreadyReset1)
+		e1:SetLabelObject(e)
+		Duel.RegisterEffect(e1,tp)
+	end
+	return false
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	local se=e:GetLabelObject():GetLabelObject()
-	return eg:IsExists(s.spfilter,1,nil,e,tp,se) and not eg:IsContains(e:GetHandler())
+	local cid=e:GetLabelObject():GetLabel()
+	return eg:IsExists(s.spfilter,1,nil,e,tp,se,cid) and not eg:IsContains(e:GetHandler())
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	local g=eg:Filter(s.spfilter,nil,e,tp,nil)
+	local g=eg:Filter(s.spfilter,nil,e,tp,nil,nil)
 	if chkc then return g:IsContains(chkc) end
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and #g>0 end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
