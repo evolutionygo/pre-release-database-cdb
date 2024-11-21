@@ -49,28 +49,28 @@ function s.rlcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.rlcfilter,1,nil,tp)
 end
 function s.rlfilter(c,e)
-	return c:IsFaceup() and c:IsCanBeEffectTarget(e) and not c:IsImmuneToEffect(e)
+	return c:IsFaceup() and c:IsCanBeEffectTarget(e)
 end
-function s.gcheck(g,tp)
+function s.gcheck(g)
 	return (g:GetClassCount(Card.GetRace)==1 or g:GetClassCount(Card.GetAttribute)==1)
 		and g:IsExists(s.atkfilter,1,nil,g)
 end
 function s.rltg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local g=Duel.GetMatchingGroup(s.rlfilter,tp,0,LOCATION_MZONE,nil,e)
 	if chkc then return false end
-	if chk==0 then return g:CheckSubGroup(s.gcheck,3,3,tp) end
+	if chk==0 then return g:CheckSubGroup(s.gcheck,3,3) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
-	local sg=g:SelectSubGroup(tp,s.gcheck,false,3,3,tp)
+	local sg=g:SelectSubGroup(tp,s.gcheck,false,3,3)
 	Duel.SetTargetCard(sg)
 	Duel.SetOperationInfo(0,CATEGORY_RELEASE,sg,2,0,0)
 end
 function s.atkfilter(c,g)
 	local sg=g:Clone()
 	sg:Sub(Group.FromCards(c))
-	return sg:FilterCount(Card.IsReleasable,nil)==2
+	return sg:FilterCount(Card.IsReleasableByEffect,nil)==2
 end
 function s.crlfilteer(c,e)
-	return c:IsRelateToEffect(e) and c:IsFaceup() and not c:IsImmuneToEffect(e) and c:IsType(TYPE_MONSTER)
+	return c:IsRelateToEffect(e) and c:IsFaceup() and c:IsType(TYPE_MONSTER)
 end
 function s.rlop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
@@ -82,20 +82,22 @@ function s.rlop(e,tp,eg,ep,ev,re,r,rp)
 		tg:Sub(sg)
 		local atk=tg:GetSum(Card.GetAttack)
 		local def=tg:GetSum(Card.GetDefense)
-		Duel.Release(tg,REASON_EFFECT)
-		local tc=sg:GetFirst()
-		local e1=Effect.CreateEffect(e:GetHandler())
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_UPDATE_ATTACK)
-		e1:SetValue(atk)
-		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
-		tc:RegisterEffect(e1)
-		local e2=Effect.CreateEffect(e:GetHandler())
-		e2:SetType(EFFECT_TYPE_SINGLE)
-		e2:SetCode(EFFECT_UPDATE_DEFENSE)
-		e2:SetValue(def)
-		e2:SetReset(RESET_EVENT+RESETS_STANDARD)
-		tc:RegisterEffect(e2)
+		local rc=Duel.Release(tg,REASON_EFFECT)
+		if rc==2 then
+			local tc=sg:GetFirst()
+			local e1=Effect.CreateEffect(e:GetHandler())
+			e1:SetType(EFFECT_TYPE_SINGLE)
+			e1:SetCode(EFFECT_UPDATE_ATTACK)
+			e1:SetValue(atk)
+			e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+			tc:RegisterEffect(e1)
+			local e2=Effect.CreateEffect(e:GetHandler())
+			e2:SetType(EFFECT_TYPE_SINGLE)
+			e2:SetCode(EFFECT_UPDATE_DEFENSE)
+			e2:SetValue(def)
+			e2:SetReset(RESET_EVENT+RESETS_STANDARD)
+			tc:RegisterEffect(e2)
+		end
 	end
 end
 function s.cfilter(c)
