@@ -39,11 +39,14 @@ function s.thfilter(c)
 	return c:IsCode(100233009) and c:IsAbleToHand()
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil) or Duel.IsExistingMatchingCard(aux.AND(Card.IsFaceupEx),tp,LOCATION_ONFIELD+LOCATION_GRAVE,0,1,nil,100233009) and Duel.IsPlayerCanDraw(tp,1) end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil)
+		or Duel.IsExistingMatchingCard(aux.AND(Card.IsFaceupEx,Card.IsCode),tp,LOCATION_ONFIELD+LOCATION_GRAVE,0,1,nil,100233009)
+			and Duel.IsPlayerCanDraw(tp,1) end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
-	local dr=Duel.IsExistingMatchingCard(aux.AND(Card.IsFaceupEx),tp,LOCATION_ONFIELD+LOCATION_GRAVE,0,1,nil,100233009) and Duel.IsPlayerCanDraw(tp,1)
+	local dr=Duel.IsExistingMatchingCard(aux.AND(Card.IsFaceupEx,Card.IsCode),tp,LOCATION_ONFIELD+LOCATION_GRAVE,0,1,nil,100233009)
+		and Duel.IsPlayerCanDraw(tp,1)
 	if Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil) and (not dr or not Duel.SelectYesNo(tp,aux.Stringid(id,3))) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 		local g=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_DECK,0,1,1,nil)
@@ -67,7 +70,7 @@ function s.atkcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local rc=e:GetHandler():GetReasonCard()
-	if rc:IsRelateToBattle() then
+	if rc:IsRelateToBattle() and rc:IsType(TYPE_MONSTER) then
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_UPDATE_ATTACK)
