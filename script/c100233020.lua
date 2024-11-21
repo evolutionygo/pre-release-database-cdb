@@ -13,7 +13,7 @@ end
 function s.tgfilter(c,ec,e,tp)
 	return c:IsFaceup() and c:IsSetCard(0x150) and c:IsAbleToGraveAsCost()
 		and (Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,Group.FromCards(c,ec))
-			and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_HAND+LOCATION_EXTRA+LOCATION_GRAVE,0,1,nil,e,tp,c))
+			or Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_HAND+LOCATION_EXTRA+LOCATION_GRAVE,0,1,nil,e,tp,c))
 end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local b1=Duel.IsCanRemoveCounter(tp,1,0,0x1,2,REASON_COST)
@@ -76,6 +76,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 		local g=Duel.SelectMatchingCard(tp,Card.IsAbleToRemove,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,aux.ExceptThisCard(e))
 		if g:GetCount()>0 then
+			Duel.HintSelection(g)
 			Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
 		end
 	end
