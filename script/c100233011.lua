@@ -1,11 +1,13 @@
 --SNo.38 タイタニック・ギャラクシー
 local s,id,o=GetID()
 function s.initial_effect(c)
+	aux.AddCodeList(c,63767246)
 	--xyz summon
 	aux.AddXyzProcedure(c,s.mfilter,9,3,s.ovfilter,aux.Stringid(id,0))
 	c:EnableReviveLimit()
 	--atk
 	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(id,1))
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetCode(EFFECT_UPDATE_ATTACK)
 	e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
@@ -14,7 +16,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 	--material
 	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(id,1))
+	e2:SetDescription(aux.Stringid(id,2))
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e2:SetRange(LOCATION_MZONE)
@@ -24,7 +26,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 	--direct attack
 	local e3=Effect.CreateEffect(c)
-	e3:SetDescription(aux.Stringid(id,2))
+	e3:SetDescription(aux.Stringid(id,3))
 	e3:SetType(EFFECT_TYPE_IGNITION)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetCondition(s.datcon)
@@ -44,14 +46,14 @@ function s.atkval(e,c)
 	return c:GetOverlayCount()*200
 end
 function s.filter(c)
-	return c:IsCanOverlay()
+	return c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsCanOverlay() and c:IsControlerCanBeChanged()
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()
-	if chkc then return chkc:IsLocation(LOCATION_SZONE) and s.filter(chkc) and chkc~=c end
-	if chk==0 then return c:IsType(TYPE_XYZ) and Duel.IsExistingTarget(s.filter,tp,0,LOCATION_SZONE,1,c) end
+	if chkc then return chkc:IsLocation(LOCATION_ONFIELD) and s.filter(chkc) and chkc~=c end
+	if chk==0 then return c:IsType(TYPE_XYZ) and Duel.IsExistingTarget(s.filter,tp,0,LOCATION_ONFIELD,1,c) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
-	local g=Duel.SelectTarget(tp,s.filter,tp,0,LOCATION_SZONE,1,2,c)
+	local g=Duel.SelectTarget(tp,s.filter,tp,0,LOCATION_ONFIELD,1,2,c)
 	Duel.SetChainLimit(s.limit(g))
 end
 function s.limit(g)
