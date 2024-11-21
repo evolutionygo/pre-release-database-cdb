@@ -46,7 +46,8 @@ function s.atkval(e,c)
 	return c:GetOverlayCount()*200
 end
 function s.filter(c)
-	return c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsCanOverlay() and c:IsControlerCanBeChanged()
+	return c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsCanOverlay()
+		and (c:IsControlerCanBeChanged() or not c:IsType(TYPE_MONSTER))
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()
