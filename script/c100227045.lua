@@ -55,8 +55,9 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 			res=Duel.IsExistingMatchingCard(s.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,mg2,mf,chkf)
 		end
 	end
-	local b1=res and Duel.GetFlagEffect(tp,id)==0
-	local b2=Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK+LOCATION_REMOVED,0,1,nil) and Duel.GetFlagEffect(tp,id+o)==0
+	local b1=res and (Duel.GetFlagEffect(tp,id)==0 or not e:IsCostChecked())
+	local b2=Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK+LOCATION_REMOVED,0,1,nil)
+		and (Duel.GetFlagEffect(tp,id+o)==0 or not e:IsCostChecked())
 	if chk==0 then return b1 or b2 end
 	local op=0
 	if b1 and not b2 then
@@ -74,13 +75,16 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 	e:SetLabel(op)
 	if op==1 then
-		e:SetCategory(CATEGORY_SPECIAL_SUMMON|CATEGORY_FUSION_SUMMON|CATEGORY_DECKDES)
-		Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1)
+		if e:IsCostChecked() then
+			e:SetCategory(CATEGORY_SPECIAL_SUMMON|CATEGORY_FUSION_SUMMON|CATEGORY_DECKDES)
+			Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1)
+		end
 		Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 	elseif op==2 then
-		e:SetLabel(2)
-		e:SetCategory(CATEGORY_SEARCH|CATEGORY_TOHAND)
-		Duel.RegisterFlagEffect(tp,id+o,RESET_PHASE+PHASE_END,0,1)
+		if e:IsCostChecked() then
+			e:SetCategory(CATEGORY_SEARCH|CATEGORY_TOHAND)
+			Duel.RegisterFlagEffect(tp,id+o,RESET_PHASE+PHASE_END,0,1)
+		end
 		Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK+LOCATION_REMOVED)
 	end
 end
