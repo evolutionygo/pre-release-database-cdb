@@ -26,14 +26,14 @@ end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return not Duel.IsPlayerAffectedByEffect(tp,59822133)
 		and Duel.GetLocationCount(tp,LOCATION_MZONE)>1
-		and Duel.IsPlayerCanSpecialSummonMonster(tp,id+o,0,TYPES_TOKEN_MONSTER,1000,1200,4,RACE_AQUA,ATTRIBUTE_WATER,POS_FACEUP_DEFENSE) end
+		and Duel.IsPlayerCanSpecialSummonMonster(tp,id+o,0,TYPES_TOKEN_MONSTER,1900,1200,4,RACE_AQUA,ATTRIBUTE_WATER,POS_FACEUP_DEFENSE) end
 	Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,2,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,2,0,0)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	if not Duel.IsPlayerAffectedByEffect(tp,59822133)
 		and Duel.GetLocationCount(tp,LOCATION_MZONE)>1
-		and Duel.IsPlayerCanSpecialSummonMonster(tp,id+o,0,TYPES_TOKEN_MONSTER,1000,1200,4,RACE_AQUA,ATTRIBUTE_WATER,POS_FACEUP_DEFENSE) then
+		and Duel.IsPlayerCanSpecialSummonMonster(tp,id+o,0,TYPES_TOKEN_MONSTER,1900,1200,4,RACE_AQUA,ATTRIBUTE_WATER,POS_FACEUP_DEFENSE) then
 		for i=1,2 do
 			local token=Duel.CreateToken(tp,id+o)
 			Duel.SpecialSummonStep(token,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
