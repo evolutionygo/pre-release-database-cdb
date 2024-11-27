@@ -27,7 +27,7 @@ function s.initial_effect(c)
 	e2:SetTarget(s.tglimit)
 	e2:SetValue(aux.tgoval)
 	c:RegisterEffect(e2)
-	--search
+	--draw
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,2))
 	e3:SetCategory(CATEGORY_DRAW|CATEGORY_HANDES)

@@ -74,8 +74,7 @@ function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.rmcon2(e,tp,eg,ep,ev,re,r,rp)
-	local ph=Duel.GetCurrentPhase()
-	return ph==PHASE_MAIN1 or ph==PHASE_MAIN2
+	return Duel.IsMainPhase()
 end
 function s.rmfilter2(c)
 	return c:IsType(TYPE_MONSTER) and c:IsFaceup() and c:IsAbleToRemove()

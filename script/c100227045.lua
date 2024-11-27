@@ -13,7 +13,6 @@ function s.initial_effect(c)
 	e1:SetOperation(s.activate)
 	c:RegisterEffect(e1)
 end
-s.fusion_effect=true
 function s.filter0(c)
 	return c:IsSetCard(0x1047) and not c:IsRace(RACE_ROCK)
 		and c:IsType(TYPE_MONSTER) and c:IsCanBeFusionMaterial() and c:IsAbleToGrave()
