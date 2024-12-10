@@ -66,9 +66,9 @@ function s.spcon(e,c)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,c)
 	local cp=c:GetControler()
-	local g=Duel.GetMatchingGroup(s.fusfilter,tp,LOCATION_ONFIELD+LOCATION_GRAVE,0,nil)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local sg=g:SelectSubGroup(tp,s.fselect,true,2,2)
+	local g=Duel.GetMatchingGroup(s.fusfilter,cp,LOCATION_ONFIELD+LOCATION_GRAVE,0,nil)
+	Duel.Hint(HINT_SELECTMSG,cp,HINTMSG_REMOVE)
+	local sg=g:SelectSubGroup(cp,s.fselect,true,2,2)
 	if sg then
 		sg:KeepAlive()
 		e:SetLabelObject(sg)
