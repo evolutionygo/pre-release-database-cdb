@@ -17,6 +17,7 @@ function s.initial_effect(c)
 	e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 	e2:SetRange(LOCATION_EXTRA)
 	e2:SetCondition(s.spcon)
+	e2:SetTarget(s.sptg)
 	e2:SetOperation(s.spop)
 	c:RegisterEffect(e2)
 	--special summon
@@ -63,10 +64,19 @@ function s.spcon(e,c)
 	local fg=Duel.GetMatchingGroup(s.fusfilter,tp,LOCATION_ONFIELD+LOCATION_GRAVE,0,nil)
 	return fg:CheckSubGroup(s.fselect,2,2)
 end
-function s.spop(e,tp,eg,ep,ev,re,r,rp,c)
-	local fg=Duel.GetMatchingGroup(s.fusfilter,tp,LOCATION_ONFIELD+LOCATION_GRAVE,0,nil)
+function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,c)
+	local cp=c:GetControler()
+	local g=Duel.GetMatchingGroup(s.fusfilter,tp,LOCATION_ONFIELD+LOCATION_GRAVE,0,nil)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local sg=fg:SelectSubGroup(tp,s.fselect,false,2,2)
+	local sg=g:SelectSubGroup(tp,s.fselect,true,2,2)
+	if sg then
+		sg:KeepAlive()
+		e:SetLabelObject(sg)
+		return true
+	else return false end
+end
+function s.spop(e,tp,eg,ep,ev,re,r,rp,c)
+	local sg=e:GetLabelObject()
 	c:SetMaterial(sg)
 	Duel.Remove(sg,POS_FACEUP,REASON_COST)
 end
@@ -99,7 +109,7 @@ end
 function s.fsptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		local chkf=tp
-		local mg1=Duel.GetFusionMaterial(tp):Filter(Card.IsOnField,nil)
+		local mg1=Duel.GetFusionMaterial(tp):Filter(s.filter0,nil,e)
 		local mg2=Duel.GetMatchingGroup(s.filter1,tp,LOCATION_REMOVED,0,nil,e)
 		mg1:Merge(mg2)
 		local res=Duel.IsExistingMatchingCard(s.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,mg1,nil,chkf)
@@ -115,12 +125,12 @@ function s.fsptg(e,tp,eg,ep,ev,re,r,rp,chk)
 		return res
 	end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
-	Duel.SetOperationInfo(0,CATEGORY_TODECK,nil,1,tp,LOCATION_ONFIELD+LOCATION_REMOVED)
+	Duel.SetOperationInfo(0,CATEGORY_TODECK,nil,1,tp,LOCATION_MZONE+LOCATION_REMOVED)
 end
 function s.fspop(e,tp,eg,ep,ev,re,r,rp)
 	local chkf=tp
 	local mg1=Duel.GetFusionMaterial(tp):Filter(s.filter0,nil,e)
-	local mg2=Duel.GetMatchingGroup(aux.NecroValleyFilter(s.filter1),tp,LOCATION_ONFIELD+LOCATION_REMOVED,0,nil,e)
+	local mg2=Duel.GetMatchingGroup(aux.NecroValleyFilter(s.filter1),tp,LOCATION_MZONE+LOCATION_REMOVED,0,nil,e)
 	mg1:Merge(mg2)
 	local sg1=Duel.GetMatchingGroup(s.filter2,tp,LOCATION_EXTRA,0,nil,e,tp,mg1,nil,chkf)
 	local mg3=nil
