@@ -1,4 +1,4 @@
---凶征竜-エクレプシス
+--凶征竜－エクレプシス
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--xyz summon

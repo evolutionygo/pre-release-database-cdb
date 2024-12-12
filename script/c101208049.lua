@@ -1,4 +1,4 @@
---超征竜-ディザスター
+--超征竜－ディザスター
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--xyz summon
