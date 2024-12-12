@@ -75,22 +75,19 @@ function s.mtop(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 end
-function s.attfilter(c,att)
-	return c:IsSetCard(0x2c3) and c:IsAttribute(att)
+function s.attfilter(c)
+	return c:IsSetCard(0x2c3) and c:IsType(TYPE_MONSTER)
 end
 function s.effcon(e,tp,eg,ep,ev,re,r,rp)
 	local g=e:GetHandler():GetOverlayGroup()
-	local att=0x1
-	local r1=0
-	local res=0
-	for i=1,6 do
-		if g:IsExists(s.attfilter,1,nil,att) then
-			res=res+1
+	local att=0
+	for tc in aux.Next(g) do
+		if s.attfilter(tc) then
+			att=att|tc:GetAttribute()
 		end
-		att=att*2
-		r1=r1+1
 	end
-	return res==6
+	local gattr=ATTRIBUTE_EARTH|ATTRIBUTE_WATER|ATTRIBUTE_FIRE|ATTRIBUTE_WIND|ATTRIBUTE_LIGHT|ATTRIBUTE_DARK
+	return att&gattr==gattr
 end
 function s.efilter(e,te)
 	return te:GetOwner()~=e:GetOwner()
