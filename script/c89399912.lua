@@ -95,8 +95,8 @@ end
 function c89399912.shfilter(c)
 	return c:IsRace(RACE_DRAGON) and c:IsAbleToHand()
 end
-function c89399912.shtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c89399912.shfilter,tp,LOCATION_DECK,0,1,nil) end
+function c89399912.shtg(e,tp,eg,ep,ev,re,r,rp,chk,_,exc)
+	if chk==0 then return Duel.IsExistingMatchingCard(c89399912.shfilter,tp,LOCATION_DECK,0,1,exc) end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 end
 function c89399912.shop(e,tp,eg,ep,ev,re,r,rp)

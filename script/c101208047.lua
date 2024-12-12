@@ -32,7 +32,7 @@ function s.efffilter(c,e,tp,eg,ep,ev,re,r,rp)
 	local te=c.Dragon_Ruler_handes_effect
 	if not te then return false end
 	local tg=te:GetTarget()
-	return not tg or tg(e,tp,eg,ep,ev,re,r,rp,0,nil)
+	return not tg or tg(e,tp,eg,ep,ev,re,r,rp,0,nil,tc)
 end
 function s.copytg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
@@ -61,7 +61,6 @@ end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	return (c:IsReason(REASON_BATTLE) or (c:IsReason(REASON_EFFECT) and c:GetReasonPlayer()==1-tp and c:IsPreviousControler(tp)))
-		and c:IsPreviousLocation(LOCATION_MZONE) and c:IsSummonType(SUMMON_TYPE_LINK)
 end
 function s.spfilter(c,e,tp)
 	return c:IsFaceupEx() and c:IsSetCard(0x2c3) and c:IsLevel(7) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
@@ -74,7 +73,7 @@ end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,1,nil,e,tp)
+	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.spfilter),tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,1,nil,e,tp)
 	if g:GetCount()>0 then
 		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 	end

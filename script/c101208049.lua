@@ -43,10 +43,10 @@ function s.matfilter(c)
 	return c:IsFaceupEx() and c:IsSetCard(0x2c3) and c:IsLevel(7) and c:IsCanOverlay()
 end
 function s.mttg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and s.matfilter(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(s.matfilter,tp,LOCATION_GRAVE,0,1,nil) end
+	if chkc then return chkc:IsLocation(LOCATION_GRAVE+LOCATION_REMOVED) and chkc:IsControler(tp) and s.matfilter(chkc) end
+	if chk==0 then return Duel.IsExistingTarget(s.matfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
-	local g=Duel.SelectTarget(tp,s.matfilter,tp,LOCATION_GRAVE,0,1,4,nil)
+	local g=Duel.SelectTarget(tp,s.matfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,4,nil)
 	Duel.SetOperationInfo(0,CATEGORY_LEAVE_GRAVE,g,4,0,0)
 end
 function s.mtfilter(c,e)
@@ -65,6 +65,7 @@ function s.mtop(e,tp,eg,ep,ev,re,r,rp)
 		if Duel.IsExistingMatchingCard(s.rmfilter,tp,0,LOCATION_GRAVE+LOCATION_MZONE,1,nil,xg) and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
 			local rg=Duel.GetMatchingGroup(s.rmfilter,tp,0,LOCATION_GRAVE+LOCATION_MZONE,nil,xg)
 			if rg:GetCount()>0 then
+				Duel.BreakEffect()
 				Duel.Remove(rg,POS_FACEUP,REASON_EFFECT)
 			end
 		end
