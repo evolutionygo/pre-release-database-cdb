@@ -47,7 +47,7 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local g=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_REMOVED,0,nil,e,tp)
 	if chk==0 then return not Duel.IsPlayerAffectedByEffect(tp,59822133)
 		and Duel.GetLocationCount(tp,LOCATION_MZONE)>1
-		and g:GetClassCount(Card.GetAttribute)>=2 end
+		and g:CheckSubGroup(aux.dabcheck,2,2) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g1=g:SelectSubGroup(tp,aux.dabcheck,false,2,2)
 	Duel.SetTargetCard(g1)
@@ -68,9 +68,9 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 			e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
 			tc:RegisterEffect(e1)
 		end
-    else
-        Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-        local sg=tg:Select(tp,ft,ft,nil)
+	else
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+		local sg=tg:Select(tp,ft,ft,nil)
 		for tc in aux.Next(sg) do
 			Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP)
 			local e1=Effect.CreateEffect(e:GetHandler())
@@ -80,7 +80,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 			tc:RegisterEffect(e1)
 		end
         tg:Sub(sg)
-        Duel.SendtoGrave(g,REASON_RULE)
+        Duel.SendtoGrave(tg,REASON_RULE)
     end
 	Duel.SpecialSummonComplete()
 end
