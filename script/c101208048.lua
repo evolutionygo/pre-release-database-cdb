@@ -36,7 +36,7 @@ function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.tfilter(c,e,tp)
 	return c:IsFaceupEx() and c:IsSetCard(0x2c3) and c:IsLevelBelow(4) and c:IsAbleToDeck()
-		and Duel.IsExistingTarget(s.spfilter,tp,LOCATION_DECK+LOCATION_REMOVED,0,1,nil,e,tp,c)
+		and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_DECK+LOCATION_REMOVED,0,1,nil,e,tp,c)
 end
 function s.spfilter(c,e,tp,ec)
 	return c:IsFaceupEx() and c:IsSetCard(0x2c3)
