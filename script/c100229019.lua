@@ -1,4 +1,4 @@
---No-P.U.N.K.ライジング・スケール
+--No－P.U.N.K.ライジング・スケール
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--special summon

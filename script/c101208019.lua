@@ -1,4 +1,4 @@
---闇征竜-ネビュラス
+--闇征竜－ネビュラス
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddCodeList(c,101208048)
