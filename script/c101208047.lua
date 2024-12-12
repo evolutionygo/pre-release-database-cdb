@@ -32,7 +32,7 @@ function s.efffilter(c,e,tp,eg,ep,ev,re,r,rp)
 	local te=c.Dragon_Ruler_handes_effect
 	if not te then return false end
 	local tg=te:GetTarget()
-	return not tg or tg(e,tp,eg,ep,ev,re,r,rp,0,nil,tc)
+	return not tg or tg(e,tp,eg,ep,ev,re,r,rp,0,nil,c)
 end
 function s.copytg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
