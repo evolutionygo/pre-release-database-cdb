@@ -9,6 +9,7 @@ function s.initial_effect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetType(EFFECT_TYPE_QUICK_O)
 	e1:SetCode(EVENT_FREE_CHAIN)
+	e1:SetHintTiming(0,TIMINGS_CHECK_MONSTER|TIMING_MAIN_END|TIMING_END_PHASE)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCountLimit(1,id)
 	e1:SetTarget(s.copytg)
@@ -42,19 +43,19 @@ function s.copytg(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
 	local g=Duel.SelectMatchingCard(tp,s.efffilter,tp,LOCATION_DECK,0,1,1,nil,e,tp,eg,ep,ev,re,r,rp)
-	c:RemoveOverlayCard(tp,1,1,REASON_COST)
-	Duel.SendtoGrave(g,REASON_COST)
 	local tc=g:GetFirst()
-	Duel.ClearTargetCard()
-	e:SetLabelObject(tc)
 	local te=tc.Dragon_Ruler_handes_effect
+	Duel.SendtoGrave(g,REASON_COST)
+	c:RemoveOverlayCard(tp,1,1,REASON_COST)
+	e:SetProperty(te:GetProperty())
+	Duel.ClearTargetCard()
+	e:SetLabelObject(te)
 	local tg=te:GetTarget()
 	if tg then tg(e,tp,eg,ep,ev,re,r,rp,1) end
 	Duel.ClearOperationInfo(0)
 end
 function s.copyop(e,tp,eg,ep,ev,re,r,rp)
-	local tc=e:GetLabelObject()
-	local te=tc.Dragon_Ruler_handes_effect
+	local te=e:GetLabelObject()
 	local op=te:GetOperation()
 	if op then op(e,tp,eg,ep,ev,re,r,rp) end
 end
