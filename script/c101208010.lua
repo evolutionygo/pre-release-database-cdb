@@ -88,7 +88,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RegisterEffect(e2,tp)
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	if ft<=0 then return end
-	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
+	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(card.IsRelateToEffect,nil,e)
 	if #g==0 then return end
 	if #g>1 and Duel.IsPlayerAffectedByEffect(tp,59822133) then return end
 	if #g>ft then
