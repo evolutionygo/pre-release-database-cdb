@@ -20,7 +20,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function s.codefilter(c)
-	return c:IsFaceup() and not c:IsCode(id+o)
+	return c:IsFaceup() and not c:IsCode(101208146)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(1-tp) and chkc:IsLocation(LOCATION_MZONE) and not chkc:IsCode(id+o) end
