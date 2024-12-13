@@ -169,7 +169,7 @@ function s.adjustop(e,tp,eg,ep,ev,re,r,rp)
 					function Auxiliary.XyzLevelFreeOperation(f,gf,minct,maxct)
 						return  function(e,tp,eg,ep,ev,re,r,rp,c,og,min,max)
 									if og and not min then
-										if mg:GetCount()<=maxc and mg:GetCount()>=minc and maxc==minc+2 then
+										if mg:GetCount()<=maxc and mg:GetCount()>=minct and maxc==minc+2 then
 											local et=maxct-mg:GetCount()
 											local exg=mg:Filter(Card.IsHasEffect,nil,id,tp)
 											local ext=exg:GetClassCount(s.eftfilter,tp)
@@ -200,7 +200,7 @@ function s.adjustop(e,tp,eg,ep,ev,re,r,rp)
 										Duel.Overlay(c,og)
 									else
 										local mg=e:GetLabelObject()
-										if mg:GetCount()<=maxct and mg:GetCount()>=minc and maxct==minct+2 then
+										if mg:GetCount()<=maxct and mg:GetCount()>=minct and maxct==minct+2 then
 											local et=maxct-mg:GetCount()
 											local exg=mg:Filter(Card.IsHasEffect,nil,id,tp)
 											local ext=exg:GetClassCount(s.eftfilter,tp)
