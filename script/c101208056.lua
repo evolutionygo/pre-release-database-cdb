@@ -33,7 +33,7 @@ function s.acfilter(c,e)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(s.acfilter,nil,e)
-	for tc in aux.Next(tg) do
+	for tc in aux.Next(g) do
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
