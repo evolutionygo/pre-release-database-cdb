@@ -22,7 +22,7 @@ function s.initial_effect(c)
 	e3:SetCode(EVENT_FREE_CHAIN)
 	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e3:SetRange(LOCATION_MZONE)
-	e3:SetHintTiming(0,TIMINGS_CHECK_MONSTER)
+	e3:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_END_PHASE)
 	e3:SetCountLimit(1)
 	e3:SetCost(s.codecost)
 	e3:SetTarget(s.codetg)
@@ -64,9 +64,10 @@ function s.codeop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.discon(e,tp,eg,ep,ev,re,r,rp)
-	local code=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_CODE)
-	return rp==1-tp and code==id+o
+	local code,code2=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_CODE,CHAININFO_TRIGGERING_CODE2)
+	return rp==1-tp and (code==id+o or code2==id+o)
 end
 function s.disop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_CARD,0,id)
 	Duel.NegateEffect(ev)
 end
