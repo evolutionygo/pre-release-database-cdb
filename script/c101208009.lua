@@ -65,6 +65,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	e2:SetProperty(EFFECT_FLAG_IGNORE_RANGE+EFFECT_FLAG_IGNORE_IMMUNE)
 	e2:SetTargetRange(0xff,0)
 	e2:SetTarget(s.tlmtg)
+	e2:SetValue(1)
 	e2:SetReset(RESET_PHASE+PHASE_END)
 	Duel.RegisterEffect(e2,tp)
 end
