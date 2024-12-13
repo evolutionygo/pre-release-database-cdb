@@ -81,8 +81,8 @@ function s.gcheck(g,tp)
 	return g:GetClassCount(s.eftfilter,tp)==g:GetCount()
 end
 function s.adjustop(e,tp,eg,ep,ev,re,r,rp)
-	if not s.globle_check then
-		s.globle_check=true
+	if Duel.GetFlagEffect(0,81096431)==0 then
+		Duel.RegisterFlagEffect(tp,19403423,0,0,1)
 		Drake_shark_AddXyzProcedure=aux.AddXyzProcedure
 		function aux.AddXyzProcedure(card_c,function_f,int_lv,int_ct,function_alterf,int_dese,int_maxc,function_op)
 			if int_ct>=3 then
@@ -262,6 +262,7 @@ function s.adjustop(e,tp,eg,ep,ev,re,r,rp)
 			end
 		end
 	end
+	e:Reset()
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return not e:GetHandler():IsReason(REASON_DRAW)
