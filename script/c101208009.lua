@@ -114,7 +114,7 @@ function s.gcheck(g,tp)
 end
 function s.adjustop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetFlagEffect(0,81096431)==0 then
-		Duel.RegisterFlagEffect(tp,81096431,0,0,1)
+		Duel.RegisterFlagEffect(0,81096431,0,0,1)
 		Drake_shark_AddXyzProcedure=aux.AddXyzProcedure
 		function aux.AddXyzProcedure(card_c,function_f,int_lv,int_ct,function_alterf,int_dese,int_maxc,function_op)
 			if int_ct>=3 then
