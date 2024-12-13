@@ -65,7 +65,7 @@ function s.codeop(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.discon(e,tp,eg,ep,ev,re,r,rp)
 	local code=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_CODE)
-	return rp==1-tp and code==id+o
+	return rp==1-tp and (code==id+o or re:GetHandler():IsCode(id+o))
 end
 function s.disop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.NegateEffect(ev)
