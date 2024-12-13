@@ -73,6 +73,7 @@ function s.spcon2(e,tp,eg,ep,ev,re,r,rp)
 	return ep==1-tp and re:GetHandler():IsOnField() and re:GetHandler():IsRelateToEffect(re) and re:IsActiveType(TYPE_MONSTER)
 end
 function s.sptg2(e,tp,eg,ep,ev,re,r,rp,chk)
+	local c=e:GetHandler()
 	if chk==0 then return aux.MustMaterialCheck(c,tp,EFFECT_MUST_BE_XMATERIAL)
 		and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp,c) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
