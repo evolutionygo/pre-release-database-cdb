@@ -1,4 +1,4 @@
---纹章兽 间柱鲸4
+--紋章獸 スタット・ホエール
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--

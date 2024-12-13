@@ -1,4 +1,4 @@
---No.69 纹章神 盾徽-神怒
+--No.69 紋章神コート·オスアームズーコッド·レイジ
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--xyz summon
