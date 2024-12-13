@@ -72,7 +72,7 @@ function s.splimit(e,c,sump,sumtype,sumpos,targetp,se)
 	return c:IsLocation(LOCATION_EXTRA) and bit.band(sumtype,SUMMON_TYPE_XYZ)~=SUMMON_TYPE_XYZ
 end
 function s.tlmtg(e,c)
-	return not c:IsSetCard(0x76,0x48)
+	return not c:IsOriginalSetCard(0x76,0x48)
 end
 function s.sxyzfilter(e,c)
 	return c:IsSetCard(0x48)

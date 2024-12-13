@@ -1,12 +1,13 @@
 --No.69 纹章神 盾徽-神裂
 local s,id,o=GetID()
 function s.initial_effect(c)
+	aux.AddCodeList(c,2407234,101208046)
 	--xyz summon
 	aux.AddXyzProcedure(c,nil,4,4,s.ovfilter,aux.Stringid(id,0))
 	c:EnableReviveLimit()
 	--special summon
 	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(id,0))
+	e1:SetDescription(aux.Stringid(id,1))
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_DESTROY)
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e1:SetCode(EVENT_ATTACK_ANNOUNCE)
@@ -45,6 +46,7 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
+	local ac=e:GetLabelObject()
 	if not aux.MustMaterialCheck(c,tp,EFFECT_MUST_BE_XMATERIAL) then return end
 	if c:IsFaceup() and c:IsRelateToEffect(e) and c:IsControler(tp) and not c:IsImmuneToEffect(e) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
@@ -71,8 +73,7 @@ function s.spcon2(e,tp,eg,ep,ev,re,r,rp)
 	return ep==1-tp and re:GetHandler():IsOnField() and re:GetHandler():IsRelateToEffect(re) and re:IsActiveType(TYPE_MONSTER)
 end
 function s.sptg2(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return re:GetHandler():IsDestructable() 
-		and aux.MustMaterialCheck(c,tp,EFFECT_MUST_BE_XMATERIAL)
+	if chk==0 then return aux.MustMaterialCheck(c,tp,EFFECT_MUST_BE_XMATERIAL)
 		and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp,c) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,eg,1,0,0)
@@ -94,7 +95,7 @@ function s.spop2(e,tp,eg,ep,ev,re,r,rp)
 			Duel.SpecialSummon(sc,SUMMON_TYPE_XYZ,tp,tp,false,false,POS_FACEUP)
 			sc:CompleteProcedure()
 		end
-		if re:GetHandler():IsRelateToEffect(re) then
+		if re:GetHandler():IsRelateToEffect(re) and re:GetHandler():IsFaceup() and re:GetHandler():IsControler(1-tp) then
 			Duel.BreakEffect()
 			Duel.Destroy(eg,REASON_EFFECT)
 		end

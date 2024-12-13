@@ -49,7 +49,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.ConfirmCards(1-tp,g)
 end
 function s.spfilter(c,e,tp)
-	return c:IsSetCard(0x76) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsSetCard(0x76) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE)
 		and c:IsCanBeEffectTarget(e)
 end
 function s.fselect(g)
@@ -65,9 +65,6 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local tg=g:SelectSubGroup(tp,s.fselect,false,2,2)
 	Duel.SetTargetCard(tg)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,tg,tg:GetCount(),0,0)
-end
-function s.spfilter(c,e,tp)
-	return c:IsRelateToEffect(e) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	--splimit
@@ -97,11 +94,11 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		g=g:Select(tp,ft,ft,nil)
 	end
-	Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
+	Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP,POS_FACEUP_DEFENSE)
 end
 function s.splimit(e,c,sump,sumtype,sumpos,targetp,se)
 	return c:IsLocation(LOCATION_EXTRA) and bit.band(sumtype,SUMMON_TYPE_XYZ)~=SUMMON_TYPE_XYZ
 end
 function s.tlmtg(e,c)
-	return not c:IsSetCard(0x76,0x48)
+	return not c:IsOriginalSetCard(0x76,0x48)
 end
