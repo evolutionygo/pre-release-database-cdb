@@ -1,4 +1,4 @@
---紋章獸 グリフィン
+--紋章獣グリフォン
 local s,id,o=GetID()
 function s.initial_effect(c)
 	local e0=Effect.CreateEffect(c)

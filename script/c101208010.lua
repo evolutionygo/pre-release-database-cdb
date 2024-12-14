@@ -1,4 +1,4 @@
---紋章獸 スタット・ホエール
+--紋章獣スタット・ホエール
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--

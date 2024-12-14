@@ -1,4 +1,4 @@
---No.69 紋章神コート·オスアームズーコッド·シャーター
+--No.69 紋章神コート・オブ・アームズ－ゴッド・シャーター
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddCodeList(c,2407234,101208046)

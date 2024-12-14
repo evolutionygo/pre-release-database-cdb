@@ -1,4 +1,4 @@
---No.69 紋章神コート·オスアームズーコッド·レイジ
+--No.69 紋章神コート・オブ・アームズ－ゴッド・レイジ
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--xyz summon
