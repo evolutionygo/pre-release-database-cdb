@@ -96,7 +96,7 @@ function s.adjustop(e,tp,eg,ep,ev,re,r,rp)
 											local exg=og:Filter(Card.IsHasEffect,nil,id,tp)
 											local ext=exg:GetClassCount(s.eftfilter,tp)
 											if et==0 or 2-et==ext then
-												for ttc in aux.Next(og) do
+												for ttc in aux.Next(exg) do
 													local tte=ttc:IsHasEffect(id,tp)
 													tte:UseCountLimit(tp)
 												end
@@ -127,7 +127,7 @@ function s.adjustop(e,tp,eg,ep,ev,re,r,rp)
 											local exg=mg:Filter(Card.IsHasEffect,nil,id,tp)
 											local ext=exg:GetClassCount(s.eftfilter,tp)
 											if et==0 or 2-et==ext then
-												for ttc in aux.Next(mg) do
+												for ttc in aux.Next(exg) do
 													local tte=ttc:IsHasEffect(id,tp)
 													tte:UseCountLimit(tp)
 												end
@@ -174,7 +174,7 @@ function s.adjustop(e,tp,eg,ep,ev,re,r,rp)
 											local exg=mg:Filter(Card.IsHasEffect,nil,id,tp)
 											local ext=exg:GetClassCount(s.eftfilter,tp)
 											if et==0 or 2-et==ext then
-												for ttc in aux.Next(mg) do
+												for ttc in aux.Next(exg) do
 													local tte=ttc:IsHasEffect(id,tp)
 													tte:UseCountLimit(tp)
 												end
@@ -205,7 +205,7 @@ function s.adjustop(e,tp,eg,ep,ev,re,r,rp)
 											local exg=mg:Filter(Card.IsHasEffect,nil,id,tp)
 											local ext=exg:GetClassCount(s.eftfilter,tp)
 											if et==0 or 2-et==ext then
-												for ttc in aux.Next(mg) do
+												for ttc in aux.Next(exg) do
 													local tte=ttc:IsHasEffect(id,tp)
 													tte:UseCountLimit(tp)
 												end
