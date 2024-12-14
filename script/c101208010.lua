@@ -53,7 +53,7 @@ function s.spfilter(c,e,tp)
 		and c:IsCanBeEffectTarget(e)
 end
 function s.fselect(g)
-	return aux.SameValueCheck(g,Card.GetCode)
+	return aux.SameValueCheck(g,Card.GetCode)==1
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()
