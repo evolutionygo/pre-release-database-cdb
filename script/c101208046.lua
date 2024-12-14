@@ -65,8 +65,8 @@ function s.codeop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.discon(e,tp,eg,ep,ev,re,r,rp)
-	local code,code2=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_CODE,CHAININFO_TRIGGERING_CODE2)
-	return rp==1-tp and (code==id+o or code2==id+o or re:GetHandler():IsCode(id+o))
+	if e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) then return false end
+	return rp==1-tp and re:GetHandler():IsCode(id+o)
 end
 function s.disop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_CARD,0,id)
