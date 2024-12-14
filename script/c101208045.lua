@@ -25,6 +25,7 @@ function s.initial_effect(c)
 	e2:SetOperation(s.spop2)
 	c:RegisterEffect(e2)
 end
+aux.xyz_number[id]=69
 function s.ovfilter(c)
 	return c:IsFaceup() and c:IsOriginalCodeRule(2407234)
 end
