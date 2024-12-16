@@ -247,7 +247,7 @@ function s.adjustop(e,tp,eg,ep,ev,re,r,rp)
 											if (et==0 or 2-et==ext) and exg then
 												for ttc in aux.Next(exg) do
 													local tte=ttc:IsHasEffect(81096431,tp)
-													tte:UseCountLimit(tp)
+													if tte then tte:UseCountLimit(tp) end
 												end
 											else
 												local st=2-et
