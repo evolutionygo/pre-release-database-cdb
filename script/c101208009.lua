@@ -138,7 +138,10 @@ function s.adjustop(e,tp,eg,ep,ev,re,r,rp)
 											if et==0 or 2-et==ext then
 												for ttc in aux.Next(og) do
 													local tte=ttc:IsHasEffect(81096431,tp)
-													tte:UseCountLimit(tp)
+													if tte then
+														Duel.Hint(HINT_CARD,0,ttc:GetCode())
+														tte:UseCountLimit(tp)
+													end
 												end
 											else
 												local st=2-et
@@ -146,7 +149,10 @@ function s.adjustop(e,tp,eg,ep,ev,re,r,rp)
 												local reg=exg:SelectSubGroup(tp,s.gcheck,false,st,st,tp)
 												for ttc in aux.Next(reg) do
 													local tte=ttc:IsHasEffect(81096431,tp)
-													tte:UseCountLimit(tp)
+													if tte then
+														Duel.Hint(HINT_CARD,0,ttc:GetCode())
+														tte:UseCountLimit(tp)
+													end
 												end
 											end
 										end
@@ -169,7 +175,10 @@ function s.adjustop(e,tp,eg,ep,ev,re,r,rp)
 											if et==0 or 2-et==ext then
 												for ttc in aux.Next(exg) do
 													local tte=ttc:IsHasEffect(81096431,tp)
-													tte:UseCountLimit(tp)
+													if tte then
+														Duel.Hint(HINT_CARD,0,ttc:GetCode())
+														tte:UseCountLimit(tp)
+													end
 												end
 											else
 												local st=2-et
@@ -177,7 +186,10 @@ function s.adjustop(e,tp,eg,ep,ev,re,r,rp)
 												local reg=exg:SelectSubGroup(tp,s.gcheck,false,st,st,tp)
 												for ttc in aux.Next(reg) do
 													local tte=ttc:IsHasEffect(81096431,tp)
-													tte:UseCountLimit(tp)
+													if tte then
+														Duel.Hint(HINT_CARD,0,ttc:GetCode())
+														tte:UseCountLimit(tp)
+													end
 												end
 											end
 										end
@@ -216,7 +228,10 @@ function s.adjustop(e,tp,eg,ep,ev,re,r,rp)
 											if et==0 or 2-et==ext then
 												for ttc in aux.Next(exg) do
 													local tte=ttc:IsHasEffect(81096431,tp)
-													tte:UseCountLimit(tp)
+													if tte then
+														Duel.Hint(HINT_CARD,0,ttc:GetCode())
+														tte:UseCountLimit(tp)
+													end
 												end
 											else
 												local st=2-et
@@ -224,7 +239,10 @@ function s.adjustop(e,tp,eg,ep,ev,re,r,rp)
 												local reg=exg:SelectSubGroup(tp,s.gcheck,false,st,st,tp)
 												for ttc in aux.Next(reg) do
 													local tte=ttc:IsHasEffect(81096431,tp)
-													tte:UseCountLimit(tp)
+													if tte then
+														Duel.Hint(HINT_CARD,0,ttc:GetCode())
+														tte:UseCountLimit(tp)
+													end
 												end
 											end
 										end
@@ -247,7 +265,10 @@ function s.adjustop(e,tp,eg,ep,ev,re,r,rp)
 											if (et==0 or 2-et==ext) and exg then
 												for ttc in aux.Next(exg) do
 													local tte=ttc:IsHasEffect(81096431,tp)
-													if tte then tte:UseCountLimit(tp) end
+													if tte then
+														Duel.Hint(HINT_CARD,0,ttc:GetCode())
+														tte:UseCountLimit(tp)
+													end
 												end
 											else
 												local st=2-et
@@ -255,7 +276,10 @@ function s.adjustop(e,tp,eg,ep,ev,re,r,rp)
 												local reg=exg:SelectSubGroup(tp,s.gcheck,false,st,st,tp)
 												for ttc in aux.Next(reg) do
 													local tte=ttc:IsHasEffect(81096431,tp)
-													tte:UseCountLimit(tp)
+													if tte then
+														Duel.Hint(HINT_CARD,0,ttc:GetCode())
+														tte:UseCountLimit(tp)
+													end
 												end
 											end
 										end
