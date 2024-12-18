@@ -63,9 +63,9 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	e2:SetType(EFFECT_TYPE_FIELD)
 	e2:SetCode(EFFECT_CANNOT_BE_XYZ_MATERIAL)
 	e2:SetProperty(EFFECT_FLAG_IGNORE_RANGE+EFFECT_FLAG_IGNORE_IMMUNE)
-	e2:SetTargetRange(0xff,0)
+	e2:SetTargetRange(0x7f,0x7f)
 	e2:SetTarget(s.tlmtg)
-	e2:SetValue(1)
+	e2:SetValue(s.tlmval)
 	e2:SetReset(RESET_PHASE+PHASE_END)
 	Duel.RegisterEffect(e2,tp)
 	--must material
@@ -82,6 +82,10 @@ function s.splimit(e,c,sump,sumtype,sumpos,targetp,se)
 end
 function s.tlmtg(e,c)
 	return not c:IsOriginalSetCard(0x76,0x48)
+end
+function s.tlmval(e,c)
+	if not c then return false end
+	return c:GetControler()==e:GetOwnerPlayer()
 end
 function s.sxyzfilter(e,c)
 	return c:IsSetCard(0x48)
