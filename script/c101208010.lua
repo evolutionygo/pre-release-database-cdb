@@ -84,7 +84,6 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	e2:SetTargetRange(0x7f,0x7f)
 	e2:SetTarget(s.tlmtg)
 	e2:SetValue(s.tlmval)
-	e2:SetValue(1)
 	e2:SetReset(RESET_PHASE+PHASE_END)
 	Duel.RegisterEffect(e2,tp)
 	--must material
