@@ -16,12 +16,6 @@ function s.costfilter(c,tp)
 	return (c:IsControler(tp) or c:IsFaceup())
 		and c:IsRace(RACE_REPTILE)
 end
-function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.CheckReleaseGroupEx(tp,s.costfilter,1,REASON_COST,true,nil,tp) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
-	local g=Duel.SelectReleaseGroupEx(tp,s.costfilter,1,1,REASON_COST,true,nil,tp)
-	Duel.Release(g,REASON_COST)
-end
 function s.filter(c)
 	return c:IsSetCard(0x2c4) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
 end
@@ -29,21 +23,11 @@ function s.spfilter(c,e,tp)
 	return c:IsSetCard(0x2c4)
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
---- comment
---- @param e Effect
---- @param tp any
---- @param eg any
---- @param ep any
---- @param ev any
---- @param re any
---- @param r any
---- @param rp any
---- @param chk any
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local b1=Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_DECK,0,1,nil)
 	local b2=true
 	if chk==0 then return b1 or b2 end
-	if b1 and b2 and e:IsCostChecked() and Duel.CheckReleaseGroupEx(tp,s.costfilter,1,REASON_COST,true,nil,tp)
+	if e:IsCostChecked() and Duel.CheckReleaseGroupEx(tp,s.costfilter,1,REASON_COST,true,nil,tp)
 		and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
 		local g=Duel.SelectReleaseGroupEx(tp,s.costfilter,1,1,REASON_COST,true,nil,tp)
@@ -56,23 +40,21 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local op=0
 	local b1=Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_DECK,0,1,nil)
 	local b2=true
-	if b1 then
-		if not b2 or Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
-			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-			local g=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_DECK,0,1,1,nil)
-			if g:GetCount()>0 then
-				Duel.SendtoHand(g,nil,REASON_EFFECT)
-				Duel.ConfirmCards(1-tp,g)
-			end
-			op=1
+	if b1 and (not b2 or Duel.SelectYesNo(tp,aux.Stringid(id,2))) then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+		local g=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_DECK,0,1,1,nil)
+		if g:GetCount()>0 then
+			Duel.SendtoHand(g,nil,REASON_EFFECT)
+			Duel.ConfirmCards(1-tp,g)
 		end
+		op=1
 	end
-	local b3=Duel.GetMZoneCount(tp)>0 and Duel.IsExistingMatchingCard(aux.NecroValleyFilter(s.spfilter),tp,LOCATION_HAND+LOCATION_GRAVE,0,1,nil,e,tp)
 	if b2 and (op==0 or e:GetLabel()==1 and Duel.SelectYesNo(tp,aux.Stringid(id,3))) then
 		if op~=0 then
 			Duel.BreakEffect()
 		end
 		Duel.Damage(tp,800,REASON_EFFECT)
+		local b3=Duel.GetMZoneCount(tp)>0 and Duel.IsExistingMatchingCard(aux.NecroValleyFilter(s.spfilter),tp,LOCATION_HAND+LOCATION_GRAVE,0,1,nil,e,tp)
 		if b3 and Duel.SelectYesNo(tp,aux.Stringid(id,4)) then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 			local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.spfilter),tp,LOCATION_HAND+LOCATION_GRAVE,0,1,1,nil,e,tp)
