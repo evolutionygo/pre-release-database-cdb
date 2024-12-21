@@ -109,8 +109,7 @@ function s.tgcon1(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.tgcon2(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	return Duel.GetTurnPlayer()==tp and (Duel.GetCurrentPhase()==PHASE_MAIN1 or Duel.GetCurrentPhase()==PHASE_MAIN2)
-		and c:GetFlagEffect(id)~=0 and aux.IsCanBeQuickEffect(c,tp,90351981)
+	return c:GetFlagEffect(id)~=0 and aux.IsCanBeQuickEffect(c,tp,90351981)
 end
 function s.tgtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToGrave,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) end
