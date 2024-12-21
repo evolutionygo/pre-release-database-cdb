@@ -21,23 +21,24 @@ end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local mg1=Duel.GetRitualMaterial(tp):Filter(Card.IsRace,nil,RACE_REPTILE)
 	local mg2=Duel.GetMatchingGroup(s.mfilter,tp,LOCATION_DECK,0,nil)
-	local b1=Duel.IsExistingMatchingCard(aux.RitualUltimateFilter,tp,LOCATION_DECK,0,1,nil,s.filter,e,tp,mg1,nil,Card.GetLevel,"Equal")
+	local s1=Duel.IsExistingMatchingCard(aux.RitualUltimateFilter,tp,LOCATION_DECK,0,1,nil,s.filter,e,tp,mg1,nil,Card.GetLevel,"Equal")
 	aux.GCheckAdditional=s.gfilter
-	local b2=Duel.IsExistingMatchingCard(aux.RitualUltimateFilter,tp,LOCATION_HAND,0,1,nil,s.filter,e,tp,mg1,mg2,Card.GetLevel,"Equal")
+	local s2=Duel.IsExistingMatchingCard(aux.RitualUltimateFilter,tp,LOCATION_HAND,0,1,nil,s.filter,e,tp,mg1,mg2,Card.GetLevel,"Equal")
 	aux.GCheckAdditional=nil
-	if chk==0 then return b1 and (Duel.GetFlagEffect(tp,id)==0 or not e:IsCostChecked())
-		or b2 and (Duel.GetFlagEffect(tp,id+o)==0 or not e:IsCostChecked()) end
+	local b1=s1 and (Duel.GetFlagEffect(tp,id)==0 or not e:IsCostChecked())
+	local b2=s2 and (Duel.GetFlagEffect(tp,id+o)==0 or not e:IsCostChecked())
+	if chk==0 then return b1 or b2 end
 	local op=aux.SelectFromOptions(tp,
 		{b1,aux.Stringid(id,1)},
 		{b2,aux.Stringid(id,2)})
 	if op==1 then
-		if not e:IsCostChecked() then
+		if e:IsCostChecked() then
 			Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1)
 		end
 		Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK)
 		e:SetOperation(s.spop1)
 	elseif op==2 then
-		if not e:IsCostChecked() then
+		if e:IsCostChecked() then
 			Duel.RegisterFlagEffect(tp,id+o,RESET_PHASE+PHASE_END,0,1)
 		end
 		Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND)
