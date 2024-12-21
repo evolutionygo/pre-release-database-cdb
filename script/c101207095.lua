@@ -6,7 +6,6 @@ function s.initial_effect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
-	e1:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_END_PHASE)
 	e1:SetTarget(s.target)
 	c:RegisterEffect(e1)
 end
@@ -20,24 +19,29 @@ function s.gfilter(g)
 	return g:GetCount()<3
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
+	local c=e:GetHandler()
 	local mg1=Duel.GetRitualMaterial(tp):Filter(Card.IsRace,nil,RACE_REPTILE)
 	local mg2=Duel.GetMatchingGroup(s.mfilter,tp,LOCATION_DECK,0,nil)
 	local b1=Duel.IsExistingMatchingCard(aux.RitualUltimateFilter,tp,LOCATION_DECK,0,1,nil,s.filter,e,tp,mg1,nil,Card.GetLevel,"Equal")
 	aux.GCheckAdditional=s.gfilter
 	local b2=Duel.IsExistingMatchingCard(aux.RitualUltimateFilter,tp,LOCATION_HAND,0,1,nil,s.filter,e,tp,mg1,mg2,Card.GetLevel,"Equal")
 	aux.GCheckAdditional=nil
-	if chk==0 then return b1 and Duel.GetFlagEffect(tp,id)==0
-		or b2 and Duel.GetFlagEffect(tp,id+o)==0 end
+	if chk==0 then return b1 and (Duel.GetFlagEffect(tp,id)==0 or not c:IsCostChecked())
+		or b2 and (Duel.GetFlagEffect(tp,id+o)==0 or not c:IsCostChecked()) end
 	local op=aux.SelectFromOptions(tp,
 		{b1,aux.Stringid(id,1)},
 		{b2,aux.Stringid(id,2)})
 	if op==1 then
+		if not c:IsCostChecked() then
+			Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1)
+		end
 		Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK)
-		Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1)
 		e:SetOperation(s.spop1)
 	elseif op==2 then
+		if not c:IsCostChecked() then
+			Duel.RegisterFlagEffect(tp,id+o,RESET_PHASE+PHASE_END,0,1)
+		end
 		Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND)
-		Duel.RegisterFlagEffect(tp,id+o,RESET_PHASE+PHASE_END,0,1)
 		e:SetOperation(s.spop2)
 	end
 end

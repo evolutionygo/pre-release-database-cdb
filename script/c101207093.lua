@@ -4,6 +4,7 @@ function s.initial_effect(c)
 	c:EnableReviveLimit()
 	--spsummon
 	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
@@ -16,7 +17,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 	--to hand
 	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(id,2))
+	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH+CATEGORY_SPECIAL_SUMMON)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
@@ -42,7 +43,7 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
+	if tc:IsRelateToEffect(e) and aux.NecroValleyFilter()(tc) then
 		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
 	end
 end
@@ -63,7 +64,8 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 		if Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 			and c:IsRelateToEffect(e)
 			and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
-			and Duel.SelectYesNo(tp,aux.Stringid(id,4)) then
+			and aux.NecroValleyFilter()(c)
+			and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 			Duel.BreakEffect()
 			Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
 		end

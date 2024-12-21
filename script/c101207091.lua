@@ -46,17 +46,18 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.repfilter(c,tp)
 	return c:IsFaceup() and c:IsControler(tp) and c:IsLocation(LOCATION_MZONE) and c:IsRace(RACE_REPTILE)
-		and c:IsReason(REASON_BATTLE+REASON_BATTLE) and not c:IsReason(REASON_REPLACE)
+		and c:IsReason(REASON_BATTLE+REASON_EFFECT) and not c:IsReason(REASON_REPLACE)
 end
 function s.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then return eg:IsExists(s.repfilter,1,c,tp)
-		and c:IsReleasable() and not c:IsStatus(STATUS_DESTROY_CONFIRMED) end
+		and c:IsReleasableByEffect() and not c:IsStatus(STATUS_DESTROY_CONFIRMED) end
 	return Duel.SelectEffectYesNo(tp,c,96)
 end
 function s.repval(e,c)
 	return s.repfilter(c,e:GetHandlerPlayer())
 end
 function s.repop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_CARD,0,id)
 	Duel.Release(e:GetHandler(),REASON_EFFECT)
 end

@@ -28,7 +28,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsChainNegatable(ev)
+	return ep~=tp and Duel.IsChainDisablable(ev)
 end
 function s.cfilter(c)
 	return c:IsRace(RACE_REPTILE) and c:IsLevelAbove(5) and not c:IsStatus(STATUS_BATTLE_DESTROYED)
@@ -68,6 +68,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
 		local g=Duel.SelectTarget(tp,Card.IsReleasableByEffect,tp,LOCATION_MZONE,0,1,1,tc)
 		if g:GetCount()>0 then
+			Duel.HintSelection(g)
 			Duel.Release(g,REASON_EFFECT)
 		end
 	end

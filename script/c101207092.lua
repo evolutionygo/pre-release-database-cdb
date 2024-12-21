@@ -55,7 +55,6 @@ end
 function s.disop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetFieldGroupCount(tp,0,LOCATION_HAND)>0 and Duel.SelectYesNo(1-tp,aux.Stringid(id,3)) then
 		Duel.DiscardHand(1-tp,aux.TRUE,1,1,REASON_EFFECT+REASON_DISCARD,nil)
-		Duel.BreakEffect()
 	else
 		Duel.NegateEffect(ev)
 	end
@@ -77,6 +76,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 		if Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 			and c:IsRelateToEffect(e)
 			and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+			and aux.NecroValleyFilter()(c)
 			and Duel.SelectYesNo(tp,aux.Stringid(id,4)) then
 			Duel.BreakEffect()
 			Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
