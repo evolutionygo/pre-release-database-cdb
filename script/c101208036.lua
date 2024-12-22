@@ -25,7 +25,6 @@ function s.initial_effect(c)
 	e3:SetCode(EFFECT_SPSUMMON_PROC)
 	e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 	e3:SetRange(LOCATION_EXTRA)
-	e3:SetCountLimit(1,id+EFFECT_COUNT_CODE_OATH)
 	e3:SetCondition(s.spcon)
 	e3:SetTarget(s.sptg)
 	e3:SetOperation(s.spop)
@@ -45,11 +44,12 @@ end
 function s.mfilter(c)
 	return c:IsRace(RACE_ZOMBIE)
 end
-function s.condition(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():IsSummonType(SUMMON_TYPE_FUSION)
-end
 function s.splimit(e,se,sp,st)
 	return bit.band(st,SUMMON_TYPE_FUSION)==SUMMON_TYPE_FUSION and Duel.GetFlagEffect(sp,id)==0
+end
+function s.condition(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	return c:IsSummonType(SUMMON_TYPE_FUSION) or c:GetFlagEffect(id)>0
 end
 function s.regop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1)
@@ -76,7 +76,7 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,c)
 	else return false end
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp,c)
-	Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1)
+	e:GetHandler():RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD-RESET_TOFIELD+RESET_PHASE+PHASE_END,0,1)
 	local g=e:GetLabelObject()
 	Duel.Release(g,REASON_SPSUMMON)
 end
