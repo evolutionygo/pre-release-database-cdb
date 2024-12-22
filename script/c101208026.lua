@@ -40,10 +40,10 @@ function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.eqfilter(c,e,tp,chk)
 	return c:IsCode(70095154)
-		and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and
+		and (c:IsCanBeSpecialSummoned(e,0,tp,false,false) and
 			(not chk and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 			or chk and Duel.IsPlayerCanSpecialSummonCount(tp,2) and Duel.GetLocationCount(tp,LOCATION_MZONE)>1)
-		or Duel.GetLocationCount(tp,LOCATION_SZONE)>0 and c:CheckUniqueOnField(tp) and not c:IsForbidden()
+		or Duel.GetLocationCount(tp,LOCATION_SZONE)>0 and c:CheckUniqueOnField(tp) and not c:IsForbidden())
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
