@@ -57,6 +57,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetCode(EVENT_CHAIN_SOLVED)
 	e1:SetCondition(s.drcon)
 	e1:SetOperation(s.drop)
+	e1:SetReset(RESET_PHASE+PHASE_END)
 	Duel.RegisterEffect(e1,tp)
 end
 function s.drcon(e,tp,eg,ep,ev,re,r,rp)
