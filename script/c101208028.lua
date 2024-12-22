@@ -24,7 +24,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function s.discon(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.IsChainDisablable(ev) then return false end
+	if not Duel.IsChainDisablable(ev) then return false end
 	local te,p=Duel.GetChainInfo(ev-1,CHAININFO_TRIGGERING_EFFECT,CHAININFO_TRIGGERING_PLAYER)
 	return te and te:GetHandler():IsSetCard(0x1151) and p==tp and rp==1-tp
 end

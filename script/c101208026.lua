@@ -69,6 +69,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 					{b1,1152,1},
 					{b2,1068,2})
 			end
+			Duel.BreakEffect()
 			if op==1 then
 				Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
 			elseif op==2 then
