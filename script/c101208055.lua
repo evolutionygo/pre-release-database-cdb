@@ -46,7 +46,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.poscon(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(Card.IsPosition,1,nil,POS_FACEUP)
+	return eg:IsExists(Card.IsPosition,1,nil,POS_FACEUP_ATTACK)
 end
 function s.posfilter(c)
 	return c:IsPosition(POS_FACEUP_ATTACK)
