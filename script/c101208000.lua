@@ -19,7 +19,7 @@ function s.initial_effect(c)
 	e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
 	e2:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
 	e2:SetRange(LOCATION_MZONE)
-	e1:SetCondition(s.valcon)
+	e2:SetCondition(s.valcon)
 	e2:SetValue(aux.indoval)
 	c:RegisterEffect(e2)
 	--pierce
