@@ -53,36 +53,19 @@ end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
-	e1:SetProperty(EFFECT_FLAG_DELAY)
-	e1:SetCode(EVENT_CHAINING)
+	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e1:SetCode(EVENT_CHAIN_SOLVED)
 	e1:SetCondition(s.drcon)
 	e1:SetOperation(s.drop)
-	e1:SetReset(RESET_PHASE+PHASE_END)
 	Duel.RegisterEffect(e1,tp)
-
-	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e2:SetCode(EVENT_CHAIN_SOLVED)
-	e2:SetCondition(s.drcon2)
-	e2:SetOperation(s.drop2)
-	Duel.RegisterEffect(e2,tp)
 end
 function s.drcon(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.IsChainDisablable(ev) then return false end
+	if not Duel.IsChainDisablable(ev) then return false end
 	local te,p=Duel.GetChainInfo(ev-1,CHAININFO_TRIGGERING_EFFECT,CHAININFO_TRIGGERING_PLAYER)
 	local tc=te:GetHandler()
 	return te and tc:IsSetCard(0x152,0x153) and te:IsActiveType(TYPE_MONSTER) and p==tp and rp==1-tp
 end
 function s.drop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.RegisterFlagEffect(tp,id,RESET_CHAIN,0,1)
-end
-function s.drcon2(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetFlagEffect(tp,id)>0
-end
-function s.drop2(e,tp,eg,ep,ev,re,r,rp)
-	local ct=Duel.GetFlagEffect(tp,id)
-	for i=1,ct do
-		Duel.Draw(tp,1,REASON_EFFECT)
-	end
+	Duel.Hint(HINT_CARD,0,id)
+	Duel.Draw(tp,1,REASON_EFFECT)
 end
