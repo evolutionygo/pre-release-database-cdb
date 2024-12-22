@@ -17,7 +17,7 @@ function s.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
 	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e2:SetRange(LOCATION_FZONE)
-	e2:SetCondition(s.accon)
+	e2:SetCondition(s.poscon)
 	e2:SetTarget(s.postg)
 	e2:SetOperation(s.posop)
 	c:RegisterEffect(e2)
@@ -28,7 +28,6 @@ function s.initial_effect(c)
 	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
 	e3:SetCode(EVENT_PHASE+PHASE_END)
 	e3:SetRange(LOCATION_FZONE)
-	e3:SetCondition(s.accon)
 	e3:SetCountLimit(1)
 	e3:SetTarget(s.destg)
 	e3:SetOperation(s.desop)
@@ -46,11 +45,14 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		Duel.ConfirmCards(1-tp,sg)
 	end
 end
+function s.poscon(e,tp,eg,ep,ev,re,r,rp)
+	return eg:IsExists(Card.IsPosition,1,nil,POS_FACEUP)
+end
 function s.posfilter(c)
 	return c:IsPosition(POS_FACEUP_ATTACK)
 end
 function s.postg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return eg:IsExists(s.posfilter,1,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.acfilter,e:GetHandlerPlayer(),LOCATION_MZONE,0,1,nil) end
 	local g=eg:Filter(s.posfilter,nil)
 	Duel.SetTargetCard(g)
 	Duel.SetOperationInfo(0,CATEGORY_POSITION,g,g:GetCount(),0,0)
@@ -62,7 +64,7 @@ function s.posop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.acfilter,e:GetHandlerPlayer(),LOCATION_MZONE,0,1,nil) end
 	local g=Duel.GetFieldGroup(Duel.GetTurnPlayer(),LOCATION_MZONE,0):Filter(Card.IsPosition,nil,POS_ATTACK)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,#g,0,0)
 end
@@ -72,7 +74,4 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.acfilter(c)
 	return c:IsFaceup() and c:IsRace(RACE_DRAGON) and c:IsType(TYPE_SYNCHRO) and c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsLevelAbove(7)
-end
-function s.accon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(s.acfilter,e:GetHandlerPlayer(),LOCATION_MZONE,0,1,nil)
 end
