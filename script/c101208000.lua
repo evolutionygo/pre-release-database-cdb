@@ -1,4 +1,4 @@
---超究极魔导龙王
+--超究極魔導竜王
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--xyz summon
