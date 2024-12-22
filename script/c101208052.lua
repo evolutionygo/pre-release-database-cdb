@@ -1,4 +1,4 @@
---邪恶★双子 姬丝基勒·交换协议
+--Evil★Twin キスキル・ディール
 local s,id,o=GetID()
 function s.initial_effect(c)
 	c:SetSPSummonOnce(id)

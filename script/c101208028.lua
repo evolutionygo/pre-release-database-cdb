@@ -1,4 +1,4 @@
---直播☆双子 璃拉·糖心
+--Live☆Twin リィラ・スウィート
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--negate

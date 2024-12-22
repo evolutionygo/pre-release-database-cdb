@@ -1,4 +1,4 @@
---尊贵黄金乡的黄金国永生药
+--貴き黄金郷のエルドリクシル
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--Activate

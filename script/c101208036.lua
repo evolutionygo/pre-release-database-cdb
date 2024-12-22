@@ -1,4 +1,4 @@
---黄金乡的堕欲天使
+--黄金郷のアンヘルカイド
 local s,id,o=GetID()
 function s.initial_effect(c)
 	c:EnableReviveLimit()
