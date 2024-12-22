@@ -1,7 +1,7 @@
 --サイバー・ヨルムンガンド
 local s,id,o=GetID()
 function s.initial_effect(c)
-	aux.AddCodeList(c,70095154)
+	aux.AddCodeList(c,70095154,24094653)
 	--splimit
 	local e0=Effect.CreateEffect(c)
 	e0:SetType(EFFECT_TYPE_SINGLE)
@@ -38,36 +38,49 @@ end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetFieldGroupCount(tp,0,LOCATION_MZONE)>0
 end
-function s.eqfilter(c,e,tp)
+function s.eqfilter(c,e,tp,chk)
 	return c:IsCode(70095154)
-		and ((not ec and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 or Duel.IsPlayerCanSpecialSummonCount(tp,2) and Duel.GetLocationCount(tp,LOCATION_MZONE)>1) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
-		or Duel.GetLocationCount(tp,LOCATION_SZONE)>0 and c:CheckUniqueOnField(tp))
+		and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and
+			(not chk and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+			or chk and Duel.IsPlayerCanSpecialSummonCount(tp,2) and Duel.GetLocationCount(tp,LOCATION_MZONE)>1)
+		or Duel.GetLocationCount(tp,LOCATION_SZONE)>0 and c:CheckUniqueOnField(tp)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
-		and Duel.IsExistingMatchingCard(s.eqfilter,tp,LOCATION_DECK,0,1,nil,e,tp) end
+		and Duel.IsExistingMatchingCard(s.eqfilter,tp,LOCATION_DECK,0,1,nil,e,tp,true) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,c,1,0,0)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToChain() and Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)~=0 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-		local g=Duel.SelectMatchingCard(tp,s.eqfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp)
+		local g=Duel.SelectMatchingCard(tp,s.eqfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp,false)
 		local tc=g:GetFirst()
-		if not tc then return end
-		if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and tc:IsCanBeSpecialSummoned(e,0,tp,false,false) and (Duel.GetLocationCount(tp,LOCATION_SZONE)<1 or not Duel.SelectYesNo(tp,aux.Stringid(id,2))) then
-			Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
-		else
-			Duel.Equip(tp,tc,c)
-			local e1=Effect.CreateEffect(c)
-			e1:SetType(EFFECT_TYPE_SINGLE)
-			e1:SetProperty(EFFECT_FLAG_OWNER_RELATE)
-			e1:SetCode(EFFECT_EQUIP_LIMIT)
-			e1:SetReset(RESET_EVENT+RESETS_STANDARD)
-			e1:SetValue(s.eqlimit)
-			tc:RegisterEffect(e1)
+		if tc then
+			local b1=Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and tc:IsCanBeSpecialSummoned(e,0,tp,false,false)
+			local b2=Duel.GetLocationCount(tp,LOCATION_SZONE)>0 and tc:CheckUniqueOnField(tp)
+			local op=0
+			if b1 and not b2 then op=1 end
+			if b2 and not b1 then op=2 end
+			if b1 and b2 then
+				op=aux.SelectFromOptions(tp,
+					{b1,1152,1},
+					{b2,1068,2})
+			end
+			if op==1 then
+				Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
+			elseif op==2 then
+				Duel.Equip(tp,tc,c)
+				local e1=Effect.CreateEffect(c)
+				e1:SetType(EFFECT_TYPE_SINGLE)
+				e1:SetProperty(EFFECT_FLAG_OWNER_RELATE)
+				e1:SetCode(EFFECT_EQUIP_LIMIT)
+				e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+				e1:SetValue(s.eqlimit)
+				tc:RegisterEffect(e1)
+			end
 		end
 	end
 	local e1=Effect.CreateEffect(c)
@@ -86,12 +99,13 @@ function s.eqlimit(e,c)
 	return e:GetOwner()==c
 end
 function s.costfilter(c)
-	return c:IsCode(70095154) and c:IsAbleToHandAsCost()
+	return c:IsFaceup() and c:IsCode(70095154) and c:IsAbleToHandAsCost()
 end
 function s.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.costfilter,tp,LOCATION_ONFIELD,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
 	local g=Duel.SelectMatchingCard(tp,s.costfilter,tp,LOCATION_ONFIELD,0,1,1,nil)
+	Duel.HintSelection(g)
 	Duel.SendtoHand(g,nil,REASON_COST)
 end
 function s.thfilter(c)
