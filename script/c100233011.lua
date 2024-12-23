@@ -29,7 +29,6 @@ function s.initial_effect(c)
 	e3:SetDescription(aux.Stringid(id,3))
 	e3:SetType(EFFECT_TYPE_IGNITION)
 	e3:SetRange(LOCATION_MZONE)
-	e3:SetCondition(s.datcon)
 	e3:SetCost(s.datcost)
 	e3:SetTarget(s.dattg)
 	e3:SetOperation(s.datop)
@@ -90,9 +89,6 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 		end
 		Duel.Overlay(c,sg)
 	end
-end
-function s.datcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetCurrentPhase()==PHASE_MAIN1 and aux.bpcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.dattg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()

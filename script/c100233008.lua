@@ -54,7 +54,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 			Duel.SendtoHand(g,nil,REASON_EFFECT)
 			Duel.ConfirmCards(1-tp,g)
 		end
-	else
+	elseif dr then
 		Duel.Draw(tp,1,REASON_EFFECT)
 	end
 end
