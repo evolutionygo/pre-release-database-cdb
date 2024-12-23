@@ -41,7 +41,7 @@ function s.initial_effect(c)
 end
 function s.rmtg(e,c)
 	return (c:IsLocation(LOCATION_OVERLAY) or c:IsPreviousLocation(LOCATION_OVERLAY))
-		and c:IsReason(REASON_COST+REASON_EFFECT)
+		and c:IsReason(REASON_COST+REASON_SPSUMMON+REASON_EFFECT)
 end
 function s.ovcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(Card.IsType,1,nil,TYPE_MONSTER)
