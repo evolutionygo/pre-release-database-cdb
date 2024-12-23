@@ -43,7 +43,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 function s.rlcfilter(c,tp)
-	return c:IsFaceup() and c:IsSetCard(0x10af) and c:IsControler(tp) and c:IsSummonType(SUMMON_TYPE_PENDULUM)
+	return c:IsFaceup() and c:IsSetCard(0x10af) and c:IsSummonPlayer(tp) and c:IsSummonType(SUMMON_TYPE_PENDULUM)
 end
 function s.rlcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.rlcfilter,1,nil,tp)
