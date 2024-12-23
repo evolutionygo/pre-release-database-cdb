@@ -48,9 +48,9 @@ function s.eqtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_EQUIP,g,1,0,0)
 end
 function s.eqop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if c:IsRelateToEffect(e) and c:IsFaceup() and tc:IsRelateToEffect(e) and c:IsType(TYPE_MONSTER) and aux.NecroValleyFilter()(tc) then
+	if tc:IsRelateToEffect(e) and aux.NecroValleyFilter()(tc) and tc:IsFaceupEx() and tc:IsAllTypes(TYPE_EFFECT+TYPE_MONSTER) then
+		local c=e:GetHandler()
 		if not Duel.Equip(tp,tc,c,false) then return end
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
@@ -68,7 +68,8 @@ function s.discon(e,tp,eg,ep,ev,re,r,rp)
 	return re:IsActiveType(TYPE_MONSTER)
 end
 function s.cfilter(c)
-	return c:IsSetCard(0x150) and bit.band(c:GetOriginalType(),TYPE_MONSTER)~=0 and c:IsAbleToGraveAsCost()
+	return c:IsFaceup() and c:IsSetCard(0x150)
+		and bit.band(c:GetOriginalType(),TYPE_MONSTER)~=0 and c:IsAbleToGraveAsCost()
 end
 function s.discost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_ONFIELD,0,1,nil) end
@@ -81,11 +82,13 @@ function s.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_DISABLE,eg,1,0,0)
 end
 function s.disop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.NegateEffect(ev) and Duel.IsExistingMatchingCard(aux.TRUE,tp,0,LOCATION_ONFIELD,1,nil) and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
+	if Duel.NegateEffect(ev) and Duel.IsExistingMatchingCard(aux.TRUE,tp,0,LOCATION_ONFIELD,1,nil)
+		and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 		Duel.BreakEffect()
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 		local g=Duel.SelectMatchingCard(tp,aux.TRUE,tp,0,LOCATION_ONFIELD,1,1,nil)
 		if g:GetCount()>0 then
+			Duel.HintSelection(g)
 			Duel.Destroy(g,REASON_EFFECT)
 		end
 	end

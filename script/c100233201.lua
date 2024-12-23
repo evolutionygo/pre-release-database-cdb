@@ -36,7 +36,6 @@ function s.initial_effect(c)
 	e4:SetValue(86120751)
 	c:RegisterEffect(e4)
 end
-s.fusion_effect=true
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return not e:GetHandler():IsReason(REASON_DRAW)
 end
