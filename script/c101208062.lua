@@ -36,7 +36,7 @@ function s.sumfilter(c)
 	return c:IsSummonable(true,nil) and c:IsRace(RACE_WARRIOR)
 end
 function s.chkfilter(c)
-	return c:IsAllTypes(TYPE_CONTINUOUS|TYPE_TRAP) and c:IsFaceup() and
+	return c:IsAllTypes(TYPE_CONTINUOUS|TYPE_TRAP) and c:IsFaceup() and c:IsEffectProperty(aux.EffectCategoryFilter(CATEGORY_SPECIAL_SUMMON)) and
 		(c:IsLocation(LOCATION_MZONE) or
 			(c:GetOriginalLevel()>0
 			or bit.band(c:GetOriginalRace(),0x3fffffff)~=0
