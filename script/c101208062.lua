@@ -36,11 +36,13 @@ function s.sumfilter(c)
 	return c:IsSummonable(true,nil) and c:IsRace(RACE_WARRIOR)
 end
 function s.chkfilter(c)
-	return c:IsAllTypes(TYPE_CONTINUOUS|TYPE_TRAP) and (c:IsLocation(LOCATION_MZONE) or (c:GetOriginalLevel()>0
-		or bit.band(c:GetOriginalRace(),0x3fffffff)~=0
-		or bit.band(c:GetOriginalAttribute(),0x7f)~=0
-		or c:GetBaseAttack()>0
-		or c:GetBaseDefense()>0))
+	return c:IsAllTypes(TYPE_CONTINUOUS|TYPE_TRAP) and c:IsFaceup() and
+		(c:IsLocation(LOCATION_MZONE) or
+			(c:GetOriginalLevel()>0
+			or bit.band(c:GetOriginalRace(),0x3fffffff)~=0
+			or bit.band(c:GetOriginalAttribute(),0x7f)~=0
+			or c:GetBaseAttack()>0
+			or c:GetBaseDefense()>0))
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
@@ -49,6 +51,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,g)
 		if Duel.IsExistingMatchingCard(s.sumfilter,tp,LOCATION_HAND+LOCATION_MZONE,0,1,nil)
+			and Duel.IsExistingMatchingCard(s.chkfilter,tp,LOCATION_MZONE+LOCATION_SZONE,0,1,nil)
 			and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 			Duel.BreakEffect()
 			Duel.ShuffleHand(tp)
