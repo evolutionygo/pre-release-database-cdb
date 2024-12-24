@@ -1,28 +1,29 @@
---args巨人杀手
+--ARG☆S－GiantKilling
 local s,id,o=GetID()
 function s.initial_effect(c)
 	 --activate
 	local e1=Effect.CreateEffect(c)
-	e1:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND+CATEGORY_SUMMON)
+	e1:SetDescription(aux.Stringid(id,0))
+	e1:SetCategory(CATEGORY_SEARCH|CATEGORY_TOHAND|CATEGORY_SUMMON)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetCountLimit(1,id)
 	e1:SetHintTiming(0,TIMING_END_PHASE)
 	e1:SetTarget(s.thtg)
 	e1:SetOperation(s.thop)
-	c:RegisterEffect(e1) 
+	c:RegisterEffect(e1)
 	--changepos
 	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetCategory(CATEGORY_TOHAND)
 	e2:SetRange(LOCATION_GRAVE)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e2:SetCountLimit(1,id)
-	e2:SetHintTiming(0,TIMINGS_CHECK_MONSTER)
 	e2:SetCost(aux.bfgcost)
 	e2:SetTarget(s.thtg1)
 	e2:SetOperation(s.thop1)
-	c:RegisterEffect(e2)  
+	c:RegisterEffect(e2)
 end
 function s.thfilter(c)
 	return c:IsSetCard(0x1c1) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
@@ -30,26 +31,24 @@ end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
-	Duel.SetOperationInfo(0,CATEGORY_SUMMON,nil,0,0,0)
 end
 function s.sumfilter(c)
 	return c:IsSummonable(true,nil) and c:IsRace(RACE_WARRIOR)
 end
 function s.chkfilter(c)
-	return c:IsAllTypes(TYPE_CONTINUOUS|TYPE_TRAP) and c:IsLocation(LOCATION_MZONE) or (c:GetOriginalLevel()>0
+	return c:IsAllTypes(TYPE_CONTINUOUS|TYPE_TRAP) and (c:IsLocation(LOCATION_MZONE) or (c:GetOriginalLevel()>0
 		or bit.band(c:GetOriginalRace(),0x3fffffff)~=0
 		or bit.band(c:GetOriginalAttribute(),0x7f)~=0
 		or c:GetBaseAttack()>0
-		or c:GetBaseDefense()>0)
+		or c:GetBaseDefense()>0))
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
-	local check=Duel.IsExistingMatchingCard(s.chkfilter,tp,LOCATION_MZONE+LOCATION_SZONE,0,1,nil)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	local g=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_DECK,0,1,1,nil)
 	if g:GetCount()>0 then
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,g)
-		if Duel.IsExistingMatchingCard(s.sumfilter,tp,LOCATION_HAND+LOCATION_MZONE,0,1,nil) and check
+		if Duel.IsExistingMatchingCard(s.sumfilter,tp,LOCATION_HAND+LOCATION_MZONE,0,1,nil)
 			and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 			Duel.BreakEffect()
 			Duel.ShuffleHand(tp)
