@@ -73,6 +73,7 @@ function s.thtg1(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return g:CheckSubGroup(s.sgselect,2,2) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
 	local sg=g:SelectSubGroup(tp,s.sgselect,false,2,2)
+	Duel.SetTargetCard(sg)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,#g,0,0)
 end
 function s.thop1(e,tp,eg,ep,ev,re,r,rp)
