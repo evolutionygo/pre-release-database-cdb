@@ -55,7 +55,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_ONFIELD,0,1,1,nil,tp)
 	if g:GetCount()>0 then
 		Duel.HintSelection(g)
-		if Duel.SendtoHand(g,nil,REASON_EFFECT)~=0 and g:Filter(Card.IsLocation,nil,LOCATION_HAND)>0
+		if Duel.SendtoHand(g,nil,REASON_EFFECT)~=0 and g:FilterCount(Card.IsLocation,nil,LOCATION_HAND)>0
 			and c:IsCanBeSpecialSummoned(e,0,tp,false,false) then
 			Duel.SpecialSummon(e:GetHandler(),0,tp,tp,false,false,POS_FACEUP)
 		end
