@@ -87,9 +87,10 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.poscon(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
+	local p,loc,atk=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_PLAYER,CHAININFO_TRIGGERING_LOCATION,CHAININFO_TRIGGERING_ATTACK)
 	local rc=re:GetHandler()
-	return ep==1-tp and rc:IsOnField() and rc:IsFaceup() and rc:IsRelateToEffect(re) and re:IsActiveType(TYPE_MONSTER) and rc:IsAttackAbove(2500)
+	return p==1-tp and (LOCATION_ONFIELD)&loc~=0 and re:IsActiveType(TYPE_MONSTER) and atk>=2500
+		and rc:IsRelateToEffect(re)
 end
 function s.postg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local rc=re:GetHandler()
