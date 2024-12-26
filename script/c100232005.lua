@@ -37,7 +37,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 			Duel.SetOperationInfo(0,CATEGORY_DESTROY,sg,1,0,0)
 		elseif ct==2 then
 			Duel.SetOperationInfo(0,CATEGORY_REMOVE,sg,1,0,0)
-		elseif ct==3 then
+		elseif ct>2 then
 			local rg=Duel.GetMatchingGroup(s.rmfdfilter,tp,0,LOCATION_ONFIELD+LOCATION_GRAVE,nil,sc:GetCode(),tp)
 			Duel.SetOperationInfo(0,CATEGORY_REMOVE,rg,#rg,0,0)
 		end
