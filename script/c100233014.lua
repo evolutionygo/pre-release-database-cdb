@@ -80,6 +80,7 @@ function s.rlop(e,tp,eg,ep,ev,re,r,rp)
 	local sg=tg:FilterSelect(tp,s.atkfilter,1,1,nil,g)
 	if sg:GetCount()>0 then
 		tg:Sub(sg)
+		Duel.HintSelection(tg)
 		local rc=Duel.Release(tg,REASON_EFFECT)
 		if rc>0 then
 			local rg=Duel.GetOperatedGroup()
