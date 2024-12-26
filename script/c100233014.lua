@@ -80,10 +80,11 @@ function s.rlop(e,tp,eg,ep,ev,re,r,rp)
 	local sg=tg:FilterSelect(tp,s.atkfilter,1,1,nil,g)
 	if sg:GetCount()>0 then
 		tg:Sub(sg)
-		local atk=tg:GetSum(Card.GetAttack)
-		local def=tg:GetSum(Card.GetDefense)
 		local rc=Duel.Release(tg,REASON_EFFECT)
-		if rc==2 then
+		if rc>0 then
+			local rg=Duel.GetOperatedGroup()
+			local atk=rg:GetSum(Card.GetPreviousAttackOnField)
+			local def=rg:GetSum(Card.GetPreviousDefenseOnField)
 			local tc=sg:GetFirst()
 			local e1=Effect.CreateEffect(e:GetHandler())
 			e1:SetType(EFFECT_TYPE_SINGLE)
