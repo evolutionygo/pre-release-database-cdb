@@ -39,17 +39,14 @@ function s.initial_effect(c)
 	Duel.AddCustomActivityCounter(id,ACTIVITY_CHAIN,s.chainfilter)
 end
 function s.chainfilter(re,tp,cid)
-	if re:IsActiveType(TYPE_MONSTER) and re:GetHandler():IsAllTypes(TYPE_LINK+TYPE_MONSTER) then
-		Duel.RegisterFlagEffect(0,id,RESET_PHASE+PHASE_END,0,1)
-		Duel.RegisterFlagEffect(1,id,RESET_PHASE+PHASE_END,0,1)
-	end
 	return not (re:IsActiveType(TYPE_MONSTER) and re:GetHandler():IsAllTypes(TYPE_LINK+TYPE_MONSTER))
 end
 function s.indcon(e)
 	return e:GetHandler():IsLinkState()
 end
 function s.descon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetFlagEffect(tp,id)>0
+	return Duel.GetCustomActivityCount(id,tp,ACTIVITY_CHAIN)>0
+		or Duel.GetCustomActivityCount(id,1-tp,ACTIVITY_CHAIN)>0
 end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end
