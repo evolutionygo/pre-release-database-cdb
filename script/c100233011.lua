@@ -92,7 +92,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.dattg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-	if chk==0 then return c:GetBaseAttack()~=1500 and not c:IsHasEffect(EFFECT_DIRECT_ATTACK) end
+	if chk==0 then return c:GetBaseAttack()~=1500 or not c:IsHasEffect(EFFECT_DIRECT_ATTACK) end
 end
 function s.datcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end
@@ -100,7 +100,7 @@ function s.datcost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.datop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) and c:IsFaceup() and c:GetBaseAttack()~=1500 then
+	if c:IsRelateToEffect(e) and c:IsFaceup() then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_SET_BASE_ATTACK)
