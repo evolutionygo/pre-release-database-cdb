@@ -13,7 +13,7 @@ function s.initial_effect(c)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCountLimit(1,id)
-	e1:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_END_PHASE)
+	e1:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_MAIN_END)
 	e1:SetCondition(s.rmcon)
 	e1:SetTarget(s.rmtg)
 	e1:SetOperation(s.rmop)
@@ -38,7 +38,7 @@ function s.mfilter2(c)
 	return c:IsRace(RACE_DRAGON) and c:IsLevelAbove(7)
 end
 function s.rmcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetCurrentPhase()==PHASE_MAIN1 or Duel.GetCurrentPhase()==PHASE_MAIN2
+	return Duel.IsMainPhase()
 end
 function s.cfilter(c)
 	return c:IsFaceup() and c:IsRace(RACE_DRAGON) and c:IsAbleToHand()
@@ -46,12 +46,12 @@ end
 function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local loc=LOCATION_GRAVE
 	if  Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_MZONE,0,1,nil) then
-		loc=loc+LOCATION_ONFIELD
+		loc=loc|LOCATION_ONFIELD
 	end
 	if chkc then return chkc:IsControler(1-tp) and chkc:IsLocation(loc) and chkc:IsAbleToRemove() end
-	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,0,loc,1,nil) end
+	if chk==0 then return Duel.IsExistingTarget(Card.IsAbleToRemove,tp,0,loc,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectTarget(tp,Card.IsAbleToRemove,tp,0,loc,1,1,nil)
+	local g=aux.SelectTargetFromFieldFirst(tp,Card.IsAbleToRemove,tp,0,loc,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,1,0,0)
 	if g:GetFirst():IsLocation(LOCATION_ONFIELD) then
 		Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_MZONE)
@@ -60,15 +60,12 @@ end
 function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) then
-		local res=false
-		if tc:IsLocation(LOCATION_ONFIELD) then
-			res=true
-		end
-		if Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)~=0 and tc:IsLocation(LOCATION_REMOVED) and res then
+		if Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)~=0 and tc:IsLocation(LOCATION_REMOVED) and tc:IsPreviousLocation(LOCATION_ONFIELD) then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
 			local g=Duel.SelectMatchingCard(tp,s.cfilter,tp,LOCATION_MZONE,0,1,1,nil)
 			if g:GetCount()>0 then
 				Duel.BreakEffect()
+				Duel.HintSelection(g)
 				Duel.SendtoHand(g,nil,REASON_EFFECT)
 			end
 		end
@@ -81,17 +78,20 @@ function s.thefilter(c,tp)
 	return c:IsFaceup() and c:IsRace(RACE_DRAGON) and (c:IsAbleToHand() or c:IsAbleToExtra()) and Duel.GetMZoneCount(tp,c)>0
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.thefilter,tp,LOCATION_MZONE,0,1,nil,tp) 
+	if chk==0 then return Duel.IsExistingMatchingCard(s.thefilter,tp,LOCATION_MZONE,0,1,nil,tp)
 		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_MZONE)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
 	local g=Duel.SelectMatchingCard(tp,s.thefilter,tp,LOCATION_MZONE,0,1,1,nil,tp)
-	if g:GetCount()>0 and Duel.SendtoHand(g,nil,REASON_EFFECT)~=0 and g:IsExists(Card.IsLocation,1,nil,LOCATION_HAND+LOCATION_EXTRA)
-		and c:IsRelateToEffect(e) then
-		Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
+	if g:GetCount()>0 then
+		Duel.HintSelection(g)
+		if Duel.SendtoHand(g,nil,REASON_EFFECT)~=0 and g:IsExists(Card.IsLocation,1,nil,LOCATION_HAND+LOCATION_EXTRA)
+			and c:IsRelateToEffect(e) and aux.NecroValleyFilter()(c) then
+			Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
+		end
 	end
 end
