@@ -60,7 +60,8 @@ end
 function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) then
-		if Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)~=0 and tc:IsLocation(LOCATION_REMOVED) and tc:IsPreviousLocation(LOCATION_ONFIELD) then
+		if Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)~=0 and tc:IsPreviousLocation(LOCATION_ONFIELD)
+			and (tc:IsLocation(LOCATION_REMOVED) or tc:IsType(TYPE_TOKEN)) then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
 			local g=Duel.SelectMatchingCard(tp,s.cfilter,tp,LOCATION_MZONE,0,1,1,nil)
 			if g:GetCount()>0 then
@@ -76,6 +77,7 @@ function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.thefilter(c,tp,chk)
 	return c:IsFaceup() and c:IsRace(RACE_DRAGON) and (c:IsAbleToHand() or c:IsAbleToExtra())
+		and (Duel.GetMZoneCount(tp,c)>0 or not chk)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.thefilter,tp,LOCATION_MZONE,0,1,nil,tp,true)
