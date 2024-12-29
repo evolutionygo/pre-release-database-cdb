@@ -45,7 +45,7 @@ function s.cfilter(c)
 end
 function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local loc=LOCATION_GRAVE
-	if  Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_MZONE,0,1,nil) then
+	if Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_MZONE,0,1,nil) then
 		loc=loc|LOCATION_ONFIELD
 	end
 	if chkc then return chkc:IsControler(1-tp) and chkc:IsLocation(loc) and chkc:IsAbleToRemove() end
@@ -74,11 +74,11 @@ end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetTurnPlayer()==1-tp
 end
-function s.thefilter(c,tp)
-	return c:IsFaceup() and c:IsRace(RACE_DRAGON) and (c:IsAbleToHand() or c:IsAbleToExtra()) and Duel.GetMZoneCount(tp,c)>0
+function s.thefilter(c,tp,chk)
+	return c:IsFaceup() and c:IsRace(RACE_DRAGON) and (c:IsAbleToHand() or c:IsAbleToExtra())
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.thefilter,tp,LOCATION_MZONE,0,1,nil,tp)
+	if chk==0 then return Duel.IsExistingMatchingCard(s.thefilter,tp,LOCATION_MZONE,0,1,nil,tp,true)
 		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_MZONE)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
@@ -86,7 +86,7 @@ end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
-	local g=Duel.SelectMatchingCard(tp,s.thefilter,tp,LOCATION_MZONE,0,1,1,nil,tp)
+	local g=Duel.SelectMatchingCard(tp,s.thefilter,tp,LOCATION_MZONE,0,1,1,nil,tp,false)
 	if g:GetCount()>0 then
 		Duel.HintSelection(g)
 		if Duel.SendtoHand(g,nil,REASON_EFFECT)~=0 and g:IsExists(Card.IsLocation,1,nil,LOCATION_HAND+LOCATION_EXTRA)
