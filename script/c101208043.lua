@@ -60,28 +60,25 @@ function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local b1=Duel.IsExistingMatchingCard(Card.IsFaceup,tp,0,LOCATION_MZONE,1,nil)
 	local b2=Duel.IsExistingMatchingCard(s.desfilter,tp,0,LOCATION_ONFIELD,1,nil)
 	if chk==0 then return b1 or b2 end
-	local op=0
-	if b1 and b2 then
-		op=Duel.SelectOption(tp,aux.Stringid(id,1),aux.Stringid(id,2))
-	elseif b1 then
-		op=Duel.SelectOption(tp,aux.Stringid(id,1))
-	else
-		op=Duel.SelectOption(tp,aux.Stringid(id,2))+1
-	end
+	local op=aux.SelectFromOptions(tp,
+		{b1,aux.Stringid(id,1),1},
+		{b2,aux.Stringid(id,2),2})
 	e:SetLabel(op)
 	local g=Group.CreateGroup()
-	if op==0 then
+	if op==1 then
 		g=Duel.GetMatchingGroup(Card.IsFaceup,tp,0,LOCATION_MZONE,nil)
-	else
+	elseif op==2 then
 		g=Duel.GetMatchingGroup(s.desfilter,tp,0,LOCATION_ONFIELD,nil)
 	end
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,#g,0,0)
+	if #g>0 then
+		Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,#g,0,0)
+	end
 end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Group.CreateGroup()
-	if e:GetLabel()==0 then
+	if e:GetLabel()==1 then
 		g=Duel.GetMatchingGroup(Card.IsFaceup,tp,0,LOCATION_MZONE,nil)
-	else
+	elseif e:GetLabel()==2 then
 		g=Duel.GetMatchingGroup(s.desfilter,tp,0,LOCATION_ONFIELD,nil)
 	end
 	Duel.Destroy(g,REASON_EFFECT)
