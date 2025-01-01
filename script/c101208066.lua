@@ -51,6 +51,12 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.selgroup(g,tp,ct)
+	if not g:IsExists(Card.IsLocation,1,nil,LOCATION_HAND) then
+		return g:Select(tp,ct*6,ct*6,nil)
+	end
+	if g:FilterCount(Card.IsLocation,nil,LOCATION_EXTRA)<6 then
+		return g:FilterSelect(tp,Card.IsLocation,ct,ct,nil,LOCATION_HAND)
+	end
 	local rg=Group.CreateGroup()
 	while true do
 		local cct=s.getct(rg)
@@ -65,7 +71,7 @@ function s.selgroup(g,tp,ct)
 			end
 			sg=sg-rg
 		end
-		local tc=sg:SelectUnselect(rg,tp,finish,not finish,cct,ct)
+		local tc=sg:SelectUnselect(rg,tp,finish,not finish and #rg>0,cct,ct)
 		if tc==nil then
 			if finish then
 				break
