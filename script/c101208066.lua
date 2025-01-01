@@ -32,20 +32,53 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local g=Duel.SelectTarget(tp,s.tgfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,ct,e:GetHandler())
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,g:GetCount(),0,0)
 end
-function s.gcheck(g,ct)
-	return g:FilterCount(Card.IsLocation,nil,LOCATION_HAND)+math.floor(g:FilterCount(Card.IsLocation,nil,LOCATION_EXTRA)/6)==ct
+function s.getct(g)
+	return g:FilterCount(Card.IsLocation,nil,LOCATION_HAND)+g:FilterCount(Card.IsLocation,nil,LOCATION_EXTRA)/6
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e)
 	if g:GetCount()>0 then
 		local tg=Duel.GetMatchingGroup(s.cfilter,tp,LOCATION_HAND+LOCATION_EXTRA,0,nil,tp)
-		if tg:CheckSubGroup(s.gcheck,1,127,g:GetCount()) then
+		local ct=tg:FilterCount(Card.IsLocation,nil,LOCATION_HAND)+tg:FilterCount(Card.IsLocation,nil,LOCATION_EXTRA)
+		if ct>=g:GetCount() then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-			local sg=tg:SelectSubGroup(tp,s.gcheck,false,1,15,g:GetCount())
+			local sg=s.selgroup(tg,tp,g:GetCount())
 			if sg:GetCount()>0 and Duel.Remove(sg,POS_FACEDOWN,REASON_EFFECT) then
 				Duel.BreakEffect()
 				Duel.SendtoHand(g,nil,REASON_EFFECT)
 			end
 		end
 	end
+end
+function s.selgroup(g,tp,ct)
+	local rg=Group.CreateGroup()
+	while true do
+		local cct=s.getct(rg)
+		local finish=cct==ct
+		local sg=Group.CreateGroup()
+		if not finish then
+			local hct=rg:FilterCount(Card.IsLocation,nil,LOCATION_HAND)
+			local ectn=math.ceil(rg:FilterCount(Card.IsLocation,nil,LOCATION_EXTRA)/6)
+			sg=g:Filter(Card.IsLocation,nil,LOCATION_EXTRA)
+			if hct+ectn<ct then
+				sg=sg+g:Filter(Card.IsLocation,nil,LOCATION_HAND)
+			end
+			sg=sg-rg
+		end
+		local tc=sg:SelectUnselect(rg,tp,finish,not finish,1,g:GetCount())
+		if tc==nil then
+			if finish then
+				break
+			else
+				rg:Clear()
+			end
+		else
+			if rg:IsContains(tc) then
+				rg:RemoveCard(tc)
+			else
+				rg:AddCard(tc)
+			end
+		end
+	end
+	return rg
 end
