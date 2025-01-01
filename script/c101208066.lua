@@ -33,7 +33,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,g:GetCount(),0,0)
 end
 function s.gcheck(g,ct)
-	return g:FilterCount(Card.IsLocation,nil,LOCATION_HAND)+(g:FilterCount(Card.IsLocation,nil,LOCATION_EXTRA)/6)==ct
+	return g:FilterCount(Card.IsLocation,nil,LOCATION_HAND)+math.floor(g:FilterCount(Card.IsLocation,nil,LOCATION_EXTRA)/6)==ct
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e)
@@ -41,7 +41,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		local tg=Duel.GetMatchingGroup(s.cfilter,tp,LOCATION_HAND+LOCATION_EXTRA,0,nil,tp)
 		if tg:CheckSubGroup(s.gcheck,1,127,g:GetCount()) then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-			local sg=tg:SelectSubGroup(tp,s.gcheck,false,1,127,g:GetCount())
+			local sg=tg:SelectSubGroup(tp,s.gcheck,false,1,15,g:GetCount())
 			if sg:GetCount()>0 and Duel.Remove(sg,POS_FACEDOWN,REASON_EFFECT) then
 				Duel.BreakEffect()
 				Duel.SendtoHand(g,nil,REASON_EFFECT)

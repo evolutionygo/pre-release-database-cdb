@@ -32,7 +32,7 @@ function s.tgfilter(c)
 	return c:IsRace(RACE_ZOMBIE+RACE_FIEND) and c:IsAllTypes(TYPE_RITUAL+TYPE_MONSTER) and c:IsAbleToGrave()
 end
 function s.tgtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.tgfilter,tp,LOCATION_DECK,0,1,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.tgfilter,tp,LOCATION_DECK+LOCATION_HAND,0,1,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_DECK)
 end
 function s.thfilter(c)
@@ -40,16 +40,17 @@ function s.thfilter(c)
 end
 function s.tgop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local g=Duel.SelectMatchingCard(tp,s.tgfilter,tp,LOCATION_DECK,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,s.tgfilter,tp,LOCATION_DECK+LOCATION_HAND,0,1,1,nil)
 	if g:GetCount()>0 then
-		local g1=Duel.GetMatchingGroup(s.thfilter,tp,LOCATION_DECK,0,nil)
-		if Duel.SendtoGrave(g,REASON_EFFECT)>0 and g:IsExists(Card.IsLocation,1,nil,LOCATION_GRAVE)
-			and #g1>0 and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
-			Duel.BreakEffect()
-			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-			local sg=g1:Select(tp,1,1,nil)
-			Duel.SendtoHand(sg,nil,REASON_EFFECT)
-			Duel.ConfirmCards(1-tp,sg)
+		if Duel.SendtoGrave(g,REASON_EFFECT)>0 and g:IsExists(Card.IsLocation,1,nil,LOCATION_GRAVE) then
+			local sg=Duel.GetMatchingGroup(s.thfilter,tp,LOCATION_DECK,0,nil)
+			if #sg>0 and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
+				Duel.BreakEffect()
+				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+				local tg=sg:Select(tp,1,1,nil)
+				Duel.SendtoHand(tg,nil,REASON_EFFECT)
+				Duel.ConfirmCards(1-tp,tg)
+			end
 		end
 	end
 end
