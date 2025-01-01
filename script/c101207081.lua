@@ -43,7 +43,8 @@ function s.tgop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.SelectMatchingCard(tp,s.tgfilter,tp,LOCATION_DECK,0,1,1,nil)
 	if g:GetCount()>0 then
 		local g1=Duel.GetMatchingGroup(s.thfilter,tp,LOCATION_DECK,0,nil)
-		if Duel.SendtoGrave(g,REASON_EFFECT) and #g1>0 and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
+		if Duel.SendtoGrave(g,REASON_EFFECT)>0 and g:IsExists(Card.IsLocation,1,nil,LOCATION_GRAVE)
+			and #g1>0 and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 			Duel.BreakEffect()
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 			local sg=g1:Select(tp,1,1,nil)
