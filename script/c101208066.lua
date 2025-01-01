@@ -39,7 +39,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e)
 	if g:GetCount()>0 then
 		local tg=Duel.GetMatchingGroup(s.cfilter,tp,LOCATION_HAND+LOCATION_EXTRA,0,nil,tp)
-		local ct=tg:FilterCount(Card.IsLocation,nil,LOCATION_HAND)+tg:FilterCount(Card.IsLocation,nil,LOCATION_EXTRA)
+		local ct=s.getct(tg)
 		if ct>=g:GetCount() then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 			local sg=s.selgroup(tg,tp,g:GetCount())
@@ -57,15 +57,15 @@ function s.selgroup(g,tp,ct)
 		local finish=cct==ct
 		local sg=Group.CreateGroup()
 		if not finish then
+			sg=g:Filter(Card.IsLocation,nil,LOCATION_EXTRA)
 			local hct=rg:FilterCount(Card.IsLocation,nil,LOCATION_HAND)
 			local ectn=math.ceil(rg:FilterCount(Card.IsLocation,nil,LOCATION_EXTRA)/6)
-			sg=g:Filter(Card.IsLocation,nil,LOCATION_EXTRA)
 			if hct+ectn<ct then
 				sg=sg+g:Filter(Card.IsLocation,nil,LOCATION_HAND)
 			end
 			sg=sg-rg
 		end
-		local tc=sg:SelectUnselect(rg,tp,finish,not finish,1,g:GetCount())
+		local tc=sg:SelectUnselect(rg,tp,finish,not finish,cct,ct)
 		if tc==nil then
 			if finish then
 				break
