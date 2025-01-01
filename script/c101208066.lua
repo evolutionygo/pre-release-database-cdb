@@ -25,8 +25,8 @@ function s.tgfilter(c)
 	return c:IsFaceup() and c:IsAbleToHand()
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsOnField() and chkc:IsControler(1-tp) and chkc:IsAbleToHand() end
-	local ct=Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_HAND,0,1,e:GetHandler(),tp)+math.floor(Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_EXTRA,0,1,nil,tp)/6)
+	if chkc then return chkc:IsOnField() and s.tgfilter(chkc) end
+	local ct=Duel.GetMatchingGroupCount(s.cfilter,tp,LOCATION_HAND,0,e:GetHandler(),tp)+math.floor(Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_EXTRA,0,1,nil,tp)/6)
 	if chk==0 then return ct>0 and Duel.IsExistingTarget(s.tgfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
 	local g=Duel.SelectTarget(tp,s.tgfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,ct,e:GetHandler())
@@ -39,11 +39,13 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e)
 	if g:GetCount()>0 then
 		local tg=Duel.GetMatchingGroup(s.cfilter,tp,LOCATION_HAND+LOCATION_EXTRA,0,nil,tp)
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-		local sg=tg:SelectSubGroup(tp,s.gcheck,false,1,127,g:GetCount())
-		if sg:GetCount()>0 and Duel.Remove(sg,POS_FACEDOWN,REASON_EFFECT) then
-			Duel.BreakEffect()
-			Duel.SendtoHand(g,nil,REASON_EFFECT)
+		if tg:CheckSubGroup(s.gcheck,1,127,g:GetCount()) then
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+			local sg=tg:SelectSubGroup(tp,s.gcheck,false,1,127,g:GetCount())
+			if sg:GetCount()>0 and Duel.Remove(sg,POS_FACEDOWN,REASON_EFFECT) then
+				Duel.BreakEffect()
+				Duel.SendtoHand(g,nil,REASON_EFFECT)
+			end
 		end
 	end
 end
