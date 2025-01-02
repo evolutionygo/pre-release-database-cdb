@@ -51,7 +51,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.selgroup_count(c)
-	if s:IsLocation(LOCATION_HAND) then
+	if c:IsLocation(LOCATION_HAND) then
 		return 6
 	else
 		return 1
