@@ -1,4 +1,4 @@
---红天马 火翼飞马
+--紅天馬ファイヤー・ウイング・ペガサス
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--special summon
@@ -12,17 +12,17 @@ function s.initial_effect(c)
 	e1:SetOperation(s.spop)
 	c:RegisterEffect(e1)
 	--damage
-	local e3=Effect.CreateEffect(c)
-	e3:SetDescription(aux.Stringid(id,1))
-	e3:SetCategory(CATEGORY_DESTROY)
-	e3:SetType(EFFECT_TYPE_QUICK_O)
-	e3:SetCode(EVENT_CHAINING)
-	e3:SetRange(LOCATION_MZONE)
-	e3:SetCountLimit(1,id)
-	e3:SetCondition(s.damcon)
-	e3:SetTarget(s.damtg)
-	e3:SetOperation(s.damop)
-	c:RegisterEffect(e3)
+	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(aux.Stringid(id,1))
+	e2:SetCategory(CATEGORY_DAMAGE)
+	e2:SetType(EFFECT_TYPE_QUICK_O)
+	e2:SetCode(EVENT_CHAINING)
+	e2:SetRange(LOCATION_MZONE)
+	e2:SetCountLimit(1,id)
+	e2:SetCondition(s.damcon)
+	e2:SetTarget(s.damtg)
+	e2:SetOperation(s.damop)
+	c:RegisterEffect(e2)
 end
 function s.spcon(e,c)
 	if c==nil then return true end
