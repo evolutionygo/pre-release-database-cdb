@@ -39,7 +39,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	c:RegisterEffect(e1)
 end
 function s.damcon(e,tp,eg,ep,ev,re,r,rp)
-	local loc=Duel.GetChainInfo(ev-1,CHAININFO_TRIGGERING_LOCATION)
+	local loc=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_LOCATION)
 	return ep==1-tp and (loc&LOCATION_ONFIELD)~=0 and re:IsActiveType(TYPE_MONSTER)
 end
 function s.damtg(e,tp,eg,ep,ev,re,r,rp,chk)
