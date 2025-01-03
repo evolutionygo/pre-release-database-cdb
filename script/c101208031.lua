@@ -27,9 +27,10 @@ function s.rfilter(c,tp)
 	return Duel.GetMZoneCount(tp,c)>0 and c:IsAttribute(ATTRIBUTE_DARK) and (c:IsFaceup() or c:IsControler(tp))
 end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.CheckReleaseGroupEx(tp,s.rfilter,1,REASON_COST,true,nil,tp) end
+	local c=e:GetHandler()
+	if chk==0 then return Duel.CheckReleaseGroupEx(tp,s.rfilter,1,REASON_COST,true,c,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
-	local g=Duel.SelectReleaseGroupEx(tp,s.rfilter,1,1,REASON_COST,true,nil,tp)
+	local g=Duel.SelectReleaseGroupEx(tp,s.rfilter,1,1,REASON_COST,true,c,tp)
 	Duel.Release(g,REASON_COST)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -52,7 +53,11 @@ end
 function s.tgop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and Duel.SendtoGrave(tc,REASON_EFFECT)~=0 and c:IsRelateToEffect(e) and aux.NecroValleyFilter()(c) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
+	if tc:IsRelateToEffect(e) and Duel.SendtoGrave(tc,REASON_EFFECT)~=0
+		and c:IsRelateToEffect(e) and aux.NecroValleyFilter()(c)
+		and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+		and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
+		Duel.BreakEffect()
 		Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
 	end
 end
