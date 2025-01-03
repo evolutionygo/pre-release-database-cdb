@@ -39,8 +39,8 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	c:RegisterEffect(e1)
 end
 function s.damcon(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	return ep==1-tp and re:GetHandler():IsOnField() and re:GetHandler():IsRelateToEffect(re) and re:IsActiveType(TYPE_MONSTER)
+	local loc=Duel.GetChainInfo(ev-1,CHAININFO_TRIGGERING_LOCATION)
+	return ep==1-tp and (loc&LOCATION_ONFIELD)~=0 and re:IsActiveType(TYPE_MONSTER)
 end
 function s.damtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
@@ -60,7 +60,7 @@ function s.damop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
 		e1:SetValue(s.efilter)
-		e1:SetReset(RESET_EVENT+RESET_CHAIN)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_CHAIN)
 		c:RegisterEffect(e1)
 	end
 end
