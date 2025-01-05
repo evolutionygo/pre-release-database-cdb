@@ -21,6 +21,8 @@ function s.initial_effect(c)
 	e2:SetCategory(CATEGORY_ATKCHANGE+CATEGORY_DESTROY)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_MZONE)
+	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e2:SetHintTiming(0,TIMINGS_CHECK_MONSTER|TIMING_MAIN_END)
 	e1:SetCountLimit(1,id+o)
 	e2:SetTarget(s.destg)
 	e2:SetOperation(s.desop)
@@ -30,10 +32,10 @@ function s.lcheck(g)
 	return g:IsExists(Card.IsLinkRace,1,nil,RACE_ROCK)
 end
 function s.atkfilter(c)
-	return c:IsRace(RACE_ROCK)
+	return c:IsRace(RACE_ROCK) and c:IsAttackAbove(1)
 end
 function s.atktg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsControler(to) and s.atkfilter(chk) end
+	if chkc then return chkc:IsControler(tp) and s.atkfilter(chk) end
 	if chk==0 then return Duel.IsExistingTarget(s.atkfilter,tp,LOCATION_GRAVE,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
 	local g=Duel.SelectTarget(tp,s.atkfilter,tp,LOCATION_GRAVE,0,1,1,nil)
@@ -52,9 +54,9 @@ function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.desfilter(c,atk)
-	return c:IsFaceup() and c:IsAttackBelow(atk)
+	return c:IsFaceup() and c:IsAttackBelow(atk) and c:IsAttackAbove(1)
 end
-function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
+function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()
 	local atk=c:GetAttack()
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and s.desfilter(chkc,atk) end
@@ -67,7 +69,7 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
 	local atk=tc:GetAttack()
-	if c:IsFacedown() or not c:IsRelateToEffect(e) or c:GetAttack()<atk
+	if c:IsFacedown() or not c:IsRelateToEffect(e) or c:GetAttack()<atk or atk<=0
 		or c:IsStatus(STATUS_BATTLE_DESTROYED) then
 		return
 	end
