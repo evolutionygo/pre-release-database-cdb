@@ -73,8 +73,8 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
 	local atk=tc:GetAttack()
-	if c:IsFacedown() or not c:IsRelateToEffect(e) or c:GetAttack()<atk or atk<=0
-		or c:IsStatus(STATUS_BATTLE_DESTROYED) then
+	if c:IsFacedown() or not c:IsRelateToEffect(e) or c:GetAttack()<atk
+		or not tc:IsRelateToEffect(e) or not tc:IsFaceup() or not tc:IsType(TYPE_MONSTER) or atk<=0 then
 		return
 	end
 	local e1=Effect.CreateEffect(c)
