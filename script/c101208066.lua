@@ -50,41 +50,13 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 end
+function s.selgroup_count(c)
+	if c:IsLocation(LOCATION_HAND) then
+		return 6
+	else
+		return 1
+	end
+end
 function s.selgroup(g,tp,ct)
-	if not g:IsExists(Card.IsLocation,1,nil,LOCATION_HAND) then
-		return g:Select(tp,ct*6,ct*6,nil)
-	end
-	if g:FilterCount(Card.IsLocation,nil,LOCATION_EXTRA)<6 then
-		return g:FilterSelect(tp,Card.IsLocation,ct,ct,nil,LOCATION_HAND)
-	end
-	local rg=Group.CreateGroup()
-	while true do
-		local cct=s.getct(rg)
-		local finish=cct==ct
-		local sg=Group.CreateGroup()
-		if not finish then
-			sg=g:Filter(Card.IsLocation,nil,LOCATION_EXTRA)
-			local hct=rg:FilterCount(Card.IsLocation,nil,LOCATION_HAND)
-			local ectn=math.ceil(rg:FilterCount(Card.IsLocation,nil,LOCATION_EXTRA)/6)
-			if hct+ectn<ct then
-				sg=sg+g:Filter(Card.IsLocation,nil,LOCATION_HAND)
-			end
-			sg=sg-rg
-		end
-		local tc=sg:SelectUnselect(rg,tp,finish,not finish and #rg>0,cct,ct)
-		if tc==nil then
-			if finish then
-				break
-			else
-				rg:Clear()
-			end
-		else
-			if rg:IsContains(tc) then
-				rg:RemoveCard(tc)
-			else
-				rg:AddCard(tc)
-			end
-		end
-	end
-	return rg
+	return g:SelectWithSumEqual(tp,s.selgroup_count,ct*6,1,#g)
 end
