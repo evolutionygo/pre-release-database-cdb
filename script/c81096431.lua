@@ -105,7 +105,7 @@ function s.adjustop(e,tp,eg,ep,ev,re,r,rp)
 												end
 											else
 												local st=2-et
-												Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,3))
+												Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RESOLVECARD)
 												local reg=exg:SelectSubGroup(tp,s.gcheck,false,st,st,tp)
 												for ttc in aux.Next(reg) do
 													local tte=ttc:IsHasEffect(id,tp)
@@ -142,7 +142,7 @@ function s.adjustop(e,tp,eg,ep,ev,re,r,rp)
 												end
 											else
 												local st=2-et
-												Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,3))
+												Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RESOLVECARD)
 												local reg=exg:SelectSubGroup(tp,s.gcheck,false,st,st,tp)
 												for ttc in aux.Next(reg) do
 													local tte=ttc:IsHasEffect(id,tp)
@@ -195,7 +195,7 @@ function s.adjustop(e,tp,eg,ep,ev,re,r,rp)
 												end
 											else
 												local st=2-et
-												Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,3))
+												Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RESOLVECARD)
 												local reg=exg:SelectSubGroup(tp,s.gcheck,false,st,st,tp)
 												for ttc in aux.Next(reg) do
 													local tte=ttc:IsHasEffect(id,tp)
@@ -232,7 +232,7 @@ function s.adjustop(e,tp,eg,ep,ev,re,r,rp)
 												end
 											else
 												local st=2-et
-												Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,3))
+												Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RESOLVECARD)
 												local reg=exg:SelectSubGroup(tp,s.gcheck,false,st,st,tp)
 												for ttc in aux.Next(reg) do
 													local tte=ttc:IsHasEffect(id,tp)
