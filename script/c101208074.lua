@@ -109,8 +109,8 @@ end
 function s.tgcon(e,tp,eg,ep,ev,re,r,rp)
 	local g=e:GetLabelObject()
 	local fid=e:GetLabel()
-	if g:FilterCount(s.tcfilter,nil,fid)==0 then
-		g:DeleteGroup()
+	if not g or g:FilterCount(s.tcfilter,nil,fid)==0 then
+		if g then g:DeleteGroup() end
 		e:Reset()
 		return false
 	else return true end
