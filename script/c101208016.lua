@@ -40,7 +40,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 function s.spcfilter(c)
-	return (c:IsAttack(2500) or c:IsDefense(2500)) and not c:IsPublic()
+	return (c:IsAttack(2500) or c:IsDefense(2500)) and c:IsType(TYPE_MONSTER) and not c:IsPublic()
 end
 function s.spcon(e,c)
 	if c==nil then return true end
@@ -87,7 +87,7 @@ function s.thtg2(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.thop2(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) then
+	if c:IsRelateToEffect(e) and aux.NecroValleyFilter()(c) then
 		Duel.SendtoHand(c,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,c)
 	end
