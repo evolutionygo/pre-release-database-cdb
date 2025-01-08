@@ -99,7 +99,7 @@ function s.sxfilter(c,tp,xc,eid)
 	local te=c:IsHasEffect(81096431,tp)
 	if te and te:GetValue()==eid then
 		local etg=te:GetTarget()
-		return etg(te,xc)
+		return not etg or etg(te,xc)
 	end
 end
 function s.Drake_shark_gf(int_ct,int_tp,xc)
@@ -241,7 +241,7 @@ function Auxiliary.Drake_Solve(tp,g,maxct,minct)
 		local et=maxct-g:GetCount()
 		local exg=g:Filter(Card.IsHasEffect,nil,81096431,tp)
 		local ext=exg:GetClassCount(s.eftfilter,tp)
-		if (et==0 or 2-et==ext) and #exg>0 then
+		if (et==0 or et==ext) and #exg>0 then
 			for ttc in aux.Next(exg) do
 				local tte=ttc:IsHasEffect(81096431,tp)
 				if tte then
@@ -250,7 +250,7 @@ function Auxiliary.Drake_Solve(tp,g,maxct,minct)
 				end
 			end
 		else
-			local st=2-et
+			local st=et
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RESOLVECARD)
 			local reg=exg:SelectSubGroup(tp,s.gcheck,false,st,st,tp)
 			for ttc in aux.Next(reg) do
