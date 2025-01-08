@@ -24,11 +24,8 @@ function s.initial_effect(c)
 	e2:SetOperation(s.matop)
 	c:RegisterEffect(e2)
 end
-function s.filter(c)
-	return c:IsFaceup() and c:IsRace(RACE_WARRIOR+RACE_SPELLCASTER)
-end
 function s.val(e,c)
-	return Duel.GetOverlayCount(e:GetHandlerPlayer(),1,0)*100
+	return Duel.GetOverlayCount(e:GetHandlerPlayer(),1,1)*100
 end
 function s.matfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0x160) and c:IsType(TYPE_XYZ)
