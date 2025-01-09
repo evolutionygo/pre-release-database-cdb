@@ -54,13 +54,13 @@ function s.splimit(e,se,sp,st)
 	if c:IsLocation(LOCATION_EXTRA) then return st&SUMMON_TYPE_FUSION==SUMMON_TYPE_FUSION end
 	return true
 end
-function s.hspfilter1(c,tp,sc)
+function s.hspfilter1(c,tp,fc)
 	return c:IsCode(85065943)
-		and c:IsControler(tp) and Duel.GetLocationCountFromEx(tp,tp,c,sc)>0 and c:IsCanBeFusionMaterial(sc,SUMMON_TYPE_SPECIAL)
+		and c:IsControler(tp) and Duel.GetLocationCountFromEx(tp,tp,c,fc)>0 and c:IsCanBeFusionMaterial(fc,SUMMON_TYPE_SPECIAL)
 end
-function s.hspfilter2(c,tp,sc)
+function s.hspfilter2(c,tp,fc)
 	return c:IsFaceup() and c:IsReleasable(REASON_MATERIAL|REASON_SPSUMMON)
-		and c:IsCanBeFusionMaterial(sc,SUMMON_TYPE_SPECIAL)
+		and c:IsCanBeFusionMaterial(fc,SUMMON_TYPE_SPECIAL)
 end
 function s.hspcon(e,c)
 	if c==nil then return true end
@@ -68,20 +68,28 @@ function s.hspcon(e,c)
 		and Duel.IsExistingMatchingCard(s.hspfilter2,c:GetControler(),0,LOCATION_MZONE,1,nil)
 end
 function s.hsptg(e,tp,eg,ep,ev,re,r,rp,chk,c)
-	local g=Duel.GetReleaseGroup(tp,false,REASON_SPSUMMON):Filter(s.hspfilter1,nil,tp,c)
+	local g1=Duel.GetReleaseGroup(tp,false,REASON_SPSUMMON):Filter(s.hspfilter1,nil,tp,c)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
-	local tc=g:SelectUnselect(nil,tp,false,true,1,1)
-	if tc then
-		local sg=Duel.SelectMatchingCard(tp,s.hspfilter2,tp,0,LOCATION_MZONE,1,1,nil)
-		sg:AddCard(tc)
-		e:SetLabelObject(sg)
-		return true
+	local tc1=g1:SelectUnselect(nil,tp,false,true,1,1)
+	if tc1 then
+		local g2=Duel.GetMatchingGroup(s.hspfilter2,tp,0,LOCATION_MZONE,tc1,tp,c)
+		local tc2=g2:SelectUnselect(nil,tp,false,true,1,1)
+		if tc2 then
+			local mg=Group.CreateGroup()
+			mg:AddCard(tc1)
+			mg:AddCard(tc2)
+			mg:KeepAlive()
+			e:SetLabelObject(mg)
+			return true
+		end
+		return false
 	else return false end
 end
 function s.hspop(e,tp,eg,ep,ev,re,r,rp,c)
 	local sg=e:GetLabelObject()
 	c:SetMaterial(sg)
 	Duel.Release(sg,REASON_SPSUMMON|REASON_MATERIAL)
+	sg:DeleteGroup()
 end
 function s.regcon(e,tp,eg,ep,ev,re,r,rp)
 	return rp==1-tp
