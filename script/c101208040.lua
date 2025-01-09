@@ -7,7 +7,8 @@ function s.initial_effect(c)
 	--move
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
-	e1:SetType(EFFECT_TYPE_IGNITION)
+	e1:SetType(EFFECT_TYPE_QUICK_O)
+	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCountLimit(1,id)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
@@ -51,7 +52,9 @@ function s.mvtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function s.mvop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and not tc:IsImmuneToEffect(e)
+	if tc:IsRelateToEffect(e)
+		and aux.NecroValleyFilter()(tc)
+		and not tc:IsImmuneToEffect(e)
 		and Duel.MoveToField(tc,tp,tc:GetOwner(),LOCATION_SZONE,POS_FACEUP,true) then
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetCode(EFFECT_CHANGE_TYPE)
@@ -71,7 +74,7 @@ function s.descon(e,tp,eg,ep,ev,re,r,rp)
 	return ph>=PHASE_BATTLE_START and ph<=PHASE_BATTLE
 end
 function s.desfilter1(c)
-	return c:IsFaceup() and c:GetType()&TYPE_SPELL+TYPE_TRAP==TYPE_SPELL+TYPE_TRAP
+	return c:IsFaceup() and c:GetType()&TYPE_SPELL+TYPE_CONTINUOUS==TYPE_SPELL+TYPE_CONTINUOUS
 end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end
