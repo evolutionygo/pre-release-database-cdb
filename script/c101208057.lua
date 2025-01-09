@@ -7,7 +7,6 @@ function s.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetCountLimit(1,id)
-	e1:SetCondition(s.condition)
 	e1:SetTarget(s.target)
 	e1:SetOperation(s.activate)
 	c:RegisterEffect(e1)
@@ -22,13 +21,7 @@ function s.initial_effect(c)
 	e2:SetOperation(s.atkop)
 	c:RegisterEffect(e2)
 end
-function s.condition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetCurrentPhase()==PHASE_MAIN1 or Duel.GetCurrentPhase()==PHASE_MAIN2
-end
-function s.cfilter(c)
-	return c:IsCode(13331639) and c:IsFaceup()
-end
-function s.filter(c,e,tp,check)
+function s.thfilter(c,e,tp,check)
 	return c:IsSetCard(0x19b) and c:IsLevelAbove(8) and (c:IsAbleToHand()
 		or check and c:IsCanBeSpecialSummoned(e,0,tp,false,false))
 end
@@ -36,13 +29,13 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		local check=Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 			and Duel.IsExistingMatchingCard(aux.TURE,tp,0,LOCATION_MZONE,1,nil)
-		return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_DECK,0,1,nil,e,tp,check)
+		return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil,e,tp,check)
 	end
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local check=Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and Duel.IsExistingMatchingCard(aux.TURE,tp,0,LOCATION_MZONE,1,nil)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_OPERATECARD)
+	Duel.Hint(HINT_SELECTMSG,tp,thfilter)
 	local g=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_DECK,0,1,1,nil,e,tp,check)
 	if g:GetCount()<=0 then return end
 	local tc=g:GetFirst()
