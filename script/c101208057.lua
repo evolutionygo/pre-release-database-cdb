@@ -22,8 +22,9 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function s.thfilter(c,e,tp,check)
-	return c:IsSetCard(0x19b) and c:IsLevelAbove(8) and (c:IsAbleToHand()
-		or check and c:IsCanBeSpecialSummoned(e,0,tp,false,false))
+	return c:IsSetCard(0x19b) and c:IsLevelAbove(8) and
+		(c:IsAbleToHand()
+			or check and c:IsCanBeSpecialSummoned(e,0,tp,false,false))
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
@@ -33,17 +34,17 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
-	local check=Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(aux.TRUE,tp,0,LOCATION_MZONE,1,nil)
-	Duel.Hint(HINT_SELECTMSG,tp,thfilter)
-	local g=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_DECK,0,1,1,nil,e,tp,check)
+	local check=Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)==0
+		and Duel.GetFieldGroupCount(tp,0,LOCATION_MZONE)>0
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_OPERATECARD)
+	local g=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp,check)
 	if g:GetCount()<=0 then return end
 	local tc=g:GetFirst()
 	local b=check and tc:IsCanBeSpecialSummoned(e,0,tp,false,false)
 	if tc:IsAbleToHand() and (not b or Duel.SelectOption(tp,1190,1152)==0) then
 		Duel.SendtoHand(tc,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,tc)
-	else
+	elseif b then
 		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
 	end
 end
