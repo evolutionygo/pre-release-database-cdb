@@ -20,7 +20,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 	--change a target into a tuner
 	local e3=Effect.CreateEffect(c)
-	e3:SetDescription(aux.Stringid(id,0))
+	e3:SetDescription(aux.Stringid(id,2))
 	e3:SetType(EFFECT_TYPE_IGNITION)
 	e3:SetRange(LOCATION_FZONE)
 	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
@@ -53,7 +53,7 @@ function s.limit(e,c)
 	return c:IsLocation(LOCATION_EXTRA) and c:IsAttribute(ATTRIBUTE_DARK)
 end
 function s.indtg(e,c)
-	return c:IsSetCard(0x1b1) and c:IsType(TYPE_FUSION)
+	return c:IsSetCard(0x1b1)
 end
 function s.indct(e,re,r,rp)
 	if bit.band(r,REASON_BATTLE)~=0 then
