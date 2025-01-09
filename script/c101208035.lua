@@ -57,8 +57,8 @@ function s.hspfilter1(c,tp,sc)
 	return c:IsCode(85065943)
 		and c:IsControler(tp) and Duel.GetLocationCountFromEx(tp,tp,c,sc)>0 and c:IsCanBeFusionMaterial(sc,SUMMON_TYPE_SPECIAL)
 end
-function s.hspfilter1(c,tp,sc)
-	return c:IsFaceup() and c:IsReleasable()
+function s.hspfilter2(c,tp,sc)
+	return c:IsFaceup() and c:IsReleasable(REASON_MATERIAL|REASON_SPSUMMON)
 		and c:IsCanBeFusionMaterial(sc,SUMMON_TYPE_SPECIAL)
 end
 function s.hspcon(e,c)
@@ -80,7 +80,7 @@ end
 function s.hspop(e,tp,eg,ep,ev,re,r,rp,c)
 	local sg=e:GetLabelObject()
 	c:SetMaterial(sg)
-	Duel.Release(sg,REASON_SPSUMMON)
+	Duel.Release(sg,REASON_SPSUMMON|REASON_MATERIAL)
 end
 function s.regcon(e,tp,eg,ep,ev,re,r,rp)
 	return rp==1-tp
@@ -92,6 +92,7 @@ function s.regop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local g=Duel.GetMatchingGroup(s.atkfilter,tp,0,LOCATION_MZONE,nil,e)
 	if g:GetCount()>0 then
+		Duel.Hint(HINT_CARD,0,id)
 		for tc in aux.Next(g) do
 			local e1=Effect.CreateEffect(c)
 			e1:SetType(EFFECT_TYPE_SINGLE)
