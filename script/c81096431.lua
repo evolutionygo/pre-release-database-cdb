@@ -51,21 +51,29 @@ function s.Drake_shark_f(function_f,int_lv,card_c)
 			   return c:IsXyzLevel(card_c,int_lv) and (not function_f or function_f(c))
 	end
 end
-function s.sxfilter(c,tp,xc,eid)
+function s.sxfilter(c,tp,xc)
 	local te=c:IsHasEffect(id,tp)
-	if te and te:GetValue()==eid then
+	if te then
 		local etg=te:GetTarget()
 		return not etg or etg(te,xc)
+	end
+	return false
+end
+function s.sxvalue(c,tp,xc)
+	local te=c:IsHasEffect(id,tp)
+	if te then
+		local etg=te:GetTarget()
+		if not etg or etg(te,xc) then
+			return te:GetValue()
+		end
 	end
 end
 function s.Drake_shark_gf(int_ct,int_tp,xc)
 	return function (g)
 			   local ct=g:GetCount()
-			   if g:IsExists(s.sxfilter,1,nil,int_tp,xc,id) then
-				   ct=ct+1
-			   end
-			   if g:IsExists(s.sxfilter,1,nil,int_tp,xc,101208009) then
-				   ct=ct+1
+			   local eg=g:Filter(s.sxfilter,nil,int_tp,xc)
+			   if #eg>0 then
+					ct=ct+eg:GetClassCount(s.sxvalue,int_tp,xc)
 			   end
 			   return ct>=int_ct
 	end
