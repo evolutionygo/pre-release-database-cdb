@@ -249,7 +249,7 @@ function Auxiliary.Drake_Solve(tp,g,maxct,minct)
 					tte:UseCountLimit(tp)
 				end
 			end
-		else
+		elseif #exg>0 then
 			local st=et
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RESOLVECARD)
 			local reg=exg:SelectSubGroup(tp,s.gcheck,false,st,st,tp)

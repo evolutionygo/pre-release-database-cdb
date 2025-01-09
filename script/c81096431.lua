@@ -232,7 +232,7 @@ function s.xyzop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Overlay(c,Group.FromCards(tc))
 	end
 end
-function Auxiliary.Drake_Solve(tp,g,maxct,minct)
+function Auxiliary.Drake_Solve(tp,g,maxct,minct,chkg)
 	if g:GetCount()<maxct and g:GetCount()>=minct and maxct==minct+2 then
 		local et=maxct-g:GetCount()
 		local exg=g:Filter(Card.IsHasEffect,nil,81096431,tp)
@@ -245,7 +245,7 @@ function Auxiliary.Drake_Solve(tp,g,maxct,minct)
 					tte:UseCountLimit(tp)
 				end
 			end
-		else
+		elseif #exg>0 then
 			local st=et
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RESOLVECARD)
 			local reg=exg:SelectSubGroup(tp,s.gcheck,false,st,st,tp)
