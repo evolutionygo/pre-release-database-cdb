@@ -1,6 +1,7 @@
 --贖罪神女
 local s,id,o=GetID()
 function s.initial_effect(c)
+	aux.AddCodeList(c,85065943)
 	--fusion material
 	c:EnableReviveLimit()
 	aux.AddFusionProcCodeFun(c,65033975,aux.FilterBoolFunction(Card.IsFusionType,TYPE_FUSION+TYPE_SYNCHRO),1,true,true)
