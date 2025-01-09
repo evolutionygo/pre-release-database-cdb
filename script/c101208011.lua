@@ -20,6 +20,7 @@ function s.initial_effect(c)
 	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e2:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_END_PHASE)
 	e2:SetCountLimit(1,id+o)
 	e2:SetCost(s.descost)
 	e2:SetTarget(s.destg)
@@ -47,8 +48,9 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if not c:IsRelateToEffect(e) then return end
-	Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
+	if c:IsRelateToEffect(e) and aux.NecroValleyFilter()(c) then
+		Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
+	end
 end
 function s.descost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
@@ -62,15 +64,18 @@ function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
 end
 function s.spfilter(c,e,tp)
-	return c:IsType(TYPE_SYNCHRO) and c:IsType(TYPE_TUNER)
+	return c:IsAllTypes(TYPE_SYNCHRO+TYPE_MONSTER+TYPE_TUNER)
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 		and c:IsRace(RACE_ILLUSION+RACE_SPELLCASTER)
 		and Duel.GetLocationCountFromEx(tp,tp,nil,c)>0
 end
+function s.spconfilter(c)
+	return c:IsFaceup() and c:IsSetCard(0x19b) and c:GetOriginalType()&TYPE_MONSTER~=0
+end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) and Duel.Destroy(tc,REASON_EFFECT)~=0
-		and Duel.IsExistingMatchingCard(aux.AND(Card.IsFaceup,Card.IsSetCard),tp,LOCATION_MZONE,0,1,aux.ExceptThisCard(e),0x19b)
+		and Duel.IsExistingMatchingCard(s.spconfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,aux.ExceptThisCard(e))
 		and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp)
 		and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 		Duel.BreakEffect()
