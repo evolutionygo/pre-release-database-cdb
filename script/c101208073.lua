@@ -18,28 +18,41 @@ function s.initial_effect(c)
 	e2:SetOperation(s.spop)
 	c:RegisterEffect(e2)
 end
-function s.spfilter(c,e,tp)
+function s.spfilter1(c,e,tp)
 	return c:IsFaceupEx() and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
-		and (c:IsLocation(LOCATION_SZONE)
-			or c:IsSetCard(0x19b) and Duel.GetFieldGroupCount(tp,LOCATION_HAND,0)>0)
+		and c:IsSetCard(0x19b) and Duel.GetMatchingGroupCount(Card.IsDiscardable,tp,LOCATION_HAND,0,e:GetHandler(),REASON_EFFECT)>0
+end
+function s.spfilter2(c,e,tp)
+	return c:IsFaceupEx() and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+		and c:IsLocation(LOCATION_SZONE)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_GRAVE+LOCATION_REMOVED+LOCATION_SZONE) and s.spfilter(chkc,e,tp) end
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingTarget(s.spfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED+LOCATION_SZONE,0,1,nil,e,tp) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=aux.SelectTargetFromFieldFirst(tp,s.spfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED+LOCATION_SZONE,0,1,1,nil,e,tp)
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
-	local sc=g:GetFirst()
-	if sc:IsLocation(LOCATION_GRAVE+LOCATION_REMOVED) then
-		e:SetLabel(1)
+	local b0=Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+	local b1=b0 and Duel.IsExistingTarget(s.spfilter1,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil,e,tp)
+	local b2=b0 and Duel.IsExistingTarget(s.spfilter2,tp,LOCATION_SZONE,0,1,nil,e,tp)
+	if chkc then
+		if e:GetLabel()==1 then
+			return chkc:IsLocation(LOCATION_GRAVE+LOCATION_REMOVED) and s.spfilter1(chkc,e,tp)
+		elseif e:GetLabel()==2 then
+			return chkc:IsLocation(LOCATION_SZONE) and s.spfilter2(chkc,e,tp)
+		end
+	end
+	if chk==0 then return b1 or b2 end
+	local op=aux.SelectFromOptions(tp,
+		{b1,aux.Stringid(id,0),1},
+		{b2,aux.Stringid(id,1),2})
+	e:SetLabel(op)
+	if op==1 then
 		e:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_HANDES)
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+		local g=Duel.SelectTarget(tp,s.spfilter1,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,1,nil,e,tp)
+		Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
 		Duel.SetOperationInfo(0,CATEGORY_HANDES,nil,0,tp,1)
-		Duel.Hint(HINT_OPSELECTED,1-tp,aux.Stringid(id,0))
-	elseif sc:IsLocation(LOCATION_SZONE) then
-		e:SetLabel(2)
+	elseif op==2 then
 		e:SetCategory(CATEGORY_SPECIAL_SUMMON)
-		Duel.Hint(HINT_OPSELECTED,1-tp,aux.Stringid(id,1))
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+		local g=Duel.SelectTarget(tp,s.spfilter2,tp,LOCATION_SZONE,0,1,1,nil,e,tp)
+		Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
 	end
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
