@@ -63,7 +63,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 			Duel.SpecialSummon(sc,SUMMON_TYPE_XYZ,tp,tp,false,false,POS_FACEUP)
 			sc:CompleteProcedure()
 		end
-		if ac:IsFaceup() and ac:IsRelateToBattle() and ac:IsControler(1-tp) then
+		if ac:IsRelateToBattle() and ac:IsControler(1-tp) and ac:IsType(TYPE_MONSTER) then
 			Duel.BreakEffect()
 			Duel.Destroy(ac,REASON_EFFECT)
 		end
