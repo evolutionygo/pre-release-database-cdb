@@ -16,7 +16,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 	--remove
 	local e3=Effect.CreateEffect(c)
-	e3:SetCategory(CATEGORY_REMOVE)
+	e3:SetCategory(CATEGORY_REMOVE+CATEGORY_TODECK)
 	e3:SetType(EFFECT_TYPE_QUICK_O)
 	e3:SetCode(EVENT_FREE_CHAIN)
 	e3:SetRange(LOCATION_SZONE)
@@ -35,9 +35,6 @@ function s.initial_effect(c)
 	e4:SetTarget(s.settg)
 	e4:SetOperation(s.setop)
 	c:RegisterEffect(e4)
-end
-function s.filter(c)
-	return c:IsFaceup() and c:IsRace(RACE_WARRIOR+RACE_SPELLCASTER)
 end
 function s.GetType(c)
 	if c:IsType(TYPE_MONSTER) then

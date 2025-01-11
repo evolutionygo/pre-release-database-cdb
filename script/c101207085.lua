@@ -10,7 +10,7 @@ function s.initial_effect(c)
 	local custom_code=aux.RegisterMergedDelayedEvent_ToSingleCard(c,id,EVENT_REMOVE)
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,0))
-	e2:SetCategory(CATEGORY_TODECK+CATEGORY_DRAW)
+	e2:SetCategory(CATEGORY_DISABLE+CATEGORY_REMOVE+CATEGORY_DRAW)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(custom_code)
 	e2:SetRange(LOCATION_SZONE)
@@ -49,7 +49,6 @@ end
 function s.cfilter(c)
 	return c:IsFaceup()
 		and c:IsReason(REASON_COST)
-		and c:GetFlagEffect(id)~=0
 		and c:IsPreviousLocation(LOCATION_ONFIELD+LOCATION_HAND)
 end
 function s.disfiter(c)
@@ -64,6 +63,11 @@ function s.actg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local b3=Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil)
 		and g:IsExists(Card.IsType,1,nil,TYPE_TRAP)
 	if chk==0 then return b1 or b2 or b3 end
+	local category=0
+	if b1 then category=category|CATEGORY_NEGATE end
+	if b2 then category=category|CATEGORY_DRAW end
+	if b3 then category=category|CATEGORY_REMOVE end
+	e:SetCategory(category)
 end
 function s.acop(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()
