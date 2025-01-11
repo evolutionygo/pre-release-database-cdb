@@ -50,7 +50,7 @@ function s.spcost2(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.costfilter2(c,e,tp)
 	return c:IsFaceup() and c:GetOriginalLevel()>0 and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_DECK,0,1,nil,c,e,tp)
-		and Duel.GetMZoneCount(tp,c)>0
+		and Duel.GetMZoneCount(tp,c)>0 and c:IsAbleToRemoveAsCost()
 end
 function s.spfilter(c,tc,e,tp)
 	return (c:GetOriginalLevel()==tc:GetOriginalLevel()-1
