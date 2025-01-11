@@ -42,12 +42,12 @@ end
 function s.checkop(e,tp,eg,ep,ev,re,r,rp)
 	for tc in aux.Next(eg) do
 		if re and re:GetHandler():IsType(TYPE_MONSTER) then
-			tc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,0,1)
+			tc:RegisterFlagEffect(id,RESET_CHAIN,0,1)
 		end
 	end
 end
 function s.cfilter(c)
-	return c:IsFaceup()
+	return c:IsFaceup() and c:GetFlagEffect(id)~=0
 		and c:IsReason(REASON_COST)
 		and c:IsPreviousLocation(LOCATION_ONFIELD+LOCATION_HAND)
 end
