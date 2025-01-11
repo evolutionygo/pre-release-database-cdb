@@ -18,15 +18,15 @@ function s.initial_effect(c)
 	e2:SetValue(s.indct)
 	--cannot target
 	c:RegisterEffect(e2)
-	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_FIELD)
-	e2:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
-	e2:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
-	e2:SetRange(LOCATION_MZONE)
-	e2:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
-	e2:SetTarget(s.tglimit)
-	e2:SetValue(s.tgoval)
-	c:RegisterEffect(e2)
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_FIELD)
+	e3:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
+	e3:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
+	e3:SetRange(LOCATION_MZONE)
+	e3:SetTargetRange(0x34,0x34)
+	e3:SetTarget(s.tglimit)
+	e3:SetValue(s.tgoval)
+	c:RegisterEffect(e3)
 end
 function s.hspcon(e,c)
 	if c==nil then return true end
@@ -39,7 +39,7 @@ function s.indct(e,re,r,rp)
 	else return 0 end
 end
 function s.tglimit(e,c)
-	return c~=e:GetHandler()
+	return c~=e:GetHandler() and c:IsType(TYPE_MONSTER)
 end
 function s.tgoval(e,re,rp)
 	return re:IsActiveType(TYPE_SPELL) and re:GetHandler():IsType(TYPE_EQUIP)
