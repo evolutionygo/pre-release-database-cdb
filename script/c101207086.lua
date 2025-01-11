@@ -1,7 +1,7 @@
 --D.D. Post
 local s,id,o=GetID()
 function s.initial_effect(c)
-	--to deck
+	--activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
@@ -20,7 +20,8 @@ function s.initial_effect(c)
 	e3:SetType(EFFECT_TYPE_QUICK_O)
 	e3:SetCode(EVENT_FREE_CHAIN)
 	e3:SetRange(LOCATION_SZONE)
-	e3:SetCountLimit(1,id)
+	e3:SetHintTiming(0,TIMING_END_PHASE)
+	e3:SetCountLimit(1)
 	e3:SetCondition(s.rmcon)
 	e3:SetTarget(s.rmtg)
 	e3:SetOperation(s.rmop)
@@ -30,7 +31,7 @@ function s.initial_effect(c)
 	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e4:SetCode(EVENT_REMOVE)
 	e4:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
-	e4:SetCountLimit(1,id+o)
+	e4:SetCountLimit(1,id)
 	e4:SetTarget(s.settg)
 	e4:SetOperation(s.setop)
 	c:RegisterEffect(e4)
@@ -61,14 +62,15 @@ end
 function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,Card.IsAbleToRemove,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(Card.IsAbleToRemove),tp,LOCATION_HAND+LOCATION_GRAVE,0,1,1,nil)
 	if g:GetCount()>0 and Duel.Remove(g,POS_FACEUP,REASON_EFFECT)>0
 		and Duel.IsExistingMatchingCard(Card.IsAbleToDeck,tp,LOCATION_REMOVED,0,1,nil)
 		and Duel.SelectYesNo(tp,aux.Stringid(id,3)) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-		local sg=Duel.SelectTarget(tp,Card.IsAbleToDeck,tp,LOCATION_REMOVED,0,1,1,c)
+		local sg=Duel.SelectMatchingCard(tp,Card.IsAbleToDeck,tp,LOCATION_REMOVED,0,1,1,c)
 		if sg:GetCount()>0 then
 			Duel.BreakEffect()
+			Duel.HintSelection(sg)
 			Duel.SendtoDeck(sg,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)
 		end
 	end
