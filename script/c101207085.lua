@@ -64,20 +64,32 @@ function s.actg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		and g:IsExists(Card.IsType,1,nil,TYPE_TRAP)
 	if chk==0 then return b1 or b2 or b3 end
 	local category=0
-	if b1 then category=category|CATEGORY_DISABLE end
-	if b2 then category=category|CATEGORY_DRAW end
-	if b3 then category=category|CATEGORY_REMOVE end
+	local label=0
+	if b1 then
+		category=category|CATEGORY_DISABLE
+		label=label|TYPE_MONSTER
+	end
+	if b2 then
+		category=category|CATEGORY_DRAW
+		label=label|TYPE_SPELL
+	end
+	if b3 then
+		category=category|CATEGORY_REMOVE
+		label=label|TYPE_TRAP
+	end
 	e:SetCategory(category)
+	e:SetLabel(label)
 end
 function s.acop(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()
+	local label=e:GetLabel()
 	local g=eg:Filter(s.cfilter,1,nil)
 	local b1=Duel.IsExistingMatchingCard(s.disfiter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil)
-		and g:IsExists(Card.IsType,1,nil,TYPE_MONSTER)
+		and label&TYPE_MONSTER~=0
 	local b2=Duel.IsPlayerCanDraw(tp,2)
-		and g:IsExists(Card.IsType,1,nil,TYPE_SPELL)
+		and label&TYPE_SPELL~=0
 	local b3=Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil)
-		and g:IsExists(Card.IsType,1,nil,TYPE_TRAP)
+		and label&TYPE_TRAP~=0
 	if not b1 and not b2 and not b3 then return end
 	local op=aux.SelectFromOptions(tp,
 		{b1,aux.Stringid(id,2),1},
