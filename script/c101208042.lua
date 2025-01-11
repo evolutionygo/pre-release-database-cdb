@@ -25,6 +25,7 @@ function s.initial_effect(c)
 	e3:SetCode(EVENT_FREE_CHAIN)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e3:SetHintTiming(0,TIMING_MAIN_END)
 	e3:SetCountLimit(1,id)
 	e3:SetCondition(s.descon)
 	e3:SetCost(s.descost)
@@ -44,12 +45,10 @@ function s.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 function s.atkcon(e)
-	local ph=Duel.GetCurrentPhase()
-	return ph>=PHASE_BATTLE_START and ph<=PHASE_BATTLE
+	return Duel.IsBattlePhase()
 end
 function s.descon(e,tp,eg,ep,ev,re,r,rp)
-	local ph=Duel.GetCurrentPhase()
-	return (ph==PHASE_MAIN1 or ph==PHASE_MAIN2) and Duel.GetTurnPlayer()==1-tp
+	return Duel.IsMainPhase() and Duel.GetTurnPlayer()==1-tp
 end
 function s.cfilter(c)
 	return c:IsSetCard(0x203d) and c:IsAbleToRemoveAsCost()
