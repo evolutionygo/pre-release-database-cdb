@@ -1,4 +1,4 @@
---一色之劳
+--The Toil of the Normal
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddCodeList(c,id)
@@ -6,7 +6,6 @@ function s.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_DISABLE+CATEGORY_SEARCH+CATEGORY_TOHAND+CATEGORY_TODECK)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
-	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetHintTiming(0,TIMING_BATTLE_START+TIMING_SPSUMMON+TIMING_SUMMON)
 	e1:SetCountLimit(1,id+EFFECT_COUNT_CODE_OATH)
@@ -15,14 +14,14 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function s.cfilter(c)
-	return c:IsType(TYPE_NORMAL)
+	return c:IsAllTypes(TYPE_NORMAL+TYPE_MONSTER)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local g=Duel.GetMatchingGroup(s.cfilter,tp,LOCATION_GRAVE,0,nil)
-	if chk==0 then return g:GetCount()>0 and true end
+	if chk==0 then return g:GetCount()>0 end
 end
 function s.tdfilter(c)
-	return c:IsFaceup() and c:IsType(TYPE_EFFECT) and c:IsAbleToDeck()
+	return c:IsFaceup() and c:IsAllTypes(TYPE_EFFECT+TYPE_MONSTER) and c:IsAbleToDeck()
 end
 function s.thfilter(c)
 	return c:IsCode(id) and c:IsAbleToHand()
@@ -45,6 +44,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		Duel.BreakEffect()
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DISABLE)
 		local sg=Duel.SelectMatchingCard(tp,aux.NegateEffectMonsterFilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
+		Duel.HintSelection(sg)
 		local tc=sg:GetFirst()
 		Duel.NegateRelatedChain(tc,RESET_TURN_SET)
 		local e2=Effect.CreateEffect(c)
@@ -92,8 +92,8 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 	if op>4 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-		local g=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_DECK,0,1,1,nil)
-		if g:GetCount()>0 then
+		local sg=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_DECK,0,1,1,nil)
+		if sg:GetCount()>0 then
 			Duel.BreakEffect()
 			Duel.SendtoHand(g,nil,REASON_EFFECT)
 			Duel.ConfirmCards(1-tp,g)
@@ -101,5 +101,5 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.atktg(e,c)
-	return c:IsType(TYPE_NORMAL)
+	return c:IsAllTypes(TYPE_NORMAL+TYPE_MONSTER) and c:IsFaceup()
 end
