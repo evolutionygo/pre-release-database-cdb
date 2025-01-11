@@ -49,8 +49,9 @@ function s.spcost2(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 end
 function s.costfilter2(c,e,tp)
-	return c:IsFaceup() and c:GetOriginalLevel()>0 and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_DECK,0,1,nil,c,e,tp)
+	return c:IsFaceup() and c:GetOriginalLevel()>0 and c:IsLevelBelow(4)
 		and Duel.GetMZoneCount(tp,c)>0 and c:IsAbleToRemoveAsCost()
+		and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_DECK,0,1,nil,c,e,tp)
 end
 function s.spfilter(c,tc,e,tp)
 	return (c:GetOriginalLevel()==tc:GetOriginalLevel()-1
@@ -66,6 +67,7 @@ function s.sptg2(e,tp,eg,ep,ev,re,r,rp,chk)
 		return Duel.IsExistingMatchingCard(s.costfilter2,tp,LOCATION_MZONE,0,1,nil,e,tp)
 	end
 	e:SetLabel(0)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local g=Duel.SelectMatchingCard(tp,s.costfilter2,tp,LOCATION_MZONE,0,1,1,nil,e,tp)
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
 	Duel.SetTargetCard(g)
@@ -73,7 +75,6 @@ function s.sptg2(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.spop2(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
-	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_DECK,0,1,1,nil,tc,e,tp)

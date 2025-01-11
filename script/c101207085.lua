@@ -10,7 +10,7 @@ function s.initial_effect(c)
 	local custom_code=aux.RegisterMergedDelayedEvent_ToSingleCard(c,id,EVENT_REMOVE)
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,0))
-	e2:SetCategory(CATEGORY_DISABLE+CATEGORY_REMOVE+CATEGORY_DRAW)
+	e2:SetCategory(CATEGORY_DISABLE|CATEGORY_DRAW|CATEGORY_REMOVE)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(custom_code)
 	e2:SetRange(LOCATION_SZONE)
@@ -64,7 +64,7 @@ function s.actg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		and g:IsExists(Card.IsType,1,nil,TYPE_TRAP)
 	if chk==0 then return b1 or b2 or b3 end
 	local category=0
-	if b1 then category=category|CATEGORY_NEGATE end
+	if b1 then category=category|CATEGORY_DISABLE end
 	if b2 then category=category|CATEGORY_DRAW end
 	if b3 then category=category|CATEGORY_REMOVE end
 	e:SetCategory(category)
@@ -138,7 +138,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	local g=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_REMOVED,0,1,1,aux.ExceptThisCard(e))
 	if g:GetCount()>0 then
+		Duel.HintSelection(g)
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
-		Duel.ConfirmCards(1-tp,g)
 	end
 end

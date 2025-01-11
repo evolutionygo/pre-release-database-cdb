@@ -20,7 +20,7 @@ function s.initial_effect(c)
 	e3:SetType(EFFECT_TYPE_QUICK_O)
 	e3:SetCode(EVENT_FREE_CHAIN)
 	e3:SetRange(LOCATION_SZONE)
-	e3:SetHintTiming(0,TIMING_END_PHASE)
+	e3:SetHintTiming(0,TIMING_MAIN_END)
 	e3:SetCountLimit(1)
 	e3:SetCondition(s.rmcon)
 	e3:SetTarget(s.rmtg)
@@ -50,7 +50,7 @@ function s.atkval(e,c)
 	return g:GetClassCount(s.GetType)*300
 end
 function s.rmcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetCurrentPhase()==PHASE_MAIN1 or Duel.GetCurrentPhase()==PHASE_MAIN2
+	return Duel.IsMainPhase()
 end
 function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,nil) end
