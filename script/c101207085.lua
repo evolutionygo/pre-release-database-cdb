@@ -42,7 +42,7 @@ end
 function s.checkop(e,tp,eg,ep,ev,re,r,rp)
 	for tc in aux.Next(eg) do
 		if re and re:GetHandler():IsType(TYPE_MONSTER) then
-			tc:RegisterFlagEffect(id,RESET_CHAIN,0,1)
+			tc:RegisterFlagEffect(id,RESET_EVENT+RESET_REMOVE,0,1)
 		end
 	end
 end
