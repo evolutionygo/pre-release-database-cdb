@@ -7,18 +7,20 @@ function s.initial_effect(c)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	c:RegisterEffect(e1)
 	--effect
-	local custom_code=aux.RegisterMergedDelayedEvent_ToSingleCard(c,id,EVENT_REMOVE)
+	--local custom_code=aux.RegisterMergedDelayedEvent_ToSingleCard(c,id,EVENT_REMOVE)
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,0))
 	e2:SetCategory(CATEGORY_DISABLE|CATEGORY_DRAW|CATEGORY_REMOVE)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
-	e2:SetCode(custom_code)
+	e2:SetCode(EVENT_CUSTOM+66399653)
 	e2:SetRange(LOCATION_SZONE)
 	e2:SetProperty(EFFECT_FLAG_DELAY)
 	e2:SetCountLimit(1,id)
 	e2:SetTarget(s.actg)
 	e2:SetOperation(s.acop)
 	c:RegisterEffect(e2)
+	local g=Group.CreateGroup()
+    aux.RegisterMergedDelayedEvent(c,id,EVENT_REMOVE,g)
 	--tohand
 	local e3=Effect.CreateEffect(c)
 	e3:SetCategory(CATEGORY_TOHAND)
@@ -42,7 +44,7 @@ end
 function s.checkop(e,tp,eg,ep,ev,re,r,rp)
 	for tc in aux.Next(eg) do
 		if re and re:GetHandler():IsType(TYPE_MONSTER) then
-			tc:RegisterFlagEffect(id,RESET_EVENT+RESET_REMOVE,0,1)
+			tc:RegisterFlagEffect(id,RESET_EVENT+RESET_REMOVE,0,1)RESETS_STANDARD
 		end
 	end
 end
