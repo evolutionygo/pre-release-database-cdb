@@ -7,18 +7,18 @@ function s.initial_effect(c)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	c:RegisterEffect(e1)
 	--effect
+	local custom_code=aux.RegisterMergedDelayedEvent_ToSingleCard(c,id,EVENT_REMOVE)
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,0))
 	e2:SetCategory(CATEGORY_TODECK+CATEGORY_DRAW)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
-	e2:SetCode(EVENT_CUSTOM+id)
+	e2:SetCode(custom_code)
 	e2:SetRange(LOCATION_SZONE)
 	e2:SetProperty(EFFECT_FLAG_DELAY)
 	e2:SetCountLimit(1,id)
 	e2:SetTarget(s.actg)
 	e2:SetOperation(s.acop)
 	c:RegisterEffect(e2)
-	aux.RegisterMergedDelayedEvent(c,id,EVENT_REMOVE)
 	--tohand
 	local e3=Effect.CreateEffect(c)
 	e3:SetCategory(CATEGORY_TOHAND)
@@ -50,6 +50,7 @@ function s.cfilter(c)
 	return c:IsFaceup()
 		and c:IsReason(REASON_COST)
 		and c:GetFlagEffect(id)~=0
+		and c:IsPreviousLocation(LOCATION_ONFIELD+LOCATION_HAND)
 end
 function s.disfiter(c)
 	return c:IsType(TYPE_SPELL+TYPE_TRAP) and aux.NegateAnyFilter(c)
@@ -73,59 +74,47 @@ function s.acop(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		and g:IsExists(Card.IsType,1,nil,TYPE_SPELL)
 	local b3=Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil)
 		and g:IsExists(Card.IsType,1,nil,TYPE_TRAP)
-	local off=1
-	local ops={}
-	local opval={}
-	if b1 then
-		ops[off]=aux.Stringid(id,2)
-		opval[off-1]=1
-		off=off+1
-	end
-	if b2 then
-		ops[off]=aux.Stringid(id,3)
-		opval[off-1]=2
-		off=off+1
-	end
-	if b3 then
-		ops[off]=aux.Stringid(id,4)
-		opval[off-1]=3
-		off=off+1
-	end
-	if off==1 then return end
-	local op=Duel.SelectOption(tp,table.unpack(ops))
-	if opval[op]==1 then
+	if not b1 and not b2 and not b3 then return end
+	local op=aux.SelectFromOptions(tp,
+		{b1,aux.Stringid(id,2),1},
+		{b2,aux.Stringid(id,3),2},
+		{b3,aux.Stringid(id,4),3})
+	if op==1 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DISABLE)
 		local sg=Duel.SelectMatchingCard(tp,s.disfiter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
-		local tc=sg:GetFirst()
-		Duel.NegateRelatedChain(tc,RESET_TURN_SET)
-		local e1=Effect.CreateEffect(c)
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-		e1:SetCode(EFFECT_DISABLE)
-		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
-		tc:RegisterEffect(e1)
-		local e2=Effect.CreateEffect(c)
-		e2:SetType(EFFECT_TYPE_SINGLE)
-		e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-		e2:SetCode(EFFECT_DISABLE_EFFECT)
-		e2:SetValue(RESET_TURN_SET)
-		e2:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
-		tc:RegisterEffect(e2)
-		if tc:IsType(TYPE_TRAPMONSTER) then
-			local e3=Effect.CreateEffect(c)
-			e3:SetType(EFFECT_TYPE_SINGLE)
-			e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-			e3:SetCode(EFFECT_DISABLE_TRAPMONSTER)
-			e3:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
-			tc:RegisterEffect(e3)
+		if sg:GetCount()>0 then
+			Duel.HintSelection(sg)
+			local tc=sg:GetFirst()
+			Duel.NegateRelatedChain(tc,RESET_TURN_SET)
+			local e1=Effect.CreateEffect(c)
+			e1:SetType(EFFECT_TYPE_SINGLE)
+			e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+			e1:SetCode(EFFECT_DISABLE)
+			e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+			tc:RegisterEffect(e1)
+			local e2=Effect.CreateEffect(c)
+			e2:SetType(EFFECT_TYPE_SINGLE)
+			e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+			e2:SetCode(EFFECT_DISABLE_EFFECT)
+			e2:SetValue(RESET_TURN_SET)
+			e2:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+			tc:RegisterEffect(e2)
+			if tc:IsType(TYPE_TRAPMONSTER) then
+				local e3=Effect.CreateEffect(c)
+				e3:SetType(EFFECT_TYPE_SINGLE)
+				e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+				e3:SetCode(EFFECT_DISABLE_TRAPMONSTER)
+				e3:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+				tc:RegisterEffect(e3)
+			end
 		end
-	elseif opval[op]==2 then
+	elseif op==2 then
 		Duel.Draw(tp,2,REASON_EFFECT)
-	elseif opval[op]==3 then
-		local g=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
-		if g:GetCount()>0 then
+	elseif op==3 then
+		local tg=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
+		if tg:GetCount()>0 then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-			local sg=g:Select(tp,1,1,nil)
+			local sg=tg:Select(tp,1,1,nil)
 			Duel.HintSelection(sg)
 			Duel.Remove(sg,POS_FACEUP,REASON_EFFECT)
 		end
