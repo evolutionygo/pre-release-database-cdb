@@ -21,7 +21,8 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function s.discon(e,tp,eg,ep,ev,re,r,rp)
-	return re:IsActiveType(TYPE_MONSTER) and re:GetActivateLocation()&LOCATION_ONFIELD~=0 and Duel.IsChainDisablable(ev)
+	return re:IsActiveType(TYPE_MONSTER) and rp==1-tp
+		and re:GetActivateLocation()&LOCATION_ONFIELD~=0 and Duel.IsChainDisablable(ev)
 end
 function s.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:SetLabel(0)
