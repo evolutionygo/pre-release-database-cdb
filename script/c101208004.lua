@@ -15,7 +15,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 	--search
 	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(id,0))
+	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_SUMMON_SUCCESS)
@@ -77,6 +77,9 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.ConfirmCards(1-tp,g)
 	end
 end
+function s.atkcon(c)
+	return c.IsType(TYPE_MONSTER) and aux.IsCodeListed(c,79791878)
+end
 function s.atkval(e,c)
-	return Duel.GetMatchingGroupCount(aux.IsCodeListed,c:GetControler(),LOCATION_GRAVE,LOCATION_GRAVE,nil,79791878)*300
+	return Duel.GetMatchingGroupCount(s.atkcon,c:GetControler(),LOCATION_GRAVE,LOCATION_GRAVE,nil)*300
 end
