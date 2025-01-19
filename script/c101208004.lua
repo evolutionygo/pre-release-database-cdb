@@ -77,9 +77,9 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.ConfirmCards(1-tp,g)
 	end
 end
-function s.atkcon(c)
+function s.atkfilter(c)
 	return c:IsType(TYPE_MONSTER) and aux.IsCodeListed(c,79791878)
 end
 function s.atkval(e,c)
-	return Duel.GetMatchingGroupCount(s.atkcon,c:GetControler(),LOCATION_GRAVE,LOCATION_GRAVE,nil)*300
+	return Duel.GetMatchingGroupCount(s.atkfilter,c:GetControler(),LOCATION_GRAVE,LOCATION_GRAVE,nil)*300
 end
