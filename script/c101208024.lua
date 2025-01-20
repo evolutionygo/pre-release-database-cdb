@@ -1,4 +1,4 @@
---転惺竜華-闇巴
+--転惺竜華－闇巴
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--pendulum summon
