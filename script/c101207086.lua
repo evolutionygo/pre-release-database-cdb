@@ -36,7 +36,7 @@ function s.initial_effect(c)
 	e4:SetOperation(s.setop)
 	c:RegisterEffect(e4)
 end
-function s.GetType(c)
+function s.GetIntType(c)
 	if c:IsType(TYPE_MONSTER) then
 		return TYPE_MONSTER
 	elseif c:IsType(TYPE_SPELL) then
@@ -47,7 +47,7 @@ function s.GetType(c)
 end
 function s.atkval(e,c)
 	local g=Duel.GetMatchingGroup(Card.IsFaceup,e:GetHandlerPlayer(),LOCATION_REMOVED,0,nil)
-	return g:GetClassCount(s.GetType)*300
+	return g:GetClassCount(s.GetIntType)*300
 end
 function s.rmcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsMainPhase()
