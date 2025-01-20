@@ -51,7 +51,7 @@ end
 function s.tdfilter(c)
 	return c:IsFaceupEx() and c:IsSetCard(0x1c0) and c:IsType(TYPE_MONSTER) and c:IsAbleToDeckAsCost()
 end
-function s.drcost(e,tp,eg,ep,ev,re,r,rp,chk)
+function s.descost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.tdfilter,tp,LOCATION_HAND+LOCATION_GRAVE+LOCATION_REMOVED,0,2,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
 	local g=Duel.SelectMatchingCard(tp,s.tdfilter,tp,LOCATION_HAND+LOCATION_GRAVE+LOCATION_REMOVED,0,2,2,nil)
@@ -72,7 +72,7 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.setfilter(c)
-	return c:IsFaceupEx() and c:IsSetCard(0xd0) and c:IsType(TYPE_TRAP) and not c:IsType(TYPE_CONTINUOUS) and c:IsSSetable()
+	return c:IsFaceupEx() and c:IsSetCard(0x1c0) and c:IsType(TYPE_TRAP) and not c:IsType(TYPE_CONTINUOUS) and c:IsSSetable()
 end
 function s.settg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0

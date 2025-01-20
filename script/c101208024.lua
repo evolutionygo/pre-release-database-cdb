@@ -34,7 +34,7 @@ function s.initial_effect(c)
 	--destroy
 	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(id,3))
-	e4:SetCategory(CATEGORY_DESTROY+CATEGORY_TOGRAVE)
+	e4:SetCategory(CATEGORY_DESTROY)
 	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e4:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e4:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
@@ -45,12 +45,10 @@ function s.initial_effect(c)
 	--set
 	local e5=Effect.CreateEffect(c)
 	e5:SetDescription(aux.Stringid(id,4))
-	e5:SetCategory(CATEGORY_TOGRAVE)
 	e5:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e5:SetProperty(EFFECT_FLAG_DELAY)
 	e5:SetCode(EVENT_DESTROYED)
 	e5:SetCountLimit(1,id+o*2)
-	e5:SetCondition(s.setcon)
 	e5:SetTarget(s.settg)
 	e5:SetOperation(s.setop)
 	c:RegisterEffect(e5)
@@ -77,7 +75,7 @@ function s.negop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.spfilter(c,tp)
-	return c:IsSetCard(0x1c0) and Duel.GetMZoneCount(tp,c)>0
+	return c:IsSetCard(0x1c0) and not c:IsCode(id) and Duel.GetMZoneCount(tp,c)>0
 end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.CheckReleaseGroupEx(tp,s.spfilter,1,REASON_COST,true,e:GetHandler(),tp) end
