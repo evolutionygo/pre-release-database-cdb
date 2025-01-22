@@ -1,4 +1,4 @@
---雷火沸动质量投射器
+--ライゼオル・マスドライバー
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--Activate
@@ -41,6 +41,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
 		local tc=Duel.SelectMatchingCard(tp,s.ovfilter,tp,LOCATION_MZONE,0,1,1,nil,e):GetFirst()
 		if tc then
+			c:CancelToGrave()
 			Duel.Overlay(tc,Group.FromCards(c))
 		end
 	end

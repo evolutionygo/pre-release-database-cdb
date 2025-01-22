@@ -1,4 +1,4 @@
---热星雷火沸动机
+--スター・ライゼオル
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--special summon rule
@@ -31,7 +31,7 @@ end
 function s.spcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
-	return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.CheckRemoveOverlayCard(tp,1,0,1,REASON_COST)
+	return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.CheckRemoveOverlayCard(tp,1,0,1,REASON_SPSUMMON)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,c)
 	local g=Duel.GetMatchingGroup(s.cfilter,tp,LOCATION_MZONE,0,c)
