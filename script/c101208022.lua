@@ -31,7 +31,7 @@ end
 function s.spcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
-	return Duel.CheckRemoveOverlayCard(tp,1,0,1,REASON_COST)
+	return duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.CheckRemoveOverlayCard(tp,1,0,1,REASON_COST)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,c)
 	local g=Duel.GetMatchingGroup(s.cfilter,tp,LOCATION_MZONE,0,c)
