@@ -1,0 +1,99 @@
+--七星天流拔刀術—「破軍」
+local s,id,o=GetID()
+function s.initial_effect(c)
+	--Activate
+	local e1=Effect.CreateEffect(c)
+	e1:SetCategory(CATEGORY_EQUIP)
+	e1:SetType(EFFECT_TYPE_ACTIVATE)
+	e1:SetCode(EVENT_FREE_CHAIN)
+	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e1:SetCountLimit(1,id+EFFECT_COUNT_CODE_OATH)
+	e1:SetTarget(s.target)
+	e1:SetOperation(s.activate)
+	c:RegisterEffect(e1)
+	--spsummon
+	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(aux.Stringid(id,1))
+	e2:SetCategory(CATEGORY_TOHAND)
+	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e2:SetCode(EVENT_BATTLE_DESTROYED)
+	e2:SetRange(LOCATION_GRAVE)
+	e2:SetCondition(s.thcon)
+	e2:SetTarget(s.thtg)
+	e2:SetOperation(s.thop)
+	c:RegisterEffect(e2)
+end
+function s.cfilter(c,tp)
+	return c:IsFaceup()
+		and Duel.IsExistingMatchingCard(s.eqfilter,tp,LOCATION_HAND+LOCATION_DECK,0,1,nil,c:GetCode(),c:GetRace(),tp)
+end
+function s.eqfilter(c,code,race,tp)
+	return not c:IsCode(code) and c:IsType(TYPE_MONSTER)
+		and c:IsLevel(7) and c:IsRace(race)
+		and c:CheckUniqueOnField(tp) and not c:IsForbidden()
+end
+function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and s.cfilter(chkc,tp) end
+	if chk==0 then return Duel.IsExistingTarget(s.cfilter,tp,LOCATION_MZONE,0,1,nil,tp)
+		and Duel.GetLocationCount(tp,LOCATION_SZONE)>0 end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
+	Duel.SelectTarget(tp,s.cfilter,tp,LOCATION_MZONE,0,1,1,nil,tp)
+	Duel.SetOperationInfo(0,CATEGORY_EQUIP,nil,1,tp,LOCATION_HAND+LOCATION_DECK)
+end
+function s.activate(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	local tc=Duel.GetFirstTarget()
+	if Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 then return end
+	if tc:IsRelateToEffect(e) and tc:IsFaceup() then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EQUIP)
+		local g=Duel.SelectMatchingCard(tp,s.eqfilter,tp,LOCATION_HAND+LOCATION_DECK,0,1,1,nil,tc:GetCode(),tc:GetRace(),tp)
+		local sc=g:GetFirst()
+		if not sc then return end
+		if not Duel.Equip(tp,sc,tc) then return end
+		--equip limit
+		local e1=Effect.CreateEffect(c)
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+		e1:SetCode(EFFECT_EQUIP_LIMIT)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+		e1:SetLabelObject(tc)
+		e1:SetValue(s.eqlimit)
+		sc:RegisterEffect(e1)
+		--atk up
+		local e2=Effect.CreateEffect(sc)
+		e2:SetType(EFFECT_TYPE_EQUIP)
+		e2:SetCode(EFFECT_UPDATE_ATTACK)
+		e2:SetValue(700)
+		e2:SetReset(RESET_EVENT+RESETS_STANDARD)
+		sc:RegisterEffect(e2)
+		local e3=Effect.CreateEffect(c)
+		e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		e3:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
+		e3:SetRange(LOCATION_SZONE)
+		e3:SetCode(EVENT_PHASE+PHASE_END)
+		e3:SetOperation(s.thop)
+		e3:SetReset(RESET_EVENT+RESETS_STANDARD)
+		e3:SetCountLimit(1)
+		sc:RegisterEffect(e3)
+	end
+end
+function s.eqlimit(e,c)
+	return c==e:GetLabelObject()
+end
+function s.thcfilter(c,tp)
+	return (c:IsLevelAbove(8) or c:IsRankAbove(8)) and c:IsPreviousControler(1-tp)
+end
+function s.thcon(e,tp,eg,ep,ev,re,r,rp)
+	return eg:IsExists(s.thcfilter,1,nil,tp)
+end
+function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return e:GetHandler():IsAbleToHand() end
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,e:GetHandler(),1,0,0)
+end
+function s.thop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	if c:IsRelateToEffect(e) then
+		Duel.SendtoHand(c,nil,REASON_EFFECT)
+		Duel.ConfirmCards(1-tp,c)
+	end
+end
