@@ -34,14 +34,14 @@ function s.gcheck(g,tp)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local rg=Duel.GetDecktopGroup(1-tp,7)
-	local g=Duel.GetMatchingGroup(Card.IsAbleToRemoveAsCost,tp,0,LOCATION_MZONE,nil,POS_FACEDOWN)
-	if chk==0 then return g:CheckSubGroup(s.gcheck,1,7,tp) or rg:FilterCount(Card.IsAbleToRemoveAsCost,nil,POS_FACEDOWN)==7 end
+	local g=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,0,LOCATION_EXTRA,nil,POS_FACEDOWN)
+	if chk==0 then return g:CheckSubGroup(s.gcheck,1,7,tp) or rg:FilterCount(Card.IsAbleToRemove,nil,POS_FACEDOWN)==7 end
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,7,0,LOCATION_EXTRA+LOCATION_DECK)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp,chk)
 	local rg=Duel.GetDecktopGroup(1-tp,7)
-	local g=Duel.GetMatchingGroup(Card.IsAbleToRemoveAsCost,tp,0,LOCATION_MZONE,nil,POS_FACEDOWN)
-	if not (g:CheckSubGroup(s.gcheck,1,7,tp) or rg:FilterCount(Card.IsAbleToRemoveAsCost,nil,POS_FACEDOWN)==7) then return end
+	local g=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,0,LOCATION_EXTRA,nil,POS_FACEDOWN)
+	if not (g:CheckSubGroup(s.gcheck,1,7,tp) or rg:FilterCount(Card.IsAbleToRemove,nil,POS_FACEDOWN)==7) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,1))
 	local sg=g:SelectSubGroup(1-tp,s.gcheck,true,1,7,tp)
 	local ct=sg:GetCount()
