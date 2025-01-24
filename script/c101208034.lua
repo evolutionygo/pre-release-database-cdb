@@ -53,7 +53,7 @@ end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local label=e:GetLabel()
 	if label==1 then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SELECT)
 		local g=Duel.SelectMatchingCard(tp,s.tgfilter1,tp,0,LOCATION_MZONE,1,1,nil,tp)
 		if g:GetCount()>0 then
 			Duel.HintSelection(g)
@@ -61,7 +61,7 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 			Duel.Destroy(sg,POS_FACEUP,REASON_EFFECT)
 		end
 	elseif label==2 then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SELECT)
 		local g=Duel.SelectMatchingCard(tp,s.tgfilter2,tp,LOCATION_MZONE,0,1,1,nil,tp)
 		if g:GetCount()>0 then
 			local tc=g:GetFirst()

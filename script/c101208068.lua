@@ -25,7 +25,7 @@ end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local rg=Duel.GetDecktopGroup(1-tp,7)
 	local ct1=Duel.GetMatchingGroupCount(Card.IsAbleToRemove,tp,0,LOCATION_EXTRA,nil,1-tp,POS_FACEDOWN,REASON_RULE)
-	local ct2=rg:FilterCount(Card.IsAbleToRemove,nil,1-tp,POS_FACEDOWN,REASON_RULE)==7
+	local ct2=rg:FilterCount(Card.IsAbleToRemove,nil,1-tp,POS_FACEDOWN,REASON_RULE)
 	if chk==0 then return ct1+ct2>=7 end
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,7,0,LOCATION_EXTRA+LOCATION_DECK)
 end
