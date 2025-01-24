@@ -40,7 +40,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		local g=Duel.SelectTarget(tp,s.rmfilter,tp,0,LOCATION_DECK+LOCATION_EXTRA,1,1,nil,tc)
 		if g:GetCount()>0 and Duel.Remove(g,POS_FACEUP,REASON_EFFECT)~=0 then
 			local rc=g:GetFirst()
-			if Duel.GetControl(tc,tp)~=0 and tc:GetCode()==rc:GetCode() then
+			if Duel.GetControl(tc,tp)~=0 and tc:GetOriginalCode()==rc:GetOriginalCode() then
 				local e1=Effect.CreateEffect(c)
 				e1:SetType(EFFECT_TYPE_SINGLE)
 				e1:SetCode(EFFECT_DISABLE)
