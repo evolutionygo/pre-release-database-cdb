@@ -28,7 +28,7 @@ function s.descon1(tp)
 end
 function s.tgfilter1(c,tp)
 	return c:IsFaceup() and c:IsLevelAbove(1)
-		and Duel.IsExistingMatchingCard(s.desfilter1,tp,0,LOCATION_MZONE,c,c:GetLevel())
+		and Duel.IsExistingMatchingCard(s.desfilter1,tp,0,LOCATION_MZONE,1,c,c:GetLevel())
 end
 function s.desfilter1(c,lv)
 	return c:IsFaceup() and (c:IsLevel(lv) or c:IsRank(lv) or c:IsLink(lv))
@@ -48,7 +48,8 @@ function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 		{b1,aux.Stringid(id,0),1},
 		{b2,aux.Stringid(id,1),2})
 	e:SetLabel(label)
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,nil,1,0,LOCATION_MZONE)
+	local g=Duel.GetMatchingGroup(aux.TRUE,tp,0,LOCATION_MZONE,nil)
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
 end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local label=e:GetLabel()
