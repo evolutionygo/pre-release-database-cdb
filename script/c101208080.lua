@@ -22,7 +22,7 @@ function s.rmfilter(c,ec)
 		and c:GetOriginalAttribute()&ec:GetOriginalAttribute()~=0
 		and (c:GetLink()==ec:GetLink() and c:IsAllTypes(TYPE_LINK+TYPE_MONSTER) and ec:IsAllTypes(TYPE_LINK+TYPE_MONSTER)
 		or c:GetOriginalRank()==ec:GetOriginalRank() and c:IsAllTypes(TYPE_XYZ+TYPE_MONSTER) and ec:IsAllTypes(TYPE_XYZ+TYPE_MONSTER)
-		or c:GetOriginalLevel()==ec:GetOriginalLevel())
+		or c:GetOriginalLevel()==ec:GetOriginalLevel() and not c:IsType(TYPE_LINK+TYPE_XYZ) and not ec:IsType(TYPE_LINK+TYPE_XYZ))
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp) and s.cfilter(chkc,tp) end
@@ -37,7 +37,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) and tc:IsFaceup() and tc:IsType(TYPE_MONSTER) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-		local g=Duel.SelectTarget(tp,s.rmfilter,tp,0,LOCATION_DECK+LOCATION_EXTRA,1,1,nil,tc)
+		local g=Duel.SelectMatchingCard(tp,s.rmfilter,tp,LOCATION_DECK+LOCATION_EXTRA,0,1,1,nil,tc)
 		if g:GetCount()>0 and Duel.Remove(g,POS_FACEUP,REASON_EFFECT)~=0 then
 			local rc=g:GetFirst()
 			if Duel.GetControl(tc,tp)~=0 and tc:GetOriginalCode()==rc:GetOriginalCode() then
