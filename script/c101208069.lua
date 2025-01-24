@@ -1,4 +1,4 @@
---七星天流拔刀術—「破軍」
+--七星天流抜刀術－「破軍」
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--Activate
