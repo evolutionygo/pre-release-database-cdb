@@ -19,9 +19,9 @@ function s.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_BATTLE_DESTROYED)
 	e2:SetRange(LOCATION_GRAVE)
-	e2:SetCondition(s.thcon)
+	e2:SetCondition(s.thcon2)
 	e2:SetTarget(s.thtg)
-	e2:SetOperation(s.thop)
+	e2:SetOperation(s.thop2)
 	c:RegisterEffect(e2)
 end
 function s.cfilter(c,tp)
@@ -69,31 +69,45 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		e2:SetValue(700)
 		e2:SetReset(RESET_EVENT+RESETS_STANDARD)
 		sc:RegisterEffect(e2)
+		local fid=c:GetFieldID()
 		local e3=Effect.CreateEffect(c)
 		e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 		e3:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
-		e3:SetRange(LOCATION_SZONE)
 		e3:SetCode(EVENT_PHASE+PHASE_END)
-		e3:SetOperation(s.thop)
-		e3:SetReset(RESET_EVENT+RESETS_STANDARD)
 		e3:SetCountLimit(1)
-		sc:RegisterEffect(e3)
+		e3:SetLabel(fid)
+		e3:SetLabelObject(tc)
+		e3:SetCondition(s.thcon1)
+		e3:SetOperation(s.thop1)
+		Duel.RegisterEffect(e1,tp)
 	end
 end
 function s.eqlimit(e,c)
 	return c==e:GetLabelObject()
 end
+function s.thcon1(e,tp,eg,ep,ev,re,r,rp)
+	local tc=e:GetLabelObject()
+	if tc:GetFlagEffectLabel(id)~=e:GetLabel() then
+		e:Reset()
+		return false
+	else
+		return true
+	end
+end
+function s.thop1(e,tp,eg,ep,ev,re,r,rp)
+	Duel.SendtoHand(e:GetLabelObject(),nil,REASON_EFFECT)
+end
 function s.thcfilter(c,tp)
 	return (c:IsLevelAbove(8) or c:IsRankAbove(8)) and c:IsPreviousControler(1-tp)
 end
-function s.thcon(e,tp,eg,ep,ev,re,r,rp)
+function s.thcon2(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.thcfilter,1,nil,tp)
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToHand() end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,e:GetHandler(),1,0,0)
 end
-function s.thop(e,tp,eg,ep,ev,re,r,rp)
+function s.thop2(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) and aux.NecroValleyFilter()(c) then
 		Duel.SendtoHand(c,nil,REASON_EFFECT)
