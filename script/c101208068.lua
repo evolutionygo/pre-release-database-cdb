@@ -22,34 +22,27 @@ function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.DisableShuffleCheck()
 	Duel.Remove(g,POS_FACEDOWN,REASON_COST)
 end
-function s.gcheck(g,tp)
-	local ct=7-g:GetCount()
-	if ct>0 then
-		local g=Duel.GetDecktopGroup(1-tp,tc)
-		if g:FilterCount(Card.IsAbleToRemoveAsCost,nil,POS_FACEDOWN)~=tc then
-			return false
-		end
-	end
-	return true
-end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local rg=Duel.GetDecktopGroup(1-tp,7)
-	local g=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,0,LOCATION_EXTRA,nil,POS_FACEDOWN)
-	if chk==0 then return g:CheckSubGroup(s.gcheck,1,7,tp) or rg:FilterCount(Card.IsAbleToRemove,nil,POS_FACEDOWN)==7 end
+	local ct1=Duel.GetMatchingGroupCount(Card.IsAbleToRemove,tp,0,LOCATION_EXTRA,nil,1-tp,POS_FACEDOWN,REASON_RULE)
+	local ct2=rg:FilterCount(Card.IsAbleToRemove,nil,1-tp,POS_FACEDOWN,REASON_RULE)==7
+	if chk==0 then return ct1+ct2>=7 end
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,7,0,LOCATION_EXTRA+LOCATION_DECK)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp,chk)
-	local rg=Duel.GetDecktopGroup(1-tp,7)
-	local g=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,0,LOCATION_EXTRA,nil,POS_FACEDOWN)
-	if not (g:CheckSubGroup(s.gcheck,1,7,tp) or rg:FilterCount(Card.IsAbleToRemove,nil,POS_FACEDOWN)==7) then return end
+	local dg=Duel.GetDecktopGroup(1-tp,7)
+	local edg=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,0,LOCATION_EXTRA,nil,1-tp,POS_FACEDOWN,REASON_RULE)
+	local ct1=dg:FilterCount(Card.IsAbleToRemove,nil,1-tp,POS_FACEDOWN,REASON_RULE)
+	local ct2=edg:GetCount()
+	if ct1+ct2<7 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,1))
-	local sg=g:SelectSubGroup(1-tp,s.gcheck,true,1,7,tp)
+	local sg=edg:Select(1-tp,7-ct1,ct2,nil)
 	local ct=sg:GetCount()
 	if ct>0 then
-		Duel.Remove(sg,POS_FACEDOWN,REASON_EFFECT)
+		Duel.Remove(sg,POS_FACEDOWN,REASON_RULE,1-tp)
 	end
 	if ct<7 then
 		local rsg=Duel.GetDecktopGroup(1-tp,7-ct)
-		Duel.Remove(rsg,POS_FACEDOWN,REASON_EFFECT)
+		Duel.Remove(rsg,POS_FACEDOWN,REASON_RULE,1-tp)
 	end
 end
