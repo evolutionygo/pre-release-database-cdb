@@ -19,7 +19,7 @@ function s.descost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.PayLPCost(tp,600)
 end
 function s.descon1(tp)
-	local g=Duel.GetMatchingGroup(aux.AND(Card.IsFaceup,Card.IsLevelAbove,Card.IsLevelBelow),tp,LOCATION_MZONE,0,nil,1,6)
+	local g=Duel.GetMatchingGroup(aux.AND(Card.IsFaceup,Card.IsLevelBelow),tp,LOCATION_MZONE,0,nil,6)
 	local lvc=0
 	for tc in aux.Next(g) do
 		lvc=lvc|(1<<(tc:GetLevel()-1))
