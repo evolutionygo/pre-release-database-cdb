@@ -9,71 +9,65 @@ function s.initial_effect(c)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCountLimit(1,EFFECT_COUNT_CODE_CHAIN)
 	e1:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_END_PHASE)
-	e1:SetCondition(s.descon1)
 	e1:SetCost(s.descost)
-	e1:SetTarget(s.destg1)
-	e1:SetOperation(s.desop1)
+	e1:SetTarget(s.destg)
+	e1:SetOperation(s.desop)
 	c:RegisterEffect(e1)
-	local e2=e1:Clone()
-	e2:SetDescription(aux.Stringid(id,0))
-	e2:SetCondition(aux.TRUE)
-	e2:SetTarget(s.destg2)
-	e2:SetOperation(s.desop2)
-	c:RegisterEffect(e2)
-end
-function s.descon1(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetMatchingGroup(aux.AND(Card.IsFaceup,Card.IsLevelAbove),tp,LOCATION_MZONE,0,nil,1)
-	local res=true
-	for i=1,6 do
-		if not g:IsExists(Card.IsLevel,1,nil,i) then
-			res=false
-		end
-	end
-	return res
 end
 function s.descost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.CheckLPCost(tp,600) end
 	Duel.PayLPCost(tp,600)
 end
-function s.cfilter1(c,tp)
+function s.descon1(tp)
+	local g=Duel.GetMatchingGroup(aux.AND(Card.IsFaceup,Card.IsLevelAbove,Card.IsLevelBelow),tp,LOCATION_MZONE,0,nil,1,6)
+	local lvc=0
+	for tc in aux.Next(g) do
+		lvc=lvc|(1<<(tc:GetLevel()-1))
+	end
+	return lvc==0x3f
+end
+function s.tgfilter1(c,tp)
 	return c:IsFaceup() and c:IsLevelAbove(1)
 		and Duel.IsExistingMatchingCard(s.desfilter1,tp,0,LOCATION_MZONE,c,c:GetLevel())
 end
 function s.desfilter1(c,lv)
 	return c:IsFaceup() and (c:IsLevel(lv) or c:IsRank(lv) or c:IsLink(lv))
 end
-function s.destg1(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.cfilter1,tp,0,LOCATION_MZONE,1,nil,tp) end
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,nil,1,0,LOCATION_MZONE)
-end
-function s.desop1(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,s.cfilter1,tp,0,LOCATION_MZONE,1,1,nil,tp)
-	if g:GetCount()>0 then
-		local sg=Duel.GetMatchingGroup(s.desfilter1,tp,0,LOCATION_MZONE,g,g:GetFirst():GetLevel())
-		Duel.HintSelection(g)
-		Duel.Destroy(sg,POS_FACEUP,REASON_EFFECT)
-	end
-end
-function s.cfilter2(c,tp)
-	local g=c:GetColumnGroup()
+function s.tgfilter2(c,tp)
 	return c:IsFaceup() and c:IsLevelAbove(1)
-		and Duel.IsExistingMatchingCard(s.desfilter2,tp,0,LOCATION_MZONE,c,tp,c:GetLevel(),g)
+		and c:GetColumnGroup():FilterCount(s.desfilter2,nil,tp,c:GetLevel())>0
 end
-function s.desfilter2(c,tp,lv,g)
-	return c:IsFaceup() and c:IsControler(1-tp) and (c:IsLevel(lv) or c:IsRank(lv) or c:IsLink(lv)) and g:IsContains(c)
+function s.desfilter2(c,tp,lv)
+	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsControler(1-tp) and (c:IsLevel(lv) or c:IsRank(lv) or c:IsLink(lv))
 end
-function s.destg2(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.cfilter2,tp,LOCATION_MZONE,0,1,nil,tp) end
+function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
+	local b1=s.descon1(tp) and Duel.IsExistingMatchingCard(s.tgfilter1,tp,0,LOCATION_MZONE,1,nil,tp)
+	local b2=Duel.IsExistingMatchingCard(s.tgfilter2,tp,LOCATION_MZONE,0,1,nil,tp)
+	if chk==0 then return b1 or b2 end
+	local label=aux.SelectFromOptions(tp,
+		{b1,aux.Stringid(id,0),1},
+		{b2,aux.Stringid(id,1),2})
+	e:SetLabel(label)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,nil,1,0,LOCATION_MZONE)
 end
-function s.desop2(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,s.cfilter2,tp,LOCATION_MZONE,0,1,1,nil,tp)
-	if g:GetCount()>0 then
-		local tc=g:GetFirst()
-		local sg=Duel.GetMatchingGroup(s.desfilter2,tp,0,LOCATION_MZONE,tc,tp,tc:GetLevel(),tc:GetColumnGroup())
-		Duel.HintSelection(g)
-		Duel.Destroy(sg,POS_FACEUP,REASON_EFFECT)
+function s.desop(e,tp,eg,ep,ev,re,r,rp)
+	local label=e:GetLabel()
+	if label==1 then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+		local g=Duel.SelectMatchingCard(tp,s.tgfilter1,tp,0,LOCATION_MZONE,1,1,nil,tp)
+		if g:GetCount()>0 then
+			Duel.HintSelection(g)
+			local sg=Duel.GetMatchingGroup(s.desfilter1,tp,0,LOCATION_MZONE,g,g:GetFirst():GetLevel())
+			Duel.Destroy(sg,POS_FACEUP,REASON_EFFECT)
+		end
+	elseif label==2 then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+		local g=Duel.SelectMatchingCard(tp,s.tgfilter2,tp,LOCATION_MZONE,0,1,1,nil,tp)
+		if g:GetCount()>0 then
+			local tc=g:GetFirst()
+			Duel.HintSelection(g)
+			local dg=tc:GetColumnGroup():Filter(s.desfilter2,nil,tp,tc:GetLevel())
+			Duel.Destroy(dg,POS_FACEUP,REASON_EFFECT)
+		end
 	end
 end
