@@ -45,13 +45,13 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp,chk)
 	local ct2=edg:GetCount()
 	if ct1+ct2<7 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,1))
-	local sg=edg:SelectSubGroup(1-tp,aux.TRUE,ct1==7,7-ct1,ct2,nil)
-	local ct=sg:GetCount()
-	if ct>0 then
+	local sg=edg:CancelableSelect(1-tp,7-ct1,7,nil)
+	local rsg=Duel.GetDecktopGroup(1-tp,7)
+	if sg then
 		Duel.Remove(sg,POS_FACEDOWN,REASON_RULE,1-tp)
+		rsg=Duel.GetDecktopGroup(1-tp,7-sg:GetCount())
 	end
-	if ct<7 then
-		local rsg=Duel.GetDecktopGroup(1-tp,7-ct)
+	if rsg:GetCount()>0 then
 		Duel.DisableShuffleCheck()
 		Duel.Remove(rsg,POS_FACEDOWN,REASON_RULE,1-tp)
 	end
