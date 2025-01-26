@@ -5,7 +5,7 @@ function s.initial_effect(c)
 	e0:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e0:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
 	e0:SetCode(EVENT_ADJUST)
-	e0:SetRange(0xff)
+	e0:SetRange(LOCATION_MZONE)
 	e0:SetOperation(s.adjustop)
 	c:RegisterEffect(e0)
 	--spsummon
