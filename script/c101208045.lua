@@ -30,6 +30,7 @@ function s.ovfilter(c)
 	return c:IsFaceup() and c:IsOriginalCodeRule(2407234)
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
+	if not Duel.GetAttacker():IsOnField() then return false end
 	e:SetLabelObject(Duel.GetAttacker())
 	return Duel.GetAttacker():GetControler()~=tp
 end
