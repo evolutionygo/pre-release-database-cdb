@@ -45,7 +45,7 @@ function s.mvop(e,tp,eg,ep,ev,re,r,rp)
 	local ft=Duel.GetLocationCount(tp,LOCATION_SZONE)
 	if ft<=0 then return end
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
-	local sg=g:Filter(Card.IsRelateToEffect,nil,e)
+	local sg=g:Filter(Card.IsRelateToEffect,nil,e):Filter(s.mvfilter,nil,tp)
 	if sg:GetCount()>0 then
 		if sg:GetCount()>ft then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
