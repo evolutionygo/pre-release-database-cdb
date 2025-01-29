@@ -63,7 +63,9 @@ function s.tgtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local tg=Duel.GetMatchingGroup(s.tgfilter,tp,LOCATION_REMOVED,0,nil,e)
 	if chk==0 then return #tg>0 end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_OPERATECARD)
-	local g=tg:SelectSubGroup(tp,aux.dabcheck,false,1,7)
+	aux.GCheckAdditional=aux.dabcheck
+	local g=tg:SelectSubGroup(tp,aux.TRUE,false,1,7)
+	aux.GCheckAdditional=nil
 	Duel.SetTargetCard(g)
 	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,g,g:GetCount(),0,0)
 end
