@@ -50,6 +50,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			local xyzg=Duel.GetMatchingGroup(s.xyzfilter,tp,LOCATION_EXTRA,0,nil,mg)
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 			local xyz=xyzg:Select(tp,1,1,nil):GetFirst()
+			Duel.BreakEffect()
 			Duel.XyzSummon(tp,xyz,mg,1,6)
 		end
 	end
@@ -62,9 +63,7 @@ function s.tgtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local tg=Duel.GetMatchingGroup(s.tgfilter,tp,LOCATION_REMOVED,0,nil,e)
 	if chk==0 then return #tg>0 end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_OPERATECARD)
-	aux.GCheckAdditional=aux.dabcheck
-	local g=tg:SelectSubGroup(tp,aux.TRUE,false,1,7)
-	aux.GCheckAdditional=nil
+	local g=tg:SelectSubGroup(tp,aux.dabcheck,false,1,7)
 	Duel.SetTargetCard(g)
 	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,g,g:GetCount(),0,0)
 end
