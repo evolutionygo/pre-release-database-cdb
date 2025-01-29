@@ -12,7 +12,7 @@ function s.initial_effect(c)
 	e1:SetTarget(s.thtg)
 	e1:SetOperation(s.thop)
 	c:RegisterEffect(e1)
-	--changepos
+	--tohand
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetType(EFFECT_TYPE_IGNITION)
@@ -38,7 +38,7 @@ end
 function s.chkfilter(c)
 	return c:IsAllTypes(TYPE_CONTINUOUS|TYPE_TRAP) and c:IsFaceup() and
 		(c:IsLocation(LOCATION_MZONE) or
-			c:IsEffectProperty(aux.EffectCategoryFilter(CATEGORY_SPECIAL_SUMMON)) and 
+			c:IsEffectProperty(aux.EffectCategoryFilter(CATEGORY_SPECIAL_SUMMON)) and
 			(c:GetOriginalLevel()>0
 			or bit.band(c:GetOriginalRace(),0x3fffffff)~=0
 			or bit.band(c:GetOriginalAttribute(),0x7f)~=0
@@ -54,11 +54,11 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 		if Duel.IsExistingMatchingCard(s.sumfilter,tp,LOCATION_HAND+LOCATION_MZONE,0,1,nil)
 			and Duel.IsExistingMatchingCard(s.chkfilter,tp,LOCATION_MZONE+LOCATION_SZONE,0,1,nil)
 			and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
-			Duel.BreakEffect()
-			Duel.ShuffleHand(tp)
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SUMMON)
 			local sg=Duel.SelectMatchingCard(tp,s.sumfilter,tp,LOCATION_HAND+LOCATION_MZONE,0,1,1,nil)
+			Duel.ShuffleHand(tp)
 			if sg:GetCount()>0 then
+				Duel.BreakEffect()
 				Duel.Summon(tp,sg:GetFirst(),true,nil)
 			end
 		end
