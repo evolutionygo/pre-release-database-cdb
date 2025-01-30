@@ -53,10 +53,6 @@ function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local g=aux.SelectTargetFromFieldFirst(tp,Card.IsAbleToRemove,tp,0,loc,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,1,0,0)
-	if g:GetFirst():IsLocation(LOCATION_ONFIELD) then
-		local hg=Duel.GetMatchingGroup(s.cfilter,tp,LOCATION_MZONE,0,nil)
-		Duel.SetOperationInfo(0,CATEGORY_TOHAND,hg,1,tp,LOCATION_MZONE)
-	end
 end
 function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
