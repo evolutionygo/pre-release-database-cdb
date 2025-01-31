@@ -26,6 +26,7 @@ end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local b1=Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_DECK,0,1,nil)
 	local b2=true
+	e:SetLabel(0)
 	if chk==0 then return b1 or b2 end
 	if e:IsCostChecked() and Duel.CheckReleaseGroupEx(tp,s.costfilter,1,REASON_COST,true,nil,tp)
 		and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
