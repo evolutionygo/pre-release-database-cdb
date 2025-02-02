@@ -1,4 +1,4 @@
---Vulcarrion, the Rotting Phoenix
+--Vulcarrion the Rotting Phoenix
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--special summon

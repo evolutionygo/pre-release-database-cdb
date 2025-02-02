@@ -88,7 +88,7 @@ function s.acop(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local g=eg:Filter(s.cfilter,1,nil)
 	local b1=Duel.IsExistingMatchingCard(s.disfiter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil)
 		and label&TYPE_MONSTER~=0
-	local b2=Duel.IsPlayerCanDraw(tp,2)
+	local b2=Duel.IsPlayerCanDraw(tp)
 		and label&TYPE_SPELL~=0
 	local b3=Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil)
 		and label&TYPE_TRAP~=0
