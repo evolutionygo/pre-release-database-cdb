@@ -16,15 +16,20 @@ end
 function s.mfilter(c)
 	return c:GetLevel()>0 and c:IsRace(RACE_REPTILE) and c:IsReleasable(REASON_EFFECT|REASON_MATERIAL|REASON_RITUAL)
 end
-function s.gfilter(g)
+function s.rcheck(tp,g,c)
+	return g:GetCount()<3
+end
+function s.rgcheck(g,ec)
 	return g:GetCount()<3
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local mg1=Duel.GetRitualMaterial(tp):Filter(Card.IsRace,nil,RACE_REPTILE)
 	local mg2=Duel.GetMatchingGroup(s.mfilter,tp,LOCATION_DECK,0,nil)
 	local s1=Duel.IsExistingMatchingCard(aux.RitualUltimateFilter,tp,LOCATION_DECK,0,1,nil,s.filter,e,tp,mg1,nil,Card.GetLevel,"Equal")
-	aux.RGCheckAdditional=s.gfilter
+	aux.RCheckAdditional=s.rcheck
+	aux.RGCheckAdditional=s.rgcheck
 	local s2=Duel.IsExistingMatchingCard(aux.RitualUltimateFilter,tp,LOCATION_HAND,0,1,nil,s.filter,e,tp,mg1,mg2,Card.GetLevel,"Equal")
+	aux.RCheckAdditional=nil
 	aux.RGCheckAdditional=nil
 	local b1=s1 and (Duel.GetFlagEffect(tp,id)==0 or not e:IsCostChecked())
 	local b2=s2 and (Duel.GetFlagEffect(tp,id+o)==0 or not e:IsCostChecked())
@@ -47,7 +52,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 end
 function s.spop1(e,tp,eg,ep,ev,re,r,rp)
-	::cancel::
+	::cancel1::
 	local mg1=Duel.GetRitualMaterial(tp):Filter(Card.IsRace,nil,RACE_REPTILE)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,aux.RitualUltimateFilter,tp,LOCATION_DECK,0,1,1,nil,s.filter,e,tp,mg1,nil,Card.GetLevel,"Equal")
@@ -63,7 +68,7 @@ function s.spop1(e,tp,eg,ep,ev,re,r,rp)
 		aux.GCheckAdditional=aux.RitualCheckAdditional(tc,tc:GetLevel(),"Equal")
 		local mat=mg:SelectSubGroup(tp,aux.RitualCheck,true,1,tc:GetLevel(),tp,tc,tc:GetLevel(),"Equal")
 		aux.GCheckAdditional=nil
-		if not mat then goto cancel end
+		if not mat then goto cancel1 end
 		tc:SetMaterial(mat)
 		Duel.ReleaseRitualMaterial(mat)
 		Duel.BreakEffect()
@@ -72,8 +77,9 @@ function s.spop1(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.spop2(e,tp,eg,ep,ev,re,r,rp)
-	::cancel::
-	aux.RGCheckAdditional=s.gfilter
+	::cancel2::
+	aux.RCheckAdditional=s.rcheck
+	aux.RGCheckAdditional=s.rgcheck
 	local mg1=Duel.GetRitualMaterial(tp):Filter(Card.IsRace,nil,RACE_REPTILE)
 	local mg2=Duel.GetMatchingGroup(s.mfilter,tp,LOCATION_DECK,0,nil)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
@@ -91,7 +97,11 @@ function s.spop2(e,tp,eg,ep,ev,re,r,rp)
 		aux.GCheckAdditional=aux.RitualCheckAdditional(tc,tc:GetLevel(),"Equal")
 		local mat=mg:SelectSubGroup(tp,aux.RitualCheck,true,1,tc:GetLevel(),tp,tc,tc:GetLevel(),"Equal")
 		aux.GCheckAdditional=nil
-		if not mat then goto cancel end
+		if not mat then
+			aux.RCheckAdditional=nil
+			aux.RGCheckAdditional=nil
+			goto cancel2
+		end
 		tc:SetMaterial(mat)
 		local mat2=mat:Filter(Card.IsLocation,nil,LOCATION_DECK):Filter(Card.IsRace,nil,RACE_REPTILE)
 		mat:Sub(mat2)
@@ -101,5 +111,6 @@ function s.spop2(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SpecialSummon(tc,SUMMON_TYPE_RITUAL,tp,tp,false,true,POS_FACEUP)
 		tc:CompleteProcedure()
 	end
+	aux.RCheckAdditional=nil
 	aux.RGCheckAdditional=nil
 end
