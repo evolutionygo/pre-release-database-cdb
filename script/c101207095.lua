@@ -101,5 +101,5 @@ function s.spop2(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SpecialSummon(tc,SUMMON_TYPE_RITUAL,tp,tp,false,true,POS_FACEUP)
 		tc:CompleteProcedure()
 	end
-	aux.GCheckAdditional=nil
+	aux.RGCheckAdditional=nil
 end
