@@ -23,9 +23,9 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local mg1=Duel.GetRitualMaterial(tp):Filter(Card.IsRace,nil,RACE_REPTILE)
 	local mg2=Duel.GetMatchingGroup(s.mfilter,tp,LOCATION_DECK,0,nil)
 	local s1=Duel.IsExistingMatchingCard(aux.RitualUltimateFilter,tp,LOCATION_DECK,0,1,nil,s.filter,e,tp,mg1,nil,Card.GetLevel,"Equal")
-	aux.GCheckAdditional=s.gfilter
+	aux.RGCheckAdditional=s.gfilter
 	local s2=Duel.IsExistingMatchingCard(aux.RitualUltimateFilter,tp,LOCATION_HAND,0,1,nil,s.filter,e,tp,mg1,mg2,Card.GetLevel,"Equal")
-	aux.GCheckAdditional=nil
+	aux.RGCheckAdditional=nil
 	local b1=s1 and (Duel.GetFlagEffect(tp,id)==0 or not e:IsCostChecked())
 	local b2=s2 and (Duel.GetFlagEffect(tp,id+o)==0 or not e:IsCostChecked())
 	if chk==0 then return b1 or b2 end
@@ -73,7 +73,7 @@ function s.spop1(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.spop2(e,tp,eg,ep,ev,re,r,rp)
 	::cancel::
-	aux.GCheckAdditional=s.gfilter
+	aux.RGCheckAdditional=s.gfilter
 	local mg1=Duel.GetRitualMaterial(tp):Filter(Card.IsRace,nil,RACE_REPTILE)
 	local mg2=Duel.GetMatchingGroup(s.mfilter,tp,LOCATION_DECK,0,nil)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
