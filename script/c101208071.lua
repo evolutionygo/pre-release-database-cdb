@@ -32,17 +32,17 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function s.atkfilter(c)
-	return c:IsFaceup() and aux.IsCodeOrListed(c,25862681)
+	return c:IsFaceup() and (c:IsCode(25862681) or aux.IsCodeListed(c,25862681) and c:IsType(TYPE_MONSTER))
 end
 function s.val(e,c)
-	local ct=Duel.GetMatchingGroupCount(s.atkfilter,e:GetHandlerPlayer(),LOCATION_MZONE,0,nil)
+	local ct=Duel.GetMatchingGroupCount(s.atkfilter,e:GetHandlerPlayer(),LOCATION_ONFIELD,0,nil)
 	return ct*500
 end
 function s.disfilter(c)
 	return c:IsFaceup()
 end
 function s.distg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	local ct=Duel.GetMatchingGroupCount(s.atkfilter,tp,LOCATION_MZONE,0,nil)
+	local ct=Duel.GetMatchingGroupCount(s.atkfilter,tp,LOCATION_ONFIELD,0,nil)
 	if chkc then return chkc:IsControler(1-tp) and chkc:IsLocation(LOCATION_MZONE) and s.disfilter(chkc) end
 	if chk==0 then return Duel.IsExistingTarget(s.disfilter,tp,0,LOCATION_MZONE,1,nil)
 		and Duel.GetFlagEffect(tp,id)<ct end
