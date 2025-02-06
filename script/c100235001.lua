@@ -67,7 +67,7 @@ function s.lvop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.negcon(e,tp,eg,ep,ev,re,r,rp)
-	return re:IsActiveType(TYPE_MONSTER) and Duel.IsChainNegatable(ev)
+	return re:IsActiveType(TYPE_MONSTER) and rp==1-tp and Duel.IsChainNegatable(ev)
 end
 function s.costfilter(c)
 	return c:IsFaceup() and c:GetOriginalType()&TYPE_MONSTER==TYPE_MONSTER
