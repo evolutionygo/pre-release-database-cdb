@@ -19,7 +19,7 @@ function s.initial_effect(c)
 	--get effect
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,1))
-	e3:SetCategory(CATEGORY_NEGATE)
+	e3:SetCategory(CATEGORY_DISABLE+CATEGORY_DESTROY)
 	e3:SetType(EFFECT_TYPE_XMATERIAL+EFFECT_TYPE_QUICK_O)
 	e3:SetCode(EVENT_CHAINING)
 	e3:SetCountLimit(1)
@@ -30,9 +30,8 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function s.cfilter(c,e,tp)
-	local lv=c:GetLevel()
-	return lv>0 and c:IsRace(RACE_FISH) and c:IsSetCard(0x1b8)
-		and Duel.GetMZoneCount(tp,c)>0 and (c:IsControler(tp) or c:IsFaceup())
+	return c:IsRace(RACE_FISH) and Duel.GetMZoneCount(tp,c)>0
+		and (c:IsControler(tp) or c:IsFaceup())
 end
 function s.spfilter(c,e,tp)
 	return c:IsRace(RACE_FISH) and c:IsSetCard(0x1b8) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
@@ -40,7 +39,6 @@ end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.CheckReleaseGroup(tp,s.cfilter,1,nil,e,tp) end
 	local g=Duel.SelectReleaseGroup(tp,s.cfilter,1,1,nil,e,tp)
-	e:SetLabel(g:GetFirst():GetLevel())
 	Duel.Release(g,REASON_COST)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -70,7 +68,7 @@ end
 function s.discon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	return c:IsSetCard(0x11b8)
-		and not c:IsStatus(STATUS_BATTLE_DESTROYED) and ep==1-tp
+		and not c:IsStatus(STATUS_BATTLE_DESTROYED)
 		and re:IsActiveType(TYPE_SPELL+TYPE_TRAP) and Duel.IsChainDisablable(ev)
 end
 function s.discost(e,tp,eg,ep,ev,re,r,rp,chk)

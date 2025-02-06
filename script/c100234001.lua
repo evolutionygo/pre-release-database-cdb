@@ -17,10 +17,12 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 	--synchro effect
 	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetType(EFFECT_TYPE_QUICK_O)
 	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetRange(LOCATION_MZONE)
+	e2:SetHintTiming(0,TIMING_MAIN_END)
 	e2:SetCountLimit(1,id+o)
 	e2:SetCondition(s.sccon)
 	e2:SetTarget(s.sctg)
@@ -41,7 +43,7 @@ end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP) then
+	if tc:IsRelateToEffect(e) and aux.NecroValleyFilter()(tc) and Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP) then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_DISABLE)
@@ -66,12 +68,10 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.sccon(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetTurnPlayer()==tp then return false end
-	local ph=Duel.GetCurrentPhase()
-	return ph==PHASE_MAIN1 or ph==PHASE_MAIN2
+	return Duel.IsMainPhase() and Duel.GetTurnPlayer()~=tp
 end
 function s.mfilter(c)
-	return c:IsRank(RACE_WARRIOR) and c:IsType(TYPE_MONSTER) and c:IsFaceup()
+	return c:IsRace(RACE_WARRIOR) and c:IsType(TYPE_MONSTER) and c:IsFaceup()
 end
 function s.syncheck(g,tp,syncard)
 	return g:IsExists(s.mfilter,1,nil) and syncard:IsSynchroSummonable(nil,g,#g-1,#g-1) and aux.SynMixHandCheck(g,tp,syncard)
