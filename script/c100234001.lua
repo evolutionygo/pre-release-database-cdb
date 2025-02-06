@@ -75,6 +75,7 @@ function s.mfilter(c)
 end
 function s.syncheck(g,tp,syncard)
 	return g:IsExists(s.mfilter,1,nil) and syncard:IsSynchroSummonable(nil,g,#g-1,#g-1) and aux.SynMixHandCheck(g,tp,syncard)
+		and aux.MustMaterialCheck(g,tp,EFFECT_MUST_BE_SMATERIAL)
 end
 function s.scfilter(c,tp,mg)
 	return mg:CheckSubGroup(s.syncheck,2,#mg,tp,c)
