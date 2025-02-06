@@ -1,5 +1,5 @@
 --戦刀匠サイバ
-local s.id,o=GetID()
+local s,id,o=GetID()
 function s.initial_effect(c)
 	--Synchro summon
 	aux.AddSynchroProcedure(c,nil,aux.NonTuner(nil),1)
