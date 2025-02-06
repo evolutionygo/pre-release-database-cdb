@@ -71,7 +71,7 @@ function s.sccon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsMainPhase() and Duel.GetTurnPlayer()~=tp
 end
 function s.mfilter(c)
-	return c:IsRace(RACE_WARRIOR) and c:IsType(TYPE_MONSTER) and c:IsFaceup()
+	return c:IsRace(RACE_WARRIOR) and c:IsType(TYPE_MONSTER) and c:IsFaceupEx()
 end
 function s.syncheck(g,tp,syncard)
 	return g:IsExists(s.mfilter,1,nil) and syncard:IsSynchroSummonable(nil,g,#g-1,#g-1) and aux.SynMixHandCheck(g,tp,syncard)
