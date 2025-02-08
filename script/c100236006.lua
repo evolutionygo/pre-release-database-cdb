@@ -4,7 +4,7 @@ function s.initial_effect(c)
 	--fusion material
 	aux.AddFusionProcFunFunRep(c,aux.FilterBoolFunction(Card.IsFusionSetCard,0x2c7),aux.FilterBoolFunction(Card.IsLocation,LOCATION_HAND),1,127,true)
 	c:EnableReviveLimit()
-	--tohang
+	--tohand
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_TOHAND)
