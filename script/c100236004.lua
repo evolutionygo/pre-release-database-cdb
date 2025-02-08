@@ -70,6 +70,6 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	if c:IsRelateToEffect(e) and aux.NecroValleyFilter()(c) and Duel.SendtoDeck(c,nil,SEQ_DECKBOTTOM,REASON_EFFECT)~=0 and c:IsLocation(LOCATION_DECK)
 		and tc:IsRelateToEffect(e) and aux.NecroValleyFilter()(tc) then
 		Duel.SendtoHand(tc,nil,REASON_EFFECT)
-		Duel.ShuffleHand()
+		Duel.ShuffleHand(tp)
 	end
 end
