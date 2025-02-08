@@ -4,7 +4,7 @@ function s.initial_effect(c)
 	--fusion material
 	aux.AddFusionProcFunFunRep(c,aux.FilterBoolFunction(Card.IsFusionSetCard,0x2c7),aux.FilterBoolFunction(Card.IsLocation,LOCATION_HAND),1,127,true)
 	c:EnableReviveLimit()
-	--remove
+	--tohang
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_TOHAND)
@@ -16,19 +16,30 @@ function s.initial_effect(c)
 	e1:SetTarget(s.thtg)
 	e1:SetOperation(s.thop)
 	c:RegisterEffect(e1)
-	--special summon
 	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(id,1))
-	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
-	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
-	e2:SetCode(EVENT_TO_GRAVE)
-	e2:SetRange(LOCATION_GRAVE)
-	e2:SetProperty(EFFECT_FLAG_DELAY)
-	e2:SetCountLimit(1,id+o)
-	e2:SetCondition(s.spcon)
-	e2:SetTarget(s.sptg)
-	e2:SetOperation(s.spop)
+	e2:SetType(EFFECT_TYPE_SINGLE)
+	e2:SetCode(EFFECT_MATERIAL_CHECK)
+	e2:SetValue(s.valcheck)
+	e2:SetLabelObject(e1)
 	c:RegisterEffect(e2)
+	--special summon
+	local e3=Effect.CreateEffect(c)
+	e3:SetDescription(aux.Stringid(id,1))
+	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e3:SetCode(EVENT_TO_GRAVE)
+	e3:SetRange(LOCATION_GRAVE)
+	e3:SetProperty(EFFECT_FLAG_DELAY)
+	e3:SetCountLimit(1,id+o)
+	e3:SetCondition(s.spcon)
+	e3:SetTarget(s.sptg)
+	e3:SetOperation(s.spop)
+	c:RegisterEffect(e3)
+end
+function s.valcheck(e,c)
+	local mg=c:GetMaterial()
+	local mg1=mg:Filter(Card.IsLocation,nil,LOCATION_HAND)
+	e:GetLabelObject():SetLabel(#mg1)
 end
 function s.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_FUSION)
@@ -37,9 +48,10 @@ function s.thfilter(c)
 	return c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	local ct=e:GetHandler():GetMaterial():FilterCount(Card.IsPreviousLocation,nil,LOCATION_HAND)
+	local ct=e:GetLabel()
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE+LOCATION_MZONE) and s.thfilter(chkc) end
-	if chk==0 then return ct>0 and Duel.IsExistingTarget(s.thfilter,tp,LOCATION_GRAVE+LOCATION_MZONE,LOCATION_GRAVE+LOCATION_MZONE,1,nil) end
+	if chk==0 then return ct and ct>0
+		and Duel.IsExistingTarget(s.thfilter,tp,LOCATION_GRAVE+LOCATION_MZONE,LOCATION_GRAVE+LOCATION_MZONE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
 	local g=Duel.SelectTarget(tp,s.thfilter,tp,LOCATION_GRAVE+LOCATION_MZONE,LOCATION_GRAVE+LOCATION_MZONE,1,ct,nil)
     Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,g:GetCount(),0,0)
@@ -60,7 +72,8 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) and Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)~=0 then
+	if c:IsRelateToEffect(e) and aux.NecroValleyFilter(c)
+		and Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)~=0 then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_LEAVE_FIELD_REDIRECT)
