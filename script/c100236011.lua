@@ -39,6 +39,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		e2:SetCode(EFFECT_DISABLE_EFFECT)
 		e2:SetValue(RESET_TURN_SET)
 		tc:RegisterEffect(e2)
+		Duel.AdjustInstantly()
 		if Duel.IsExistingMatchingCard(aux.NecroValleyFilter(s.tdfilter),tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil)
 			and Duel.IsPlayerCanDraw(tp,1)
 			and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
