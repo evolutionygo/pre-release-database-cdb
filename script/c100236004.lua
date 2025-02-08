@@ -52,7 +52,7 @@ function s.setop(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.thfilter(c)
 	return c:IsRace(RACE_SPELLCASTER) and c:IsSetCard(0x2c7)
-		and c:IsAbleToHand
+		and c:IsAbleToHand()
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()
