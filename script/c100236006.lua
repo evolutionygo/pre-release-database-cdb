@@ -42,7 +42,6 @@ function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return ct>0 and Duel.IsExistingTarget(s.thfilter,tp,LOCATION_GRAVE+LOCATION_MZONE,LOCATION_GRAVE+LOCATION_MZONE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
 	local g=Duel.SelectTarget(tp,s.thfilter,tp,LOCATION_GRAVE+LOCATION_MZONE,LOCATION_GRAVE+LOCATION_MZONE,1,ct,nil)
-	Duel.SetOperationInfo(0,CATEGORY_TODECK,c,1,0,0)
     Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,1,0,0)
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
