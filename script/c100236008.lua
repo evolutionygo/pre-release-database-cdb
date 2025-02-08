@@ -45,6 +45,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			end
 		end
 		if Duel.IsExistingMatchingCard(aux.TRUE,tp,0,LOCATION_MZONE,1,nil) and res and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
+			Duel.ShuffleHand(tp)
 			local sg1=Duel.GetMatchingGroup(s.filter2,tp,LOCATION_EXTRA,0,nil,e,tp,mg1,nil,chkf)
 			local mg2=nil
 			local sg2=nil
@@ -61,13 +62,13 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 				local tg=sg:Select(tp,1,1,nil)
 				local tc=tg:GetFirst()
-				if sg1:IsContains(tc) and (sg2==nil or not sg2:IsContains(tc) or not Duel.SelectYesNo(tp,ce:GetDescription())) then
+				if sg1:IsContains(tc) and (sg2==nil or not sg2:IsContains(tc) or ce and not Duel.SelectYesNo(tp,ce:GetDescription())) then
 					local mat1=Duel.SelectFusionMaterial(tp,tc,mg1,nil,chkf)
 					tc:SetMaterial(mat1)
 					Duel.SendtoGrave(mat1,REASON_EFFECT+REASON_MATERIAL+REASON_FUSION)
 					Duel.BreakEffect()
 					Duel.SpecialSummon(tc,SUMMON_TYPE_FUSION,tp,tp,false,false,POS_FACEUP)
-				else
+				elseif ce then
 					local mat2=Duel.SelectFusionMaterial(tp,tc,mg2,nil,chkf)
 					local fop=ce:GetOperation()
 					fop(ce,e,tp,tc,mat2)
