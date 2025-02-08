@@ -37,7 +37,7 @@ function s.thfilter(c)
 	return c:IsType(TYPE_MONSTER) and c:IsAbleToRemove()
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	local ct=e:GetHandler():GetMaterialCount()
+	local ct=e:GetHandler():GetMaterial():FilterCount(Card.IsPreviousLocation,nil,LOCATION_HAND)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE+LOCATION_MZONE) and s.thfilter(chkc) end
 	if chk==0 then return ct>0 and Duel.IsExistingTarget(s.thfilter,tp,LOCATION_GRAVE+LOCATION_MZONE,LOCATION_GRAVE+LOCATION_MZONE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
