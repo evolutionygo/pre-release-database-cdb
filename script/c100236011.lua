@@ -39,16 +39,19 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		e2:SetCode(EFFECT_DISABLE_EFFECT)
 		e2:SetValue(RESET_TURN_SET)
 		tc:RegisterEffect(e2)
-		if Duel.IsExistingMatchingCard(s.tdfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil)
-			and duek.IsPlayerCanDraw(tp,1)
+		if Duel.IsExistingMatchingCard(aux.NecroValleyFilter(s.tdfilter),tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil)
+			and Duel.IsPlayerCanDraw(tp,1)
 			and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-			local sg=Duel.SelectMatchingCard(tp,s.tdfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,1,nil)
+			local sg=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.tdfilter),tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,1,nil)
 			local dtc=sg:GetFirst()
-			if dtc and Duel.SendtoDeck(dtc,nil,SEQ_DECKBOTTOM,REASON_EFFECT)>0
-				and dtc:IsLocation(LOCATION_DECK+LOCATION_EXTRA) then
+			if dtc then
 				Duel.BreakEffect()
-				Duel.Draw(tp,1,REASON_EFFECT)
+				Duel.HintSelection(sg)
+				if Duel.SendtoDeck(dtc,nil,SEQ_DECKBOTTOM,REASON_EFFECT)>0 and dtc:IsLocation(LOCATION_DECK+LOCATION_EXTRA) then
+					Duel.BreakEffect()
+					Duel.Draw(tp,1,REASON_EFFECT)
+				end
 			end
 		end
 	end
