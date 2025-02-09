@@ -50,7 +50,7 @@ function s.lvcfilter(c,tp)
 	return c:IsSummonPlayer(tp) and c:IsLevelAbove(1) and c:IsPosition(POS_FACEUP_ATTACK)
 end
 function s.lvcon(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(s.lvcfilter,1,nil,1-tp)
+	return eg:IsExists(s.lvcfilter,1,nil,1-tp) and not eg:IsContains(e:GetHandler())
 end
 function s.lvop(e,tp,eg,ep,ev,re,r,rp)
 	local g=eg:Filter(s.lvcfilter,nil,1-tp)
