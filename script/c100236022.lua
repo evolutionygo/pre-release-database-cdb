@@ -23,7 +23,7 @@ function s.initial_effect(c)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCountLimit(1,EFFECT_COUNT_CODE_CHAIN)
 	e2:SetCondition(s.sccon)
-	e2:SetTarget(s.sctarg)
+	e2:SetTarget(s.sctg)
 	e2:SetOperation(s.scop)
 	c:RegisterEffect(e2)
 end
