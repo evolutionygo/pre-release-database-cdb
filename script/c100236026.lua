@@ -47,7 +47,7 @@ end
 function s.val(e,c)
 	local tp=e:GetHandlerPlayer()
 	local g=Duel.GetMatchingGroup(s.atkfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,nil)
-	return g:GetClassCount(Card.GetRace)*(-200)
+	return g:GetCount()*(-200)
 end
 function s.cfilter(c)
 	return c:IsFaceup() and c:IsRace(RACE_BEAST) and c:IsAttribute(ATTRIBUTE_LIGHT)
