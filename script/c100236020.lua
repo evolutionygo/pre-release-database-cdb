@@ -1,4 +1,4 @@
---曲奇猫妖★味奇喵运输
+--クッキィ☆ヤミーウェイ
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--synchro summon

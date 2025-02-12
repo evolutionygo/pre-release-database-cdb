@@ -85,7 +85,8 @@ end
 function s.tdop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local sg=Duel.GetTargetsRelateToChain()
-	if c:IsRelateToEffect(e) then g:AddCard(c) end
+	if not c:IsRelateToEffect(e) then return end
+	sg:AddCard(c)
 	if #sg==0 then return end
 	aux.PlaceCardsOnDeckBottom(tp,sg)
 end

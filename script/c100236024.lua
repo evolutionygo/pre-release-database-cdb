@@ -64,11 +64,11 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Destroy(tc,REASON_EFFECT)
 	end
 end
-function s.cfilter(c,tp,rp)
-	return c:GetPreviousControler()==tp and c:IsPreviousLocation(LOCATION_MZONE) and rp==1-tp and c:IsReason(REASON_EFFECT)
+function s.cfilter2(c,tp,rp)
+	return c:IsPreviousPosition(POS_FACEUP) and c:GetPreviousControler()==tp and c:IsPreviousLocation(LOCATION_MZONE) and rp==1-tp and c:IsReason(REASON_EFFECT)
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(s.cfilter,1,nil,tp,rp) and not eg:IsContains(e:GetHandler())
+	return eg:IsExists(s.cfilter2,1,nil,tp,rp) and not eg:IsContains(e:GetHandler())
 end
 function s.spfilter(c,e,tp)
 	return c:IsSetCard(0x2c8) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
@@ -102,7 +102,8 @@ end
 function s.tdop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local sg=Duel.GetTargetsRelateToChain()
-	if c:IsRelateToEffect(e) then g:AddCard(c) end
+	if not c:IsRelateToEffect(e) then return end
+	sg:AddCard(c)
 	if #sg==0 then return end
 	aux.PlaceCardsOnDeckBottom(tp,sg)
 end

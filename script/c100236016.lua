@@ -40,10 +40,11 @@ function s.spcon(e,c)
 		and Duel.IsExistingMatchingCard(s.filter,c:GetControler(),LOCATION_MZONE,0,1,nil)
 end
 function s.thfilter(c)
-	return c:IsSetCard(0x2c8) and not c:IsCode(id) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
+	return c:IsSetCard(0x2c8) and not c:IsCode(id) and c:IsAbleToHand()
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil)
+		or e:GetHandler():GetFlagEffect(id)>0 and Duel.IsPlayerCanDraw(tp,1) end
 	if e:GetHandler():GetFlagEffect(id)>0 then
 		e:SetLabel(1)
 	else
@@ -54,14 +55,14 @@ end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	local b1=Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil)
 	local b2=e:GetLabel()==1 and Duel.IsPlayerCanDraw(tp,1)
-	if b1 and (not b2 or Duel.SelectYesNo(tp,aux.Stringid(id,2))) then
+	if b1 and (not b2 or not Duel.SelectYesNo(tp,aux.Stringid(id,2))) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 		local g=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_DECK,0,1,1,nil)
 		if g:GetCount()>0 then
 			Duel.SendtoHand(g,nil,REASON_EFFECT)
 			Duel.ConfirmCards(1-tp,g)
 		end
-	elseif b2 then
+	elseif e:GetLabel()==1 then
 		Duel.Draw(tp,1,REASON_EFFECT)
 	end
 end

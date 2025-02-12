@@ -1,4 +1,4 @@
---棒棒猫妖★味奇喵运输
+--ロリポー☆ヤミーウェイ
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--synchro summon
@@ -14,7 +14,7 @@ function s.initial_effect(c)
 	e0:SetValue(SUMMON_TYPE_SYNCHRO)
 	c:RegisterEffect(e0)
 	c:EnableReviveLimit()
-	--position change
+	--special summon
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
@@ -37,7 +37,7 @@ function s.initial_effect(c)
 	e2:SetCondition(s.spcon)
 	e2:SetCost(s.spcost)
 	e2:SetTarget(s.sptg)
-	e2:SetOperation(s.spop)	
+	e2:SetOperation(s.spop) 
 	c:RegisterEffect(e2)
 end
 function s.CheckGroup(g,f,cg,min,max,...)
