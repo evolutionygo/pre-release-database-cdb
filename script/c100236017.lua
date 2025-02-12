@@ -58,7 +58,6 @@ function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 	if b1 and (not b2 or not Duel.SelectYesNo(tp,aux.Stringid(id,2))) then
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetProperty(EFFECT_FLAG_COPY_INHERIT)
 		e1:SetCode(EFFECT_UPDATE_ATTACK)
 		e1:SetValue(-1000)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
