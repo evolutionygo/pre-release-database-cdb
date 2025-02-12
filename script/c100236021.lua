@@ -40,28 +40,13 @@ function s.initial_effect(c)
 	e2:SetOperation(s.spop) 
 	c:RegisterEffect(e2)
 end
-function s.CheckGroup(g,f,cg,min,max,...)
-	if cg then Duel.SetSelectedCard(cg) end
-	return g:CheckSubGroup(f,min,max,...)
-end
-function s.SelectGroupNew(tp,desc,cancelable,g,f,cg,min,max,...)
-	local min=min or 1
-	local max=max or #g
-	local ext_params={...}
-	if cg then Duel.SetSelectedCard(cg) end
-	Duel.Hint(tp,HINT_SELECTMSG,desc)
-	return g:SelectSubGroup(tp,f,cancelable,min,max,...)
-end
-function s.SelectGroup(tp,desc,g,f,cg,min,max,...)
-	return s.SelectGroupNew(tp,desc,false,g,f,cg,min,max,...)
-end
 function s.matfilter1(c,syncard,tp)
 	if c:IsFacedown() then return false end
-	if c:IsSynchroType(TYPE_LINK) and c:IsControler(tp) then return true end 
-	return c:IsSynchroType(TYPE_TUNER) and c:IsCanBeSynchroMaterial(syncard)
+	if c:IsSynchroType(TYPE_LINK) and c:IsControler(tp) then return true end
+	return c:IsSynchroType(TYPE_TUNER) and c:IsCanBeSynchroMaterial(syncard) and (c:IsControler(tp) or Duel.GetSynchroMaterial(tp):IsContains(c))
 end
-function s.matfilter2(c,syncard)
-	return (c:IsLocation(LOCATION_HAND) or c:IsFaceup()) and c:IsNotTuner(syncard) and c:IsCanBeSynchroMaterial(syncard)
+function s.matfilter2(c,syncard,tp)
+	return (c:IsLocation(LOCATION_HAND) or c:IsFaceup()) and c:IsNotTuner(syncard) and c:IsCanBeSynchroMaterial(syncard) and (c:IsControler(tp) or Duel.GetSynchroMaterial(tp):IsContains(c))
 end
 function s.val(c,syncard)
 	if c:IsSynchroType(TYPE_LINK) then
@@ -70,41 +55,39 @@ function s.val(c,syncard)
 		return c:GetSynchroLevel(syncard)
 	end
 end
-function s.CheckGroupRecursive(c,sg,g,f,min,max,ext_params)
-	sg:AddCard(c)
-	local ct=sg:GetCount()
-	local res=(ct>=min and f(sg,table.unpack(ext_params)))
-		or (ct<max and g:IsExists(s.CheckGroupRecursive,1,sg,sg,g,f,min,max,ext_params))
-	sg:RemoveCard(c)
-	return res
-end
 function s.synfilter(c,syncard,lv,g2,g3,minc,maxc,tp)
 	local tsg=c:IsHasEffect(EFFECT_HAND_SYNCHRO) and g3 or g2
-	return s.CheckGroup(tsg,s.goal,Group.FromCards(c),minc,maxc,tp,lv,syncard,c)
+	if c then Duel.SetSelectedCard(c) end
+	return tsg:CheckSubGroup(s.goal,minc,maxc,tp,lv,syncard,c)
 end
 function s.goal(g,tp,lv,syncard,tuc)
 	if Duel.GetLocationCountFromEx(tp,tp,g,syncard)<=0 then return false end
 	if tuc:IsHasEffect(EFFECT_HAND_SYNCHRO) and g:IsExists(Card.IsLocation,2,tuc,LOCATION_HAND) then return false end
 	local ct=g:GetCount()
-	return g:CheckWithSumEqual(s.val,lv,ct,ct,syncard)
+	return g:GetSum(s.val,syncard)==lv
 end
-function s.LSynCondition(e,c,tuner,mg)
+function s.LSynCondition(e,c,tuner,mg,min,max)
 	if c==nil then return true end
 	if c:IsType(TYPE_PENDULUM) and c:IsFaceup() then return false end
 	local tp=c:GetControler()
 	local minc=2
 	local maxc=c:GetLevel()
+	if min then
+		if min>minc then minc=min end
+		if max<maxc then maxc=max end
+		if minc>maxc then return false end
+	end
 	local g1=nil
 	local g2=nil
 	local g3=nil
 	if mg then
 		g1=mg:Filter(s.matfilter1,nil,c,tp)
-		g2=mg:Filter(s.matfilter2,nil,c)
+		g2=mg:Filter(s.matfilter2,nil,c,tp)
 		g3=g2:Clone()
 	else
 		g1=Duel.GetMatchingGroup(s.matfilter1,tp,LOCATION_MZONE,LOCATION_MZONE,nil,c,tp)
-		g2=Duel.GetMatchingGroup(s.matfilter2,tp,LOCATION_MZONE,LOCATION_MZONE,nil,c)
-		g3=Duel.GetMatchingGroup(s.matfilter2,tp,LOCATION_MZONE+LOCATION_HAND,LOCATION_MZONE,nil,c)
+		g2=Duel.GetMatchingGroup(s.matfilter2,tp,LOCATION_MZONE,LOCATION_MZONE,nil,c,tp)
+		g3=Duel.GetMatchingGroup(s.matfilter2,tp,LOCATION_MZONE+LOCATION_HAND,LOCATION_MZONE,nil,c,tp)
 	end
 	local pe=Duel.IsPlayerAffectedByEffect(tp,EFFECT_MUST_BE_SMATERIAL)
 	local lv=c:GetLevel()
@@ -117,38 +100,44 @@ function s.LSynCondition(e,c,tuner,mg)
 		return g1:IsExists(s.synfilter,1,nil,c,lv,g2,g3,minc,maxc,tp)
 	end
 end
-function s.LSynTarget(e,tp,eg,ep,ev,re,r,rp,chk,c,tuner,mg)
+function s.LSynTarget(e,tp,eg,ep,ev,re,r,rp,chk,c,tuner,mg,min,max)
 	local minc=2
 	local maxc=c:GetLevel()
+	if min then
+		if min>minc then minc=min end
+		if max<maxc then maxc=max end
+		if minc>maxc then return false end
+	end
 	local g1=nil
 	local g2=nil
 	local g3=nil
 	if mg then
 		g1=mg:Filter(s.matfilter1,nil,c,tp)
-		g2=mg:Filter(s.matfilter2,nil,c)
+		g2=mg:Filter(s.matfilter2,nil,c,tp)
 		g3=g2:Clone()
 	else
 		g1=Duel.GetMatchingGroup(s.matfilter1,tp,LOCATION_MZONE,LOCATION_MZONE,nil,c,tp)
-		g2=Duel.GetMatchingGroup(s.matfilter2,tp,LOCATION_MZONE,LOCATION_MZONE,nil,c)
-		g3=Duel.GetMatchingGroup(s.matfilter2,tp,LOCATION_MZONE+LOCATION_HAND,LOCATION_MZONE,nil,c)
+		g2=Duel.GetMatchingGroup(s.matfilter2,tp,LOCATION_MZONE,LOCATION_MZONE,nil,c,tp)
+		g3=Duel.GetMatchingGroup(s.matfilter2,tp,LOCATION_MZONE+LOCATION_HAND,LOCATION_MZONE,nil,c,tp)
 	end
 	local pe=Duel.IsPlayerAffectedByEffect(tp,EFFECT_MUST_BE_SMATERIAL)
 	local lv=c:GetLevel()
 	local tuc=nil
 	if tuner then
-		tuner=tuc
+		tuc=tuner
 	else
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SMATERIAL)
 		if not pe then
-			local t1=g1:FilterSelect(tp,s.synfilter,1,1,nil,c,lv,g2,g3,minc,maxc,tp)
-			tuc=t1:GetFirst()
+			tuc=g1:FilterSelect(tp,s.synfilter,1,1,nil,c,lv,g2,g3,minc,maxc,tp):GetFirst()
 		else
 			tuc=pe:GetOwner()
 			Group.FromCards(tuc):Select(tp,1,1,nil)
 		end
 	end
-	local tsg=tuc and tuc:IsHasEffect(EFFECT_HAND_SYNCHRO) and g3 or g2
-	local g=s.SelectGroup(tp,HINTMSG_SMATERIAL,tsg,s.goal,Group.FromCards(tuc),minc,maxc,tp,lv,c,tuc)
+	local tsg=tuc:IsHasEffect(EFFECT_HAND_SYNCHRO) and g3 or g2
+	if tuc then Duel.SetSelectedCard(tuc) end
+	Duel.Hint(tp,HINT_SELECTMSG,HINTMSG_SMATERIAL)
+	local g=tsg:SelectSubGroup(tp,s.goal,false,minc,maxc,tp,lv,c,tuc)
 	if g then
 		g:KeepAlive()
 		e:SetLabelObject(g)
