@@ -85,8 +85,8 @@ end
 function s.tdop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local sg=Duel.GetTargetsRelateToChain():Filter(aux.NecroValleyFilter(aux.TRUE),nil)
+	if #sg==0 then return end
 	if not c:IsRelateToEffect(e) or not aux.NecroValleyFilter()(c) then return end
 	sg:AddCard(c)
-	if #sg==0 then return end
 	aux.PlaceCardsOnDeckBottom(tp,sg)
 end
