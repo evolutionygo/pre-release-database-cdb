@@ -9,7 +9,7 @@ function s.initial_effect(c)
 	--destroy
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,0))
-	e2:SetCategory(CATEGORY_DESTROY+CATEGORY_REMOVE)
+	e2:SetCategory(CATEGORY_DESTROY)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e2:SetRange(LOCATION_FZONE)
@@ -101,8 +101,8 @@ function s.tdtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function s.tdop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local sg=Duel.GetTargetsRelateToChain()
-	if not c:IsRelateToEffect(e) then return end
+	local sg=Duel.GetTargetsRelateToChain():Filter(aux.NecroValleyFilter(aux.TRUE),nil)
+	if not c:IsRelateToEffect(e) or not aux.NecroValleyFilter()(c) then return end
 	sg:AddCard(c)
 	if #sg==0 then return end
 	aux.PlaceCardsOnDeckBottom(tp,sg)

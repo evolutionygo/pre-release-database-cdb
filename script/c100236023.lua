@@ -65,7 +65,7 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
+	if tc:IsRelateToEffect(e) and aux.NecroValleyFilter()(tc) then
 		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
 	end
 end
@@ -84,8 +84,8 @@ function s.tdtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function s.tdop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local sg=Duel.GetTargetsRelateToChain()
-	if not c:IsRelateToEffect(e) then return end
+	local sg=Duel.GetTargetsRelateToChain():Filter(aux.NecroValleyFilter(aux.TRUE),nil)
+	if not c:IsRelateToEffect(e) or not aux.NecroValleyFilter()(c) then return end
 	sg:AddCard(c)
 	if #sg==0 then return end
 	aux.PlaceCardsOnDeckBottom(tp,sg)
