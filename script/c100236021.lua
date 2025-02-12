@@ -70,8 +70,8 @@ function s.LSynCondition(e,c,tuner,mg,min,max)
 	if c==nil then return true end
 	if c:IsType(TYPE_PENDULUM) and c:IsFaceup() then return false end
 	local tp=c:GetControler()
-	local minc=2
-	local maxc=c:GetLevel()
+	local minc=1
+	local maxc=c:GetLevel()-1
 	if min then
 		if min>minc then minc=min end
 		if max<maxc then maxc=max end
@@ -93,16 +93,16 @@ function s.LSynCondition(e,c,tuner,mg,min,max)
 	local lv=c:GetLevel()
 	local sg=nil
 	if tuner then
-		return s.matfilter1(c,tp) and s.synfilter(tuner,c,lv,g2,g3,minc,maxc,tp)
+		return s.matfilter1(c,tp) and s.synfilter(tuner,c,lv,g2,g3,minc+1,maxc+1,tp)
 	elseif pe then
-		return s.matfilter1(pe:GetOwner(),tp) and s.synfilter(pe:GetOwner(),c,lv,g2,g3,minc,maxc,tp)
+		return s.matfilter1(pe:GetOwner(),tp) and s.synfilter(pe:GetOwner(),c,lv,g2,g3,minc+1,maxc+1,tp)
 	else
-		return g1:IsExists(s.synfilter,1,nil,c,lv,g2,g3,minc,maxc,tp)
+		return g1:IsExists(s.synfilter,1,nil,c,lv,g2,g3,minc+1,maxc+1,tp)
 	end
 end
 function s.LSynTarget(e,tp,eg,ep,ev,re,r,rp,chk,c,tuner,mg,min,max)
-	local minc=2
-	local maxc=c:GetLevel()
+	local minc=1
+	local maxc=c:GetLevel()-1
 	if min then
 		if min>minc then minc=min end
 		if max<maxc then maxc=max end
@@ -128,7 +128,7 @@ function s.LSynTarget(e,tp,eg,ep,ev,re,r,rp,chk,c,tuner,mg,min,max)
 	else
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SMATERIAL)
 		if not pe then
-			tuc=g1:FilterSelect(tp,s.synfilter,1,1,nil,c,lv,g2,g3,minc,maxc,tp):GetFirst()
+			tuc=g1:FilterSelect(tp,s.synfilter,1,1,nil,c,lv,g2,g3,minc+1,maxc+1,tp):GetFirst()
 		else
 			tuc=pe:GetOwner()
 			Group.FromCards(tuc):Select(tp,1,1,nil)
@@ -137,7 +137,7 @@ function s.LSynTarget(e,tp,eg,ep,ev,re,r,rp,chk,c,tuner,mg,min,max)
 	local tsg=tuc:IsHasEffect(EFFECT_HAND_SYNCHRO) and g3 or g2
 	if tuc then Duel.SetSelectedCard(tuc) end
 	Duel.Hint(tp,HINT_SELECTMSG,HINTMSG_SMATERIAL)
-	local g=tsg:SelectSubGroup(tp,s.goal,false,minc,maxc,tp,lv,c,tuc)
+	local g=tsg:SelectSubGroup(tp,s.goal,false,minc+1,maxc+1,tp,lv,c,tuc)
 	if g then
 		g:KeepAlive()
 		e:SetLabelObject(g)
