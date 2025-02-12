@@ -37,7 +37,7 @@ function s.initial_effect(c)
 	e2:SetCondition(s.spcon)
 	e2:SetCost(s.spcost)
 	e2:SetTarget(s.sptg)
-	e2:SetOperation(s.spop) 
+	e2:SetOperation(s.spop)
 	c:RegisterEffect(e2)
 end
 function s.CheckGroup(g,f,cg,min,max,...)
@@ -57,7 +57,7 @@ function s.SelectGroup(tp,desc,g,f,cg,min,max,...)
 end
 function s.matfilter1(c,syncard,tp)
 	if c:IsFacedown() then return false end
-	if c:IsSynchroType(TYPE_LINK) and c:IsControler(tp) then return true end 
+	if c:IsSynchroType(TYPE_LINK) and c:IsControler(tp) then return true end
 	return c:IsSynchroType(TYPE_TUNER) and c:IsCanBeSynchroMaterial(syncard)
 end
 function s.matfilter2(c,syncard)
@@ -80,8 +80,6 @@ function s.CheckGroupRecursive(c,sg,g,f,min,max,ext_params)
 end
 function s.synfilter(c,syncard,lv,g2,g3,minc,maxc,tp)
 	local tsg=c:IsHasEffect(EFFECT_HAND_SYNCHRO) and g3 or g2
-	local f=c.tuner_filter
-	if c.tuner_filter then tsg=tsg:Filter(f,nil) end
 	return s.CheckGroup(tsg,s.goal,Group.FromCards(c),minc,maxc,tp,lv,syncard,c)
 end
 function s.goal(g,tp,lv,syncard,tuc)
@@ -149,9 +147,7 @@ function s.LSynTarget(e,tp,eg,ep,ev,re,r,rp,chk,c,tuner,mg)
 			Group.FromCards(tuc):Select(tp,1,1,nil)
 		end
 	end
-	local tsg=tuc:IsHasEffect(EFFECT_HAND_SYNCHRO) and g3 or g2
-	local f=tuc.tuner_filter
-	if tuc.tuner_filter then tsg=tsg:Filter(f,nil) end
+	local tsg=tuc and tuc:IsHasEffect(EFFECT_HAND_SYNCHRO) and g3 or g2
 	local g=s.SelectGroup(tp,HINTMSG_SMATERIAL,tsg,s.goal,Group.FromCards(tuc),minc,maxc,tp,lv,c,tuc)
 	if g then
 		g:KeepAlive()
@@ -170,13 +166,18 @@ function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
+	if not Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,2,nil) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	local g=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_DECK,0,2,2,nil)
-	if g:GetCount()>0 and Duel.SendtoHand(g,nil,REASON_EFFECT)>0 then	  
+	if g:GetCount()>0 and Duel.SendtoHand(g,nil,REASON_EFFECT)>0 then
 		Duel.ConfirmCards(1-tp,g)
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DISCARD)
+		local dg=Duel.SelectMatchingCard(tp,Card.IsDiscardable,tp,LOCATION_HAND,0,1,1,nil,REASON_EFFECT)
 		Duel.ShuffleHand(tp)
-		Duel.BreakEffect()
-		Duel.DiscardHand(tp,nil,1,1,REASON_EFFECT+REASON_DISCARD,nil)
+		if dg:GetCount()>0 then
+			Duel.BreakEffect()
+			Duel.SendtoGrave(dg,REASON_EFFECT+REASON_DISCARD)
+		end
 	end
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)

@@ -80,8 +80,6 @@ function s.CheckGroupRecursive(c,sg,g,f,min,max,ext_params)
 end
 function s.synfilter(c,syncard,lv,g2,g3,minc,maxc,tp)
 	local tsg=c:IsHasEffect(EFFECT_HAND_SYNCHRO) and g3 or g2
-	local f=c.tuner_filter
-	if c.tuner_filter then tsg=tsg:Filter(f,nil) end
 	return s.CheckGroup(tsg,s.goal,Group.FromCards(c),minc,maxc,tp,lv,syncard,c)
 end
 function s.goal(g,tp,lv,syncard,tuc)
@@ -149,9 +147,7 @@ function s.LSynTarget(e,tp,eg,ep,ev,re,r,rp,chk,c,tuner,mg)
 			Group.FromCards(tuc):Select(tp,1,1,nil)
 		end
 	end
-	local tsg=tuc:IsHasEffect(EFFECT_HAND_SYNCHRO) and g3 or g2
-	local f=tuc.tuner_filter
-	if tuc.tuner_filter then tsg=tsg:Filter(f,nil) end
+	local tsg=tuc and tuc:IsHasEffect(EFFECT_HAND_SYNCHRO) and g3 or g2
 	local g=s.SelectGroup(tp,HINTMSG_SMATERIAL,tsg,s.goal,Group.FromCards(tuc),minc,maxc,tp,lv,c,tuc)
 	if g then
 		g:KeepAlive()

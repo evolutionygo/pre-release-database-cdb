@@ -37,7 +37,7 @@ function s.initial_effect(c)
 	e2:SetCondition(s.spcon)
 	e2:SetCost(s.spcost)
 	e2:SetTarget(s.sptg)
-	e2:SetOperation(s.spop) 
+	e2:SetOperation(s.spop)
 	c:RegisterEffect(e2)
 end
 function s.CheckGroup(g,f,cg,min,max,...)
@@ -57,7 +57,7 @@ function s.SelectGroup(tp,desc,g,f,cg,min,max,...)
 end
 function s.matfilter1(c,syncard,tp)
 	if c:IsFacedown() then return false end
-	if c:IsSynchroType(TYPE_LINK) and c:IsControler(tp) then return true end 
+	if c:IsSynchroType(TYPE_LINK) and c:IsControler(tp) then return true end
 	return c:IsSynchroType(TYPE_TUNER) and c:IsCanBeSynchroMaterial(syncard)
 end
 function s.matfilter2(c,syncard)
@@ -80,8 +80,6 @@ function s.CheckGroupRecursive(c,sg,g,f,min,max,ext_params)
 end
 function s.synfilter(c,syncard,lv,g2,g3,minc,maxc,tp)
 	local tsg=c:IsHasEffect(EFFECT_HAND_SYNCHRO) and g3 or g2
-	local f=c.tuner_filter
-	if c.tuner_filter then tsg=tsg:Filter(f,nil) end
 	return s.CheckGroup(tsg,s.goal,Group.FromCards(c),minc,maxc,tp,lv,syncard,c)
 end
 function s.goal(g,tp,lv,syncard,tuc)
@@ -149,9 +147,7 @@ function s.LSynTarget(e,tp,eg,ep,ev,re,r,rp,chk,c,tuner,mg)
 			Group.FromCards(tuc):Select(tp,1,1,nil)
 		end
 	end
-	local tsg=tuc:IsHasEffect(EFFECT_HAND_SYNCHRO) and g3 or g2
-	local f=tuc.tuner_filter
-	if tuc.tuner_filter then tsg=tsg:Filter(f,nil) end
+	local tsg=tuc and tuc:IsHasEffect(EFFECT_HAND_SYNCHRO) and g3 or g2
 	local g=s.SelectGroup(tp,HINTMSG_SMATERIAL,tsg,s.goal,Group.FromCards(tuc),minc,maxc,tp,lv,c,tuc)
 	if g then
 		g:KeepAlive()
@@ -169,7 +165,7 @@ function s.tdtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_POSITION,g,#g,0,0)
 end
 function s.tdop(e,tp,eg,ep,ev,re,r,rp)
-	local sg=Duel.GetTargetsRelateToChain()
+	local sg=Duel.GetTargetsRelateToChain():Filter(Card.IsType,nil,TYPE_MONSTER)
 	if #sg==0 then return end
 	Duel.ChangePosition(sg,POS_FACEDOWN_DEFENSE)
 end
