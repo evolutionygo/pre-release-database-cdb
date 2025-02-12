@@ -23,6 +23,7 @@ function s.initial_effect(c)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCountLimit(1,EFFECT_COUNT_CODE_CHAIN)
 	e2:SetCondition(s.sccon)
+	e2:SetCost(s.sccost)
 	e2:SetTarget(s.sctg)
 	e2:SetOperation(s.scop)
 	c:RegisterEffect(e2)
@@ -61,6 +62,10 @@ function s.splimit(e,c,tp,sumtp,sumpos)
 end
 function s.sccon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetCurrentPhase()==PHASE_MAIN1 or Duel.GetCurrentPhase()==PHASE_MAIN2 or Duel.GetTurnPlayer()~=tp and Duel.GetCurrentPhase()>=PHASE_BATTLE_START and Duel.GetCurrentPhase()<=PHASE_BATTLE
+end
+function s.sccost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.CheckLPCost(tp,100) end
+	Duel.PayLPCost(tp,100)
 end
 function s.mfilter(c)
 	return c:IsSetCard(0x2c8) and c:IsType(TYPE_MONSTER) and c:IsFaceup()
