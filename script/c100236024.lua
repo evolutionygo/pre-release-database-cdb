@@ -1,4 +1,4 @@
---味奇喵乐园★收藏集
+--ヤミーズメント★アクロッキー
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--activate

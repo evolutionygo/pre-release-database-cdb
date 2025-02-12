@@ -1,4 +1,4 @@
---味奇喵★零嘴夹星人
+--ヤミー★スナイッチー
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddLinkProcedure(c,s.matfilter,1,1)

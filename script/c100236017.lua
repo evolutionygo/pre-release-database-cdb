@@ -1,4 +1,4 @@
---曲奇猫妖☆味奇喵
+--クッキィ☆ヤミー
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--spsummon

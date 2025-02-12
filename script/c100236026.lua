@@ -1,4 +1,4 @@
---味奇喵★兑换
+--ヤミー★リデンプション
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--activate
