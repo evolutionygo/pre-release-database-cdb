@@ -37,9 +37,9 @@ function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local b2=Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil)
 	if chk==0 then return b1 or b2 end
 	local op=0
-	if b1 and b2 then op=Duel.SelectOption(tp,aux.Stringid(id,0),aux.Stringid(id,1))
-	elseif b1 then op=Duel.SelectOption(tp,aux.Stringid(id,0))
-	else op=Duel.SelectOption(tp,aux.Stringid(id,1))+1 end
+	if b1 and b2 then op=Duel.SelectOption(tp,aux.Stringid(id,2),aux.Stringid(id,3))
+	elseif b1 then op=Duel.SelectOption(tp,aux.Stringid(id,2))
+	else op=Duel.SelectOption(tp,aux.Stringid(id,3))+1 end
 	e:SetLabel(op)
 	if op==0 then
 		e:SetCategory(CATEGORY_DESTROY)
