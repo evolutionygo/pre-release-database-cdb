@@ -19,13 +19,13 @@ function s.initial_effect(c)
 	--extra attack
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
-	e2:SetType(EFFECT_TYPE_XMATERIAL+EFFECT_TYPE_TRIGGER_F)
+	e2:SetType(EFFECT_TYPE_XMATERIAL+EFFECT_TYPE_CONTINUOUS)
 	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e2:SetProperty(EFFECT_FLAG_DELAY)
+	e2:SetLabelObject(c)
 	e2:SetCondition(s.eacon)
-	e2:SetTarget(s.eatg)
-	e2:SetOperation(s.eaop)
-	c:RegisterEffect(e2)
+	e2:SetOperation(s.addop)
+	c:RegisterEffect(e2)	
 end
 function s.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetOverlayGroup():IsExists(Card.IsSetCard,1,nil,0x8f,0x54,0x59,0x82)
@@ -49,11 +49,28 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.ConfirmCards(1-tp,g)
 	end
 end
+function s.addop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	local ec=e:GetLabelObject()
+	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(aux.Stringid(id,1))
+	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
+	e2:SetCode(EVENT_CUSTOM+id)
+	e2:SetRange(LOCATION_MZONE)
+	e2:SetProperty(EFFECT_FLAG_DELAY)
+	e2:SetReset(RESET_EVENT+RESETS_STANDARD)
+	e2:SetLabelObject(ec)
+	e2:SetTarget(s.eatg)
+	e2:SetOperation(s.eaop)
+	c:RegisterEffect(e2)
+	Duel.RaiseSingleEvent(c,EVENT_CUSTOM+id,re,r,rp,ep,ev)
+end
 function s.eacon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():IsSetCard(0x207f) and e:GetHandler():IsSummonType(SUMMON_TYPE_XYZ)
+	local c=e:GetHandler()
+	return c:IsSetCard(0x207f) and c:IsSummonType(SUMMON_TYPE_XYZ)
 end
 function s.eatg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
+	if chk==0 then return e:GetHandler():GetOverlayGroup():IsContains(e:GetLabelObject()) end
 	Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
 end
 function s.eaop(e,tp,eg,ep,ev,re,r,rp)
