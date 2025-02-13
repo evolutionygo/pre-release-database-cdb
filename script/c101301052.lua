@@ -6,15 +6,16 @@ function s.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	c:RegisterEffect(e1)
-	--cannot be target
+	--cannot be destroy
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD)
 	e2:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
-	e2:SetRange(LOCATION_FZONE)
-	e2:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
+	e2:SetRange(LOCATION_SZONE)
+	e2:SetTargetRange(LOCATION_MZONE,0)
 	e2:SetTarget(s.target)
 	e2:SetValue(1)
 	c:RegisterEffect(e2)
+	--cannot be target
 	local e3=e2:Clone()
 	e3:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
 	e3:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
@@ -45,9 +46,9 @@ function s.initial_effect(c)
 	c:RegisterEffect(e5)
 end
 function s.target(e,c)
-	return c:GetAttribute()==ATTRIBUTE_LIGHT and c:IsSetCard(0x7f) and c:IsType(TYPE_XYZ)
+	return c:GetOriginalAttribute()&ATTRIBUTE_LIGHT~=0 and c:IsSetCard(0x7f) and c:IsType(TYPE_XYZ)
 end
-function s.cfilter(c,e)
+function s.lvcfilter(c,e)
 	return c:IsFaceup() and c:IsLevelAbove(1) and c:IsCanBeEffectTarget(e)
 end
 function s.fselect(g,lv)
@@ -56,15 +57,19 @@ function s.fselect(g,lv)
 end
 function s.lvtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end
-	local rg=Duel.GetMatchingGroup(s.cfilter,tp,LOCATION_MZONE,0,nil,e)
+	local rg=Duel.GetMatchingGroup(s.lvcfilter,tp,LOCATION_MZONE,0,nil,e)
 	if chk==0 then return rg:CheckSubGroup(s.fselect,2,2) end
 	local lvt={}
 	local pc=1
 	for i=1,12 do
-		if g:IsExists(aux.NOT(Card.IsLevel),2,nil,i) then lvt[i]=nil lvt[pc]=i pc=pc+1 end
+		if rg:IsExists(aux.NOT(Card.IsLevel),2,nil,i) then
+			lvt[i]=nil
+			lvt[pc]=i
+			pc=pc+1
+		end
 	end
 	lvt[pc]=nil
-	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,1))
+	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,3))
 	local lv=Duel.AnnounceNumber(tp,table.unpack(lvt))
 	e:SetLabel(lv)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
@@ -72,6 +77,7 @@ function s.lvtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetTargetCard(sg)
 end
 function s.lvop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
 	local tg=g:Filter(Card.IsRelateToEffect,nil,e)
 	for tc in aux.Next(tg) do
@@ -80,11 +86,11 @@ function s.lvop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetCode(EFFECT_CHANGE_LEVEL)
 		e1:SetValue(e:GetLabel())
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
-		c:RegisterEffect(e1)
+		tc:RegisterEffect(e1)
 	end
 end
 function s.cfilter(c,tp)
-	return c:IsFaceup() and c:GetAttribute()==ATTRIBUTE_LIGHT and c:IsSetCard(0x7f) and c:IsType(TYPE_XYZ)
+	return c:IsFaceup() and c:GetOriginalAttribute()&ATTRIBUTE_LIGHT~=0 and c:IsSetCard(0x7f) and c:IsType(TYPE_XYZ)
 		and c:IsSummonPlayer(tp) and c:IsSummonType(SUMMON_TYPE_XYZ)
 end
 function s.descon(e,tp,eg,ep,ev,re,r,rp)
