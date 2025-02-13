@@ -62,7 +62,7 @@ function s.lvtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local lvt={}
 	local pc=1
 	for i=1,12 do
-		if rg:IsExists(aux.NOT(Card.IsLevel),2,nil,i) then
+		if rg:CheckSubGroup(s.fselect,2,2,i) then
 			lvt[i]=nil
 			lvt[pc]=i
 			pc=pc+1
