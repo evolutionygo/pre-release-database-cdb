@@ -29,7 +29,7 @@ function s.initial_effect(c)
 	e4:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
 	e4:SetRange(LOCATION_MZONE)
 	e4:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_SET_AVAILABLE)
-	e4:SetTargetRange(LOCATION_ONFIELD,0)
+	e4:SetTargetRange(LOCATION_ONFIELD,LOCATION_ONFIELD)
 	e4:SetTarget(s.tgtg)
 	e4:SetValue(aux.tgoval)
 	c:RegisterEffect(e4)
@@ -55,7 +55,7 @@ function s.xyzcheck(g)
 	return g:GetClassCount(Card.GetRank)==1
 end
 function s.atkfilter(c)
-	return c:IsType(TYPE_XYZ)
+	return c:IsFaceupEx() and c:IsType(TYPE_XYZ)
 end
 function s.atkval(e,c)
 	local g=Duel.GetMatchingGroup(s.atkfilter,c:GetControler(),LOCATION_MZONE,LOCATION_GRAVE,nil)
@@ -81,6 +81,7 @@ function s.tgfilter(c)
 end
 function s.cttg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.tgfilter,tp,0,LOCATION_MZONE,1,nil) end
+	Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
 	Duel.SetOperationInfo(0,CATEGORY_CONTROL,nil,1,1-tp,LOCATION_MZONE)
 end
 function s.ctop(e,tp,eg,ep,ev,re,r,rp)
@@ -89,6 +90,7 @@ function s.ctop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.SelectMatchingCard(tp,s.tgfilter,tp,0,LOCATION_MZONE,1,1,nil)
 	local tc=g:GetFirst()
 	if tc then
+		Duel.HintSelection(g)
 		Duel.GetControl(tc,tp)
 	end
 	if c:IsRelateToEffect(e) then
