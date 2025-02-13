@@ -45,6 +45,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 			local g=Duel.SelectMatchingCard(tp,aux.TURE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,aux.ExceptThisCard(e))
 			if g:GetCount()>0 then
+				Duel.BreakEffect()
 				Duel.HintSelection(g)
 				Duel.Destroy(g,REASON_EFFECT)
 			end
