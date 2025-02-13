@@ -31,7 +31,7 @@ function s.desfilter(c)
 	return c:IsFaceup() and c:IsLevelBelow(4) and c:IsPosition(POS_FACEUP_DEFENSE)
 end
 function s.thfilter(c)
-	return not c:IsCode(id) and c:IsSetCard(0x8f) and c:IsAbleToHand()
+	return not c:IsCode(id) and c:IsSetCard(0x8f) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local b1=Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil)
