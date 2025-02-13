@@ -23,6 +23,7 @@ function s.initial_effect(c)
 	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e2:SetProperty(EFFECT_FLAG_DELAY)
 	e2:SetCondition(s.eacon)
+	e2:SetTarget(s.eatg)
 	e2:SetOperation(s.eaop)
 	c:RegisterEffect(e2)
 end
@@ -51,12 +52,17 @@ end
 function s.eacon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSetCard(0x207f) and e:GetHandler():IsSummonType(SUMMON_TYPE_XYZ)
 end
+function s.eatg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
+end
 function s.eaop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_EXTRA_ATTACK)
+		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 		e1:SetValue(1)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
 		c:RegisterEffect(e1)
