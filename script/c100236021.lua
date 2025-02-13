@@ -57,14 +57,13 @@ function s.val(c,syncard)
 end
 function s.synfilter(c,syncard,lv,g2,g3,minc,maxc,tp)
 	local tsg=c:IsHasEffect(EFFECT_HAND_SYNCHRO) and g3 or g2
-	if c then Duel.SetSelectedCard(c) end
 	return tsg:CheckSubGroup(s.goal,minc,maxc,tp,lv,syncard,c)
 end
 function s.goal(g,tp,lv,syncard,tuc)
 	if Duel.GetLocationCountFromEx(tp,tp,g,syncard)<=0 then return false end
 	if tuc:IsHasEffect(EFFECT_HAND_SYNCHRO) and g:IsExists(Card.IsLocation,2,tuc,LOCATION_HAND) then return false end
-	local ct=g:GetCount()
-	return g:GetSum(s.val,syncard)==lv
+	local lg=g:__add(tuc)
+	return lg:GetSum(s.val,syncard)==lv
 end
 function s.LSynCondition(e,c,tuner,mg,min,max)
 	if c==nil then return true end
@@ -93,11 +92,11 @@ function s.LSynCondition(e,c,tuner,mg,min,max)
 	local lv=c:GetLevel()
 	local sg=nil
 	if tuner then
-		return s.matfilter1(c,tp) and s.synfilter(tuner,c,lv,g2,g3,minc+1,maxc+1,tp)
+		return s.matfilter1(c,tp) and s.synfilter(tuner,c,lv,g2,g3,minc,maxc,tp)
 	elseif pe then
-		return s.matfilter1(pe:GetOwner(),tp) and s.synfilter(pe:GetOwner(),c,lv,g2,g3,minc+1,maxc+1,tp)
+		return s.matfilter1(pe:GetOwner(),tp) and s.synfilter(pe:GetOwner(),c,lv,g2,g3,minc,maxc,tp)
 	else
-		return g1:IsExists(s.synfilter,1,nil,c,lv,g2,g3,minc+1,maxc+1,tp)
+		return g1:IsExists(s.synfilter,1,nil,c,lv,g2,g3,minc,maxc,tp)
 	end
 end
 function s.LSynTarget(e,tp,eg,ep,ev,re,r,rp,chk,c,tuner,mg,min,max)
@@ -128,17 +127,22 @@ function s.LSynTarget(e,tp,eg,ep,ev,re,r,rp,chk,c,tuner,mg,min,max)
 	else
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SMATERIAL)
 		if not pe then
-			tuc=g1:FilterSelect(tp,s.synfilter,1,1,nil,c,lv,g2,g3,minc+1,maxc+1,tp):GetFirst()
+			local sg=g1:Filter(s.synfilter,nil,c,lv,g2,g3,minc,maxc,tp):CancelableSelect(tp,1,1,nil)
+			if sg then
+				tuc=sg:GetFirst()
+			else
+				return false
+			end
 		else
 			tuc=pe:GetOwner()
 			Group.FromCards(tuc):Select(tp,1,1,nil)
 		end
 	end
 	local tsg=tuc:IsHasEffect(EFFECT_HAND_SYNCHRO) and g3 or g2
-	if tuc then Duel.SetSelectedCard(tuc) end
 	Duel.Hint(tp,HINT_SELECTMSG,HINTMSG_SMATERIAL)
-	local g=tsg:SelectSubGroup(tp,s.goal,false,minc+1,maxc+1,tp,lv,c,tuc)
+	local g=tsg:SelectSubGroup(tp,s.goal,true,minc,maxc,tp,lv,c,tuc)
 	if g then
+		g:AddCard(tuc)
 		g:KeepAlive()
 		e:SetLabelObject(g)
 		return true
