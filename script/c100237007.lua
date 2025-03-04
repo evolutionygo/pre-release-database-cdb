@@ -1,7 +1,7 @@
 --Defense of the Temple
 local s,id,o=GetID()
 function s.initial_effect(c)
-	aux.AddCodeList(c,29762407)
+	aux.AddCodeList(c,29762407,100237008)
 	--Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_FUSION_SUMMON)
@@ -17,6 +17,7 @@ function s.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_GRAVE)
 	e2:SetCountLimit(1,id)
+	e2:SetCondition(s.thcon)
 	e2:SetCost(aux.bfgcost)
 	e2:SetTarget(s.thtg)
 	e2:SetOperation(s.thop)

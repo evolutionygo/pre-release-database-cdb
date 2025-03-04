@@ -81,17 +81,17 @@ function s.setfilter(c)
 	return c:IsSetCard(0x2c9) and c:IsType(TYPE_TRAP) and c:IsSSetable()
 end
 function s.settg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	local g=Duel.GetMatchingGroup(s.setfilter,tp,LOCATION_GRAVE,0,nil,e,tp)
+	local g=Duel.GetMatchingGroup(s.setfilter,tp,LOCATION_GRAVE,0,nil)
 	local ft=math.min((Duel.GetLocationCount(tp,LOCATION_SZONE)),3)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and ft>0
-		and g:GetCount()>0 end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EQUIP)
+	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and s.setfilter(chkc) end
+	if chk==0 then return ft>0 and g:GetCount()>0 end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SET)
 	local sg=g:SelectSubGroup(tp,aux.dncheck,false,1,ft)
 	Duel.SetTargetCard(sg)
 end
 function s.setop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
-	local tg=g:Filter(Card.IsRelateToEffect,nil,e)
+	local tg=g:Filter(aux.NecroValleyFilter(Card.IsRelateToEffect),nil,e)
 	local ft=Duel.GetLocationCount(tp,LOCATION_SZONE)
 	if #tg==0 or ft<=0 then return end
 	if #tg>ft then

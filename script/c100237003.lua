@@ -25,18 +25,18 @@ function s.initial_effect(c)
 	e2:SetOperation(s.thop)
 	c:RegisterEffect(e2)
 	--spsummon
-	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(id,1))
-	e1:SetCategory(CATEGORY_DESTROY)
-	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
-	e1:SetProperty(EFFECT_FLAG_DELAY)
-	e1:SetRange(LOCATION_MZONE)
-	e1:SetCode(EVENT_DESTROYED)
-	e2:SetCountLimit(1,id+o)
-	e1:SetCondition(s.descon)
-	e1:SetTarget(s.destg)
-	e1:SetOperation(s.desop)
-	c:RegisterEffect(e1)
+	local e3=Effect.CreateEffect(c)
+	e3:SetDescription(aux.Stringid(id,1))
+	e3:SetCategory(CATEGORY_DESTROY)
+	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e3:SetProperty(EFFECT_FLAG_DELAY)
+	e3:SetRange(LOCATION_MZONE)
+	e3:SetCode(EVENT_DESTROYED)
+	e3:SetCountLimit(1,id+o)
+	e3:SetCondition(s.descon)
+	e3:SetTarget(s.destg)
+	e3:SetOperation(s.desop)
+	c:RegisterEffect(e3)
 end
 function s.sprfilter(c)
 	return (c:IsCode(29762407) or c:IsType(TYPE_TRAP)) and c:IsAbleToDeckAsCost()
@@ -61,11 +61,19 @@ end
 function s.sprop(e,tp,eg,ep,ev,re,r,rp,c)
 	local g=e:GetLabelObject()
 	Duel.HintSelection(g)
-	Duel.SendtoDeck(g,nil,2,REASON_SPSUMMON)
+	Duel.SendtoDeck(g,nil,SEQ_DECKTOP,REASON_SPSUMMON)
+	local og=Duel.GetOperatedGroup()
+	local ct=og:FilterCount(Card.IsLocation,nil,LOCATION_DECK)
+	if ct==0 then return end
+	Duel.SortDecktop(tp,tp,ct)
+	for i=1,ct do
+		local mg=Duel.GetDecktopGroup(tp,1)
+		Duel.MoveSequence(mg:GetFirst(),1)
+	end
 	g:DeleteGroup()
 end
 function s.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsAbleToGraveAsCost() and e:GetHandler():IsDiscardable() end
+	if chk==0 then return e:GetHandler():IsAbleToGraveAsCost() end
 	Duel.SendtoGrave(e:GetHandler(),REASON_COST)
 end
 function s.thfilter(c)
@@ -86,6 +94,7 @@ end
 function s.cfilter(c,tp)
 	return c:IsPreviousControler(tp) and c:IsPreviousLocation(LOCATION_ONFIELD)
 		and c:IsReason(REASON_EFFECT) and c:IsType(TYPE_SPELL+TYPE_TRAP)
+		and c:GetPreviousTypeOnField()&TYPE_SPELL+TYPE_TRAP~=0
 end
 function s.descon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.cfilter,1,nil,tp)

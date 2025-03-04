@@ -1,6 +1,7 @@
 --Apophis the Serpent
 local s,id,o=GetID()
 function s.initial_effect(c)
+	aux.AddCodeList(c,28649820)
 	--Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
@@ -36,7 +37,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	if not Duel.IsPlayerCanSpecialSummonMonster(tp,id,0,TYPES_NORMAL_TRAP_MONSTER,1600,1800,4,RACE_REPTILE,ATTRIBUTE_EARTH) then return end
 	c:AddMonsterAttribute(TYPE_NORMAL+TYPE_TRAP)
 	local g=Duel.GetMatchingGroup(s.setfilter,tp,LOCATION_DECK,0,nil)
-	if Duel.SpecialSummon(c,0,tp,tp,true,false,POS_FACEUP) and g:GetCount()>0 and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
+	if Duel.SpecialSummon(c,0,tp,tp,true,false,POS_FACEUP)~=0 and g:GetCount()>0 and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
 		Duel.BreakEffect()
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SET)
 		local sg=g:Select(tp,1,1,nil)
