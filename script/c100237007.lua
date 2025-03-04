@@ -37,11 +37,11 @@ function s.filter2(c,e,tp,m,f,chkf)
 	aux.FCheckAdditional=nil
 	return res
 end
-function s.ffilter(c)
-	return aux.IsCodeListed(c,29762407)
+function s.ffilter(c,tp)
+	return aux.IsCodeListed(c,29762407) and c:IsControler(tp)
 end
 function s.fcheck(tp,sg,fc)
-	return not sg:IsExists(Card.IsControler,1,nil,1-tp) or sg:IsExists(s.ffilter,1,nil)
+	return not sg:IsExists(Card.IsControler,1,nil,1-tp) or sg:IsExists(s.ffilter,1,nil,tp)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
