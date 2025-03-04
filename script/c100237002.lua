@@ -36,7 +36,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function s.cfilter(c,tp)
-	return c:IsAbleToRemove(tp,POS_FACEUP,REASON_SPSUMMON) and c:IsLevelAbove(10)
+	return c:IsAbleToRemoveAsCost() and c:IsAbleToRemove(tp,POS_FACEUP,REASON_SPSUMMON) and c:IsLevelAbove(10)
 end
 function s.sprcon(e,c)
 	if c==nil then return true end
