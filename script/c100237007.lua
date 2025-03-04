@@ -37,7 +37,7 @@ function s.filter2(c,e,tp,m,f,chkf)
 	return res
 end
 function s.ffilter(c)
-	return aux.IsCodeListed(c,29762407)
+	return aux.IsCodeListed(c,29762408)
 end
 function s.fcheck(tp,sg,fc)
 	return not sg:IsExists(Card.IsControler,1,nil,1-tp) or sg:IsExists(s.ffilter,1,nil)
@@ -100,7 +100,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.thcon(e,tp,eg,ep,ev,re,r,rp,chk)
-	return Duel.IsExistingMatchingCard(aux.AND(Card.IsFaceupEx,Card.IsCode),tp,LOCATION_ONFIELD,0,1,nil,29762407)
+	return Duel.IsExistingMatchingCard(aux.AND(Card.IsFaceupEx,Card.IsCode),tp,LOCATION_ONFIELD,0,1,nil,29762408)
 end
 function s.thfilter(c)
 	return c:IsCode(100237007) and c:IsAbleToHand()
