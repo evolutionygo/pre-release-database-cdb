@@ -38,7 +38,7 @@ function s.filter2(c,e,tp,m,f,chkf)
 	return res
 end
 function s.ffilter(c)
-	return aux.IsCodeListed(c,29762408)
+	return aux.IsCodeListed(c,29762407)
 end
 function s.fcheck(tp,sg,fc)
 	return not sg:IsExists(Card.IsControler,1,nil,1-tp) or sg:IsExists(s.ffilter,1,nil)
