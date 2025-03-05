@@ -6,7 +6,7 @@ function s.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
-	e1:SetHintTiming(0,TIMING_MAIN_END)
+	e1:SetHintTiming(0,TIMING_END_PHASE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetCountLimit(1,id)
 	e1:SetTarget(s.target)
@@ -36,20 +36,22 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if not Duel.IsPlayerCanSpecialSummonMonster(tp,id,0,TYPES_NORMAL_TRAP_MONSTER,1600,1800,4,RACE_REPTILE,ATTRIBUTE_EARTH) then return end
 	c:AddMonsterAttribute(TYPE_NORMAL+TYPE_TRAP)
-	local g=Duel.GetMatchingGroup(s.setfilter,tp,LOCATION_DECK,0,nil)
-	if Duel.SpecialSummon(c,0,tp,tp,true,false,POS_FACEUP)~=0 and g:GetCount()>0 and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
-		Duel.BreakEffect()
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SET)
-		local sg=g:Select(tp,1,1,nil)
-		local tc=sg:GetFirst()
-		if Duel.SSet(tp,tc)~=0 then
-			local e1=Effect.CreateEffect(e:GetHandler())
-			e1:SetDescription(aux.Stringid(id,0))
-			e1:SetType(EFFECT_TYPE_SINGLE)
-			e1:SetCode(EFFECT_TRAP_ACT_IN_SET_TURN)
-			e1:SetProperty(EFFECT_FLAG_SET_AVAILABLE)
-			e1:SetReset(RESET_EVENT+RESETS_STANDARD)
-			tc:RegisterEffect(e1)
+	if Duel.SpecialSummon(c,0,tp,tp,true,false,POS_FACEUP)~=0 then
+		local g=Duel.GetMatchingGroup(s.setfilter,tp,LOCATION_DECK,0,nil)
+		if g:GetCount()>0 and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
+			Duel.BreakEffect()
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SET)
+			local sg=g:Select(tp,1,1,nil)
+			local tc=sg:GetFirst()
+			if Duel.SSet(tp,tc)~=0 then
+				local e1=Effect.CreateEffect(e:GetHandler())
+				e1:SetDescription(aux.Stringid(id,0))
+				e1:SetType(EFFECT_TYPE_SINGLE)
+				e1:SetCode(EFFECT_TRAP_ACT_IN_SET_TURN)
+				e1:SetProperty(EFFECT_FLAG_SET_AVAILABLE)
+				e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+				tc:RegisterEffect(e1)
+			end
 		end
 	end
 end

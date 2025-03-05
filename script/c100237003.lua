@@ -24,12 +24,12 @@ function s.initial_effect(c)
 	e2:SetTarget(s.thtg)
 	e2:SetOperation(s.thop)
 	c:RegisterEffect(e2)
-	--spsummon
+	--destroy
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,1))
 	e3:SetCategory(CATEGORY_DESTROY)
 	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
-	e3:SetProperty(EFFECT_FLAG_DELAY)
+	e3:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DELAY)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetCode(EVENT_DESTROYED)
 	e3:SetCountLimit(1,id+o)
@@ -60,16 +60,9 @@ function s.sprtg(e,tp,eg,ep,ev,re,r,rp,chk,c)
 end
 function s.sprop(e,tp,eg,ep,ev,re,r,rp,c)
 	local g=e:GetLabelObject()
+	if not g or g:GetCount()~=2 then return end
 	Duel.HintSelection(g)
-	Duel.SendtoDeck(g,nil,SEQ_DECKTOP,REASON_SPSUMMON)
-	local og=Duel.GetOperatedGroup()
-	local ct=og:FilterCount(Card.IsLocation,nil,LOCATION_DECK)
-	if ct==0 then return end
-	Duel.SortDecktop(tp,tp,ct)
-	for i=1,ct do
-		local mg=Duel.GetDecktopGroup(tp,1)
-		Duel.MoveSequence(mg:GetFirst(),1)
-	end
+	aux.PlaceCardsOnDeckBottom(tp,g,REASON_SPSUMMON)
 	g:DeleteGroup()
 end
 function s.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -93,8 +86,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.cfilter(c,tp)
 	return c:IsPreviousControler(tp) and c:IsPreviousLocation(LOCATION_ONFIELD)
-		and c:IsReason(REASON_EFFECT) and c:IsType(TYPE_SPELL+TYPE_TRAP)
-		and c:GetPreviousTypeOnField()&TYPE_SPELL+TYPE_TRAP~=0
+		and c:IsReason(REASON_EFFECT) and c:GetPreviousTypeOnField()&TYPE_SPELL+TYPE_TRAP~=0
 end
 function s.descon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.cfilter,1,nil,tp)
