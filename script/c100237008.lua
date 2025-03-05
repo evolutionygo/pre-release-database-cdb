@@ -1,7 +1,7 @@
 --Dangers of the Divine
 local s,id,o=GetID()
 function s.initial_effect(c)
-	aux.AddCodeList(c,29762407,10000010)
+	aux.AddCodeList(c,10000010)
 	--Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
