@@ -1,4 +1,4 @@
---暗黑栗子球
+--ダークリボー
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--indestructable
