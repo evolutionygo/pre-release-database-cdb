@@ -60,7 +60,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local sc=e:GetLabelObject()
 	local g=Group.FromCards(c,sc)
-	local fg=g:Filter(Card.IsRelateToEffect,nil,e)
+	local fg=g:Filter(Card.IsRelateToChain,nil)
 	if Duel.IsPlayerAffectedByEffect(tp,59822133) then return end
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<2 then return end
 	if fg:GetCount()~=2 then return end
@@ -73,12 +73,12 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 			e1:SetValue(s.xyzlimit)
 			e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 			tc:RegisterEffect(e1,true)
+			tc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id,3))
 		end
 	end
 end
 function s.xyzlimit(e,c)
-	if not c then return false end
-	return c:IsAttribute(ATTRIBUTE_LIGHT)
+	return c and c:IsAttribute(ATTRIBUTE_LIGHT)
 end
 function s.thfilter(c)
 	return c:IsSetCard(0x2cb) and c:IsType(TYPE_MONSTER) and not c:IsRace(RACE_AQUA) and c:IsAbleToHand()
