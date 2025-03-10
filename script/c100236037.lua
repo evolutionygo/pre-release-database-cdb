@@ -53,23 +53,19 @@ function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
 		Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,1,1-tp,LOCATION_HAND)
 	end
 end
+function s.gcheck(g)
+	return g:FilterCount(Card.IsLocation,nil,LOCATION_ONFIELD)<=1
+		and g:FilterCount(Card.IsLocation,nil,LOCATION_GRAVE)<=1
+end
 function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetTurnPlayer()==tp then
 		local g1=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD,nil)
 		local g2=Duel.GetMatchingGroup(aux.NecroValleyFilter(Card.IsAbleToRemove),tp,0,LOCATION_GRAVE,nil)
-		local sg=Group.CreateGroup()
-		if g1:GetCount()>0 and (g2:GetCount()==0 or Duel.SelectYesNo(tp,aux.Stringid(id,1))) then
-			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-			local sg1=g1:Select(tp,1,1,nil)
-			Duel.HintSelection(sg1)
-			sg:Merge(sg1)
-		end
-		if g2:GetCount()>0 and (sg:GetCount()==0 or Duel.SelectYesNo(tp,aux.Stringid(id,2))) then
-			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-			local sg2=g2:Select(tp,1,1,nil)
-			Duel.HintSelection(sg2)
-			sg:Merge(sg2)
-		end
+		g1:Merge(g2)
+		aux.GCheckAdditional=s.gcheck
+		local sg=g1:SelectSubGroup(tp,aux.TRUE,false,1,2)
+		aux.GCheckAdditional=nil
+		Duel.HintSelection(sg)
 		Duel.Remove(sg,POS_FACEUP,REASON_EFFECT)
 	else
 		local g0=Duel.GetFieldGroup(tp,0,LOCATION_HAND)
