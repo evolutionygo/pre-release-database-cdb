@@ -76,6 +76,10 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 end
+function s.xyzlimit(e,c)
+	if not c then return false end
+	return c:IsAttribute(ATTRIBUTE_LIGHT)
+end
 function s.thfilter(c)
 	return c:IsSetCard(0x2cb) and c:IsType(TYPE_MONSTER) and not c:IsRace(RACE_AQUA) and c:IsAbleToHand()
 end
