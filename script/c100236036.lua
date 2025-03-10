@@ -36,7 +36,7 @@ function s.initial_effect(c)
 	e4:SetCondition(s.atkcon)
 	e4:SetOperation(s.atkop)
 	c:RegisterEffect(e4)
-	--Special Summon
+	--remove
 	local e5=Effect.CreateEffect(c)
 	e5:SetDescription(aux.Stringid(id,1))
 	e5:SetCategory(CATEGORY_REMOVE)
