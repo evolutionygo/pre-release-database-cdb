@@ -10,16 +10,16 @@ function s.initial_effect(c)
 	e1:SetCondition(s.ntcon)
 	c:RegisterEffect(e1)
 	--spsummon
-	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(id,1))
-	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
-	e1:SetType(EFFECT_TYPE_IGNITION)
-	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e1:SetRange(LOCATION_HAND)
-	e1:SetCountLimit(1,id)
-	e1:SetTarget(s.sptg)
-	e1:SetOperation(s.spop)
-	c:RegisterEffect(e1)
+	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(aux.Stringid(id,1))
+	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e2:SetType(EFFECT_TYPE_IGNITION)
+	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e2:SetRange(LOCATION_HAND)
+	e2:SetCountLimit(1,id)
+	e2:SetTarget(s.sptg)
+	e2:SetOperation(s.spop)
+	c:RegisterEffect(e2)
 	--tohand
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,2))
@@ -37,7 +37,7 @@ function s.ntcon(e,c,minc)
 		and Duel.IsExistingMatchingCard(aux.TRUE,c:GetControler(),0,LOCATION_HAND,2,nil)
 end
 function s.spfilter(c,e,tp)
-	return c:IsSetCard(0x2cb) and c:IsLevel(5) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsSetCard(0x2cb) and c:IsLevel(5) and not c:IsRace(RACE_PYRO) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()
@@ -54,28 +54,29 @@ end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if c:IsRelateToEffect(e) and tc:IsRelateToEffect(e) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and tc:IsCanBeSpecialSummoned(e,0,tp,false,false)
-		and not Duel.IsPlayerAffectedByEffect(tp,s) and Duel.GetLocationCount(tp,LOCATION_MZONE)>1 then
+	if c:IsRelateToChain() and tc:IsRelateToChain() and aux.NecroValleyFilter()(tc)
+		and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and tc:IsCanBeSpecialSummoned(e,0,tp,false,false)
+		and not Duel.IsPlayerAffectedByEffect(tp,59822133) and Duel.GetLocationCount(tp,LOCATION_MZONE)>1 then
 		local g=Group.FromCards(c,tc)
 		if Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)~=0 then
-			for tc in aux.Next(g) do
+			for sc in aux.Next(g) do
 				local e1=Effect.CreateEffect(c)
 				e1:SetType(EFFECT_TYPE_SINGLE)
 				e1:SetCode(EFFECT_CANNOT_BE_XYZ_MATERIAL)
 				e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 				e1:SetValue(s.xyzlimit)
 				e1:SetReset(RESET_EVENT+RESETS_STANDARD)
-				tc:RegisterEffect(e1,true)
+				sc:RegisterEffect(e1,true)
+				sc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id,3))
 			end
 		end
 	end
 end
 function s.xyzlimit(e,c)
-	if not c then return false end
-	return c:IsAttribute(ATTRIBUTE_LIGHT)
+	return c and c:IsAttribute(ATTRIBUTE_LIGHT)
 end
 function s.thfilter(c)
-	return c:IsSetCard(0x2cb) and c:IsType(TYPE_SPELL+TYPE_TRAP) and not c:IsRace(RACE_AQUA) and c:IsAbleToHand()
+	return c:IsSetCard(0x2cb) and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToHand()
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil) end
