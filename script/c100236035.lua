@@ -4,7 +4,7 @@ function s.initial_effect(c)
 	--xyz summon
 	aux.AddXyzProcedure(c,nil,5,2)
 	c:EnableReviveLimit()
-	--Search
+	--search
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
@@ -15,7 +15,7 @@ function s.initial_effect(c)
 	e1:SetTarget(s.thtg)
 	e1:SetOperation(s.thop)
 	c:RegisterEffect(e1)
-	--negate activate
+	--negate
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetCategory(CATEGORY_DISABLE)
@@ -31,7 +31,6 @@ function s.initial_effect(c)
 	Duel.AddCustomActivityCounter(id,ACTIVITY_CHAIN,s.chainfilter)
 end
 function s.chainfilter(re,tp,cid)
-	local ph=Duel.GetCurrentPhase()
 	return not re:IsActiveType(TYPE_MONSTER)
 end
 function s.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -55,7 +54,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	if tc and Duel.SendtoHand(tc,nil,REASON_EFFECT)~=0 then
 		Duel.ConfirmCards(1-tp,g)
 		if Duel.IsExistingMatchingCard(aux.NecroValleyFilter(s.setfilter),tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil)
-			and Duel.GetCustomActivityCount(id,1-tp,ACTIVITY_CHAIN)~=0
+			and Duel.GetCustomActivityCount(id,1-tp,ACTIVITY_CHAIN)>0
 			and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 			Duel.BreakEffect()
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SET)
