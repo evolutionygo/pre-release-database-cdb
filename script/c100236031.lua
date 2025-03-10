@@ -38,7 +38,6 @@ function s.initial_effect(c)
 	Duel.AddCustomActivityCounter(id,ACTIVITY_CHAIN,s.chainfilter)
 end
 function s.chainfilter(re,tp,cid)
-	local ph=Duel.GetCurrentPhase()
 	local loc=Duel.GetChainInfo(cid,CHAININFO_TRIGGERING_LOCATION)
 	if re:IsActiveType(TYPE_MONSTER) and loc&(LOCATION_HAND|LOCATION_GRAVE)>0
 		and Duel.IsMainPhase() then
