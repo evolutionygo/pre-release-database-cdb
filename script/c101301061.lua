@@ -50,6 +50,7 @@ function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return Duel.IsExistingTarget(s.tgfilter,tp,0,LOCATION_MZONE,1,nil,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
 	local g=Duel.SelectTarget(tp,s.tgfilter,tp,0,LOCATION_MZONE,1,1,nil,tp)
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK+LOCATION_GRAVE)
 end
 function s.sumfilter(c)
 	return c:IsSummonable(true,nil) and c:IsCode(4929256,9748752,26205777,51945556,60229110,73125233)
@@ -59,13 +60,15 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	if not tc or not tc:IsRelateToChain() or not tc:IsType(TYPE_MONSTER) or not tc:IsFaceup() then return end
 	local att=tc:GetAttribute()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,1,nil,att)
+	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.thfilter),tp,LOCATION_DECK+LOCATION_GRAVE,0,1,1,nil,att)
 	if g:GetCount()>0 and Duel.SendtoHand(g,nil,REASON_EFFECT)>0 then
+		Duel.ConfirmCards(1-tp,g)
 		local sumg=Duel.GetMatchingGroup(s.sumfilter,tp,LOCATION_HAND+LOCATION_MZONE,0,nil)
 		if sumg:GetCount()>0 and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SUMMON)
 			local sc=sumg:Select(tp,1,1,nil):GetFirst()
 			if sc then
+				Duel.BreakEffect()
 				Duel.ShuffleHand(tp)
 				Duel.Summon(tp,sc,true,nil)
 			end
