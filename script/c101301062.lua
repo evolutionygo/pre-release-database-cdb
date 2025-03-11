@@ -30,7 +30,7 @@ function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.filter(c)
 	return (c:IsAttackAbove(2400) or c:IsAttack(800)) and c:IsDefense(1000) and c:IsType(TYPE_MONSTER)
-		and (c:IsAbleToHand() or c:IsAbleToGrave())
+		and c:IsAbleToHand() and c:IsAbleToGrave()
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_DECK,0,3,nil) end

@@ -37,12 +37,12 @@ function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	local b1=Duel.GetFlagEffect(tp,id+1)==0 and Duel.GetFieldGroupCount(tp,LOCATION_MZONE,LOCATION_MZONE)>0
-	local b2=Duel.GetFlagEffect(tp,id+2)==0 and Duel.GetFieldGroupCount(tp,LOCATION_SZONE,LOCATION_SZONE)>0
-	local b3=Duel.GetFlagEffect(tp,id+3)==0 and Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,0,LOCATION_HAND,1,nil,REASON_EFFECT)
-	local b4=Duel.GetFlagEffect(tp,id+4)==0 and Duel.IsExistingMatchingCard(Card.IsFacedown,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil)
-	local b5=Duel.GetFlagEffect(tp,id+5)==0 and Duel.IsExistingMatchingCard(Card.IsAbleToDeck,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil)
-	local b6=Duel.GetFlagEffect(tp,id+6)==0 and Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil)
+	local b1=Duel.GetFlagEffect(tp,id+o)==0 and Duel.GetFieldGroupCount(tp,LOCATION_MZONE,LOCATION_MZONE)>0
+	local b2=Duel.GetFlagEffect(tp,id+o*2)==0 and Duel.IsExistingMatchingCard(Card.IsType,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil,TYPE_SPELL+TYPE_TRAP)
+	local b3=Duel.GetFlagEffect(tp,id+o*3)==0 and Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,0,LOCATION_HAND,1,nil,REASON_EFFECT)
+	local b4=Duel.GetFlagEffect(tp,id+o*4)==0 and Duel.IsExistingMatchingCard(Card.IsFacedown,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil)
+	local b5=Duel.GetFlagEffect(tp,id+o*5)==0 and Duel.IsExistingMatchingCard(Card.IsAbleToDeck,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil)
+	local b6=Duel.GetFlagEffect(tp,id+o*6)==0 and Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil)
 	if chk==0 then return e:GetHandler():GetFlagEffect(id)==0
 		and (b1 or b2 or b3 or b4 or b5 or b6) end
 	e:GetHandler():RegisterFlagEffect(id,RESET_CHAIN,0,1)
@@ -78,7 +78,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 		)
 	end
 	e:SetLabel(op)
-	Duel.RegisterFlagEffect(tp,id+op,RESET_PHASE+PHASE_END,0,1)
+	Duel.RegisterFlagEffect(tp,id+o*op,RESET_PHASE+PHASE_END,0,1)
 	if op==1 then
 		e:SetCategory(CATEGORY_DESTROY)
 		local g=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
