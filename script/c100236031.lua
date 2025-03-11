@@ -35,32 +35,11 @@ function s.initial_effect(c)
 	local e4=e3:Clone()
 	e4:SetCode(EVENT_SPSUMMON_SUCCESS)
 	c:RegisterEffect(e4)
-	if not s.global_check then
-		s.global_check=true
-		local ge1=Effect.CreateEffect(c)
-		ge1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		ge1:SetCode(EVENT_CHAINING)
-		ge1:SetOperation(s.checkop1)
-		Duel.RegisterEffect(ge1,0)
-		local ge2=ge1:Clone()
-		ge2:SetCode(EVENT_CHAIN_NEGATED)
-		ge2:SetOperation(s.checkop2)
-		Duel.RegisterEffect(ge2,0)
-	end
+	Duel.AddCustomActivityCounter(id,ACTIVITY_CHAIN,s.chainfilter)
 end
-function s.checkop1(e,tp,eg,ep,ev,re,r,rp)
-	local loc=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_LOCATION)
-	if re:IsActiveType(TYPE_MONSTER) and loc&(LOCATION_HAND|LOCATION_GRAVE)>0
-		and Duel.IsMainPhase() then
-		Duel.RegisterFlagEffect(ep,id,RESET_PHASE+PHASE_MAIN1+PHASE_MAIN2,0,1)
-	end
-end
-function s.checkop2(e,tp,eg,ep,ev,re,r,rp)
-	local loc=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_LOCATION)
-	if re:IsActiveType(TYPE_MONSTER) and loc&(LOCATION_HAND|LOCATION_GRAVE)>0
-		and Duel.IsMainPhase() then
-		Duel.RegisterFlagEffect(ep,id+o,RESET_PHASE+PHASE_MAIN1+PHASE_MAIN2,0,1)
-	end
+function s.chainfilter(re,tp,cid)
+	local loc=Duel.GetChainInfo(cid,CHAININFO_TRIGGERING_LOCATION)
+	return not (re:IsActiveType(TYPE_MONSTER) and loc&(LOCATION_HAND|LOCATION_GRAVE)>0)
 end
 function s.ntcon(e,c,minc)
 	if c==nil then return true end
@@ -68,7 +47,7 @@ function s.ntcon(e,c,minc)
 		and Duel.IsExistingMatchingCard(aux.TRUE,c:GetControler(),0,LOCATION_HAND,2,nil)
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetFlagEffect(1-tp,id)>Duel.GetFlagEffect(1-tp,id+o)
+	return Duel.GetCustomActivityCount(id,1-tp,ACTIVITY_CHAIN)>0 and Duel.IsMainPhase()
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
