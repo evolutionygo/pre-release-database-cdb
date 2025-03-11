@@ -90,7 +90,7 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if not c:IsRelateToEffect(e) then return end
+	if not c:IsRelateToChain() or not aux.NecroValleyFilter()(c) then return end
 	local b1=c:IsAbleToHand()
 	local b2=Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 	local op=aux.SelectFromOptions(tp,{b1,1190,1},{b2,1152,2})
