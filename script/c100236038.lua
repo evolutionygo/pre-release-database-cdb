@@ -33,12 +33,11 @@ end
 function s.checkop(e,tp,eg,ep,ev,re,r,rp)
 	local at=Duel.GetAttackTarget()
 	local ar=Duel.GetAttacker()
-	if at then
-		if at:IsSetCard(0x2cb) then
-			Duel.RegisterFlagEffect(at:GetControler(),id,RESET_PHASE+PHASE_END,0,1)
-		elseif ar and ar:IsSetCard(0x2cb) then
-			Duel.RegisterFlagEffect(ar:GetControler(),id,RESET_PHASE+PHASE_END,0,1)
-		end
+	if at and at:IsSetCard(0x2cb) then
+		Duel.RegisterFlagEffect(at:GetControler(),id,RESET_PHASE+PHASE_END,0,1)
+	end
+	if ar and ar:IsSetCard(0x2cb) then
+		Duel.RegisterFlagEffect(ar:GetControler(),id,RESET_PHASE+PHASE_END,0,1)
 	end
 end
 function s.filter1(c,e,tp)
