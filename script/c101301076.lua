@@ -12,16 +12,17 @@ function s.initial_effect(c)
 	e2:SetCategory(CATEGORY_DESTROY|CATEGORY_REMOVE|CATEGORY_TODECK|CATEGORY_HANDES)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e2:SetRange(LOCATION_SZONE)
-	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
-	e2:SetProperty(EFFECT_FLAG_DELAY)
+	e2:SetCode(EVENT_CUSTOM+id)
+	e2:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_ACTIVATE_CONDITION)
 	e2:SetCondition(s.condition)
 	e2:SetCost(s.cost)
 	e2:SetTarget(s.target)
 	e2:SetOperation(s.operation)
 	c:RegisterEffect(e2)
+	aux.RegisterMergedDelayedEvent(c,id,EVENT_SPSUMMON_SUCCESS)
 end
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(Card.IsSummonPlayer,1,e:GetHandler(),1-tp)
+	return eg:IsExists(Card.IsSummonPlayer,1,e:GetHandler(),1-tp) and Duel.IsExistingMatchingCard(s.cfilter,e:GetHandlerPlayer(),LOCATION_MZONE,0,1,nil)
 end
 function s.cfilter(c)
 	return c:IsSummonType(SUMMON_TYPE_ADVANCE)
@@ -42,8 +43,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local b4=Duel.GetFlagEffect(tp,id+4)==0 and Duel.IsExistingMatchingCard(Card.IsFacedown,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil)
 	local b5=Duel.GetFlagEffect(tp,id+5)==0 and Duel.IsExistingMatchingCard(Card.IsAbleToDeck,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil)
 	local b6=Duel.GetFlagEffect(tp,id+6)==0 and Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_MZONE,0,1,nil)
-		and e:GetHandler():GetFlagEffect(id)==0
+	if chk==0 then return e:GetHandler():GetFlagEffect(id)==0
 		and (b1 or b2 or b3 or b4 or b5 or b6) end
 	e:GetHandler():RegisterFlagEffect(id,RESET_CHAIN,0,1)
 	local op=0
