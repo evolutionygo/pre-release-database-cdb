@@ -35,7 +35,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 function s.filter(c)
-	return c:IsSetCard(0xbe) and (c:IsType(TYPE_SPELL+TYPE_TRAP) or c:IsType(TYPE_MONSTER) and c:GetAttack()==2800 and c:GetDefense()==1000)
+	return c:IsSetCard(0xbe) and (c:IsType(TYPE_SPELL+TYPE_TRAP) or c:IsType(TYPE_MONSTER) and c:IsAttack(2800) and c:IsDefense(1000))
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil) end
@@ -50,27 +50,36 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.cttg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
+	local att=0
+	local mg=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
+	for tc in aux.Next(mg) do
+		att=att|(ATTRIBUTE_ALL&~tc:GetAttribute())
+	end
+	if chk==0 then return att>0 end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATTRIBUTE)
-	local att=Duel.AnnounceAttribute(tp,1,ATTRIBUTE_ALL)
-	e:SetLabel(att)
+	local aatt=Duel.AnnounceAttribute(tp,1,att)
+	e:SetLabel(aatt)
 end
 function s.ctop(e,tp,eg,ep,ev,re,r,rp)
+	local att=e:GetLabel()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
-	local tc=Duel.SelectMatchingCard(tp,Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil):GetFirst()
-	if tc then
+	local g=Duel.SelectMatchingCard(tp,aux.AND(Card.IsFaceup,Card.IsNonAttribute),tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil,att)
+	if g:GetCount()>0 then
+		Duel.HintSelection(g)
+		local tc=g:GetFirst()
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 		e1:SetCode(EFFECT_CHANGE_ATTRIBUTE)
-		e1:SetValue(e:GetLabel())
+		e1:SetValue(att)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 		tc:RegisterEffect(e1)
 	end
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	local tc=eg:GetFirst()
-	return tc:IsSummonPlayer(tp) and tc:IsSummonType(SUMMON_TYPE_ADVANCE) 
-		and tc:GetAttack()>=2400 and tc:GetDefense()==1000
+	return tc:IsSummonPlayer(tp) and tc:IsSummonType(SUMMON_TYPE_ADVANCE)
+		and tc:IsAttackAbove(2400) and tc:IsDefense(1000)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
@@ -82,8 +91,8 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if not c:IsRelateToEffect(e) then return end
 	local b1=c:IsAbleToHand()
-	local b2=Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and c:IsCanBeSpecialSummoned(e,0,tp,false,false)   
-	local op=aux.SelectFromOptions(tp,{b1,1190},{b2,1152})
+	local b2=Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	local op=aux.SelectFromOptions(tp,{b1,1190,1},{b2,1152,2})
 	if op==1 then
 		Duel.SendtoHand(c,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,c)
