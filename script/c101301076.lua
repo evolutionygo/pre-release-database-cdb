@@ -85,7 +85,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 		Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
 	elseif op==2 then
 		e:SetCategory(CATEGORY_DESTROY)
-		local g=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_SZONE,LOCATION_SZONE,nil)
+		local g=Duel.GetMatchingGroup(Card.IsType,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil,TYPE_SPELL+TYPE_TRAP)
 		Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
 	elseif op==3 then
 		e:SetCategory(CATEGORY_HANDES)
