@@ -8,15 +8,20 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 	--trigger
 	local e2=Effect.CreateEffect(c)
-	e2:SetCategory(CATEGORY_DESTROY+CATEGORY_REMOVE+CATEGORY_TODECK+CATEGORY_HANDES)
+	e2:SetDescription(aux.Stringid(id,0))
+	e2:SetCategory(CATEGORY_DESTROY|CATEGORY_REMOVE|CATEGORY_TODECK|CATEGORY_HANDES)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
-	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e2:SetRange(LOCATION_SZONE)
+	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e2:SetProperty(EFFECT_FLAG_DELAY)
+	e2:SetCondition(s.condition)
 	e2:SetCost(s.cost)
 	e2:SetTarget(s.target)
 	e2:SetOperation(s.operation)
 	c:RegisterEffect(e2)
+end
+function s.condition(e,tp,eg,ep,ev,re,r,rp)
+	return eg:IsExists(Card.IsSummonPlayer,1,e:GetHandler(),1-tp)
 end
 function s.cfilter(c)
 	return c:IsSummonType(SUMMON_TYPE_ADVANCE)
@@ -37,8 +42,10 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local b4=Duel.GetFlagEffect(tp,id+4)==0 and Duel.IsExistingMatchingCard(Card.IsFacedown,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil)
 	local b5=Duel.GetFlagEffect(tp,id+5)==0 and Duel.IsExistingMatchingCard(Card.IsAbleToDeck,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil)
 	local b6=Duel.GetFlagEffect(tp,id+6)==0 and Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_MZONE,0,1,nil) and
-		(b1 or b2 or b3 or b4 or b5 or b6) end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_MZONE,0,1,nil)
+		and e:GetHandler():GetFlagEffect(id)==0
+		and (b1 or b2 or b3 or b4 or b5 or b6) end
+	e:GetHandler():RegisterFlagEffect(id,RESET_CHAIN,0,1)
 	local op=0
 	if b1 and b2 and b3 and b4 and b5 and b6 then
 		local page=0
@@ -72,6 +79,30 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 	e:SetLabel(op)
 	Duel.RegisterFlagEffect(tp,id+op,RESET_PHASE+PHASE_END,0,1)
+	if op==1 then
+		e:SetCategory(CATEGORY_DESTROY)
+		local g=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
+		Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
+	elseif op==2 then
+		e:SetCategory(CATEGORY_DESTROY)
+		local g=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_SZONE,LOCATION_SZONE,nil)
+		Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
+	elseif op==3 then
+		e:SetCategory(CATEGORY_HANDES)
+		Duel.SetOperationInfo(0,CATEGORY_HANDES,nil,0,1-tp,1)
+	elseif op==4 then
+		e:SetCategory(CATEGORY_DESTROY)
+		local g=Duel.GetMatchingGroup(Card.IsFacedown,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)
+		Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
+	elseif op==5 then
+		e:SetCategory(CATEGORY_TODECK)
+		local g=Duel.GetMatchingGroup(Card.IsAbleToDeck,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)
+		Duel.SetOperationInfo(0,CATEGORY_TODECK,g,1,0,0)
+	elseif op==6 then
+		e:SetCategory(CATEGORY_REMOVE)
+		local g=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)
+		Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,1,0,0)
+	end
 end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	local opt=e:GetLabel()
