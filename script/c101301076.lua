@@ -48,13 +48,13 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 				{b1,aux.Stringid(id,1),1},
 				{b2,aux.Stringid(id,2),2},
 				{b3,aux.Stringid(id,3),3},
-				{true,1345},7)
+				{true,1345,7})
 			else
 				op=aux.SelectFromOptions(tp,
 				{b4,aux.Stringid(id,4),4},
 				{b5,aux.Stringid(id,5),5},
 				{b6,aux.Stringid(id,6),6},
-				{true,1360},7)
+				{true,1360,7})
 			end
 			if op==7 then
 				page=1-page
