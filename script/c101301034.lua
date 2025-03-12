@@ -57,23 +57,21 @@ end
 function s.rmcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_FUSION)
 end
-function s.rmcost(e,tp,eg,ep,ev,re,r,rp)
-	if chk==0 then return Duel.CheckLPCost(tp,1000) end
-	Duel.PayLPCost(tp,1000)
+function s.rmcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.CheckLPCost(tp,2000) end
+	Duel.PayLPCost(tp,2000)
 end
 function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	local c=e:GetHandler()
 	if chk==0 then return Duel.IsExistingMatchingCard(aux.AND(Card.IsFaceup,Card.IsAbleToRemove),tp,0,LOCATION_ONFIELD,1,nil) end
 	local g=Duel.GetMatchingGroup(aux.AND(Card.IsFaceup,Card.IsAbleToRemove),tp,0,LOCATION_ONFIELD,nil)
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,#g,0,0)
 end
 function s.rmop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
 	local g=Duel.GetMatchingGroup(aux.AND(Card.IsFaceup,Card.IsAbleToRemove),tp,0,LOCATION_ONFIELD,nil)
 	Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
 end
 function s.spfilter(c,e,tp)
-	return c:IsType(TYPE_FUSION) and c:IsRace(RACE_PSYCHO) and c:IsLevelBelow(10) and c:CheckFusionMaterial()
+	return c:IsType(TYPE_FUSION) and c:IsRace(RACE_PSYCHO) and c:IsLevel(10) and c:CheckFusionMaterial()
 		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) and Duel.GetLocationCountFromEx(tp,tp,nil,c)>0
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)

@@ -39,7 +39,7 @@ end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if aux.NecroValleyFilter()(tc) and tc:IsRelateToEffect(e) and aux.NecroValleyFilter()(tc)
-		and Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
+		and Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)~=0
 		and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
 		Duel.BreakEffect()
 		local e1=Effect.CreateEffect(e:GetHandler())

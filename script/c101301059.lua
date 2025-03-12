@@ -27,7 +27,7 @@ function s.spfilter(c,e,tp,ec)
 		or c:IsLocation(LOCATION_EXTRA) and Duel.GetLocationCountFromEx(tp,tp,ec,c)>0)
 end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetCustomActivityCount(45584727,tp,ACTIVITY_SPSUMMON)==0
+	if chk==0 then return Duel.GetCustomActivityCount(id,tp,ACTIVITY_SPSUMMON)==0
 		and Duel.CheckReleaseGroup(tp,s.costfilter,1,nil,e,tp) end
 	local g=Duel.SelectReleaseGroup(tp,s.costfilter,1,1,nil,e,tp)
 	e:SetLabel(g:GetFirst():GetOriginalLevel())
@@ -50,7 +50,6 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK+LOCATION_EXTRA)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_DECK+LOCATION_EXTRA,0,1,1,nil,e,tp)
 	local tc=g:GetFirst()
@@ -59,7 +58,6 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		local lv=0
 		if tc:GetOriginalLevel()>e:GetLabel() then lv=tc:GetOriginalLevel()-e:GetLabel()
 		else lv=e:GetLabel()-tc:GetOriginalLevel() end
-		Duel.BreakEffect()
 		Duel.SetLP(tp,Duel.GetLP(tp)-lv*1000)
 	end
 end
