@@ -6,6 +6,7 @@ function s.initial_effect(c)
 	e1:SetCategory(CATEGORY_REMOVE+CATEGORY_SPECIAL_SUMMON+CATEGORY_FUSION_SUMMON)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
+	e1:SetHintTiming(0,TIMING_MAIN_END)
 	e1:SetCountLimit(1,id)
 	e1:SetCondition(s.condition)
 	e1:SetTarget(s.target)
@@ -17,7 +18,7 @@ function s.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_DESTROYED)
 	e2:SetRange(LOCATION_GRAVE)
-	e2:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
+	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
 	e2:SetCountLimit(1,id+o)
 	e2:SetCondition(s.spcon)
 	e2:SetCost(aux.bfgcost)
@@ -26,10 +27,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetCurrentPhase()==PHASE_MAIN1 or Duel.GetCurrentPhase()==PHASE_MAIN2
-end
-function s.filter0(c)
-	return c:IsOnField() and c:IsAbleToRemove()
+	return Duel.IsMainPhase()
 end
 function s.filter1(c,e)
 	return c:IsOnField() and c:IsAbleToRemove() and not c:IsImmuneToEffect(e)
@@ -44,7 +42,7 @@ end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		local chkf=tp
-		local mg1=Duel.GetFusionMaterial(tp):Filter(Card.IsRace,nil,RACE_PSYCHO):Filter(s.filter0,nil)
+		local mg1=Duel.GetFusionMaterial(tp):Filter(Card.IsRace,nil,RACE_PSYCHO):Filter(s.filter1,nil,e)
 		local mg2=Duel.GetMatchingGroup(s.filter3,tp,LOCATION_GRAVE,0,nil):Filter(Card.IsRace,nil,RACE_PSYCHO)
 		mg1:Merge(mg2)
 		local res=Duel.IsExistingMatchingCard(s.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,mg1,nil,chkf)
@@ -59,13 +57,13 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 		end
 		return res
 	end
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,1,tp,LOCATION_ONFIELD+LOCATION_GRAVE)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local chkf=tp
 	local mg1=Duel.GetFusionMaterial(tp):Filter(Card.IsRace,nil,RACE_PSYCHO):Filter(s.filter1,nil,e)
-	local mg2=Duel.GetMatchingGroup(s.filter3,tp,LOCATION_GRAVE,0,nil):Filter(Card.IsRace,nil,RACE_PSYCHO)
+	local mg2=Duel.GetMatchingGroup(aux.NecroValleyFilter(s.filter3),tp,LOCATION_GRAVE,0,nil):Filter(Card.IsRace,nil,RACE_PSYCHO)
 	mg1:Merge(mg2)
 	local sg1=Duel.GetMatchingGroup(s.filter2,tp,LOCATION_EXTRA,0,nil,e,tp,mg1,nil,chkf)
 	local mg3=nil
@@ -83,13 +81,13 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local tg=sg:Select(tp,1,1,nil)
 		local tc=tg:GetFirst()
-		if sg1:IsContains(tc) and (sg2==nil or not sg2:IsContains(tc) or not Duel.SelectYesNo(tp,ce:GetDescription())) then
+		if sg1:IsContains(tc) and (sg2==nil or not sg2:IsContains(tc) or ce and not Duel.SelectYesNo(tp,ce:GetDescription())) then
 			local mat1=Duel.SelectFusionMaterial(tp,tc,mg1,nil,chkf)
 			tc:SetMaterial(mat1)
 			Duel.Remove(mat1,POS_FACEUP,REASON_EFFECT+REASON_MATERIAL+REASON_FUSION)
 			Duel.BreakEffect()
 			Duel.SpecialSummon(tc,SUMMON_TYPE_FUSION,tp,tp,false,false,POS_FACEUP)
-		else
+		elseif ce then
 			local mat2=Duel.SelectFusionMaterial(tp,tc,mg3,nil,chkf)
 			local fop=ce:GetOperation()
 			fop(ce,e,tp,tc,mat2)
@@ -98,8 +96,8 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.cfilter(c,tp)
-	return c:IsSummonLocation(LOCATION_EXTRA) and c:GetPreviousRaceOnField()&RACE_PSYCHO~=0 and c:IsReason(REASON_BATTLE+REASON_EFFECT) and c:IsPreviousLocation(LOCATION_MZONE)
-		and c:IsPreviousControler(tp) and c:IsPreviousPosition(POS_FACEUP)
+	return c:IsSummonLocation(LOCATION_EXTRA) and c:GetPreviousRaceOnField()&RACE_PSYCHO~=0 and c:IsReason(REASON_BATTLE+REASON_EFFECT)
+		and c:IsPreviousLocation(LOCATION_MZONE) and c:IsPreviousControler(tp) and c:IsPreviousPosition(POS_FACEUP)
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	if eg:IsContains(e:GetHandler()) then return false end
@@ -118,7 +116,7 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
+	if tc:IsRelateToChain() then
 		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
 	end
 end
