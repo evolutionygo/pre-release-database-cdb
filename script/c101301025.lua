@@ -39,7 +39,7 @@ function s.spcon1(e,tp,eg,ep,ev,re,r,rp)
 	return ep==1-tp and re:IsActiveType(TYPE_MONSTER)
 end
 function s.cfilter(c)
-	return c:IsSetCard(0x35) and c:IsType(TYPE_MONSTER)
+	return c:IsDiscardable()
 end
 function s.sptg1(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
