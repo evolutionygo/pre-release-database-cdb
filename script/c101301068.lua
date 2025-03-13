@@ -29,7 +29,8 @@ end
 function s.setfilter(c)
 	return c:IsSetCard(0xdc) and c:IsType(TYPE_TRAP) and c:IsSSetable()
 end
-function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
+function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return e:GetLabel()==1 and chkc:IsType(TYPE_MONSTER) and s.posfilter(chkc) end
 	local b1=Duel.IsExistingTarget(s.posfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil)
 		and (not e:IsCostChecked() or Duel.GetFlagEffect(tp,id)==0)
 	local b2=Duel.GetLocationCount(tp,LOCATION_MZONE)>0
@@ -38,9 +39,9 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 			or Duel.GetFlagEffect(tp,id+o)==0 and Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_MZONE,0,1,nil))
 	local b3=Duel.IsExistingMatchingCard(s.setfilter,tp,LOCATION_DECK,0,1,nil)
 		and (not e:IsCostChecked() or Duel.GetFlagEffect(tp,id+o*2)==0)
-	if chk==0 then return b1 or b2 end
+	if chk==0 then return b1 or b2 or b3 end
 	local op=0
-	if b1 or b2 then
+	if b1 or b2 or b3 then
 		op=aux.SelectFromOptions(tp,
 			{b1,aux.Stringid(id,1),1},
 			{b2,aux.Stringid(id,2),2},
