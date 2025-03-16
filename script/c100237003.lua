@@ -86,7 +86,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.cfilter(c,tp)
 	return c:IsPreviousControler(tp) and c:IsPreviousLocation(LOCATION_ONFIELD)
-		and c:IsReason(REASON_EFFECT) and c:GetPreviousTypeOnField()&TYPE_SPELL+TYPE_TRAP~=0
+		and c:IsReason(REASON_EFFECT) and c:GetPreviousTypeOnField()&(TYPE_SPELL+TYPE_TRAP)~=0
 end
 function s.descon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.cfilter,1,nil,tp)

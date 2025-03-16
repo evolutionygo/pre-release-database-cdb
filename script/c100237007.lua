@@ -32,7 +32,7 @@ end
 function s.filter2(c,e,tp,m,f,chkf)
 	if not (c:IsType(TYPE_FUSION) and c:IsAttribute(ATTRIBUTE_EARTH) and (not f or f(c))
 		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false)) then return false end
-	aux.FCheckAdditional=c.branded_fusion_check or s.fcheck
+	aux.FCheckAdditional=s.fcheck
 	local res=c:CheckFusionMaterial(m,nil,chkf)
 	aux.FCheckAdditional=nil
 	return res
