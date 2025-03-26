@@ -1,12 +1,13 @@
---閃刀亜式ーレムニスゲート
+--閃刀亜式－レムニスゲート
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
-	e1:SetCategory(CATEGORY_TODECK)
+	e1:SetCategory(CATEGORY_TODECK+CATEGORY_TOHAND)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetCode(EVENT_FREE_CHAIN)
+	e1:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_END_PHASE)
 	e1:SetCountLimit(1,id)
 	e1:SetTarget(s.thtg)
 	e1:SetOperation(s.thop)
@@ -41,9 +42,10 @@ function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local g2=Duel.GetMatchingGroup(s.mfilter,tp,LOCATION_GRAVE,0,nil,e)
 	if chkc then return false end
 	if chk==0 then return g1:GetCount()>0 and g2:GetCount()>0 end
-	local g=g1:__add(g2)
-	local tg=g:SelectSubGroup(tp,s.fselect,false,2)
+	g1:Merge(g2)
+	local tg=g1:SelectSubGroup(tp,s.fselect,false,2)
 	Duel.SetTargetCard(tg)
+	Duel.SetOperationInfo(0,CATEGORY_TODECK,tg,#tg,0,0)
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	local sg=Duel.GetTargetsRelateToChain()
@@ -55,15 +57,16 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 		if ct>0 and dg:GetCount()>0 then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
 			local dc=dg:CancelableSelect(tp,1,ct,nil)
-			if dc then
+			if dc and dc:GetCount()>0 then
 				Duel.BreakEffect()
+				Duel.HintSelection(dc)
 				Duel.SendtoHand(dc,nil,REASON_EFFECT)
 			end
 		end
 	end
 end
 function s.cfilter(c,tp)
-	return c:IsSetCard(0x1115) and c:IsType(TYPE_MONSTER) and c:IsControler(tp)
+	return c:IsSetCard(0x115) and c:IsType(TYPE_MONSTER) and c:IsControler(tp)
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.cfilter,1,nil,tp)
