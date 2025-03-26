@@ -1,4 +1,4 @@
---閃刀姫=ゼロ
+--閃刀姫＝ゼロ
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddCodeList(c,26077387,37351133)
@@ -30,6 +30,7 @@ function s.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_QUICK_O)
 	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetRange(LOCATION_MZONE)
+	e2:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_END_PHASE)
 	e2:SetCountLimit(1,id)
 	e2:SetCost(s.spcost)
 	e2:SetTarget(s.sptg)
@@ -66,7 +67,9 @@ function s.fselect(g)
 	return g:GetClassCount(Card.GetCode)==2
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return not Duel.IsPlayerAffectedByEffect(tp,59822133) and Duel.IsExistingMatchingCard(s.spfilter1,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil,e,tp) and Duel.IsExistingMatchingCard(s.spfilter2,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil,e,tp) end
+	if chk==0 then return not Duel.IsPlayerAffectedByEffect(tp,59822133)
+		and Duel.IsExistingMatchingCard(s.spfilter1,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil,e,tp)
+		and Duel.IsExistingMatchingCard(s.spfilter2,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil,e,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,2,tp,LOCATION_DECK+LOCATION_GRAVE)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
@@ -76,12 +79,14 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	if #g1>=1 and #g2>=1 then
 		g1:Merge(g2)
 		local sg=g1:SelectSubGroup(tp,s.fselect,false,2,2)
-		Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP)
-		if Duel.IsExistingMatchingCard(aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
+		if Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP)>0
+			and Duel.IsExistingMatchingCard(aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil)
+			and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 			local dg=Duel.SelectMatchingCard(tp,aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
 			if #dg>0 then
 				Duel.BreakEffect()
+				Duel.HintSelection(dg)
 				Duel.Destroy(dg,REASON_EFFECT)
 			end
 		end
