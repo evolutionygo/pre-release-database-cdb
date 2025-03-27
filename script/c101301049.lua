@@ -3,6 +3,7 @@ local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddCodeList(c,26077387,37351133)
 	--link summon
+	c:SetSPSummonOnce(id)
 	c:EnableReviveLimit()
 	aux.AddLinkProcedure(c,aux.FilterBoolFunction(Card.IsLinkSetCard,0x1115),2,2)
 	--link limit
