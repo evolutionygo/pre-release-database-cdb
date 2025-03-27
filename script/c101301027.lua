@@ -1,4 +1,4 @@
---黒き魔族-レオ・ウィザード
+--黒き魔族－レオ・ウィザード
 local s,id,o=GetID()
 function s.initial_effect(c)	
 	local e0=Effect.CreateEffect(c)
