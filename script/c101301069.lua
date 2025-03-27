@@ -45,8 +45,6 @@ function s.SelectSub(g1,g2,tp)
 	local finish=false
 	while true do
 		finish=#sg1==#sg2 and #sg>0
-		Debug.Message(#sg1)
-		Debug.Message(#sg2)
 		local sc=fg:SelectUnselect(sg,tp,finish,finish,2,max*2)
 		if not sc then break end
 		if sg:IsContains(sc) then
