@@ -36,17 +36,50 @@ end
 function s.fselect(g)
 	return g:FilterCount(s.sfilter,nil)==g:FilterCount(s.mfilter,nil)
 end
+function s.SelectSub(g1,g2,tp)
+	local max=math.min(#g1,#g2)
+	local sg1=Group.CreateGroup()
+	local sg2=Group.CreateGroup()
+	local sg=sg1:__add(sg2)
+	local fg=g1:__add(g2)
+	local finish=false
+	while true do
+		finish=#sg1==#sg2 and #sg>0
+		Debug.Message(#sg1)
+		Debug.Message(#sg2)
+		local sc=fg:SelectUnselect(sg,tp,finish,finish,2,max*2)
+		if not sc then break end
+		if sg:IsContains(sc) then
+			if g1:IsContains(sc) then
+				sg1:RemoveCard(sc)
+			else
+				sg2:RemoveCard(sc)
+			end
+		else
+			if g1:IsContains(sc) then
+				sg1:AddCard(sc)
+			else
+				sg2:AddCard(sc)
+			end
+		end
+		sg=sg1:__add(sg2)
+		fg=g1:__add(g2):Filter(aux.TRUE,sg)
+		if #sg1>=max then
+			fg=fg:Filter(aux.TRUE,g1)
+		end
+		if #sg2>=max then
+			fg=fg:Filter(aux.TRUE,g2)
+		end
+	end
+	return sg
+end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()
 	local g1=Duel.GetMatchingGroup(s.sfilter,tp,LOCATION_GRAVE,0,nil,e)
 	local g2=Duel.GetMatchingGroup(s.mfilter,tp,LOCATION_GRAVE,0,nil,e)
 	if chkc then return false end
 	if chk==0 then return g1:GetCount()>0 and g2:GetCount()>0 end
-	local max=math.min(#g1,#g2)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
-	local tg=g1:Select(tp,1,max,nil)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
-	tg:Merge(g2:Select(tp,#tg,#tg,nil))
+	local tg=s.SelectSub(g1,g2,tp)
 	Duel.SetTargetCard(tg)
 	Duel.SetOperationInfo(0,CATEGORY_TODECK,tg,#tg,0,0)
 end
@@ -59,7 +92,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 		local dg=Duel.GetMatchingGroup(Card.IsAbleToHand,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)
 		if ct>0 and dg:GetCount()>0 and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
-			local dc=dg:CancelableSelect(tp,1,ct,nil)
+			local dc=dg:Select(tp,1,ct,nil)
 			if dc and dc:GetCount()>0 then
 				Duel.BreakEffect()
 				Duel.HintSelection(dc)
