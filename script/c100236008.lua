@@ -45,6 +45,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			end
 		end
 		if Duel.IsExistingMatchingCard(aux.TRUE,tp,0,LOCATION_MZONE,1,nil) and res and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
+			Duel.BreakEffect()
 			Duel.ShuffleHand(tp)
 			local sg1=Duel.GetMatchingGroup(s.filter2,tp,LOCATION_EXTRA,0,nil,e,tp,mg1,nil,chkf)
 			local mg2=nil
