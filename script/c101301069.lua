@@ -40,8 +40,8 @@ function s.SelectSub(g1,g2,tp)
 	local max=math.min(#g1,#g2)
 	local sg1=Group.CreateGroup()
 	local sg2=Group.CreateGroup()
-	local sg=sg1:__add(sg2)
-	local fg=g1:__add(g2)
+	local sg=sg1+sg2
+	local fg=g1+g2
 	local finish=false
 	while true do
 		finish=#sg1==#sg2 and #sg>0
@@ -60,13 +60,13 @@ function s.SelectSub(g1,g2,tp)
 				sg2:AddCard(sc)
 			end
 		end
-		sg=sg1:__add(sg2)
-		fg=g1:__add(g2):Filter(aux.TRUE,sg)
+		sg=sg1+sg2
+		fg=g1+g2-sg
 		if #sg1>=max then
-			fg=fg:Filter(aux.TRUE,g1)
+			fg=fg-g1
 		end
 		if #sg2>=max then
-			fg=fg:Filter(aux.TRUE,g2)
+			fg=fg-g2
 		end
 	end
 	return sg
