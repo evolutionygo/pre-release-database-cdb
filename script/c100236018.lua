@@ -59,7 +59,7 @@ function s.tdop(e,tp,eg,ep,ev,re,r,rp)
 	local b2=e:GetLabel()==1 and tc:IsAbleToRemove()
 	if b1 and (not b2 or not Duel.SelectYesNo(tp,aux.Stringid(id,2))) then
 		Duel.SendtoDeck(tc,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)
-	else
+	elseif b2 then
 		Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)
 	end
 end
