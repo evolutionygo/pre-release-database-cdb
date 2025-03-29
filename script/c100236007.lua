@@ -79,6 +79,8 @@ function s.RegisterMergedEvent_ToSingleCard_AddOperation(c,g,event,event_code_si
 	c:RegisterEffect(e1)
 	local ec={
 		EVENT_CHAIN_ACTIVATING,
+		EVENT_CHAINING,
+		EVENT_ATTACK_ANNOUNCE,
 		EVENT_BREAK_EFFECT,
 		EVENT_CHAIN_SOLVING,
 		EVENT_CHAIN_SOLVED,
