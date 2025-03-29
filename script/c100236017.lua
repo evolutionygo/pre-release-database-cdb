@@ -63,7 +63,7 @@ function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetValue(-1000)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 		tc:RegisterEffect(e1)
-	else
+	elseif b2 then
 		Duel.Destroy(tc,REASON_EFFECT)
 	end
 end
