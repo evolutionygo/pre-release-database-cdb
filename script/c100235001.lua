@@ -38,8 +38,8 @@ function s.initial_effect(c)
 end
 function s.cfilter(c)
 	return c:IsFaceup() and c:GetOriginalType()&TYPE_MONSTER==TYPE_MONSTER
-		and (c:IsLocation(LOCATION_MZONE) and c:IsLevelAbove(5)
-		or c:GetOriginalLevel()>4)
+		and (c:IsLevelAbove(5) and c:IsLocation(LOCATION_MZONE)
+		or c:GetOriginalLevel()>4 and not c:IsLocation(LOCATION_MZONE))
 end
 function s.ntcon(e,c,minc)
 	if c==nil then return true end
