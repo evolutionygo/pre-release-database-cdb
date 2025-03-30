@@ -71,8 +71,8 @@ function s.negcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.costfilter(c)
 	return c:IsFaceup() and c:GetOriginalType()&TYPE_MONSTER==TYPE_MONSTER
-		and (c:IsLocation(LOCATION_MZONE) and c:IsLevelAbove(5)
-		or c:GetOriginalLevel()>4)
+		and (c:IsLevelAbove(5) and c:IsLocation(LOCATION_MZONE)
+		or c:GetOriginalLevel()>4 and not c:IsLocation(LOCATION_MZONE))
 		and c:IsAbleToGraveAsCost()
 end
 function s.negcost(e,tp,eg,ep,ev,re,r,rp,chk)
