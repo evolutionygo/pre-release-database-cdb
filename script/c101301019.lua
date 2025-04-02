@@ -4,6 +4,7 @@ function s.initial_effect(c)
 	aux.AddCodeList(c,45231177)
 	--spsummon self
 	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetRange(LOCATION_HAND)
@@ -14,12 +15,14 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 	--avoid dmg
 	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetType(EFFECT_TYPE_SINGLE)
 	e2:SetCode(EFFECT_AVOID_BATTLE_DAMAGE)
 	e2:SetValue(1)
 	c:RegisterEffect(e2)
 	--spsummon other
 	local e3=Effect.CreateEffect(c)
+	e3:SetDescription(aux.Stringid(id,2))
 	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e3:SetType(EFFECT_TYPE_QUICK_O)
 	e3:SetCode(EVENT_FREE_CHAIN)
@@ -47,7 +50,7 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) then
+	if c:IsRelateToChain() then
 		Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
 	end
 	local e1=Effect.CreateEffect(c)
