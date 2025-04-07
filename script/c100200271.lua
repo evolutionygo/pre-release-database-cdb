@@ -1,4 +1,4 @@
---试号闪刀姬-天津
+--試号閃刀姫－アマツ
 local s,id,o=GetID()
 function s.initial_effect(c)
 	c:SetSPSummonOnce(id)
@@ -78,7 +78,7 @@ function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
-	local tg=g:Filter(Card.IsRelateToEffect,nil,e)
+	local tg=g:Filter(Card.IsRelateToChain,nil)
 	if tg:GetCount()>0 then
 		Duel.Destroy(tg,REASON_EFFECT)
 	end
