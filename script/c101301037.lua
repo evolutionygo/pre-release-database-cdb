@@ -37,7 +37,7 @@ function s.atkval(e)
 	return Duel.GetFieldGroupCount(e:GetHandlerPlayer(),LOCATION_REMOVED,0)*-100
 end
 function s.actcon(e)
-	return e:GetHandler():IsSummonType(SUMMON_TYPE_SPECIAL)
+	return e:GetHandler():IsSummonType(SUMMON_TYPE_FUSION)
 end
 function s.acttg(e,c)
 	return c:IsRace(RACE_DRAGON+RACE_SPELLCASTER) and c:IsSummonType(SUMMON_TYPE_SPECIAL)
