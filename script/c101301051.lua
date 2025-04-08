@@ -79,7 +79,7 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 	if op&2~=0 then
-		if op&3~=0 then
+		if op==3 then
 			Duel.BreakEffect()
 		end
 		Duel.Damage(1-tp,1500,REASON_EFFECT)
