@@ -1,4 +1,4 @@
---超念铳士 瓦隆
+--超念銃士ヴァロン
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--xyz summon

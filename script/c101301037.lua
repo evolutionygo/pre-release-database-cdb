@@ -1,4 +1,4 @@
---圣秘之龙骑士
+--聖秘なる竜騎士
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--fusion summon
