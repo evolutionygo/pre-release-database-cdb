@@ -68,17 +68,15 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetTargetsRelateToChain()
-	if #g~=2 then return end
-	local exg=nil
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then
-		exg=g:Filter(aux.NOT(Card.IsCanBeSpecialSummoned),nil,e,0,tp,false,false)
-		if #exg==2 then exg=nil end
-	end
+	if #g==0 or Duel.GetLocationCount(tp,LOCATION_MZONE)==0 then return end
+	local sg=g:Filter(aux.NecroValleyFilter(Card.IsCanBeSpecialSummoned),nil,e,0,tp,false,false)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local dc=g:FilterSelect(tp,aux.NecroValleyFilter(s.spfilter),1,1,exg,g,e,tp):GetFirst()
-	if not dc then return end
-	if Duel.SpecialSummon(dc,0,tp,tp,false,false,POS_FACEUP)~=0 then
-		g:RemoveCard(dc)
-		Duel.SendtoDeck(g,nil,SEQ_DECKBOTTOM,REASON_EFFECT)
+	local sc=sg:Select(tp,1,1):GetFirst()
+	if not sc then return end
+	if Duel.SpecialSummon(sc,0,tp,tp,false,false,POS_FACEUP)>0 then
+		g:RemoveCard(sc)
+		if #g>0 then
+			Duel.SendtoDeck(g,nil,SEQ_DECKBOTTOM,REASON_EFFECT)
+		end
 	end
 end
