@@ -47,7 +47,7 @@ function s.tgfilter(c,e,tp)
 		and (c:IsAbleToDeck() or c:IsCanBeSpecialSummoned(e,0,tp,false,false))
 end
 function s.spfilter(c,g,e,tp)
-	return c:IsCanBeSpecialSummoned(e,0,tp,false,false) and g:IsExists(Card.IsCanOverlay,1,c)
+	return c:IsCanBeSpecialSummoned(e,0,tp,false,false) and g:IsExists(Card.IsAbleToDeck,1,c)
 end
 function s.racefilter(c,g)
 	return c:IsRace(RACE_DRAGON) and g:IsExists(Card.IsRace,1,c,RACE_SPELLCASTER)
