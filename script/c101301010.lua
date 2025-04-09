@@ -70,9 +70,9 @@ end
 function s.valcon(e,re,r,rp)
 	return r&REASON_BATTLE~=0
 end
-function s.descon(e,tp,eg,ep,ev,re,r,rp,chk)
+function s.descon(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,0,nil)
-	if chk==0 then return g:GetClassCount(Card.GetRace)>2 end
+	return g:GetClassCount(Card.GetRace)>2
 end
 function s.desfilter(c)
 	return c:IsType(TYPE_SPELL+TYPE_TRAP)
