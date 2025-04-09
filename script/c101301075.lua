@@ -45,22 +45,27 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 		end
 	end
+	--inactivatable
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetCode(EFFECT_CANNOT_INACTIVATE)
+	e1:SetValue(s.efilter)
+	e1:SetReset(RESET_PHASE+PHASE_END)
+	Duel.RegisterEffect(e1,tp)
+	--act limit
 	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_FIELD)
-	e2:SetCode(EFFECT_CANNOT_INACTIVATE)
-	e2:SetValue(s.efilter)
+	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e2:SetCondition(s.limcon)
+	e2:SetOperation(s.limop)
+	e2:SetReset(RESET_PHASE+PHASE_END)
 	Duel.RegisterEffect(e2,tp)
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
-	e3:SetCondition(s.limcon)
-	e3:SetOperation(s.limop)
+	e3:SetCode(EVENT_CHAIN_END)
+	e3:SetReset(RESET_PHASE+PHASE_END)
+	e3:SetOperation(s.limop2)
 	Duel.RegisterEffect(e3,tp)
-	local e4=Effect.CreateEffect(c)
-	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e4:SetCode(EVENT_CHAIN_END)
-	e4:SetOperation(s.limop2)
-	Duel.RegisterEffect(e4,tp)
 end
 function s.efilter(e,ct)
 	local p=e:GetHandlerPlayer()
@@ -104,7 +109,7 @@ function s.chainlm(e,rp,tp)
 	return tp==rp
 end
 function s.thfilter(c)
-	return c:IsSetCard(0x2cd) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
+	return c:IsFaceup() and c:IsSetCard(0x2cd) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return s.thfilter(chkc) and chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) end
@@ -118,7 +123,7 @@ function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToChain() and Duel.SendtoHand(tc,nil,REASON_EFFECT)>0
+	if tc:IsRelateToChain() and tc:IsType(TYPE_MONSTER) and Duel.SendtoHand(tc,nil,REASON_EFFECT)>0
 		and tc:IsLocation(LOCATION_HAND+LOCATION_EXTRA) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 		local g=Duel.SelectMatchingCard(tp,aux.TRUE,tp,0,LOCATION_ONFIELD,1,1,nil)
