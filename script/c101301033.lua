@@ -81,7 +81,7 @@ function s.indcon(e)
 end
 function s.chcon(e,tp,eg,ep,ev,re,r,rp)
 	local ec=re:GetHandler()
-	local b1=ec:IsSetCard(0x2cd)
+	local b1=re:GetHandler():IsRelateToEffect(re) and ec:IsSetCard(0x2cd)
 	local b2=re:GetActivateLocation()==LOCATION_MZONE and not ec:IsLocation(LOCATION_MZONE) and ec:IsPreviousSetCard(0x2cd)
 	return rp==tp and re:IsActiveType(TYPE_MONSTER) and (b1 or b2)
 end
