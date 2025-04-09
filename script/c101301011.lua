@@ -64,7 +64,7 @@ function s.spcon2(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetTurnPlayer()~=tp and Duel.IsMainPhase()
 end
 function s.spfilter(c,e,tp)
-	return not c:IsCode(id) and c:IsSetCard(0x2cd) and c:IsLevelBelow(4)
+	return not c:IsCode(id) and c:IsSetCard(0x2cd)
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.sptg2(e,tp,eg,ep,ev,re,r,rp,chk)
