@@ -34,14 +34,18 @@ function s.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.costfilter,tp,LOCATION_HAND,0,1,nil) end
 	Duel.DiscardHand(tp,s.costfilter,1,1,REASON_COST+REASON_DISCARD,nil)
 end
-function s.thfilter(c,tp,code,res)
+function s.anfilter(c,tp)
 	return c:IsSetCard(0x2cd) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
-		and (res or not c:IsHasEffect(id,tp))
-		and (not code or c:IsCode(code))
+		and not Duel.IsExistingMatchingCard(Card.IsCode,tp,LOCATION_MZONE,0,1,nil,c:GetCode())
+		and not c:IsHasEffect(id,tp)
+end
+function s.thfilter(c,code)
+	return c:IsSetCard(0x2cd) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
+		and c:IsCode(code)
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil,tp,nil,false) end
-	local g=Duel.GetMatchingGroup(s.thfilter,tp,LOCATION_DECK,0,nil,tp,nil,false)
+	if chk==0 then return Duel.IsExistingMatchingCard(s.anfilter,tp,LOCATION_DECK,0,1,nil,tp) end
+	local g=Duel.GetMatchingGroup(s.anfilter,tp,LOCATION_DECK,0,nil,tp)
 	local ag=Group.CreateGroup()
 	local codes={}
 	for c in aux.Next(g) do
@@ -52,7 +56,6 @@ function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 		end
 	end
 	table.sort(codes)
-	--c:IsCode(codes[1])
 	local afilter={codes[1],OPCODE_ISCODE}
 	if #codes>1 then
 		--or ... or c:IsCode(codes[i])
@@ -62,9 +65,30 @@ function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 			table.insert(afilter,OPCODE_OR)
 		end
 	end
+	ag:Clear()
+	local ncodes={}
+	local exg=Duel.GetMatchingGroup(aux.AND(Card.IsFaceup,Card.IsSetCard),tp,LOCATION_MZONE,0,nil,0x2cd)
+	for c in aux.Next(exg) do
+		local code=c:GetCode()
+		if not ag:IsExists(Card.IsCode,1,nil,code) then
+			ag:AddCard(c)
+			table.insert(ncodes,code)
+		end
+	end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CODE)
 	local ac=Duel.AnnounceCard(tp,table.unpack(afilter))
-	getmetatable(e:GetHandler()).announce_filter={TYPE_FUSION+TYPE_SYNCHRO+TYPE_XYZ+TYPE_LINK,OPCODE_ISTYPE,OPCODE_NOT,0x2cd,OPCODE_ISSETCARD,OPCODE_AND,TYPE_MONSTER,OPCODE_ISTYPE,OPCODE_AND}
+	local af={
+		TYPE_FUSION+TYPE_SYNCHRO+TYPE_XYZ+TYPE_LINK,OPCODE_ISTYPE,OPCODE_NOT,
+		0x2cd,OPCODE_ISSETCARD,OPCODE_AND,
+		TYPE_MONSTER,OPCODE_ISTYPE,OPCODE_AND
+	}
+	for i=1,#ncodes do
+		table.insert(af,ncodes[i])
+		table.insert(af,OPCODE_ISCODE)
+		table.insert(af,OPCODE_NOT)
+		table.insert(af,OPCODE_AND)
+	end
+	getmetatable(e:GetHandler()).announce_filter=af
 	Duel.SetTargetParam(ac)
 	Duel.SetOperationInfo(0,CATEGORY_ANNOUNCE,nil,0,tp,0)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
@@ -82,8 +106,8 @@ function s.thlimit(e,c,tp,re)
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	local ac=Duel.GetChainInfo(0,CHAININFO_TARGET_PARAM)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_DECK,0,1,1,nil,tp,ac,true)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+	local g=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_DECK,0,1,1,nil,ac)
 	if g:GetCount()>0 then
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,g)
