@@ -53,7 +53,7 @@ function s.hspfilter(c,tp,sc)
 end
 function s.hspchk(g,tp,sc)
 	return Duel.GetLocationCountFromEx(tp,tp,g,sc)>0
-		and g:GetClassCount(Card.GetRace)>2
+		and g:GetClassCount(Card.GetRace)==#g
 end
 function s.hspcon(e,c)
 	if c==nil then return true end
@@ -80,10 +80,13 @@ function s.indcon(e)
 	return Duel.IsExistingMatchingCard(aux.TRUE,e:GetHandlerPlayer(),LOCATION_FZONE,LOCATION_FZONE,1,nil)
 end
 function s.chcon(e,tp,eg,ep,ev,re,r,rp)
-	return rp==tp and re:IsActiveType(TYPE_MONSTER) and re:GetHandler():IsSetCard(0x2cd)
+	local ec=re:GetHandler()
+	local b1=ec:IsSetCard(0x2cd)
+	local b2=re:GetActivateLocation()==LOCATION_MZONE and not ec:IsLocation(LOCATION_MZONE) and ec:IsPreviousSetCard(0x2cd)
+	return rp==tp and re:IsActiveType(TYPE_MONSTER) and (b1 or b2)
 end
 function s.chtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(aux.TRUE,rp,0,LOCATION_MZONE,1,nil,rp) end
+	if chk==0 then return Duel.IsExistingMatchingCard(aux.TRUE,rp,0,LOCATION_ONFIELD,1,nil,rp) end
 end
 function s.chop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Group.CreateGroup()
