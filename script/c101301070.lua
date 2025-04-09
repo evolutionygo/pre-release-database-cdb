@@ -34,7 +34,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetValue(s.aclimit)
 	Duel.RegisterEffect(e1,tp)
 	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(id,0))
+	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetType(EFFECT_TYPE_FIELD)
 	e2:SetCode(EFFECT_SUMMON_PROC)
 	e2:SetTargetRange(LOCATION_HAND,0)
@@ -80,7 +80,7 @@ function s.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.drop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and Duel.SendtoDeck(tc,nil,SEQ_DECKBOTTOM,REASON_EFFECT)>0
+	if tc:IsRelateToChain() and Duel.SendtoDeck(tc,nil,SEQ_DECKBOTTOM,REASON_EFFECT)>0
 		and tc:IsLocation(LOCATION_DECK) then
 		Duel.BreakEffect()
 		Duel.Draw(tp,1,REASON_EFFECT)
