@@ -35,21 +35,26 @@ function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetFieldGroupCount(1-tp,LOCATION_DECK,0) end
+	Duel.SetTargetPlayer(tp)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetDecktopGroup(1-tp,1)
-	Duel.ConfirmCards(tp,g)
+	local p=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER)
+	local g=Duel.GetDecktopGroup(1-p,1)
+	Duel.ConfirmCards(p,g)
 	local tc=g:GetFirst()
-	local opt=Duel.SelectOption(tp,aux.Stringid(id,2),aux.Stringid(id,3))
+	local opt=Duel.SelectOption(p,aux.Stringid(id,2),aux.Stringid(id,3))
 	if opt==1 then
 		Duel.MoveSequence(tc,opt)
 	end
 end
+function s.rafilter(c)
+	return c:IsFaceup() and (RACE_ALL&~c:GetRace())~=0 and (ATTRIBUTE_ALL~c:GetAttribute())~=0
+end
 function s.ratg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and chkc:IsFaceup() end
-	if chk==0 then return Duel.IsExistingTarget(Card.IsFaceup,tp,LOCATION_MZONE,0,1,nil) end
+	if chk==0 then return Duel.IsExistingTarget(s.rafilter,tp,LOCATION_MZONE,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-	local tc=Duel.SelectTarget(tp,Card.IsFaceup,tp,LOCATION_MZONE,0,1,1,nil):GetFirst()
+	local tc=Duel.SelectTarget(tp,s.rafilter,tp,LOCATION_MZONE,0,1,1,nil):GetFirst()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RACE)
 	local race=Duel.AnnounceRace(tp,1,RACE_ALL&~tc:GetRace())
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATTRIBUTE)
@@ -60,7 +65,7 @@ function s.raop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local race,att=e:GetLabel()
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and tc:IsFaceup() then
+	if tc:IsRelateToChain() and tc:IsFaceup() and tc:IsType(TYPE_MONSTER) then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_CHANGE_RACE)
