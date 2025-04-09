@@ -1,4 +1,4 @@
---アルトメギア・ヴァンダリズム-襲撃-
+--アルトメギア・ヴァンダリズム－襲撃－
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddCodeList(c,101301008,101301054)
@@ -52,10 +52,10 @@ function s.fstg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SelectTarget(tp,s.filter,tp,LOCATION_MZONE,0,1,1,nil)
 end
 function s.fsop(e,tp,eg,ep,ev,re,r,rp)
-	local s,id,o=GetID()
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
-		local e1=Effect.CreateEffect(c)
+	if tc:IsRelateToChain() then
+		tc:RegisterFlagEffect(0,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id,2))
+		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_ADD_FUSION_SETCODE)
 		e1:SetValue(0x2cd)
