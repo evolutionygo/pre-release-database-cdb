@@ -1,4 +1,4 @@
---アルトメギア・マスターワーク-継承-
+--アルトメギア・マスターワーク－継承－
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--Activate
@@ -26,8 +26,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function s.fscon(e,tp,eg,ep,ev,re,r,rp)
-	local ph=Duel.GetCurrentPhase()
-	return ph==PHASE_MAIN1 or ph==PHASE_MAIN2
+	return Duel.IsMainPhase()
 end
 function s.filter(c,e,tp,m,f,chkf)
 	return c:IsType(TYPE_FUSION) and (not f or f(c))
@@ -39,7 +38,7 @@ end
 function s.fstg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		local chkf=tp
-		local mg1=Duel.GetFusionMaterial(tp)
+		local mg1=Duel.GetFusionMaterial(tp):Filter(aux.NOT(Card.IsImmuneToEffect),nil,e)
 		aux.FCheckAdditional=s.check
 		local res=Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_EXTRA,0,1,nil,e,tp,mg1,nil,chkf)
 		if not res then
@@ -75,15 +74,14 @@ function s.fsop(e,tp,eg,ep,ev,re,r,rp)
 		::cancel::
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local tc=sg:Select(tp,1,1,nil):GetFirst()
-		if sg1:IsContains(tc) and (sg2==nil or not (sg2:IsContains(tc)
-			and Duel.SelectYesNo(tp,ce:GetDescription()))) then
+		if sg1:IsContains(tc) and (sg2==nil or not sg2:IsContains(tc) or ce and not Duel.SelectYesNo(tp,ce:GetDescription())) then
 			local mat=Duel.SelectFusionMaterial(tp,tc,mg1,nil,chkf)
 			if #mat==0 then goto cancel end
 			tc:SetMaterial(mat)
 			Duel.SendtoGrave(mat,REASON_EFFECT+REASON_MATERIAL+REASON_FUSION)
 			Duel.BreakEffect()
 			Duel.SpecialSummon(tc,SUMMON_TYPE_FUSION,tp,tp,false,false,POS_FACEUP)
-		else
+		elseif ce then
 			local mat=Duel.SelectFusionMaterial(tp,tc,mg2,nil,chkf)
 			if #mat==0 then goto cancel end
 			local fop=ce:GetOperation()
@@ -91,6 +89,7 @@ function s.fsop(e,tp,eg,ep,ev,re,r,rp)
 		end
 		tc:CompleteProcedure()
 		if Duel.IsExistingMatchingCard(aux.TRUE,tp,LOCATION_FZONE,LOCATION_FZONE,1,nil) then
+			Duel.BreakEffect()
 			local e1=Effect.CreateEffect(e:GetHandler())
 			e1:SetType(EFFECT_TYPE_SINGLE)
 			e1:SetCode(EFFECT_UPDATE_ATTACK)
@@ -114,7 +113,7 @@ function s.tdtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_TODECK,g,g:GetCount(),0,0)
 end
 function s.tdop(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetTargetsRelateToChain()
+	local g=Duel.GetTargetsRelateToChain():Filter(aux.NecroValleyFilter(),nil)
 	if g:GetCount()>0 then
 		Duel.SendtoDeck(g,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)
 	end
