@@ -74,16 +74,16 @@ end
 function s.atkcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetMatchingGroup(s.cfilter2,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,nil):GetClassCount(Card.GetCode)>=3
 end
-function s.atkfilter(c)
-	return c:IsFaceup()
+function s.atkfilter(c,op)
+	return c:IsFaceup() and (op or c:GetAttack()>0)
 end
 function s.atktg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.atkfilter,tp,0,LOCATION_MZONE,1,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.atkfilter,tp,0,LOCATION_MZONE,1,nil,false) end
 	Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
 end
 function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local g=Duel.GetMatchingGroup(s.atkfilter,tp,0,LOCATION_MZONE,nil)
+	local g=Duel.GetMatchingGroup(s.atkfilter,tp,0,LOCATION_MZONE,nil,true)
 	for tc in aux.Next(g) do
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
