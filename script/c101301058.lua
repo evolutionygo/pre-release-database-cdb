@@ -1,19 +1,20 @@
---アルトメギア・バーニッシュ-改変-
+--アルトメギア・バーニッシュ－改変－
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddCodeList(c,101301008,101301054)
 	--Activate
 	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
-	e1:SetHintTiming(0,TIMING_END_PHASE)
 	e1:SetCountLimit(1,id+EFFECT_COUNT_CODE_OATH)
 	e1:SetTarget(s.target)
 	e1:SetOperation(s.activate)
 	c:RegisterEffect(e1)
 	--negate
 	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e2:SetRange(LOCATION_GRAVE)
@@ -23,8 +24,8 @@ function s.initial_effect(c)
 	e2:SetOperation(s.negop)
 	c:RegisterEffect(e2)
 end
-function s.stfilter(c)
-	return c:IsCode(101301054) and not c:IsForbidden()
+function s.stfilter(c,tp)
+	return c:IsCode(101301054) and not c:IsForbidden() and c:CheckUniqueOnField(tp)
 end
 function s.thfilter(c)
 	return not c:IsCode(id) and c:IsSetCard(0x2cd) and c:IsAbleToHand()
@@ -32,7 +33,7 @@ end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		if not Duel.IsExistingMatchingCard(aux.AND(Card.IsFaceup,Card.IsCode),tp,LOCATION_ONFIELD,0,1,nil,101301054) then
-			return Duel.IsExistingMatchingCard(s.stfilter,tp,LOCATION_DECK,0,1,nil)
+			return Duel.IsExistingMatchingCard(s.stfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil,tp)
 		else
 			return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil)
 		end
@@ -41,7 +42,7 @@ end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	if not Duel.IsExistingMatchingCard(aux.AND(Card.IsFaceup,Card.IsCode),tp,LOCATION_ONFIELD,0,1,nil,101301054) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
-		local tc=Duel.SelectMatchingCard(tp,s.stfilter,tp,LOCATION_DECK,0,1,1,nil,tp):GetFirst()
+		local tc=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.stfilter),tp,LOCATION_DECK+LOCATION_GRAVE,0,1,1,nil,tp):GetFirst()
 		if tc then
 			local fc=Duel.GetFieldCard(tp,LOCATION_SZONE,5)
 			if fc then
@@ -61,7 +62,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.negcon(e,tp,eg,ep,ev,re,r,rp)
 	local tc=eg:GetFirst()
-	return tc:IsFaceup() and tc:IsType(TYPE_XYZ) and tc:IsSetCard(0x2cd)
+	return tc:IsFaceup() and tc:IsSetCard(0x2cd)
 		and tc:IsControler(tp) and tc:IsLocation(LOCATION_MZONE)
 end
 function s.spfilter(c,e,tp)
