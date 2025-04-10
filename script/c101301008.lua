@@ -49,7 +49,8 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.spfilter(c,tp,chk)
-	return c:IsFaceupEx() and c:IsType(TYPE_MONSTER) and c:IsAbleToDeck() and Duel.GetMZoneCount(tp,c)>0
+	return c:IsFaceupEx() and c:IsType(TYPE_MONSTER) and c:IsAbleToDeck()
+		and (Duel.GetMZoneCount(tp,c)>0 or not chk)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
@@ -61,7 +62,12 @@ end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-	local rg=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_MZONE+LOCATION_HAND,0,1,1,nil,tp)
+	local rg=nil
+	if Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_MZONE+LOCATION_HAND,0,1,nil,tp,true) then
+		rg=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_MZONE+LOCATION_HAND,0,1,1,nil,tp,true)
+	else
+		rg=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_MZONE+LOCATION_HAND,0,1,1,nil,tp,false)
+	end
 	if rg and rg:GetCount()>0 then
 		if rg:IsExists(Card.IsLocation,1,nil,LOCATION_HAND) then
 			Duel.ConfirmCards(1-tp,rg)
