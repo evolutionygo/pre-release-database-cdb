@@ -101,14 +101,14 @@ function s.fsop(e,tp,eg,ep,ev,re,r,rp)
 	aux.FCheckAdditional=nil
 end
 function s.tdfilter(c)
-	return c:IsSetCard(0x2cd) and c:IsAbleToDeck()
+	return c:IsSetCard(0x2cd) and c:IsAbleToDeck() and c:IsCanBeEffectTarget()
 end
 function s.tdtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local g=Duel.GetMatchingGroup(s.tdfilter,tp,LOCATION_GRAVE,0,e:GetHandler())
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and s.tdfilter(chkc) end
 	if chk==0 then return g:CheckSubGroup(aux.dncheck,3,3) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-	local sg=g:SelectSubGroup(tp,aux.dncheck,false,1,3)
+	local sg=g:SelectSubGroup(tp,aux.dncheck,false,3,3)
 	Duel.SetTargetCard(sg)
 	Duel.SetOperationInfo(0,CATEGORY_TODECK,g,g:GetCount(),0,0)
 end

@@ -86,7 +86,7 @@ function s.chcon(e,tp,eg,ep,ev,re,r,rp)
 	return rp==tp and re:IsActiveType(TYPE_MONSTER) and (b1 or b2)
 end
 function s.chtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(aux.TRUE,rp,0,LOCATION_ONFIELD,1,nil,rp) end
+	if chk==0 then return Duel.IsExistingMatchingCard(aux.TRUE,rp,0,LOCATION_ONFIELD,1,nil) end
 end
 function s.chop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Group.CreateGroup()
