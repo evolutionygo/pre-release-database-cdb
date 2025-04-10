@@ -60,12 +60,12 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
 	local rg=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_MZONE+LOCATION_HAND,0,1,1,nil,tp)
 	if rg and rg:GetCount()>0 then
 		if rg:IsExists(Card.IsLocation,1,nil,LOCATION_HAND) then
 			Duel.ConfirmCards(1-tp,rg)
-		else 
+		else
 			Duel.HintSelection(rg)
 		end
 		if Duel.SendtoDeck(rg,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)~=0
