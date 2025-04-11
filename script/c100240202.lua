@@ -30,7 +30,7 @@ function s.initial_effect(c)
 	--to hand
 	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(id,1))
-	e4:SetCategory(CATEGORY_TOHAND)
+	e4:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND)
 	e4:SetType(EFFECT_TYPE_IGNITION)
 	e4:SetRange(LOCATION_SZONE)
 	e4:SetCountLimit(1,id)
