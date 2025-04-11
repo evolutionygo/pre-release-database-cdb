@@ -1,7 +1,7 @@
 --マタドール降臨の儀式 ダーク・パセオ
 local s,id,o=GetID()
 function s.initial_effect(c)
-	aux.AddRitualProcGreaterCode(c,100240004)
+	aux.AddRitualProcGreaterCode(c,100240204)
 	--Special Summon
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,0))
@@ -27,6 +27,6 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_HAND,0,1,1,nil,e,tp)
 	if g:GetCount()>0 then
-		Duel.SpecialSummon(g,0,tp,tp,0,false,POS_FACEUP)
+		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 	end
 end
