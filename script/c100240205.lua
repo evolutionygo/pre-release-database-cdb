@@ -4,7 +4,7 @@ function s.initial_effect(c)
 	aux.AddRitualProcGreaterCode(c,100240204)
 	--Special Summon
 	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(id,0))
+	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_GRAVE)
@@ -15,7 +15,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function s.spfilter(c,e,tp)
-	return not c:IsType(TYPE_RITUAL) and c:IsSetCard(0x45) and c:IsCanBeSpecialSummoned(e,0,tp,0,false)
+	return not c:IsType(TYPE_RITUAL) and c:IsSetCard(0x45) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
