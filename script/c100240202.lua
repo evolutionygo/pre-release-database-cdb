@@ -1,4 +1,4 @@
---錬金釜-カオス・ディスティル
+--錬金釜－カオス・ディスティル
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddCodeList(c,30241314)
@@ -44,10 +44,11 @@ function s.rmtg(e,c)
 	return c:GetOwner()==e:GetHandlerPlayer()
 end
 function s.filter(c)
-	return not c:IsCode(id) and (c:IsCode(30241314) or aux.IsCodeListed(c,30241314)) and c:IsAbleToHand()
+	return not c:IsCode(id) and aux.IsCodeOrListed(c,30241314) and c:IsAbleToHand()
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_DECK,0,1,nil) end
+	Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
@@ -66,6 +67,7 @@ function s.thfilter2(c)
 end
 function s.thtg2(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter2,tp,LOCATION_DECK,0,1,nil) end
+	Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 end
 function s.thop2(e,tp,eg,ep,ev,re,r,rp)
