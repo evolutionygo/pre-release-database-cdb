@@ -1,6 +1,7 @@
 --超電導戦士 リニア・マグナム±
 local s,id,o=GetID()
 function s.initial_effect(c)
+	c:EnableReviveLimit()
 	--special summon
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
@@ -72,8 +73,8 @@ end
 function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if tc:IsFaceup() and tc:IsRelateToEffect(e)
-		and c:IsRelateToEffect(e) and c:IsFaceup() then
+	if tc:IsFaceup() and tc:IsRelateToChain()
+		and c:IsFaceup() and c:IsRelateToChain() then
 		local e2=Effect.CreateEffect(c)
 		e2:SetType(EFFECT_TYPE_SINGLE)
 		e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
@@ -92,7 +93,7 @@ function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) and aux.NecroValleyFilter()(c) then
+	if c:IsRelateToChain() and aux.NecroValleyFilter()(c) then
 		Duel.SendtoHand(c,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,c)
 	end
