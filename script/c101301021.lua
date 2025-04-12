@@ -45,8 +45,8 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(s.chkfilter,tp,LOCATION_HAND+LOCATION_GRAVE+LOCATION_ONFIELD+LOCATION_DECK,0,nil)
-	if not g:GetCount()>=3 then return end
-	local rg
+	if g:GetCount()<3 then return end
+	local rg=nil
 	if g:GetCount()>3 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONFIRM)
 		rg=g:Select(tp,3,3,nil)
