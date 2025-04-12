@@ -61,9 +61,8 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	if cg:GetCount()>0 then
 		Duel.ConfirmCards(1-tp,cg)
 	end
-	if rg:FilterCount(Card.IsLocation,nil,LOCATION_DECK)>0 then
-		Duel.ShuffleDeck(tp)
-	end
+	if rg:FilterCount(Card.IsLocation,nil,LOCATION_DECK)>0 then Duel.ShuffleDeck(tp) end
+	if rg:FilterCount(Card.IsLocation,nil,LOCATION_HAND)>0 then Duel.ShuffleHand(tp) end
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local sg=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.spfilter),tp,LOCATION_HAND+LOCATION_GRAVE+LOCATION_DECK,0,1,1,nil,e,tp)
