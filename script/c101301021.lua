@@ -53,11 +53,22 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	else
 		rg=g
 	end
-	Duel.ConfirmCards(1-tp,rg)
+	local cg=rg:Filter(Card.IsLocation,nil,LOCATION_HAND+LOCATION_DECK)
+	local hg=rg-cg
+	if hg:GetCount()>0 then
+		Duel.HintSelection(hg)
+	end
+	if cg:GetCount()>0 then
+		Duel.ConfirmCards(1-tp,cg)
+	end
+	if rg:FilterCount(Card.IsLocation,nil,LOCATION_DECK)>0 then
+		Duel.ShuffleDeck(tp)
+	end
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local sg=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.spfilter),tp,LOCATION_HAND+LOCATION_GRAVE+LOCATION_DECK,0,1,1,nil,e,tp)
 		if sg:GetCount()>0 then
+			Duel.BreakEffect()
 			Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP)
 		end
 	end
