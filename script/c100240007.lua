@@ -24,6 +24,15 @@ function s.initial_effect(c)
 	e2:SetOperation(s.thop)
 	c:RegisterEffect(e2)
 end
+function s.getrg(tp,chk)
+	local rg=Duel.GetReleaseGroup(tp,false,REASON_EFFECT)
+	local mrg=rg:Filter(Card.IsHasEffect,nil,EFFECT_EXTRA_RELEASE)
+	if mrg:GetCount()>0 then
+		return mrg:Filter(s.cfilter,nil,tp,chk)
+	else
+		return rg:Filter(s.cfilter,nil,tp,chk)
+	end
+end
 function s.cfilter(c,tp,chk)
 	return c:IsRace(RACE_WARRIOR) and c:IsAttribute(ATTRIBUTE_EARTH) and c:IsReleasableByEffect()
 		and (not chk or Duel.GetMZoneCount(tp,c)>0)
@@ -35,7 +44,8 @@ function s.sumfilter(c)
 	return c:IsRace(RACE_WARRIOR) and c:IsSummonable(true,nil)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	local b1=Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_MZONE,0,1,nil,tp,true)
+	local rg=s.getrg(tp,true)
+	local b1=rg:GetCount()>0
 		and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_HAND+LOCATION_DECK,0,1,nil,e,tp)
 	local b2=Duel.IsMainPhase() and Duel.IsExistingMatchingCard(s.sumfilter,tp,LOCATION_HAND,0,1,nil)
 	if chk==0 then return b1 or b2 end
@@ -62,18 +72,17 @@ end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetLabel()==1 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
-		local rg=nil
-		if Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_MZONE,0,1,nil,tp,true) then
-			rg=Duel.SelectMatchingCard(tp,s.cfilter,tp,LOCATION_MZONE,0,1,1,nil,tp,true)
-		else
-			rg=Duel.SelectMatchingCard(tp,s.cfilter,tp,LOCATION_MZONE,0,1,1,nil,tp,false)
+		local srg=s.getrg(tp,true)
+		if srg:GetCount()==0 then
+			srg=s.getrg(tp,false)
 		end
+		local rg=srg:Select(tp,1,1,nil)
 		if rg:GetCount()>0 and Duel.Release(rg,REASON_EFFECT)>0
 			and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 			local sg=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_HAND+LOCATION_DECK,0,1,1,nil,e,tp)
 			if sg:GetCount()>0 then
-				Duel.SpecialSummon(sg,0,tp,tp,true,false,POS_FACEUP)
+				Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP)
 			end
 		end
 	elseif e:GetLabel()==2 then
