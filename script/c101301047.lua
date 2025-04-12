@@ -59,7 +59,7 @@ function s.xyzcon2(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.xyzop2(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:GetOverlayCount()>0 then
+	if c:IsRelateToChain() and c:GetOverlayCount()>0 then
 		c:RemoveOverlayCard(tp,1,1,REASON_EFFECT)
 	end
 end
