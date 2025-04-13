@@ -3,7 +3,7 @@ local s,id,o=GetID()
 function s.initial_effect(c)
 	--xyz summon
 	aux.AddXyzProcedure(c,nil,4,2,s.ovfilter,aux.Stringid(id,0),2,s.xyzop)
-	c:EnableReviveLimit()   
+	c:EnableReviveLimit()
 	--search
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,1))
@@ -65,6 +65,8 @@ end
 function s.settg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0
 		and Duel.IsExistingMatchingCard(s.pfilter,tp,LOCATION_GRAVE,0,1,nil,tp) end
+	local g=Duel.GetMatchingGroup(s.pfilter,tp,LOCATION_GRAVE,0,nil,nil)
+	Duel.SetOperationInfo(0,CATEGORY_LEAVE_GRAVE,g,1,0,0)
 end
 function s.setop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 then return end
