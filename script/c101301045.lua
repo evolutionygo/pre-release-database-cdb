@@ -60,13 +60,13 @@ function s.setcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	c:RemoveOverlayCard(tp,2,2,REASON_COST)
 end
 function s.pfilter(c,tp)
-	return c:IsType(TYPE_CONTINUOUS) and c:IsSetCard(0x1c1) and c:IsType(TYPE_TRAP)
+	return c:IsAllTypes(TYPE_CONTINUOUS+TYPE_TRAP) and c:IsSetCard(0x1c1)
 		and not c:IsForbidden() and c:CheckUniqueOnField(tp)
 end
 function s.settg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0
 		and Duel.IsExistingMatchingCard(s.pfilter,tp,LOCATION_GRAVE,0,1,nil,tp) end
-	local g=Duel.GetMatchingGroup(s.pfilter,tp,LOCATION_GRAVE,0,nil,nil)
+	local g=Duel.GetMatchingGroup(s.pfilter,tp,LOCATION_GRAVE,0,nil,tp)
 	Duel.SetOperationInfo(0,CATEGORY_LEAVE_GRAVE,g,1,0,0)
 end
 function s.setop(e,tp,eg,ep,ev,re,r,rp)
