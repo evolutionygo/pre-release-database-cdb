@@ -15,8 +15,9 @@ function s.initial_effect(c)
 	e1:SetOperation(s.operation)
 	c:RegisterEffect(e1)
 end
-function s.cfilter(c)
-	return c:IsRace(RACE_REPTILE)
+function s.cfilter(c,tp)
+	return c:IsRace(RACE_REPTILE) and (c:IsControler(tp) or c:IsFaceup())
+		and Duel.IsExistingTarget(Card.IsFaceup,tp,0,LOCATION_ONFIELD,1,c)
 end
 function s.con(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsMainPhase()
@@ -37,6 +38,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if op==1 then
 		if e:IsCostChecked() then
 			local g=Duel.SelectReleaseGroup(tp,s.cfilter,1,1,nil)
+			aux.UseExtraReleaseCount(g,tp)
 			Duel.Release(g,REASON_COST)
 		end
 		e:SetLabel(1)
