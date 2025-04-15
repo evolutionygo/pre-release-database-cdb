@@ -43,7 +43,7 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,c)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
 	local tc=g:SelectUnselect(nil,tp,false,true,1,1)
 	if not tc then return false end
-	local g2=Duel.GetMatchingGroup(s.spfilter2,tp,0,LOCATION_MZONE,nil,tp)
+	local g2=Duel.GetMatchingGroup(s.spfilter2,tp,0,LOCATION_MZONE,nil)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
 	local tc2=g2:SelectUnselect(nil,tp,false,true,1,1)
 	if tc2 then
