@@ -23,7 +23,7 @@ function s.con(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsMainPhase()
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	local c1=not e:IsCostChecked() or Duel.CheckReleaseGroup(tp,s.cfilter,1,nil)
+	local c1=not e:IsCostChecked() or Duel.CheckReleaseGroup(tp,s.cfilter,1,nil,tp)
 	local b1=c1 and Duel.IsExistingTarget(Card.IsFaceup,tp,0,LOCATION_ONFIELD,1,nil)
 	local b2=aux.RitualUltimateTarget(s.ritual_filter,Card.GetLevel,"Greater",LOCATION_HAND,nil,s.mfilter)(e,tp,eg,ep,ev,re,r,rp,0)
 	if chkc then
@@ -39,7 +39,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		if e:IsCostChecked() then
 			e:SetCategory(CATEGORY_DESTROY)
 			e:SetProperty(EFFECT_FLAG_CARD_TARGET)
-			local g=Duel.SelectReleaseGroup(tp,s.cfilter,1,1,nil)
+			local g=Duel.SelectReleaseGroup(tp,s.cfilter,1,1,nil,tp)
 			aux.UseExtraReleaseCount(g,tp)
 			Duel.Release(g,REASON_COST)
 		end
