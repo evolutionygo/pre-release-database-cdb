@@ -1,4 +1,4 @@
---Ame no Murakumo no Mitsurugi
+--Ame no Habakiri no Mitsurugi
 local s,id,o=GetID()
 function s.initial_effect(c)
 	c:EnableReviveLimit()

@@ -1,7 +1,7 @@
 --Mitsurugi Mirror
 local s,id,o=GetID()
 function s.initial_effect(c)
-	aux.AddCodeList(c,101208192,19899073,55397172)
+	aux.AddCodeList(c,101208092,19899073,55397172)
 	--Activate
 	local e1=aux.AddRitualProcGreater2(c,s.spfilter,LOCATION_HAND+LOCATION_GRAVE,nil,s.mfilter,true)
 	e1:SetCountLimit(1,id)
@@ -28,7 +28,7 @@ function s.mfilter(c)
 end
 function s.cfilter(c,tp)
 	return c:IsPreviousLocation(LOCATION_ONFIELD) and c:IsPreviousControler(tp)
-		and (c:GetPreviousCodeOnField()==101208192 or c:GetPreviousCodeOnField()==19899073 or c:GetPreviousCodeOnField()==55397172)
+		and (c:GetPreviousCodeOnField()==101208092 or c:GetPreviousCodeOnField()==19899073 or c:GetPreviousCodeOnField()==55397172)
 end
 function s.tdcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.cfilter,1,nil,tp) and not eg:IsContains(e:GetHandler())

@@ -56,15 +56,12 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetLabel()==1 then
-		s.operation1(e,tp,eg,ep,ev,re,r,rp)
+		local tc=Duel.GetFirstTarget()
+		if tc:IsRelateToChain() then
+			Duel.Destroy(tc,REASON_EFFECT)
+		end
 	elseif e:GetLabel()==2 then
 		aux.RitualUltimateOperation(s.ritual_filter,Card.GetLevel,"Greater",LOCATION_HAND,nil,s.mfilter)(e,tp,eg,ep,ev,re,r,rp)
-	end
-end
-function s.operation1(e,tp,eg,ep,ev,re,r,rp)
-	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
-		Duel.Destroy(tc,REASON_EFFECT)
 	end
 end
 function s.mfilter(c)
