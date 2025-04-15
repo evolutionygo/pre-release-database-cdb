@@ -47,12 +47,14 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
 		if e:IsCostChecked() then
 			e:SetCategory(CATEGORY_DESTROY)
+			e:SetProperty(EFFECT_FLAG_CARD_TARGET)
 		end
 	elseif op==2 then
 		e:SetLabel(2)
 		aux.RitualUltimateTarget(s.ritual_filter,Card.GetLevel,"Greater",LOCATION_HAND,nil,s.mfilter)(e,tp,eg,ep,ev,re,r,rp,chk)
 		if e:IsCostChecked() then
 			e:SetCategory(CATEGORY_SPECIAL_SUMMON)
+			e:SetProperty(0)
 		end
 	end
 end
