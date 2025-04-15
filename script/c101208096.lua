@@ -1,7 +1,7 @@
 --Mitsurugi Tempest
 local s,id,o=GetID()
 function s.initial_effect(c)
-	aux.AddCodeList(c,101208192,19899073,55397172)
+	aux.AddCodeList(c,101208092,19899073,55397172)
 	--Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_REMOVE)
@@ -14,7 +14,7 @@ function s.initial_effect(c)
 	e1:SetOperation(s.activate)
 	c:RegisterEffect(e1)
 end
-s.spchecks=aux.CreateChecks(Card.IsOriginalCodeRule,{101208192,19899073,55397172})
+s.spchecks=aux.CreateChecks(Card.IsOriginalCodeRule,{101208092,19899073,55397172})
 function s.cfilter(c)
 	return c:IsSetCard(0x1c3) and c:IsType(TYPE_RITUAL) and c:IsType(TYPE_SPELL)
 end
@@ -22,7 +22,7 @@ function s.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_GRAVE,0,1,nil)
 end
 function s.rlfilter(c,tp)
-	return c:IsOriginalCodeRule(101208192,19899073,55397172) and (c:IsControler(tp) or c:IsFaceup())
+	return c:IsOriginalCodeRule(101208092,19899073,55397172) and (c:IsControler(tp) or c:IsFaceup())
 end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
