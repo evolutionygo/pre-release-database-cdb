@@ -42,10 +42,10 @@ end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if not Duel.IsPlayerCanRemove(1-tp) then return end
-	local g=Duel.GetFieldGroup(tp,0,LOCATION_ONFIELD+LOCATION_GRAVE+LOCATION_HAND+LOCATION_EXTRA)
+	local g=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD+LOCATION_GRAVE+LOCATION_HAND+LOCATION_EXTRA,nil,1-tp,POS_FACEUP,REASON_RULE)
 	if g:GetCount()>7 then
 		Duel.Hint(HINT_SELECTMSG,1-tp,HINTMSG_REMOVE)
-		local sg=g:FilterSelect(1-tp,Card.IsAbleToRemove,8,8,nil,1-tp,POS_FACEUP,REASON_RULE)
+		local sg=g:Select(1-tp,8,8,nil)
 		if sg:GetCount()>7 then
 			Duel.Remove(sg,POS_FACEUP,REASON_RULE,1-tp)
 		end
