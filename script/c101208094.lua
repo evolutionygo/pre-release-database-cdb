@@ -37,6 +37,8 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	)
 	if op==1 then
 		if e:IsCostChecked() then
+			e:SetCategory(CATEGORY_DESTROY)
+			e:SetProperty(EFFECT_FLAG_CARD_TARGET)
 			local g=Duel.SelectReleaseGroup(tp,s.cfilter,1,1,nil)
 			aux.UseExtraReleaseCount(g,tp)
 			Duel.Release(g,REASON_COST)
@@ -45,17 +47,13 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 		local g=Duel.SelectTarget(tp,Card.IsFaceup,tp,0,LOCATION_ONFIELD,1,1,nil)
 		Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
-		if e:IsCostChecked() then
-			e:SetCategory(CATEGORY_DESTROY)
-			e:SetProperty(EFFECT_FLAG_CARD_TARGET)
-		end
 	elseif op==2 then
 		e:SetLabel(2)
-		aux.RitualUltimateTarget(s.ritual_filter,Card.GetLevel,"Greater",LOCATION_HAND,nil,s.mfilter)(e,tp,eg,ep,ev,re,r,rp,chk)
 		if e:IsCostChecked() then
 			e:SetCategory(CATEGORY_SPECIAL_SUMMON)
 			e:SetProperty(0)
 		end
+		aux.RitualUltimateTarget(s.ritual_filter,Card.GetLevel,"Greater",LOCATION_HAND,nil,s.mfilter)(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
