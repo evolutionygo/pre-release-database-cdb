@@ -9,7 +9,6 @@ function s.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetRange(LOCATION_HAND)
 	e1:SetCountLimit(1,EFFECT_COUNT_CODE_DUEL)
-	e1:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_END_PHASE)
 	e1:SetCost(s.spcost)
 	e1:SetTarget(s.sptg)
 	e1:SetOperation(s.spop)
@@ -75,7 +74,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 			and c:IsRelateToChain()
 			and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 			and aux.NecroValleyFilter()(c)
-			and Duel.SelectYesNo(tp,aux.Stringid(id,4)) then
+			and Duel.SelectYesNo(tp,aux.Stringid(id,3)) then
 			Duel.BreakEffect()
 			Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
 		end
