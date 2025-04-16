@@ -1,0 +1,33 @@
+name: Mirror upstream repository
+
+on:
+  # schedule:
+  #   - cron: '0 * * * *'
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Clone master branch
+        run: |
+          git clone --depth=1 --single-branch --branch master https://github.com/${{ github.repository }} repo
+          cd repo
+          git config user.name "Evolution Bot"
+          git config user.email "bot@evolutionygo.com"
+          git remote add upstream https://code.moenext.com/mycard/pre-release-database-cdb.git
+          git fetch upstream master --depth=1
+          git reset --hard upstream/master
+          echo "SYNC_OK=true" >> $GITHUB_ENV
+
+      - name: Push to origin
+        if: env.SYNC_OK == 'true'
+        working-directory: repo
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git remote set-url origin https://x-access-token:${TOKEN}@github.com/${{ github.repository }}.git
+          git push origin HEAD:master --force
