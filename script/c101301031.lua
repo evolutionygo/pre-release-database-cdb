@@ -1,4 +1,4 @@
---
+--月光舞香姫
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddCodeList(c,48444114)
@@ -53,6 +53,9 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.ConfirmCards(1-tp,g)
 	end
 end
+function s.bfilter(c)
+	return c:IsSetCard(0xdf) and (c:IsAbleToHand() or c:IsAbleToExtra())
+end
 function s.bstg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_ONFIELD) and chkc:IsControler(tp) and s.bfilter(chkc) and chkc~=e:GetHandler() end
 	if chk==0 then return Duel.IsExistingTarget(s.bfilter,tp,LOCATION_ONFIELD,0,1,e:GetHandler()) end
@@ -69,17 +72,18 @@ function s.spfilter(c,e,tp)
 	return c:IsSetCard(0xdf) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.bsop(e,tp,eg,ep,ev,re,r,rp)
-	local tc=Duel.GetFirstTarget()
-	if tc and tc:IsRelateToEffect(e) then
-		if Duel.SendtoHand(tc,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)>0
-			and tc:IsLocation(LOCATION_HAND+LOCATION_EXTRA) then
-			local g=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_HAND,0,nil,e,tp)
-			if #g>0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.SelectYesNo(tp,aux.Stringid(id,3)) then
-				Duel.BreakEffect()
-				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-				local sg=g:Select(tp,1,1,nil)
-				Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP)
+	local tg=Duel.GetTargetsRelateToChain()
+	if tg:GetCount()>0 and Duel.SendtoHand(tg,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)>0
+		and tg:IsExists(Card.IsLocation,1,nil,LOCATION_HAND+LOCATION_EXTRA) then
+		local g=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_HAND,0,nil,e,tp)
+		if #g>0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.SelectYesNo(tp,aux.Stringid(id,3)) then
+			Duel.BreakEffect()
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+			local sg=g:Select(tp,1,1,nil)
+			if tg:IsExists(Card.IsLocation,1,nil,LOCATION_HAND) then
+				Duel.ShuffleHand(tp)
 			end
+			Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP)
 		end
 	end
 end
