@@ -32,6 +32,7 @@ function s.initial_effect(c)
 	e4:SetType(EFFECT_TYPE_QUICK_O)
 	e4:SetCode(EVENT_FREE_CHAIN)
 	e4:SetRange(LOCATION_MZONE)
+	e4:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_END_PHASE)
 	e4:SetCountLimit(1,id+o)
 	e4:SetTarget(s.sptg)
 	e4:SetOperation(s.spop)
@@ -56,7 +57,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	if g:GetCount()>0 then
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,g)
-		if c:IsRelateToEffect(e) then
+		if c:IsRelateToChain() then
 			Duel.SendtoDeck(c,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)
 		end
 	end
@@ -64,9 +65,9 @@ end
 function s.atklimit(e,c)
 	return c==e:GetHandler()
 end
-function s.relfilter(c,tp)
+function s.relfilter(c,tp,chk)
 	return c:IsReleasableByEffect() and c:IsAttackPos()
-		and Duel.GetMZoneCount(tp,c)>0
+		and (not chk or Duel.GetMZoneCount(tp,c)>0)
 end
 function s.spfilter(c,e,tp)
 	return c:IsCode(30243636) and c:IsAttack(2000)
@@ -74,16 +75,22 @@ function s.spfilter(c,e,tp)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-	if chk==0 then return Duel.IsExistingMatchingCard(s.relfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil,tp)
+	if chk==0 then return Duel.IsExistingMatchingCard(s.relfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil,tp,true)
 		and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_HAND+LOCATION_DECK,0,1,nil,e,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND+LOCATION_DECK)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
+	local g=Group.CreateGroup()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
-	local g=Duel.SelectMatchingCard(tp,s.relfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil,tp)
+	local rg=Duel.GetMatchingGroup(s.relfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil,tp,true)
+	if rg:GetCount()>0 then
+		g=rg:Select(tp,1,1,nil)
+	else
+		g=Duel.SelectMatchingCard(tp,s.relfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil,tp,false)
+	end
 	if g:GetCount()==0 then return end
-	if Duel.Release(g,REASON_EFFECT)==0 then return end
+	Duel.HintSelection(g)
+	if Duel.Release(g,REASON_EFFECT)==0 or Duel.GetLocationCount(tp,LOCATION_MZONE)==0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local tc=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_HAND+LOCATION_DECK,0,1,1,nil,e,tp):GetFirst()
 	if tc then
