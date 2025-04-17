@@ -36,7 +36,8 @@ function s.atklimit(e,c)
 	return c==e:GetHandler()
 end
 function s.cccon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetAttackTarget()~=nil
+	local c=e:GetHandler()
+	return c:IsRelateToBattle() and c:IsStatus(STATUS_OPPO_BATTLE)
 end
 function s.cfilter(c)
 	return c:IsControlerCanBeChanged() and c:GetCounter(0x106e)>0
@@ -54,11 +55,11 @@ function s.cctg(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:SetLabel(op)
 	if op==1 then
 		e:SetCategory(CATEGORY_COUNTER)
-		local g=Duel.GetMatchingGroup(Card.IsCanAddCounter,tp,0,LOCATION_MZONE,1,1,nil,0x106e,1)
+		local g=Duel.GetMatchingGroup(Card.IsCanAddCounter,tp,0,LOCATION_MZONE,nil,0x106e,1)
 		Duel.SetOperationInfo(0,CATEGORY_COUNTER,g,1,0,0)
 	elseif op==2 then
 		e:SetCategory(CATEGORY_CONTROL)
-		local g=Duel.GetMatchingGroup(s.cfilter,tp,0,LOCATION_MZONE,1,1,nil)
+		local g=Duel.GetMatchingGroup(s.cfilter,tp,0,LOCATION_MZONE,nil)
 		Duel.SetOperationInfo(0,CATEGORY_CONTROL,g,1,0,0)
 	end
 end
@@ -68,6 +69,7 @@ function s.ccop(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		local g=Duel.SelectMatchingCard(tp,Card.IsCanAddCounter,tp,0,LOCATION_MZONE,1,1,nil,0x106e,1)
 		local tc=g:GetFirst()
 		if tc then
+			Duel.HintSelection(g)
 			tc:AddCounter(0x106e,1)
 		end
 	else
@@ -75,6 +77,7 @@ function s.ccop(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		local g=Duel.SelectMatchingCard(tp,s.cfilter,tp,0,LOCATION_MZONE,1,1,nil)
 		local tc=g:GetFirst()
 		if tc then
+			Duel.HintSelection(g)
 			Duel.GetControl(tc,tp)
 		end
 	end
