@@ -31,6 +31,7 @@ function s.initial_effect(c)
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_IGNITION)
 	e3:SetRange(LOCATION_GRAVE)
+	e3:SetCountLimit(1,id+o*2)
 	e3:SetCost(aux.bfgcost)
 	e3:SetOperation(s.atkop)
 	c:RegisterEffect(e3)
@@ -73,7 +74,7 @@ function s.spfilter(c,e,tp)
 end
 function s.bsop(e,tp,eg,ep,ev,re,r,rp)
 	local tg=Duel.GetTargetsRelateToChain()
-	if tg:GetCount()>0 and Duel.SendtoHand(tg,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)>0
+	if tg:GetCount()>0 and Duel.SendtoHand(tg,nil,REASON_EFFECT)>0
 		and tg:IsExists(Card.IsLocation,1,nil,LOCATION_HAND+LOCATION_EXTRA) then
 		local g=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_HAND,0,nil,e,tp)
 		if #g>0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.SelectYesNo(tp,aux.Stringid(id,3)) then
@@ -97,5 +98,5 @@ function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RegisterEffect(e1,tp)
 end
 function s.atkval(e,c)
-	return c:GetBaseDefense()
+	return -c:GetBaseDefense()
 end
