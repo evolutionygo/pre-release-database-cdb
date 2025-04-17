@@ -179,7 +179,7 @@ function s.pztg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.pzop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsRelateToChain() and aux.NecroValleyFilter()(c) then
+	if c:IsRelateToChain() then
 		Duel.MoveToField(c,tp,tp,LOCATION_PZONE,POS_FACEUP,true)
 	end
 end
