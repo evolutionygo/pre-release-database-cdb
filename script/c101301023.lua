@@ -111,7 +111,7 @@ function s.cfilter(c)
 	return c:IsFaceup() and c:IsType(TYPE_EFFECT) and c:GetLevel()>0
 end
 function s.lvtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) and s.filter(chkc) end
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and s.cfilter(chkc) end
 	if chk==0 then return Duel.GetFlagEffect(tp,id)==0
 		and Duel.IsExistingTarget(s.cfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
 	Duel.RegisterFlagEffect(tp,id,RESET_CHAIN,EFFECT_FLAG_OATH,1)
