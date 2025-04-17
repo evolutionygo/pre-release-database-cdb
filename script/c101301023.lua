@@ -11,8 +11,9 @@ function s.initial_effect(c)
 	e0:SetRange(LOCATION_HAND)
 	e0:SetCost(s.reg)
 	c:RegisterEffect(e0)
-	--to hand
+	--search
 	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetRange(LOCATION_PZONE)
@@ -23,41 +24,45 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 	--pzone specialsummon
 	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e2:SetProperty(EFFECT_FLAG_DELAY)
 	e2:SetRange(LOCATION_PZONE)
 	e2:SetCountLimit(1,id+o)
-	e2:SetCondition(s.spcon)
+	e2:SetCondition(s.spcon1)
 	e2:SetTarget(s.sptg)
 	e2:SetOperation(s.spop)
 	c:RegisterEffect(e2)
 	--level up
 	local e3=Effect.CreateEffect(c)
+	e3:SetDescription(aux.Stringid(id,2))
 	e3:SetType(EFFECT_TYPE_QUICK_O)
 	e3:SetCode(EVENT_FREE_CHAIN)
 	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e3:SetRange(LOCATION_MZONE)
+	e3:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_MAIN_END+TIMING_END_PHASE)
 	e3:SetCountLimit(1)
 	e3:SetTarget(s.lvtg)
 	e3:SetOperation(s.lvop)
 	c:RegisterEffect(e3)
 	--spell effect
 	local e4=Effect.CreateEffect(c)
+	e4:SetDescription(aux.Stringid(id,3))
 	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e4:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e4:SetProperty(EFFECT_FLAG_DELAY)
 	e4:SetRange(LOCATION_MZONE)
 	e4:SetCountLimit(1)
-	e4:SetCondition(s.spcon)
+	e4:SetCondition(s.rspcon)
 	e4:SetCost(s.rspcost)
 	e4:SetTarget(s.rsptg)
 	e4:SetOperation(s.rspop)
 	c:RegisterEffect(e4)
 	--place in pzone
 	local e5=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(id,1))
+	e5:SetDescription(aux.Stringid(id,4))
 	e5:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e5:SetCode(EVENT_TO_DECK)
 	e5:SetProperty(EFFECT_FLAG_DELAY)
@@ -88,7 +93,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.ConfirmCards(1-tp,g)
 	end
 end
-function s.spcon(e,tp,eg,ep,ev,re,r,rp)
+function s.spcon1(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(Card.IsControler,1,nil,1-tp)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -98,7 +103,7 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) then
+	if c:IsRelateToChain() then
 		Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
 	end
 end
@@ -115,22 +120,28 @@ function s.lvtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function s.lvop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and tc:IsFaceup() then
-		local opt=Duel.SelectOption(tp,aux.Stringid(id,2),aux.Stringid(id,3),aux.Stringid(id,4))
+	if tc:IsRelateToChain() and tc:IsFaceup() and tc:IsType(TYPE_MONSTER) then
+		local ct={1,2,3}
+		Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,5))
+		local ac=Duel.AnnounceNumber(tp,table.unpack(ct))
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_UPDATE_LEVEL)
-		e1:SetValue(opt+1)
+		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+		e1:SetValue(ac)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 		tc:RegisterEffect(e1)
 	end
+end
+function s.rspcon(e,tp,eg,ep,ev,re,r,rp)
+	return eg:IsExists(Card.IsSummonPlayer,1,nil,1-tp)
 end
 function s.rspcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:SetLabel(1)
 	return true
 end
 function s.rfilter(c)
-	return c:IsSetCard(0x197) and c:GetType()==TYPE_SPELL+TYPE_RITUAL and c:CheckActivateEffect(false,true,false)~=nil and c:IsAbleToRemoveAsCost()
+	return c:IsSetCard(0x197) and c:IsAllTypes(TYPE_RITUAL+TYPE_SPELL) and c:CheckActivateEffect(false,true,false)~=nil and c:IsAbleToRemoveAsCost()
 end
 function s.rsptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then
@@ -168,5 +179,7 @@ function s.pztg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.pzop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) then Duel.MoveToField(c,tp,tp,LOCATION_PZONE,POS_FACEUP,true) end
+	if c:IsRelateToChain() and aux.NecroValleyFilter()(c) then
+		Duel.MoveToField(c,tp,tp,LOCATION_PZONE,POS_FACEUP,true)
+	end
 end
