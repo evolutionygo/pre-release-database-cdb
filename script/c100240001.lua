@@ -1,4 +1,4 @@
---
+--恋する乙女
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--must attack
@@ -25,14 +25,13 @@ function s.initial_effect(c)
 	e4:SetDescription(aux.Stringid(id,0))
 	e4:SetCategory(CATEGORY_CONTROL+CATEGORY_COUNTER)
 	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e4:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e4:SetCode(EVENT_DAMAGE_STEP_END)
 	e4:SetCondition(s.cccon)
 	e4:SetTarget(s.cctg)
 	e4:SetOperation(s.ccop)
 	c:RegisterEffect(e4)
 end
-s.counter_add_list={0x100e}
+s.counter_add_list={0x106e}
 function s.atklimit(e,c)
 	return c==e:GetHandler()
 end
@@ -44,7 +43,7 @@ function s.cfilter(c)
 end
 function s.cctg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local b1=Duel.IsExistingMatchingCard(Card.IsCanAddCounter,tp,0,LOCATION_MZONE,1,nil,0x106e,1)
-	local b2=Duel.IsExistingTarget(s.cfilter,tp,0,LOCATION_MZONE,1,nil)
+	local b2=Duel.IsExistingMatchingCard(s.cfilter,tp,0,LOCATION_MZONE,1,nil)
 	if chk==0 then return b1 or b2 end
 	local op=0
 	if b1 or b2 then
@@ -55,18 +54,18 @@ function s.cctg(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:SetLabel(op)
 	if op==1 then
 		e:SetCategory(CATEGORY_COUNTER)
-		local g=Duel.GetMatchingGroup(tp,Card.IsCanAddCounter,tp,0,LOCATION_MZONE,1,1,nil,0x106e,1)
+		local g=Duel.GetMatchingGroup(Card.IsCanAddCounter,tp,0,LOCATION_MZONE,1,1,nil,0x106e,1)
 		Duel.SetOperationInfo(0,CATEGORY_COUNTER,g,1,0,0)
 	elseif op==2 then
 		e:SetCategory(CATEGORY_CONTROL)
-		local g=Duel.GetMatchingGroup(tp,s.cfilter,tp,0,LOCATION_MZONE,1,1,nil)
+		local g=Duel.GetMatchingGroup(s.cfilter,tp,0,LOCATION_MZONE,1,1,nil)
 		Duel.SetOperationInfo(0,CATEGORY_CONTROL,g,1,0,0)
 	end
 end
 function s.ccop(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if e:GetLabel()==1 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-		local g=Duel.SelectTarget(tp,Card.IsCanAddCounter,tp,0,LOCATION_MZONE,1,1,nil,0x106e,1)
+		local g=Duel.SelectMatchingCard(tp,Card.IsCanAddCounter,tp,0,LOCATION_MZONE,1,1,nil,0x106e,1)
 		local tc=g:GetFirst()
 		if tc then
 			tc:AddCounter(0x106e,1)
@@ -78,11 +77,5 @@ function s.ccop(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		if tc then
 			Duel.GetControl(tc,tp)
 		end
-	end
-end
-function s.ccop(e,tp,eg,ep,ev,re,r,rp)
-	local tc=Duel.GetFirstTarget()
-	if tc:IsFaceup() and tc:IsRelateToEffect(e) and tc:IsControler(1-tp) then
-		tc:AddCounter(0x106e,1)
 	end
 end
