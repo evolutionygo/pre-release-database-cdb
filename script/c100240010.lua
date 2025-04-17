@@ -1,11 +1,12 @@
---
+--魂の結束－ソウル・ユニオン
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
-	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
+	e1:SetCategory(CATEGORY_REMOVE+CATEGORY_SPECIAL_SUMMON+CATEGORY_FUSION_SUMMON+CATEGORY_GRAVE_ACTION)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
+	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetCountLimit(1,id+EFFECT_COUNT_CODE_OATH)
 	e1:SetTarget(s.target)
 	e1:SetOperation(s.activate)
@@ -39,7 +40,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
 	local sc=g:GetFirst()
 	if sc==tc then sc=g:GetNext() end
-	if tc:IsFacedown() or not tc:IsRelateToEffect(e) or not sc:IsRelateToEffect(e) then return end
+	if tc:IsFacedown() or not tc:IsRelateToChain() or not sc:IsRelateToChain() then return end
 	local ac=e:GetLabelObject()
 	if tc==ac then tc=sc end
 	if not ac:IsImmuneToEffect(e) then
@@ -53,7 +54,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		if not ac:IsHasEffect(EFFECT_REVERSE_UPDATE)
 			and Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,nil) then
 			local chkf=tp
-			local mg1=Duel.GetMatchingGroup(s.filter1,tp,LOCATION_GRAVE,0,nil)
+			local mg1=Duel.GetMatchingGroup(s.filter1,tp,LOCATION_GRAVE,0,nil,e)
 			local sg1=Duel.GetMatchingGroup(s.filter2,tp,LOCATION_EXTRA,0,nil,e,tp,mg1,nil,chkf)
 			local mg2=nil
 			local sg2=nil
