@@ -3,9 +3,9 @@ local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddCodeList(c,28168628)
 	--xyz summon
-	aux.AddXyzProcedure(c,nil,4,2,s.ovfilter,aux.Stringid(id,0),99,s.xyzop)
+	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x195),4,2,s.ovfilter,aux.Stringid(id,0),99,s.xyzop)
 	c:EnableReviveLimit()
-	--atk
+	--atkdown
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetCode(EFFECT_UPDATE_ATTACK)
@@ -14,10 +14,11 @@ function s.initial_effect(c)
 	e1:SetValue(-800)
 	e1:SetCondition(s.atkcon1)
 	c:RegisterEffect(e1)
+	--atkup
 	local e2=e1:Clone()
-	e2:SetValue(1000)
 	e2:SetTargetRange(LOCATION_MZONE,0)
 	e2:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x195))
+	e2:SetValue(1000)
 	e2:SetCondition(s.atkcon2)
 	c:RegisterEffect(e2)
 	--destroy
@@ -38,7 +39,10 @@ function s.initial_effect(c)
 		ge1:SetCode(EVENT_BATTLED)
 		ge1:SetOperation(s.checkop)
 		Duel.RegisterEffect(ge1,0)
-	end 
+	end
+end
+function s.ovfilter(c)
+	return c:IsFaceup() and (c:IsSetCard(0x195) or c:IsCode(28168628))
 end
 function s.atkcon1(e)
 	return e:GetHandler():GetOverlayGroup():IsExists(Card.IsAttribute,1,nil,ATTRIBUTE_DARK)
@@ -48,9 +52,6 @@ function s.atkcon2(e)
 end
 function s.atkcon3(e)
 	return e:GetHandler():GetOverlayGroup():IsExists(Card.IsAttribute,1,nil,ATTRIBUTE_EARTH)
-end
-function s.ovfilter(c)
-	return c:IsFaceup() and (c:IsSetCard(0x195) or c:IsCode(28168628))
 end
 function s.xyzop(e,tp,chk)
 	if chk==0 then return Duel.GetFlagEffect(tp,id)>0 and Duel.GetFlagEffect(tp,id+o)==0 end
