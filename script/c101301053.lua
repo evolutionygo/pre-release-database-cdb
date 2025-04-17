@@ -1,4 +1,4 @@
---
+--月光舞踏会
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddCodeList(c,24094653)
@@ -84,6 +84,7 @@ function s.tgop(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.cfilter(c,tp)
 	return c:IsFaceup() and c:IsSetCard(0xdf) and c:IsSummonType(SUMMON_TYPE_FUSION) and c:IsSummonPlayer(tp)
+		and c:IsAllTypes(TYPE_FUSION+TYPE_MONSTER)
 end
 function s.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.cfilter,1,nil,tp)
@@ -101,9 +102,13 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=g:GetFirst()
 	if tc and Duel.SendtoHand(tc,nil,REASON_EFFECT)~=0 and tc:IsLocation(LOCATION_HAND) then
 		Duel.ConfirmCards(1-tp,g)
-		if Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
+		local sg=Duel.GetMatchingGroup(Card.IsDiscardable,tp,LOCATION_HAND,0,nil,REASON_EFFECT+REASON_DISCARD)
+		if sg:GetCount()>0 and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 			Duel.BreakEffect()
-			Duel.DiscardHand(tp,nil,1,1,REASON_EFFECT+REASON_DISCARD,nil)
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DISCARD)
+			local dg=sg:Select(tp,1,1,nil)
+			Duel.ShuffleHand(tp)
+			Duel.SendtoGrave(dg,REASON_EFFECT+REASON_DISCARD)
 			local e1=Effect.CreateEffect(e:GetHandler())
 			e1:SetDescription(aux.Stringid(id,2))
 			e1:SetType(EFFECT_TYPE_FIELD)
