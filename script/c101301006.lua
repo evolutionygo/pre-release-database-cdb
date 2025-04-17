@@ -1,4 +1,4 @@
---
+--月光銀狗
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--special summon
@@ -16,7 +16,7 @@ function s.initial_effect(c)
 	--negate
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
-	e2:SetCategory(CATEGORY_DISABLE)
+	e2:SetCategory(CATEGORY_NEGATE)
 	e2:SetType(EFFECT_TYPE_QUICK_O)
 	e2:SetCode(EVENT_CHAINING)
 	e2:SetCountLimit(1,id+o)
@@ -50,10 +50,14 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CANNOT_DISABLE)
 		e1:SetRange(LOCATION_MZONE)
 		e1:SetAbsoluteRange(tp,1,0)
+		e1:SetCondition(s.splimitcon)
 		e1:SetTarget(s.splimit)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 		tc:RegisterEffect(e1,true)
 	end
+end
+function s.splimitcon(e)
+	return e:GetHandler():IsControler(e:GetOwnerPlayer())
 end
 function s.splimit(e,c)
 	return not c:IsSetCard(0xdf) and c:IsLocation(LOCATION_EXTRA)
@@ -64,7 +68,7 @@ function s.negcon(e,tp,eg,ep,ev,re,r,rp)
 		and re:IsActiveType(TYPE_SPELL+TYPE_TRAP) and Duel.IsChainNegatable(ev)
 end
 function s.cfilter(c)
-	return c:IsSetCard(0xdf) and c:IsType(TYPE_FUSION) and c:IsAbleToRemoveAsCost()
+	return c:IsSetCard(0xdf) and c:IsAllTypes(TYPE_FUSION+TYPE_MONSTER) and c:IsAbleToRemoveAsCost()
 end
 function s.negcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost()
@@ -75,8 +79,7 @@ function s.negcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
 function s.negtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_SZONE,0,1,nil,e,tp,e:GetHandler()) end
+	if chk==0 then return true end
 	Duel.SetOperationInfo(0,CATEGORY_NEGATE,eg,1,0,0)
 end
 function s.negop(e,tp,eg,ep,ev,re,r,rp)
