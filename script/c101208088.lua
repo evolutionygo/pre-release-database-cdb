@@ -25,6 +25,7 @@ function s.initial_effect(c)
 	e2:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCountLimit(1,id+o)
+	e2:SetCondition(s.codecon)
 	e2:SetTarget(s.codetg)
 	e2:SetOperation(s.codeop)
 	c:RegisterEffect(e2)
@@ -50,6 +51,9 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	if tc:IsRelateToChain() and aux.NecroValleyFilter()(tc) then
 		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
 	end
+end
+function s.codecon(e,tp,eg,ep,ev,re,r,rp)
+	return not eg:IsContains(e:GetHandler())
 end
 function s.codefilter(c)
 	return c:IsFaceup() and not c:IsCode(id)
