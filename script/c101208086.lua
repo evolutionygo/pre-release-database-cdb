@@ -47,7 +47,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	if dg:CheckSubGroup(s.gcheck,2,2) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_OPERATECARD)
 		local sg1=dg:SelectSubGroup(tp,s.gcheck,false,2,2)
-		if sg1:GetFirst():IsAbleToGrave() and not sg1:GetFirst():IsAbleToRemove() or Duel.SelectOption(tp,1191,1192)==0 then
+		if sg1:GetFirst():IsAbleToGrave() and (not sg1:GetFirst():IsAbleToRemove() or Duel.SelectOption(tp,1191,1192)==0) then
 			Duel.SendtoGrave(sg1,REASON_EFFECT)
 		elseif sg1:GetFirst():IsAbleToRemove() then
 			Duel.Remove(sg1,POS_FACEUP,REASON_EFFECT)
