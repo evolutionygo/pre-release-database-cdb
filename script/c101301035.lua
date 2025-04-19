@@ -29,7 +29,6 @@ function s.initial_effect(c)
 	e4:SetOperation(s.spop)
 	c:RegisterEffect(e4)
 end
---atk
 function s.matcheck(e,c)
 	local ct=c:GetMaterial():Filter(Card.IsType,nil,TYPE_NORMAL):GetCount()
 	local e1=Effect.CreateEffect(c)
@@ -39,27 +38,33 @@ function s.matcheck(e,c)
 	e1:SetReset(RESET_EVENT+0xff0000)
 	c:RegisterEffect(e1)
 end
---disable
 function s.disfilter(c)
 	return c:IsFaceup() and not c:IsStatus(STATUS_BATTLE_DESTROYED) and not c:IsDisabled()
 end
 function s.discon(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
 	local rc=re:GetHandler()
-	local ct=Duel.GetMatchingGroupCount(Card.IsType,tp,LOCATION_GRAVE+LOCATION_MZONE,0,nil,TYPE_NORMAL)
-	local p,loc=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_CONTROLER,CHAININFO_TRIGGERING_LOCATION)
-	return re:IsActiveType(TYPE_MONSTER) and (rc:IsLevelBelow(ct) or rc:IsRankBelow(ct) or rc:IsLinkBelow(ct)) 
-		and loc==LOCATION_MZONE
-		and Duel.IsExistingMatchingCard(s.disfilter,p,0,LOCATION_MZONE,1,nil)
+	local ct=Duel.GetMatchingGroupCount(aux.AND(Card.IsFaceupEx,Card.IsType),tp,LOCATION_GRAVE+LOCATION_MZONE,0,nil,TYPE_NORMAL)
+	local p,loc,lv,rk=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_CONTROLER,CHAININFO_TRIGGERING_LOCATION,CHAININFO_TRIGGERING_LEVEL,CHAININFO_TRIGGERING_RANK)
+	if not (re:IsActiveType(TYPE_MONSTER) and loc==LOCATION_MZONE and p==1-tp and not c:IsStatus(STATUS_BATTLE_DESTROYED)) then
+		return false
+	end
+	if lv>0 then
+		if ct>=lv then return true end
+	elseif rk>0 then
+		if ct>=rk then return true end
+	elseif re:IsActiveType(TYPE_LINK) then
+		if rc:IsLinkBelow(ct) then return true end
+	end
 end
 function s.disop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.NegateEffect(ev)
 end
---special
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsPreviousLocation(LOCATION_ONFIELD)
 end
 function s.filter(c,e,tp)
-	return c:IsType(TYPE_NORMAL) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENCE)
+	return c:IsType(TYPE_NORMAL) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
@@ -71,6 +76,6 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_DECK,0,1,1,nil,e,tp)
 	if g:GetCount()>0 then
-		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP_DEFENCE)
+		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
 	end
 end
