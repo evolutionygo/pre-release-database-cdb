@@ -14,9 +14,10 @@ function s.initial_effect(c)
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e3:SetCode(EVENT_CHAIN_SOLVING)
+	e3:SetRange(LOCATION_MZONE)
 	e3:SetCondition(s.discon)
 	e3:SetOperation(s.disop)
-	Duel.RegisterEffect(e3,0)
+	c:RegisterEffect(e3)
 	--special
 	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(id,1))
@@ -58,6 +59,7 @@ function s.discon(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.disop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_CARD,0,id)
 	Duel.NegateEffect(ev)
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
