@@ -60,7 +60,6 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local mg=Duel.GetMatchingGroup(aux.NecroValleyFilter(s.filter1),tp,LOCATION_ONFIELD+LOCATION_GRAVE+LOCATION_REMOVED,0,nil,e)
 	aux.FCheckAdditional=s.fcheck
 	local sg1=Duel.GetMatchingGroup(s.filter2,tp,LOCATION_EXTRA,0,nil,e,tp,mg,nil,chkf)
-	aux.FCheckAdditional=nil
 	local mg3=nil
 	local sg2=nil
 	local ce=Duel.GetChainMaterial(tp)
@@ -100,6 +99,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		end
 		tc:CompleteProcedure()
 	end
+	aux.FCheckAdditional=nil
 end
 function s.cfilter(c)
 	return c:IsLocation(LOCATION_GRAVE+LOCATION_REMOVED) or (c:IsLocation(LOCATION_MZONE) and c:IsFaceup())
