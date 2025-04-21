@@ -28,7 +28,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_MZONE,0,1,nil,tp) end
 end
 function s.dop(c,e)
-	if c:IsFaceup() and c:IsRelateToEffect(e) and c:IsCanBeDisabledByEffect(e,false) then
+	if c:IsFaceup() and c:IsCanBeDisabledByEffect(e,false) then
 		Duel.NegateRelatedChain(c,RESET_TURN_SET)
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
@@ -68,12 +68,14 @@ function s.dop(c,e)
 	end
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetMatchingGroup(s.cfilter,tp,LOCATION_MZONE,0,nil)
+	local g=Duel.GetMatchingGroup(s.cfilter,tp,LOCATION_MZONE,0,nil,tp)
 	if g:GetCount()==0 then return end
 	local sg=Group.CreateGroup()
 	for tc in aux.Next(g) do
 		local tg=tc:GetColumnGroup():Filter(Card.IsControler,nil,1-tp)
 		Group.Merge(sg,tg)
 	end
-	Group.ForEach(sg,s.dop,e)
+	for oc in aux.Next(sg) do
+		s.dop(oc,e)
+	end
 end
