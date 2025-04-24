@@ -28,7 +28,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	Duel.ChangeChainOperation(ev,s.repop)
 end
 function s.repop(e,tp,eg,ep,ev,re,r,rp)
-	local sg=Duel.SelectMatchingCard(1-tp,s.thfilter,tp,LOCATION_DECK,0,1,1,nil)
+	local sg=Duel.SelectMatchingCard(1-tp,s.thfilter,1-tp,LOCATION_DECK,0,1,1,nil)
 	local tc=sg:GetFirst()
 	if tc and Duel.SendtoHand(tc,tp,REASON_EFFECT)~=0 then
 		local e1=Effect.CreateEffect(e:GetHandler())

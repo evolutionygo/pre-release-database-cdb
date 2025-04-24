@@ -84,9 +84,9 @@ function s.setop(e,tp,eg,ep,ev,re,r,rp)
 		if Duel.GetLocationCount(1-tp,LOCATION_MZONE)<=0 then return end
 		local sg=Duel.GetMatchingGroup(s.sfilter,tp,LOCATION_SZONE,0,nil,e,tp)
 		::cancel::
-		if sg:GetCount()==0 or not Duel.SelectYesNo(tp,aux.Stringid(id,3)) then return false end
+		if sg:GetCount()==0 or not Duel.SelectYesNo(tp,aux.Stringid(id,4)) then return false end
 		Duel.Hint(HINT_SELECTMSG,1-tp,HINTMSG_SPSUMMON)
-		local g=sg:CancelableSelect(1-tp,1,1)
+		local g=sg:CancelableSelect(1-tp,1,1,nil)
 		if g==nil or g:GetCount()==0 then goto cancel end
 		local tc=g:GetFirst()
 		if tc and Duel.SpecialSummon(tc,0,1-tp,1-tp,false,false,POS_FACEUP)~=0 then
