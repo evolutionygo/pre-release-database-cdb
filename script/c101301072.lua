@@ -18,13 +18,13 @@ function s.initial_effect(c)
 	e2:SetRange(LOCATION_SZONE)
 	e2:SetCode(custom_code)
 	e2:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
-	e2:SetCountLimit(1,id+o*2)
+	e2:SetCountLimit(1,id+o)
 	e2:SetTarget(s.thtg)
 	e2:SetOperation(s.thop)
 	c:RegisterEffect(e2)
 end
 function s.setfilter(c)
-	return c:IsType(TYPE_TRAP) and c:IsType(TYPE_CONTINUOUS) and c:IsSSetable()
+	return c:IsAllTypes(TYPE_CONTINUOUS+TYPE_TRAP) and c:IsSSetable()
 		and (c:GetOriginalLevel()>0
 		or bit.band(c:GetOriginalRace(),0x3fffffff)~=0
 		or bit.band(c:GetOriginalAttribute(),0x7f)~=0

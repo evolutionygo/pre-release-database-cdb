@@ -14,7 +14,7 @@ end
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
 	local ex4=re:IsHasCategory(CATEGORY_DRAW)
 	local ex5=re:IsHasCategory(CATEGORY_SEARCH)
-	return ep==1-tp and (ex4 or ex5)
+	return ex4 or ex5
 end
 function s.thfilter(c)
 	return c:IsAbleToHand()
