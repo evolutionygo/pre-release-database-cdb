@@ -58,7 +58,7 @@ function s.thcon2(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.cfilter,1,nil,tp) and not eg:IsContains(e:GetHandler())
 end
 function s.tgfilter(c,e)
-	return c:IsCanBeEffectTarget(e) and c:IsAbleToHand()
+	return c:IsLocation(LOCATION_GRAVE) and c:IsCanBeEffectTarget(e) and c:IsAbleToHand()
 end
 function s.thtg2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local mg=eg:Filter(s.cfilter,nil,tp):Filter(s.tgfilter,nil,e)
