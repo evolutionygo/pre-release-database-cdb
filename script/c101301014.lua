@@ -34,7 +34,7 @@ function s.sprcon(e,c)
 		and Duel.IsExistingMatchingCard(s.sprfilter,tp,LOCATION_MZONE,0,1,nil)
 end
 function s.cfilter(c)
-	return c:IsRace(RACE_PSYCHO) and c:IsAbleToRemove()
+	return c:IsRace(RACE_PSYCHO) and c:IsAbleToRemoveAsCost()
 end
 function s.rmcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost()

@@ -72,7 +72,7 @@ function s.lvtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SelectTarget(tp,s.lvfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,mat,nil)
 end
 function s.lvop(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetTargetsRelateToChain():Filter(Card.IsType,nil,TYPE_MONSTER)
+	local g=Duel.GetTargetsRelateToChain():Filter(aux.AND(Card.IsType,Card.IsFaceup),nil,TYPE_MONSTER)
 	if g:GetCount()==0 then return end
 	for tc in aux.Next(g) do
 		local e1=Effect.CreateEffect(e:GetHandler())
