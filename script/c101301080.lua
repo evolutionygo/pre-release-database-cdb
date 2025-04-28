@@ -96,7 +96,7 @@ function s.setop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.spfilter(c,tp)
-	return c:IsControler(1-tp) and c:GetOwner()==tp
+	return c:IsControler(1-tp) and c:GetOwner()==tp and c:IsType(TYPE_EFFECT)
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.spfilter,1,nil,tp)
