@@ -12,7 +12,7 @@ jobs:
       contents: write
 
     steps:
-      - name: Clone master branch
+      - name: Clean Clone
         run: |
           rm -rf repo
           git clone --depth=1 --single-branch --branch master https://github.com/${{ github.repository }} repo
@@ -20,12 +20,12 @@ jobs:
           git config user.name "Evolution Bot"
           git config user.email "bot@evolutionygo.com"
           git remote add upstream https://code.moenext.com/mycard/pre-release-database-cdb.git
-          git fetch upstream master --depth=1
+          git fetch upstream master --depth=50
           FETCH_HEAD_SHA=$(git rev-parse FETCH_HEAD)
           git reset --hard ${FETCH_HEAD_SHA}
           echo "SYNC_OK=true" >> $GITHUB_ENV
 
-      - name: Verify repository integrity
+      - name: Verify local repository integrity
         working-directory: repo
         run: git fsck --full
 
