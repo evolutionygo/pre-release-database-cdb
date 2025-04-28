@@ -25,6 +25,7 @@ jobs:
           echo "SYNC_OK=true" >> $GITHUB_ENV
 
       - name: Verify repository integrity
+        working-directory: repo
         run: git fsck --full
 
       - name: Push to origin
