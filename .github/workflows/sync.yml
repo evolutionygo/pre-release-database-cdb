@@ -20,12 +20,12 @@ jobs:
           git config user.email "bot@evolutionygo.com"
           git remote add upstream https://code.moenext.com/mycard/pre-release-database-cdb.git
           git fetch upstream master --depth=1
-          git reset --hard upstream/master
+          FETCH_HEAD_SHA=$(git rev-parse FETCH_HEAD)
+          git reset --hard ${FETCH_HEAD_SHA}
           echo "SYNC_OK=true" >> $GITHUB_ENV
 
-      - name: Cleanup repository
-        working-directory: repo
-        run: git gc --prune=now
+      - name: Verify repository integrity
+        run: git fsck --full
 
       - name: Push to origin
         if: env.SYNC_OK == 'true'
@@ -35,6 +35,4 @@ jobs:
         run: |
           git remote remove origin
           git remote add origin https://x-access-token:${TOKEN}@github.com/${{ github.repository }}.git
-          for i in {1..3}; do
-            git push origin +HEAD:master --force && break || sleep 10;
-          done
+          git push origin +HEAD:master --force
