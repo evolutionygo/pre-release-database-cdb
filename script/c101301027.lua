@@ -37,7 +37,7 @@ function s.initial_effect(c)
 	e3:SetOperation(s.thop)
 	c:RegisterEffect(e3)
 end
-function s.ttcon(e,c,minc)  
+function s.ttcon(e,c,minc)
 	if c==nil then return true end
 	local min,max=c:GetTributeRequirement()
 	return min<=1 and Duel.CheckTribute(c,1)
@@ -49,6 +49,19 @@ function s.ttop(e,tp,eg,ep,ev,re,r,rp,c)
 end
 function s.eftg(e,c)
 	return c:GetOriginalLevel()<=4 and (c:IsAttackAbove(1351) or c:IsDefenseAbove(1351))
+end
+function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
+	local c=e:GetHandler()
+	local tc=Duel.GetAttacker()
+	if tc==c then tc=Duel.GetAttackTarget() end
+	if chk==0 then return tc and tc:IsFaceup() and tc:IsAttribute(ATTRIBUTE_LIGHT) end
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,tc,1,0,0)
+end
+function s.desop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	local tc=Duel.GetAttacker()
+	if tc==c then tc=Duel.GetAttackTarget() end
+	if tc:IsRelateToBattle() then Duel.Destroy(tc,REASON_EFFECT) end
 end
 function s.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return bit.band(r,REASON_EFFECT+REASON_BATTLE)~=0
@@ -67,17 +80,4 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,g)
 	end
-end
-function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
-	local c=e:GetHandler()
-	local tc=Duel.GetAttacker()
-	if tc==c then tc=Duel.GetAttackTarget() end
-	if chk==0 then return tc and tc:IsFaceup() and tc:IsAttribute(ATTRIBUTE_LIGHT) end
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,tc,1,0,0)
-end
-function s.desop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	local tc=Duel.GetAttacker()
-	if tc==c then tc=Duel.GetAttackTarget() end
-	if tc:IsRelateToBattle() then Duel.Destroy(tc,REASON_EFFECT) end
 end

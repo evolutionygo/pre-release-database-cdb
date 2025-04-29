@@ -51,8 +51,7 @@ function s.sptg1(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.spop1(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local ec=aux.ExceptThisCard(e)
-	local g=Duel.GetMatchingGroup(s.cfilter,tp,LOCATION_HAND,0,ec)
+	local g=Duel.GetMatchingGroup(s.cfilter,tp,LOCATION_HAND,0,aux.ExceptThisCard(e))
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DISCARD)
 	local tc=g:Select(tp,1,1,nil):GetFirst()
 	if tc and Duel.SendtoGrave(tc,REASON_EFFECT+REASON_DISCARD)>0 and c:IsRelateToChain() then
