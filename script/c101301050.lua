@@ -58,9 +58,7 @@ function s.antg(e,c)
 	return e:GetHandler():GetLinkedGroup():IsContains(c)
 end
 function s.discon(e,tp,eg,ep,ev,re,r,rp)
-	local loc,seq,p=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_LOCATION,CHAININFO_TRIGGERING_SEQUENCE,CHAININFO_TRIGGERING_CONTROLER)
-	if p==1-tp then seq=seq+16 end
-	return re:IsActiveType(TYPE_MONSTER) and bit.band(loc,LOCATION_MZONE)~=0 and bit.extract(e:GetHandler():GetLinkedZone(),seq)~=0
+	return re:IsActiveType(TYPE_MONSTER) and re:GetHandler():IsRelateToChain() and e:GetHandler():GetLinkedGroup():IsContains(re:GetHandler())
 end
 function s.disop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_CARD,0,id)
