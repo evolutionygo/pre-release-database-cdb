@@ -2,6 +2,7 @@
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddCodeList(c,3055018)
+	--activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
@@ -64,14 +65,13 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local g2=Duel.SelectTarget(tp,s.spfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
 	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,g1,1,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g2,1,0,0)
-	e:SetLabelObject(g1:GetFirst())
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
-	local tc1,tc2=Duel.GetFirstTarget()
-	if tc1~=e:GetLabelObject() then tc1,tc2=tc2,tc1 end
-	if tc1:IsRelateToChain() and Duel.SendtoGrave(tc1,REASON_EFFECT)>0
-		and tc1:IsLocation(LOCATION_GRAVE) and tc2:IsRelateToChain()
-		and aux.NecroValleyFilter()(tc2) then
+	local tg=Duel.GetTargetsRelateToChain()
+	local tc1=tg:Filter(Card.IsLocation,nil,LOCATION_ONFIELD):GetFirst()
+	local tc2=tg:Filter(Card.IsLocation,nil,LOCATION_GRAVE):GetFirst()
+	if tc1 and Duel.SendtoGrave(tc1,REASON_EFFECT)>0 and tc1:IsLocation(LOCATION_GRAVE)
+		and tc2 and aux.NecroValleyFilter()(tc2) then
 		Duel.SpecialSummon(tc2,0,tp,1-tp,false,false,POS_FACEUP_DEFENSE)
 	end
 end
