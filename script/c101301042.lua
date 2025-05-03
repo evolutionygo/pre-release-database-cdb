@@ -93,7 +93,7 @@ function s.ctop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.HintSelection(g)
 		Duel.GetControl(tc,tp)
 	end
-	if c:IsRelateToEffect(e) then
+	if c:IsRelateToChain() then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)

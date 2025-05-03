@@ -58,7 +58,9 @@ function s.antg(e,c)
 	return e:GetHandler():GetLinkedGroup():IsContains(c)
 end
 function s.discon(e,tp,eg,ep,ev,re,r,rp)
-	return re:IsActiveType(TYPE_MONSTER) and re:GetHandler():IsRelateToChain() and e:GetHandler():GetLinkedGroup():IsContains(re:GetHandler())
+	local rc=re:GetHandler()
+	return rc and re:IsActiveType(TYPE_MONSTER) and rc:IsRelateToChain() and e:GetHandler():GetLinkedGroup():IsContains(rc)
+		and rc:IsCanBeDisabledByEffect(e) and Duel.IsChainDisablable(ev)
 end
 function s.disop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_CARD,0,id)

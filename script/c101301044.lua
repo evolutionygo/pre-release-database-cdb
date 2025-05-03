@@ -49,7 +49,7 @@ function s.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) and c:IsFaceup() then
+	if c:IsRelateToCard() and c:IsFaceup() then
 		local atk=c:GetAttack()
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
@@ -76,9 +76,10 @@ end
 function s.eqop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if c:IsRelateToEffect(e) and c:IsFaceup() and c:IsControler(tp) then
-		if Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 or tc:IsFacedown() or not tc:IsRelateToEffect(e) or not tc:IsLocation(LOCATION_MZONE) then
-			Duel.SendtoGrave(c,REASON_EFFECT)
+	if c:IsRelateToChain() and c:IsFaceup() and c:IsControler(tp) then
+		if Duel.GetLocationCount(tp,LOCATION_SZONE)<=0
+			or tc:IsFacedown() or not tc:IsRelateToChain() or not tc:IsLocation(LOCATION_MZONE) then
+			Duel.SendtoGrave(c,REASON_RULE)
 			return
 		end
 		if not Duel.Equip(tp,c,tc) then return end

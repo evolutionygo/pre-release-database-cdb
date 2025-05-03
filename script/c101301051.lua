@@ -60,6 +60,9 @@ end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local ct=Duel.GetMatchingGroupCount(aux.TRUE,tp,LOCATION_FZONE,LOCATION_FZONE,nil)
 	if chk==0 then return ct>0 end
+	if not Duel.IsExistingMatchingCard(aux.TRUE,tp,0,LOCATION_ONFIELD,1,nil) then
+		Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,1500)
+	end
 end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local ct=Duel.GetMatchingGroupCount(aux.TRUE,tp,LOCATION_FZONE,LOCATION_FZONE,nil)
