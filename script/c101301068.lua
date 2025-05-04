@@ -76,7 +76,7 @@ end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetLabel()==1 then
 		local tc=Duel.GetFirstTarget()
-		if tc:IsRelateToEffect(e) and tc:IsAttackPos() then
+		if tc:IsRelateToChain() and tc:IsAttackPos() then
 			Duel.ChangePosition(tc,POS_FACEUP_DEFENSE)
 		end
 	elseif e:GetLabel()==2 then
