@@ -40,6 +40,7 @@ function s.pfilter(c,tp)
 end
 function s.sfilter(c,e,tp)
 	return c:GetOriginalType()&TYPE_MONSTER>0 and c:IsFaceup() and c:IsCanBeSpecialSummoned(e,0,1-tp,false,false,POS_FACEUP,1-tp)
+		and Duel.GetLP(1-tp)>=c:GetBaseAttack()
 end
 function s.settg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local ft=0
@@ -60,7 +61,6 @@ function s.settg(e,tp,eg,ep,ev,re,r,rp,chk)
 		e:SetCategory(0)
 	elseif op==2 then
 		e:SetCategory(CATEGORY_SPECIAL_SUMMON)
-		Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_SZONE)
 	end
 end
 function s.setop(e,tp,eg,ep,ev,re,r,rp)
