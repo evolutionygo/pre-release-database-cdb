@@ -51,7 +51,9 @@ function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return bit.band(r,REASON_EFFECT+REASON_BATTLE)~=0 and e:GetHandler():IsSummonType(SUMMON_TYPE_FUSION)
+	local c=e:GetHandler()
+	return bit.band(r,REASON_EFFECT+REASON_BATTLE)~=0 and c:IsSummonType(SUMMON_TYPE_FUSION)
+		and c:IsPreviousLocation(LOCATION_MZONE)
 end
 function s.spfilter(c,e,tp)
 	return c:IsRace(RACE_SPELLCASTER) and c:IsLevel(4) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
