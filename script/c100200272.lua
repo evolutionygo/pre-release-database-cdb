@@ -32,15 +32,15 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		local c=e:GetHandler()
 		local g=Duel.GetOperatedGroup()
 		local tc=g:GetFirst()
-		Duel.ConfirmCards(1-tp,tc)
+		Duel.ConfirmCards(1-p,tc)
 		if not tc:IsType(TYPE_MONSTER) then end
 		Duel.BreakEffect()
-		if Duel.IsExistingMatchingCard(Card.IsAttribute,tp,LOCATION_GRAVE,0,1,nil,tc:GetAttribute()) then
-			Duel.ShuffleHand(tp)
-			Duel.DiscardHand(tp,aux.TRUE,1,1,REASON_EFFECT+REASON_DISCARD)
+		if Duel.IsExistingMatchingCard(Card.IsAttribute,p,LOCATION_GRAVE,0,1,nil,tc:GetAttribute()) then
+			Duel.ShuffleHand(p)
+			Duel.DiscardHand(p,aux.TRUE,1,1,REASON_EFFECT+REASON_DISCARD)
 		else
-			Duel.Draw(tp,1,REASON_EFFECT)
+			Duel.Draw(p,1,REASON_EFFECT)
 		end
-		Duel.ShuffleHand(tp)
+		Duel.ShuffleHand(p)
 	end
 end
