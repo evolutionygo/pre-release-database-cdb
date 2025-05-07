@@ -1,4 +1,4 @@
---
+--ライトウォーター・ドラゴン
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--spsummon
@@ -19,13 +19,15 @@ function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
 end
 function s.spfilter(c,e,tp)
-	return c:IsRace(RACE_DINOSAUR) and c:IsAttribute(ATTRIBUTE_WIND+ATTRIBUTE_WATER) and c:IsLevelBelow(5) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsRace(RACE_DINOSAUR) and c:IsAttribute(ATTRIBUTE_WIND+ATTRIBUTE_WATER) and c:IsLevelBelow(5)
+		and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENCE)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		local g=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_DECK,0,nil,e,tp)
 		return not Duel.IsPlayerAffectedByEffect(tp,59822133)
-			and Duel.GetLocationCount(tp,LOCATION_MZONE)>2 and g:GetClassCount(Card.GetCode)>=3 end
+			and (e:IsCostChecked() or Duel.GetLocationCount(tp,LOCATION_MZONE)>2)
+			and g:GetCount()>=3 end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,3,tp,LOCATION_DECK)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
@@ -35,8 +37,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		and Duel.GetLocationCount(tp,LOCATION_MZONE)>2
 		and g:GetCount()>=3 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-		local sg1=g:SelectSubGroup(tp,aux.TRUE,false,3,3)
-		local fid=c:GetFieldID()
+		local sg1=g:Select(tp,3,3,nil)
 		local tc=sg1:GetFirst()
 		while tc do
 			Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP)

@@ -1,4 +1,4 @@
---
+--ドリル・アームド・ドラゴン
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--atk up
@@ -18,7 +18,6 @@ function s.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCountLimit(1,id+o)
-	e2:SetCost(s.thcost)
 	e2:SetTarget(s.thtg)
 	e2:SetOperation(s.thop)
 	c:RegisterEffect(e2)
@@ -48,10 +47,6 @@ end
 function s.atktg(e,c)
 	return c:IsRace(RACE_DRAGON) and c:IsAttribute(ATTRIBUTE_WIND)
 end
-function s.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	e:SetLabel(100)
-	return true
-end
 function s.cfilter(c)
 	return (c:IsRace(RACE_DRAGON) and c:IsLevelAbove(7) or c:IsAttribute(ATTRIBUTE_WIND)) and c:IsAbleToRemoveAsCost()
 end
@@ -67,9 +62,7 @@ function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local tg=Duel.GetMatchingGroup(s.thfilter,tp,LOCATION_DECK,0,nil)
 	local _,maxlv=tg:GetMaxGroup(Card.GetLevel)
 	if chk==0 then
-		if e:GetLabel()~=100 then return false end
-		e:SetLabel(0)
-		if #tg==0 then return false end
+		if not e:IsCostChecked() then return false end
 		return cg:CheckSubGroup(s.fselect,1,maxlv,tg)
 	end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
