@@ -48,7 +48,7 @@ function s.atktg(e,c)
 	return c:IsRace(RACE_DRAGON) and c:IsAttribute(ATTRIBUTE_WIND)
 end
 function s.cfilter(c)
-	return (c:IsRace(RACE_DRAGON) and c:IsLevelAbove(7) or c:IsAttribute(ATTRIBUTE_WIND)) and c:IsAbleToRemoveAsCost()
+	return c:IsRace(RACE_DRAGON) and (c:IsLevelAbove(7) or c:IsAttribute(ATTRIBUTE_WIND)) and c:IsAbleToRemoveAsCost()
 end
 function s.fselect(g,tg)
 	return tg:IsExists(Card.IsLevel,1,nil,#g)
