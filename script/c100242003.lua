@@ -22,7 +22,7 @@ function s.filter(c,e,tp)
 end
 function s.fusfilter(c,e,tp,code)
 	return c:IsType(TYPE_FUSION) and aux.IsMaterialListCode(c,code)
-		and Duel.GetLocationCountFromEx(tp,tp,nil,c)>0 and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION|0x19,tp,false,false)
+		and Duel.GetLocationCountFromEx(tp,tp,nil,c)>0 and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_MZONE+LOCATION_GRAVE) and s.filter(chkc,e,tp) end
@@ -45,7 +45,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	if sc then
 		Duel.BreakEffect()
 		sc:SetMaterial(mg)
-		Duel.SpecialSummon(sc,SUMMON_TYPE_FUSION|0x19,tp,tp,false,false,POS_FACEUP)
+		Duel.SpecialSummon(sc,SUMMON_TYPE_FUSION,tp,tp,false,false,POS_FACEUP)
 		tc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,0,1)
 		sc:CompleteProcedure()
 		local e1=Effect.CreateEffect(e:GetHandler())
