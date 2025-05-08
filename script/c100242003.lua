@@ -18,11 +18,11 @@ end
 function s.filter(c,e,tp)
 	return c:IsFaceupEx() and c:IsCode(46986414,38033121) and c:IsAbleToDeck() and not c:IsImmuneToEffect(e)
 		and c:IsCanBeFusionMaterial() and aux.MustMaterialCheck(c,tp,EFFECT_MUST_BE_FMATERIAL)
-		and Duel.IsExistingMatchingCard(s.fusfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp,c:GetCode())
+		and Duel.IsExistingMatchingCard(s.fusfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp,c:GetCode(),c)
 end
-function s.fusfilter(c,e,tp,code)
+function s.fusfilter(c,e,tp,code,mc)
 	return c:IsType(TYPE_FUSION) and aux.IsMaterialListCode(c,code)
-		and Duel.GetLocationCountFromEx(tp,tp,nil,c)>0 and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false)
+		and Duel.GetLocationCountFromEx(tp,tp,mc,c)>0 and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_MZONE+LOCATION_GRAVE) and s.filter(chkc,e,tp) end
@@ -38,14 +38,14 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local code=tc:GetCode()
 	if tc and tc:IsRelateToChain() and aux.NecroValleyFilter()(tc) and not tc:IsImmuneToEffect(e) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-		local sg=Duel.SelectMatchingCard(tp,s.fusfilter,tp,LOCATION_EXTRA,0,1,1,tc,e,tp,code)
+		local sg=Duel.SelectMatchingCard(tp,s.fusfilter,tp,LOCATION_EXTRA,0,1,1,tc,e,tp,code,nil)
 		local sc=sg:GetFirst()
 		if sc then
 			sc:SetMaterial(Group.FromCards(tc))
 			Duel.SendtoDeck(tc,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)
 			Duel.BreakEffect()
 			Duel.SpecialSummon(sc,SUMMON_TYPE_FUSION,tp,tp,false,false,POS_FACEUP)
-			tc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,0,1)
+			sc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,0,1)
 			sc:CompleteProcedure()
 			local e1=Effect.CreateEffect(e:GetHandler())
 			e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
