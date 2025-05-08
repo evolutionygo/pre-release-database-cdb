@@ -34,30 +34,30 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
+	if not aux.MustMaterialCheck(tc,tp,EFFECT_MUST_BE_FMATERIAL) then return end
 	local code=tc:GetCode()
-	if not tc or not tc:IsRelateToChain() or not aux.NecroValleyFilter()(tc)
-		or Duel.SendtoDeck(tc,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)<=0
-		or not tc:IsLocation(LOCATION_DECK+LOCATION_EXTRA) then return end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local sg=Duel.SelectMatchingCard(tp,s.fusfilter,tp,LOCATION_EXTRA,0,1,1,tc,e,tp,code)
-	local mg=Group.FromCards(tc)
-	local sc=sg:GetFirst()
-	if sc then
-		Duel.BreakEffect()
-		sc:SetMaterial(mg)
-		Duel.SpecialSummon(sc,SUMMON_TYPE_FUSION,tp,tp,false,false,POS_FACEUP)
-		tc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,0,1)
-		sc:CompleteProcedure()
-		local e1=Effect.CreateEffect(e:GetHandler())
-		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		e1:SetCode(EVENT_PHASE+PHASE_END)
-		e1:SetCountLimit(1)
-		e1:SetLabelObject(sc)
-		e1:SetLabel(Duel.GetTurnCount())
-		e1:SetCondition(s.rmcon)
-		e1:SetOperation(s.rmop)
-		e1:SetReset(RESET_PHASE+PHASE_END,2)
-		Duel.RegisterEffect(e1,tp)
+	if tc and tc:IsRelateToChain() and aux.NecroValleyFilter()(tc) and not tc:IsImmuneToEffect(e) then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+		local sg=Duel.SelectMatchingCard(tp,s.fusfilter,tp,LOCATION_EXTRA,0,1,1,tc,e,tp,code)
+		local sc=sg:GetFirst()
+		if sc then
+			sc:SetMaterial(Group.FromCards(tc))
+			Duel.SendtoDeck(tc,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)
+			Duel.BreakEffect()
+			Duel.SpecialSummon(sc,SUMMON_TYPE_FUSION,tp,tp,false,false,POS_FACEUP)
+			tc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,0,1)
+			sc:CompleteProcedure()
+			local e1=Effect.CreateEffect(e:GetHandler())
+			e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+			e1:SetCode(EVENT_PHASE+PHASE_END)
+			e1:SetCountLimit(1)
+			e1:SetLabelObject(sc)
+			e1:SetLabel(Duel.GetTurnCount())
+			e1:SetCondition(s.rmcon)
+			e1:SetOperation(s.rmop)
+			e1:SetReset(RESET_PHASE+PHASE_END,2)
+			Duel.RegisterEffect(e1,tp)
+		end
 	end
 end
 function s.rmcon(e,tp,eg,ep,ev,re,r,rp)
