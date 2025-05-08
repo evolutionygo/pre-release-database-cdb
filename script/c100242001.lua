@@ -16,11 +16,11 @@ function s.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetCode(EFFECT_SPSUMMON_PROC)
-	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE)
+	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 	e1:SetRange(LOCATION_EXTRA)
 	e1:SetCondition(s.spcon)
+	e1:SetTarget(s.sptg)
 	e1:SetOperation(s.spop)
-	e1:SetValue(SUMMON_TYPE_SPECIAL)
 	c:RegisterEffect(e1)
 	--spsummon condition
 	local e2=Effect.CreateEffect(c)
@@ -33,6 +33,7 @@ function s.initial_effect(c)
 	aux.EnableChangeCode(c,46986414,LOCATION_MZONE+LOCATION_GRAVE)
 	--search
 	local e4=Effect.CreateEffect(c)
+	e4:SetDescription(aux.Stringid(id,0))
 	e4:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e4:SetCode(EVENT_SPSUMMON_SUCCESS)
@@ -46,21 +47,31 @@ function s.chainfilter(re,tp,cid)
 	return not re:IsActiveType(TYPE_SPELL)
 end
 function s.spfilter(c,tp,sc)
-	return c:IsRace(RACE_SPELLCASTER) and c:IsAttribute(ATTRIBUTE_DARK) and c:IsLevelAbove(6) and c:IsAbleToRemoveAsCost() and Duel.GetLocationCountFromEx(tp,tp,nil,sc)>0
+	return c:IsRace(RACE_SPELLCASTER) and c:IsAttribute(ATTRIBUTE_DARK) and c:IsLevelAbove(6)
+		and c:IsAbleToRemoveAsCost() and Duel.GetLocationCountFromEx(tp,tp,c,sc)>0
+		and c:IsAbleToRemove(tp,POS_FACEUP,REASON_SPSUMMON)
 end
 function s.spcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
 	return Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_MZONE,0,1,nil,tp,c)
+		and Duel.GetFlagEffect(tp,id)==0
 		and (Duel.GetCustomActivityCount(id,tp,ACTIVITY_CHAIN)~=0
 		or Duel.GetCustomActivityCount(id,1-tp,ACTIVITY_CHAIN)~=0)
 end
+function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,c)
+	local g=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_MZONE,0,nil,tp,c)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+	local tc=g:SelectUnselect(nil,tp,false,true,1,1)
+	if tc then
+		e:SetLabelObject(tc)
+		return true
+	else return false end
+end
 function s.spop(e,tp,eg,ep,ev,re,r,rp,c)
 	e:GetHandler():RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD-RESET_TOFIELD+RESET_PHASE+PHASE_END,0,1)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_MZONE,0,1,1,nil)
-	Duel.Remove(g,POS_FACEUP,REASON_COST)
-	Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1)
+	local g=e:GetLabelObject()
+	Duel.Remove(g,POS_FACEUP,REASON_SPSUMMON)
 end
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -73,7 +84,7 @@ function s.splimit(e,se,sp,st)
 	return bit.band(st,SUMMON_TYPE_FUSION)==SUMMON_TYPE_FUSION and Duel.GetFlagEffect(sp,id)==0
 end
 function s.thfilter(c)
-	return c:IsAbleToHand() and (c:IsCode(46986414) or aux.IsCodeListed(c,46986414))
+	return c:IsAbleToHand() and aux.IsCodeOrListed(c,46986414)
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil) end
