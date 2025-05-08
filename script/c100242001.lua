@@ -43,19 +43,17 @@ function s.initial_effect(c)
 	Duel.AddCustomActivityCounter(id,ACTIVITY_CHAIN,s.chainfilter)
 end
 function s.chainfilter(re,tp,cid)
-	local rc=re:GetHandler()
-	return rc:GetType()==TYPE_SPELL and re:IsHasType(EFFECT_TYPE_ACTIVATE)
+	return not re:IsActiveType(TYPE_SPELL)
 end
-function s.spfilter(c)
-	return c:IsRace(RACE_SPELLCASTER) and c:IsAttribute(ATTRIBUTE_DARK) and c:IsLevelAbove(6) and c:IsAbleToRemoveAsCost()
+function s.spfilter(c,tp,sc)
+	return c:IsRace(RACE_SPELLCASTER) and c:IsAttribute(ATTRIBUTE_DARK) and c:IsLevelAbove(6) and c:IsAbleToRemoveAsCost() and Duel.GetLocationCountFromEx(tp,tp,nil,sc)>0
 end
 function s.spcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
-	return Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_MZONE,0,1,nil)
-		and (Duel.GetCustomActivityCount(id,tp,ACTIVITY_CHAIN)>0
-		or Duel.GetCustomActivityCount(id,1-tp,ACTIVITY_CHAIN)>0)
-		and Duel.GetLocationCountFromEx(tp,tp,nil,c)>0
+	return Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_MZONE,0,1,nil,tp,c)
+		and (Duel.GetCustomActivityCount(id,tp,ACTIVITY_CHAIN)~=0
+		or Duel.GetCustomActivityCount(id,1-tp,ACTIVITY_CHAIN)~=0)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp,c)
 	e:GetHandler():RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD-RESET_TOFIELD+RESET_PHASE+PHASE_END,0,1)
