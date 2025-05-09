@@ -1,4 +1,4 @@
---M·HERO ファーネス
+--M・HERO ファーネス
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddCodeList(c,21143940,24094653)
@@ -62,13 +62,17 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	if g:GetCount()>0 then
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,g)
-		Duel.ShuffleHand(tp)
-		Duel.BreakEffect()
-		Duel.DiscardHand(tp,nil,1,1,REASON_EFFECT+REASON_DISCARD)
+		if g:IsExists(Card.IsLocation,1,nil,LOCATION_HAND) then
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DISCARD)
+			local dg=Duel.SelectMatchingCard(tp,Card.IsDiscardable,tp,LOCATION_HAND,0,1,1,nil,REASON_EFFECT)
+			Duel.BreakEffect()
+			Duel.ShuffleHand(tp)
+			Duel.SendtoGrave(dg,REASON_EFFECT+REASON_DISCARD)
+		end
 	end
 end
 function s.spfilter(c,tp,se)
-	return c:IsControler(tp) and not c:IsAttribute(ATTRIBUTE_FIRE) and c:IsSetCard(0x8) and c:IsType(TYPE_FUSION) and c:IsFaceup()
+	return c:IsSummonPlayer(tp) and not c:IsAttribute(ATTRIBUTE_FIRE) and c:IsSetCard(0x8) and c:IsType(TYPE_FUSION) and c:IsFaceup()
 		and (se==nil or c:GetReasonEffect()~=se)
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)

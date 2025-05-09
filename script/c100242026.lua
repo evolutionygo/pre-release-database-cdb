@@ -1,4 +1,4 @@
---M·HERO アトミック
+--M・HERO アトミック
 local s,id,o=GetID()
 function s.initial_effect(c)
 	c:EnableReviveLimit()
