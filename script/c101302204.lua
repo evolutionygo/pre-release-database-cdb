@@ -118,15 +118,14 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local og=Duel.GetOperatedGroup()
 	local ect1=c29724053 and Duel.IsPlayerAffectedByEffect(tp,29724053) and c29724053[tp]
 	local ect2=aux.ExtraDeckSummonCountLimit and Duel.IsPlayerAffectedByEffect(tp,92345028)
-	if og:GetCount()>0 and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_DECK+LOCATION_EXTRA,0,1,nil,e,tp)
-		and Duel.SelectYesNo(tp,aux.Stringid(id,3)) then
+	if og:GetCount()>0 and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_DECK+LOCATION_EXTRA,0,1,nil,e,tp) then
 		local ct=og:GetCount()
 		local ft1=Duel.GetLocationCount(tp,LOCATION_MZONE)
 		local ft2=Duel.GetLocationCountFromEx(tp,tp,nil,TYPE_FUSION+TYPE_SYNCHRO+TYPE_XYZ)
 		local ft3=Duel.GetLocationCountFromEx(tp,tp,nil,TYPE_PENDULUM+TYPE_LINK)
 		local ft=Duel.GetUsableMZoneCount(tp)
-		if ect1>ft2 then ft2=ect1 end
-		if ect1>ft3 then ft3=ect1 end
+		if ect1 and ect1>ft2 then ft2=ect1 end
+		if ect1 and ect1>ft3 then ft3=ect1 end
 		if Duel.IsPlayerAffectedByEffect(tp,59822133) then
 			if ft1>0 then ft1=1 end
 			if ft2>0 then ft2=1 end
@@ -142,7 +141,9 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 		if (not ect1 or ect1>0) and ft>0 and (ft2>0 or ft3>0) then loc=loc+LOCATION_EXTRA end
 		if loc==0 then return end
 		local sg=Duel.GetMatchingGroup(s.spfilter,tp,loc,0,nil,e,tp)
-		if sg:GetCount()==0 then return end
+		if sg:GetCount()==0 or not sg:CheckSubGroup(s.gcheck,1,ct,ft1,ft2,ft3,ect1,ft)
+			or not Duel.SelectYesNo(tp,aux.Stringid(id,3)) then return end
+		Duel.BreakEffect()
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local rg=sg:SelectSubGroup(tp,s.gcheck,false,1,ct,ft1,ft2,ft3,ect1,ft)
 		Duel.SpecialSummon(rg,0,tp,tp,false,false,POS_FACEUP)
