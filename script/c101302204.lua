@@ -116,23 +116,31 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToChain,nil)
 	if Duel.Destroy(g,REASON_EFFECT)==0 then return end
 	local og=Duel.GetOperatedGroup()
+	local ect1=c29724053 and Duel.IsPlayerAffectedByEffect(tp,29724053) and c29724053[tp]
+	local ect2=aux.ExtraDeckSummonCountLimit and Duel.IsPlayerAffectedByEffect(tp,92345028)
 	if og:GetCount()>0 and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_DECK+LOCATION_EXTRA,0,1,nil,e,tp)
+		and (not ect1 or ect1>1)
 		and Duel.SelectYesNo(tp,aux.Stringid(id,3)) then
 		local ct=og:GetCount()
 		local ft1=Duel.GetLocationCount(tp,LOCATION_MZONE)
 		local ft2=Duel.GetLocationCountFromEx(tp,tp,nil,TYPE_FUSION+TYPE_SYNCHRO+TYPE_XYZ)
 		local ft3=Duel.GetLocationCountFromEx(tp,tp,nil,TYPE_PENDULUM+TYPE_LINK)
 		local ft=Duel.GetUsableMZoneCount(tp)
+		if ect1>ft2 then ft2=ect1 end
+		if ect1>ft3 then ft3=ect1 end
 		if Duel.IsPlayerAffectedByEffect(tp,59822133) then
 			if ft1>0 then ft1=1 end
 			if ft2>0 then ft2=1 end
 			if ft3>0 then ft3=1 end
 			ft=1
 		end
-		local ect=(c29724053 and Duel.IsPlayerAffectedByEffect(tp,29724053) and c29724053[tp]) or ft
+		if ect2 and ect2<1 then
+			if ft2>0 then ft2=0 end
+			if ft3>0 then ft3=0 end
+		end
 		local loc=0
 		if ft1>0 then loc=loc+LOCATION_DECK end
-		if ect>0 and (ft2>0 or ft3>0) then loc=loc+LOCATION_EXTRA end
+		if (not ect1 or ect1>0) and ft>0 and (ft2>0 or ft3>0) then loc=loc+LOCATION_EXTRA end
 		if loc==0 then return end
 		local sg=Duel.GetMatchingGroup(s.spfilter,tp,loc,0,nil,e,tp)
 		if sg:GetCount()==0 then return end
