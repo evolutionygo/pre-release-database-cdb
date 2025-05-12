@@ -119,7 +119,6 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local ect1=c29724053 and Duel.IsPlayerAffectedByEffect(tp,29724053) and c29724053[tp]
 	local ect2=aux.ExtraDeckSummonCountLimit and Duel.IsPlayerAffectedByEffect(tp,92345028)
 	if og:GetCount()>0 and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_DECK+LOCATION_EXTRA,0,1,nil,e,tp)
-		and (not ect1 or ect1>1)
 		and Duel.SelectYesNo(tp,aux.Stringid(id,3)) then
 		local ct=og:GetCount()
 		local ft1=Duel.GetLocationCount(tp,LOCATION_MZONE)
