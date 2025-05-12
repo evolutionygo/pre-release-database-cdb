@@ -3,7 +3,7 @@ local s,id,o=GetID()
 function s.initial_effect(c)
 	c:EnableReviveLimit()
 	aux.AddFusionProcMix(c,false,true,s.fusfilter1,s.fusfilter2,s.fusfilter3,s.fusfilter4)
-	aux.AddContactFusionProcedure(c,Card.IsAbleToRemoveAsCost,LOCATION_MZONE+LOCATION_GRAVE,0,Duel.Remove,POS_FACEUP,REASON_SPSUMMON)
+	aux.AddContactFusionProcedure(c,s.fsmfiler(c),LOCATION_MZONE+LOCATION_GRAVE,0,Duel.Remove,POS_FACEUP,REASON_SPSUMMON)
 	aux.EnablePendulumAttribute(c,false)
 	--splimit
 	local e0=Effect.CreateEffect(c)
@@ -59,6 +59,11 @@ function s.initial_effect(c)
 	c:RegisterEffect(e5)
 end
 s.material_type=TYPE_SYNCHRO
+function s.fsmfiler(ec)
+	return	function(c)
+				return c:IsAbleToRemoveAsCost() and Duel.GetFlagEffect(ec:GetControl(),id)==0
+			end
+end
 function s.fusfilter1(c)
 	return c:IsRace(RACE_FIEND) and c:IsFusionType(TYPE_FUSION)
 end
