@@ -144,7 +144,7 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 		local sg=Duel.GetMatchingGroup(s.spfilter,tp,loc,0,nil,e,tp)
 		if sg:GetCount()==0 then return end
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-		local rg=sg:SelectSubGroup(tp,s.gcheck,false,1,ct,ft1,ft2,ft3,ect,ft)
+		local rg=sg:SelectSubGroup(tp,s.gcheck,false,1,ct,ft1,ft2,ft3,ect1,ft)
 		Duel.SpecialSummon(rg,0,tp,tp,false,false,POS_FACEUP)
 	end
 end
