@@ -37,7 +37,7 @@ function s.cfilter(c)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local loc=LOCATION_REMOVED
-	if Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_ONFIELD,0,1,nil) then loc=loc+LOCATION_GRAVE end
+	if Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) then loc=loc+LOCATION_GRAVE end
 	if chkc then return chkc:IsLocation(loc) and chkc:IsControler(tp) and s.spfilter(chkc,e,tp) end
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and Duel.IsExistingTarget(s.spfilter,tp,loc,0,1,nil,e,tp) end

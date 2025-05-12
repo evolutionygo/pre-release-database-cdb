@@ -41,7 +41,7 @@ function s.lvop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
 	local ct=Duel.GetMatchingGroupCount(s.cfilter,tp,LOCATION_ONFIELD+LOCATION_GRAVE,0,nil)
-	if tc:IsFaceup() and tc:IsRelateToChain() and ct>0 then
+	if tc:IsFaceup() and tc:IsRelateToChain() and tc:IsType(TYPE_MONSTER) and ct>0 then
 		Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,2))
 		local lv=Duel.AnnounceLevel(tp,1,ct)
 		local e1=Effect.CreateEffect(c)
