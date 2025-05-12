@@ -3,7 +3,7 @@ local s,id,o=GetID()
 function s.initial_effect(c)
 	c:EnableReviveLimit()
 	aux.AddFusionProcMix(c,false,true,s.fusfilter1,s.fusfilter2,s.fusfilter3,s.fusfilter4)
-	aux.AddContactFusionProcedure(c,Card.IsAbleToRemoveAsCost,LOCATION_ONFIELD+LOCATION_GRAVE,0,Duel.Remove,POS_FACEUP,REASON_SPSUMMON)
+	aux.AddContactFusionProcedure(c,Card.IsAbleToRemoveAsCost,LOCATION_MZONE+LOCATION_GRAVE,0,Duel.Remove,POS_FACEUP,REASON_SPSUMMON)
 	aux.EnablePendulumAttribute(c,false)
 	--splimit
 	local e0=Effect.CreateEffect(c)
