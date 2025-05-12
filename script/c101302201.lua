@@ -30,7 +30,7 @@ function s.cfilter(c)
 	return c:IsFaceupEx() and c:IsSetCard(0xae)
 end
 function s.lvtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) and s.filter(chkc)
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and s.lvfilter(chkc)
 		and chkc:IsControler(tp) end
 	if chk==0 then return Duel.IsExistingTarget(s.lvfilter,tp,LOCATION_MZONE,0,1,nil)
 		and Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_ONFIELD+LOCATION_GRAVE,0,1,nil) end
