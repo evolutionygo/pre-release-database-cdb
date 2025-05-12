@@ -61,7 +61,7 @@ end
 s.material_type=TYPE_SYNCHRO
 function s.fsmfiler(ec)
 	return	function(c)
-				return c:IsAbleToRemoveAsCost() and Duel.GetFlagEffect(ec:GetControl(),id)==0
+				return c:IsAbleToRemoveAsCost() and Duel.GetFlagEffect(ec:GetControler(),id)==0
 			end
 end
 function s.fusfilter1(c)
