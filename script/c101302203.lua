@@ -99,7 +99,7 @@ function s.pentg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.penop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) then
+	if c:IsRelateToChain() and aux.NecroValleyFilter()(c) then
 		Duel.MoveToField(c,tp,tp,LOCATION_PZONE,POS_FACEUP,true)
 	end
 end

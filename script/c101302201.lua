@@ -41,7 +41,7 @@ function s.lvop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
 	local ct=Duel.GetMatchingGroupCount(s.cfilter,tp,LOCATION_ONFIELD+LOCATION_GRAVE,0,nil)
-	if tc:IsFaceup() and tc:IsRelateToEffect(e) and ct>0 then
+	if tc:IsFaceup() and tc:IsRelateToChain() and ct>0 then
 		Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,2))
 		local lv=Duel.AnnounceLevel(tp,1,ct)
 		local e1=Effect.CreateEffect(c)
@@ -69,8 +69,8 @@ end
 function s.spdop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and Duel.Destroy(tc,REASON_EFFECT)~=0
-		and c:IsRelateToEffect(e) and aux.NecroValleyFilter()(c)
+	if tc:IsRelateToChain() and Duel.Destroy(tc,REASON_EFFECT)~=0
+		and c:IsRelateToChain() and aux.NecroValleyFilter()(c)
 		and Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)~=0 then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)

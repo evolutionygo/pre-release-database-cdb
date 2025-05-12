@@ -40,7 +40,7 @@ end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and Duel.Destroy(tc,REASON_EFFECT)~=0 then
+	if tc:IsRelateToChain() and Duel.Destroy(tc,REASON_EFFECT)~=0 then
 		local e1=Effect.CreateEffect(c)
 		e1:SetDescription(aux.Stringid(id,2))
 		e1:SetType(EFFECT_TYPE_FIELD)

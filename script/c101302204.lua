@@ -114,7 +114,7 @@ function s.gcheck(g,ft1,ft2,ft3,ect,ft)
 		and g:FilterCount(Card.IsLocation,nil,LOCATION_EXTRA)<=ect
 end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e)
+	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToChain,nil)
 	if Duel.Destroy(g,REASON_EFFECT)==0 then return end
 	local og=Duel.GetOperatedGroup()
 	if og:GetCount()>0 and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_DECK+LOCATION_EXTRA,0,1,nil,e,tp)
