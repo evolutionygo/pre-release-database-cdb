@@ -146,7 +146,7 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 		if sg:GetCount()==0 then return end
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local rg=sg:SelectSubGroup(tp,s.gcheck,false,1,ct,ft1,ft2,ft3,ect,ft)
-		Duel.SpecialSummon(rg,0,tp,tp,true,false,POS_FACEUP)
+		Duel.SpecialSummon(rg,0,tp,tp,false,false,POS_FACEUP)
 	end
 end
 function s.distg(e,tp,eg,ep,ev,re,r,rp,chk)
