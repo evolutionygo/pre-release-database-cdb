@@ -79,7 +79,11 @@ function s.regop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1)
 end
 function s.splimit(e,se,sp,st)
-	return bit.band(st,SUMMON_TYPE_FUSION)==SUMMON_TYPE_FUSION and Duel.GetFlagEffect(sp,id)==0
+	local c=e:GetHandler()
+	if c:IsLocation(LOCATION_EXTRA) and c:IsFacedown() then
+		return st&SUMMON_TYPE_FUSION==SUMMON_TYPE_FUSION and Duel.GetFlagEffect(sp,id)==0
+	end
+	return true
 end
 function s.desfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0xae)
