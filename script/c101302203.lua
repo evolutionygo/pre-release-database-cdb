@@ -72,7 +72,7 @@ function s.cfilter(c,tp)
 		and c:IsPreviousLocation(LOCATION_ONFIELD) and c:IsPreviousPosition(POS_FACEUP) and c:IsPreviousControler(tp)
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(s.cfilter,1,nil,tp) and e:GetHandler():IsFaceup() and not eg:IsContains(e:GetHandler())
+	return eg:IsExists(s.cfilter,1,e:GetHandler(),tp) and e:GetHandler():IsFaceup() and not eg:IsContains(e:GetHandler())
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
