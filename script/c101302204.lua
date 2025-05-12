@@ -141,7 +141,7 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 		if (not ect1 or ect1>0) and ft>0 and (ft2>0 or ft3>0) then loc=loc+LOCATION_EXTRA end
 		if loc==0 then return end
 		local sg=Duel.GetMatchingGroup(s.spfilter,tp,loc,0,nil,e,tp)
-		if not ect or ect<1 then ect=0 end
+		if not ect then ect=ft end
 		if sg:GetCount()==0 or not sg:CheckSubGroup(s.gcheck,1,ct,ft1,ft2,ft3,ect1,ft)
 			or not Duel.SelectYesNo(tp,aux.Stringid(id,3)) then return end
 		Duel.BreakEffect()
