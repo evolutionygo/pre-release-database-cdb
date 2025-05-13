@@ -40,7 +40,7 @@ function s.pfilter(c,tp)
 end
 function s.sfilter(c,e,tp)
 	return c:GetOriginalType()&TYPE_MONSTER>0 and c:IsFaceup() and c:IsCanBeSpecialSummoned(e,0,1-tp,false,false,POS_FACEUP,1-tp)
-		and Duel.GetLP(1-tp)>=c:GetBaseAttack()
+		and Duel.GetLP(1-tp)>=c:GetBaseAttack() and c:GetTextAttack()>=0
 end
 function s.settg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local ft=0
