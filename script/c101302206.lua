@@ -69,7 +69,7 @@ function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetOperation(s.damop)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
 		tc:RegisterEffect(e1)
-		tc:RegisterFlagEffect(0,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id,3))
+		tc:RegisterFlagEffect(0,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id,3))
 	end
 end
 function s.damtg(e,tp,eg,ep,ev,re,r,rp,chk)
