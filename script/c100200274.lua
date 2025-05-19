@@ -1,4 +1,4 @@
---
+--妖魔ヌリカベ
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--spsummon
