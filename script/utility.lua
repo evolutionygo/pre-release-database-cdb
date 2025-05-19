@@ -1733,7 +1733,7 @@ function Auxiliary.RegisterMergedDelayedEvent_ToSingleCard_RaiseEvent(e,tp,eg,ep
 	for _,mse in ipairs(Auxiliary.merge_single_effects) do
 		local code=mse:GetLabel()
 		local g=mse:GetLabelObject()
-		if #g>0 then
+		if g and #g>0 then
 			local _eg=g:Clone()
 			Duel.RaiseEvent(_eg,code,re,r,rp,ep,ev)
 			g:Clear()
