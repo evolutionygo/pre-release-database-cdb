@@ -13,7 +13,7 @@ function s.fusfilter(c)
     return c:IsSetCard(0xdf)
 end
 
----@type FUSION_SPELL_PRE_SELECT_MAT_LOCATION_FUNCTION 
+---@type FUSION_SPELL_PRE_SELECT_MAT_LOCATION_FUNCTION
 function s.pre_select_mat_location(tc,tp)
     local res=LOCATION_HAND|LOCATION_ONFIELD
     if Duel.IsExistingMatchingCard(s.cfilter,tp,0,LOCATION_MZONE,1,nil) then
