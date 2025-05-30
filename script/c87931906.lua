@@ -2,7 +2,12 @@
 local s,id=GetID()
 function s.initial_effect(c)
 	--Activate
-	local e1=FusionSpell.CreateSummonEffect(c,s.fusfilter,nil,s.pre_select_mat_location,nil,nil,s.fcheck,s.gcheck)
+	local e1=FusionSpell.CreateSummonEffect(c,{
+		fusfilter=s.fusfilter,
+		pre_select_mat_location=s.pre_select_mat_location,
+		additional_fcheck=s.fcheck,
+		additional_gcheck=s.gcheck
+	})
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_FUSION_SUMMON+CATEGORY_DECKDES)
 	e1:SetCountLimit(1,id+EFFECT_COUNT_CODE_OATH)
 	c:RegisterEffect(e1)

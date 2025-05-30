@@ -2,7 +2,10 @@
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--Activate
-	FusionSpell.RegisterSummonEffect(c,s.fusfilter,nil,nil,nil,nil,nil,nil,nil,nil,nil,s.stage_x_operation)
+	FusionSpell.RegisterSummonEffect(c,{
+		fusfilter=s.fusfilter,
+		stage_x_operation=s.stage_x_operation
+	})
 end
 
 ---@param c Card

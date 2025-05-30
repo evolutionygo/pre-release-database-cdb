@@ -5,7 +5,7 @@ function s.initial_effect(c)
 	c:EnableReviveLimit()
 	aux.AddLinkProcedure(c,aux.FilterBoolFunction(Card.IsLinkType,TYPE_EFFECT),2)
 	--fusion
-	local e1=FusionSpell.CreateSummonEffect(c,nil,nil,LOCATION_ONFIELD)
+	local e1=FusionSpell.CreateSummonEffect(c,{pre_select_mat_location=LOCATION_ONFIELD})
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetRange(LOCATION_MZONE)
