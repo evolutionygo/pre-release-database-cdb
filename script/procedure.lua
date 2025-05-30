@@ -2503,7 +2503,10 @@ function FusionSpell.GetSummonTarget(
 		pre_select_mat_opponent_location)
     return function(e,tp,eg,ep,ev,re,r,rp,chk)
         if chk==0 then
-            local sg=Duel.IsExistingMatchingCard(FusionSpell.SummonTargetFilter,tp,fuslocation,0,1,nil,fusfilter,matfilter,e,tp,pre_select_mat_location,mat_operation_code_map,post_select_mat_location,additional_fcheck,sumtype,sumpos,pre_select_mat_opponent_location)
+            local sg=Duel.IsExistingMatchingCard(
+					FusionSpell.SummonTargetFilter,tp,fuslocation,0,1,nil,
+					--- FusionSpell.SummonTargetFilter param
+					fusfilter,matfilter,e,tp,pre_select_mat_location,mat_operation_code_map,post_select_mat_location,additional_fcheck,sumtype,sumpos,pre_select_mat_opponent_location)
 			if sg==true then
 				return true
 			end
@@ -2549,7 +2552,10 @@ function FusionSpell.GetSummonOperation(
 		stage_x_operation,
 		pre_select_mat_opponent_location)
     return function(e,tp,eg,ep,ev,re,r,rp)
-        local sg=Duel.GetMatchingGroup(FusionSpell.SummonTargetFilter,tp,fuslocation,0,nil,fusfilter,matfilter,e,tp,pre_select_mat_location,mat_operation_code_map,post_select_mat_location,additional_fcheck,sumtype,sumpos,pre_select_mat_opponent_location)
+        local sg=Duel.GetMatchingGroup(
+				FusionSpell.SummonTargetFilter,tp,fuslocation,0,nil,
+				--- FusionSpell.SummonTargetFilter param
+				fusfilter,matfilter,e,tp,pre_select_mat_location,mat_operation_code_map,post_select_mat_location,additional_fcheck,sumtype,sumpos,pre_select_mat_opponent_location)
 		--- check for chain material targets
 		local ce_sgs={}
 		local can_chain_material=false
@@ -2644,6 +2650,7 @@ function FusionSpell.GetSummonOperation(
 								material_effect=material_effects[1]
 							else
 								-- more than one effect. ask player to choose from one.
+								-- TODO: let user select them in group
 								material_effect=FusionSpell.MultiMaterialEffectPrompt(material_effects,tp,e)
 							end
 							local fusion_operation=nil
@@ -3028,10 +3035,10 @@ function FusionSpell.GetExtraMaterialEffect(c,tp,summon_card)
 end
 
 -- when a target card can be summoned by multiple effect, ask for which to apply.
----@return true|Effect
+---@return Effect
 function FusionSpell.MultiFusionEffectPrompt(effects,tp)
 	local ops={}
-	for i,eff in ipairs(effects) do
+	for _,eff in ipairs(effects) do
 		table.insert(ops,eff:GetDescription())
 	end
 	local op=Duel.SelectOption(tp,table.unpack(ops))
