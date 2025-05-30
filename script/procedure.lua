@@ -2672,9 +2672,9 @@ function FusionSpell.GetSummonOperation(
 						end
 					end
 
-					-- perform operations on materials
-					for operation,materials in pairs(material_grouped_by_op) do
-						operation(materials,tp)
+					-- perform operations on grouped materials
+					for operation,grouped_materials in pairs(material_grouped_by_op) do
+						operation(grouped_materials,tp)
 					end
 
 					-- mark effect as used once. if count limit reached, reset the effect
