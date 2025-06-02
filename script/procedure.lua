@@ -2527,6 +2527,7 @@ function FusionSpell.GetSummonOperation(
 		if #sg>0 or can_chain_material==true then
 			local materials=Group.CreateGroup()
 			local fusion_effect=nil
+			local fusion_succeeded=false
 
 			while #materials==0 do
 				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
@@ -2675,9 +2676,17 @@ function FusionSpell.GetSummonOperation(
 						end
 					end
 
+					-- before do the operations to the materials, hint the opponent selected materials
+					local confirm_materials=materials:Filter(Card.IsLocation,nil,LOCATION_HAND|LOCATION_EXTRA|LOCATION_DECK)
+					if #confirm_materials>0 then
+						Duel.ConfirmCards(1-tp,confirm_materials)
+					end
+					Duel.HintSelection(materials)
+
+					local operated_material_count=0
 					-- perform operations on grouped materials
 					for operation,grouped_materials in pairs(material_grouped_by_op) do
-						operation(grouped_materials,tp)
+						operated_material_count=operated_material_count+operation(grouped_materials,tp)
 					end
 
 					-- mark effect as used once. if count limit reached, reset the effect
@@ -2688,8 +2697,13 @@ function FusionSpell.GetSummonOperation(
 						end
 					end
 
-					Duel.BreakEffect()
-					Duel.SpecialSummonStep(tc,SUMMON_TYPE_FUSION,tp,tp,false,false,sumpos)
+					-- check if all materials are moved successfully (ラピッド・トリガー)
+					fusion_succeeded=(operated_material_count==#materials)
+
+					if fusion_succeeded==true then
+						Duel.BreakEffect()
+						Duel.SpecialSummonStep(tc,SUMMON_TYPE_FUSION,tp,tp,false,false,sumpos)
+					end
 				else
 					--- fusion with chain material
 					fusion_effect:GetOperation()(e,e,tp,tc,materials,sumtype,sumpos)
@@ -2698,13 +2712,18 @@ function FusionSpell.GetSummonOperation(
 					if fusion_effect:CheckCountLimit(tp)==false then
 						fusion_effect:Reset()
 					end
+
+					-- for chain material effects as of 2025 May it always succeeds
+					fusion_succeeded=true
 				end
 
-				stage_x_operation(e,tc,tp,FusionSpell.STAGE_BEFORE_SUMMON_COMPLETE,materials_from_spell_card,materials)
-				Duel.SpecialSummonComplete()
-				stage_x_operation(e,tc,tp,FusionSpell.STAGE_BEFORE_PROCEDURE_COMPLETE,materials_from_spell_card,materials)
-				tc:CompleteProcedure()
-				stage_x_operation(e,tc,tp,FusionSpell.STAGE_AT_SUMMON_OPERATION_FINISH,materials_from_spell_card,materials)
+				if fusion_succeeded==true then
+					stage_x_operation(e,tc,tp,FusionSpell.STAGE_BEFORE_SUMMON_COMPLETE,materials_from_spell_card,materials)
+					Duel.SpecialSummonComplete()
+					stage_x_operation(e,tc,tp,FusionSpell.STAGE_BEFORE_PROCEDURE_COMPLETE,materials_from_spell_card,materials)
+					tc:CompleteProcedure()
+					stage_x_operation(e,tc,tp,FusionSpell.STAGE_AT_SUMMON_OPERATION_FINISH,materials_from_spell_card,materials)
+				end
 			end
 		end
 		stage_x_operation(e,tc,tp,FusionSpell.STAGE_AT_ALL_OPERATION_FINISH)
