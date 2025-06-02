@@ -2420,6 +2420,7 @@ function FusionSpell.CreateSummonEffect(c,opts)
 		pre_select_mat_opponent_location,
 		gc
 	))
+	e1:SetDescription(1169) --- 融合召喚
 
 	return e1
 end
@@ -2681,7 +2682,7 @@ function FusionSpell.GetSummonOperation(
 					if #confirm_materials>0 then
 						Duel.ConfirmCards(1-tp,confirm_materials)
 					end
-					Duel.HintSelection(materials)
+					Duel.HintSelection(materials-confirm_materials)
 
 					local operated_material_count=0
 					-- perform operations on grouped materials
@@ -2691,6 +2692,8 @@ function FusionSpell.GetSummonOperation(
 
 					-- mark effect as used once. if count limit reached, reset the effect
 					for effect,_ in pairs(applied_extra_effects) do
+						--- hint opponent that this effect is applied
+						Duel.Hint(HINT_OPSELECTED,1-tp,effect:GetDescription())
 						effect:UseCountLimit(tp)
 						if effect:CheckCountLimit(tp)==false then
 							effect:Reset()
@@ -2705,6 +2708,9 @@ function FusionSpell.GetSummonOperation(
 						Duel.SpecialSummonStep(tc,SUMMON_TYPE_FUSION,tp,tp,false,false,sumpos)
 					end
 				else
+					--- hint opponent that this effect is applied
+					Duel.Hint(HINT_OPSELECTED,1-tp,fusion_effect:GetDescription())
+
 					--- fusion with chain material
 					fusion_effect:GetOperation()(e,e,tp,tc,materials,sumtype,sumpos)
 					--- use the chain material effect, reset if exhausted
