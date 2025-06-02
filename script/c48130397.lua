@@ -3,8 +3,8 @@ local s,id,o=GetID()
 function s.initial_effect(c)
 	--Activate
 	local e1=FusionSpell.CreateSummonEffect(c,{
-		pre_select_mat_location=LOCATION_ONFIELD,
-		pre_select_mat_opponent_location=LOCATION_ONFIELD,
+		pre_select_mat_location=LOCATION_MZONE,
+		pre_select_mat_opponent_location=LOCATION_MZONE,
 		extra_target=s.extra_target
 		})
 	e1:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_END_PHASE)

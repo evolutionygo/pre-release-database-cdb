@@ -55,7 +55,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetValue(s.fuslimit)
 	e1:SetReset(RESET_PHASE+PHASE_END)
 	Duel.RegisterEffect(e1,tp)
-	   --Can also banish monsters from your GY as material once when you Fusion Summon this turn
+	-- Can also banish monsters from your GY as material once when you Fusion Summon this turn
 	local e2=Effect.CreateEffect(e:GetHandler())
 	e2:SetDescription(aux.Stringid(id,2))
 	e2:SetType(EFFECT_TYPE_FIELD)
@@ -64,7 +64,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	e2:SetCountLimit(1)
 	e2:SetTarget(s.mttg)
 	e2:SetOperation(function() return FusionSpell.FUSION_OPERATION_BANISH end)
-	e2:SetValue(1)
+	e2:SetValue(function(fusion_effect,c) return c and c:IsControler(fusion_effect:GetHandlerPlayer()) end)
 	e2:SetReset(RESET_PHASE+PHASE_END)
 	Duel.RegisterEffect(e2,tp)
 end
