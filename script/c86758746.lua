@@ -25,6 +25,7 @@ end
 function s.fusop(e,tp,eg,ep,ev,re,r,rp)
 	--Once this turn, if you Fusion Summon an "Amazoness" Fusion Monster this turn, you can also send 1 "Amazoness" monster from your Extra Deck to the GY as material.
 	local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetCode(EFFECT_EXTRA_FUSION_MATERIAL)
 	e1:SetCountLimit(1)

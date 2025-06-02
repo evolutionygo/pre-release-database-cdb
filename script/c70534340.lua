@@ -7,7 +7,7 @@ function s.initial_effect(c)
 	--spsummon
 	local e1=FusionSpell.CreateSummonEffect(c,{
 		fusfilter=s.fusfilter,
-		pre_select_mat_location=LOCATION_GRAVE|LOCATION_ONFIELD|LOCATION_REMOVED,
+		pre_select_mat_location=LOCATION_GRAVE|LOCATION_MZONE|LOCATION_REMOVED,
 		mat_operation_code_map={
 			{ [LOCATION_DECK] = FusionSpell.FUSION_OPERATION_GRAVE },
 			{ [0xff] = FusionSpell.FUSION_OPERATION_SHUFFLE }

@@ -85,6 +85,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 			e1:SetType(EFFECT_TYPE_FIELD)
 			e1:SetCode(EFFECT_EXTRA_FUSION_MATERIAL)
 			e1:SetCountLimit(1)
+			e1:SetDescription(aux.Stringid(id,3))
 			e1:SetTargetRange(LOCATION_GRAVE,0)
 			e1:SetTarget(function(_,c) return c:IsAbleToRemove() and c:IsType(TYPE_MONSTER) end)
 			e1:SetOperation(function() return FusionSpell.FUSION_OPERATION_BANISH end)
@@ -94,36 +95,3 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 end
-
--- --月光舞踏会
--- local s,id=GetID()
--- function s.initial_effect(c)
--- 	--Activate
--- 	local e1=Effect.CreateEffect(c)
--- 	e1:SetType(EFFECT_TYPE_ACTIVATE)
--- 	e1:SetCode(EVENT_FREE_CHAIN)
--- 	c:RegisterEffect(e1)
--- 	--fake one, activate to get extra materials
--- 	local e2=Effect.CreateEffect(c)
--- 	e2:SetDescription(aux.Stringid(id,0))
--- 	e2:SetType(EFFECT_TYPE_IGNITION)
--- 	e2:SetRange(LOCATION_SZONE)
--- 	e2:SetOperation(s.op)
--- 	c:RegisterEffect(e2)
--- end
-
--- function s.op(e,tp,eg,ep,ev,re,r,rp)
---     --Once this turn, if you Fusion Summon a "Lunalight" monster, you can also banish monsters from your grave as material
---     local c=e:GetHandler()
---     local e1=Effect.CreateEffect(c)
---     e1:SetType(EFFECT_TYPE_FIELD)
---     e1:SetCode(EFFECT_EXTRA_FUSION_MATERIAL)
---     e1:SetCountLimit(1)
---     e1:SetTargetRange(LOCATION_GRAVE,0)
---     e1:SetTarget(function(e,c) return c:IsAbleToRemove() and c:IsType(TYPE_MONSTER) end)
---     e1:SetOperation(function() return FusionSpell.FUSION_OPERATION_BANISH end)
---     e1:SetValue(function(e,c) return c and c:IsSetCard(0xdf) and c:IsControler(e:GetHandlerPlayer()) end)
---     e1:SetReset(RESET_PHASE|PHASE_END)
---     Duel.RegisterEffect(e1,tp)
--- end
-
