@@ -80,17 +80,17 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 			local dg=sg:Select(tp,1,1,nil)
 			Duel.ShuffleHand(tp)
 			Duel.SendtoGrave(dg,REASON_EFFECT+REASON_DISCARD)
-            --Once this turn, if you Fusion Summon a "Lunalight" monster, you can also banish monsters from your grave as material
-            local e1=Effect.CreateEffect(e:GetHandler())
-            e1:SetType(EFFECT_TYPE_FIELD)
-            e1:SetCode(EFFECT_EXTRA_FUSION_MATERIAL)
-            e1:SetCountLimit(1)
-            e1:SetTargetRange(LOCATION_GRAVE,0)
-            e1:SetTarget(function(_,c) return c:IsAbleToRemove() and c:IsType(TYPE_MONSTER) end)
-            e1:SetOperation(function() return FusionSpell.FUSION_OPERATION_BANISH end)
-            e1:SetValue(function(fusion_effect,c) return c and c:IsSetCard(0xdf) and c:IsControler(fusion_effect:GetHandlerPlayer()) end)
-            e1:SetReset(RESET_PHASE|PHASE_END)
-            Duel.RegisterEffect(e1,tp)
+			--Once this turn, if you Fusion Summon a "Lunalight" monster, you can also banish monsters from your grave as material
+			local e1=Effect.CreateEffect(e:GetHandler())
+			e1:SetType(EFFECT_TYPE_FIELD)
+			e1:SetCode(EFFECT_EXTRA_FUSION_MATERIAL)
+			e1:SetCountLimit(1)
+			e1:SetTargetRange(LOCATION_GRAVE,0)
+			e1:SetTarget(function(_,c) return c:IsAbleToRemove() and c:IsType(TYPE_MONSTER) end)
+			e1:SetOperation(function() return FusionSpell.FUSION_OPERATION_BANISH end)
+			e1:SetValue(function(fusion_effect,c) return c and c:IsSetCard(0xdf) and c:IsControler(fusion_effect:GetHandlerPlayer()) end)
+			e1:SetReset(RESET_PHASE|PHASE_END)
+			Duel.RegisterEffect(e1,tp)
 		end
 	end
 end

@@ -967,7 +967,7 @@ function Auxiliary.FOperationMix(insf,sub,...)
 end
 function Auxiliary.FConditionFilterMix(c,fc,sub,notfusion,...)
 	local check_type=notfusion and SUMMON_TYPE_SPECIAL or SUMMON_TYPE_FUSION
-	if not c:IsCanBeFusionMaterial(fc,check_type) then return false end
+	if not FusionSpell.IsCanBeFusionMaterial(c,fc,check_type) then return false end
 	for i,f in ipairs({...}) do
 		if f(c,fc,sub) then return true end
 	end
@@ -1369,7 +1369,7 @@ function Auxiliary.AddFusionProcShaddoll(c,attr)
 	c:RegisterEffect(e1)
 end
 function Auxiliary.FShaddollFilter(c,fc,attr)
-	return (Auxiliary.FShaddollFilter1(c) or Auxiliary.FShaddollFilter2(c,attr)) and c:IsCanBeFusionMaterial(fc) and not c:IsHasEffect(6205579)
+	return (Auxiliary.FShaddollFilter1(c) or Auxiliary.FShaddollFilter2(c,attr)) and FusionSpell.IsCanBeFusionMaterial(c,fc) and not c:IsHasEffect(6205579)
 end
 function Auxiliary.FShaddollExFilter(c,fc,attr,fe)
 	return c:IsFaceup() and not c:IsImmuneToEffect(fe) and Auxiliary.FShaddollFilter(c,fc,attr)
@@ -1449,7 +1449,7 @@ end
 
 --Fusion Summon Effect
 function Auxiliary.FMaterialFilter(c,e,tp)
-	return c:IsCanBeFusionMaterial()
+	return FusionSpell.IsCanBeFusionMaterial(c)
 end
 function Auxiliary.FMaterialRemoveFilter(c,e,tp)
 	return c:IsAbleToRemove()
@@ -1720,7 +1720,7 @@ function Auxiliary.AddContactFusionProcedure(c,filter,self_location,opponent_loc
 	return e2
 end
 function Auxiliary.ContactFusionMaterialFilter(c,fc,filter)
-	return c:IsCanBeFusionMaterial(fc,SUMMON_TYPE_SPECIAL) and (not filter or filter(c,fc))
+	return FusionSpell.IsCanBeFusionMaterial(c,fc,SUMMON_TYPE_SPECIAL) and (not filter or filter(c,fc))
 end
 function Auxiliary.ContactFusionCondition(filter,self_location,opponent_location)
 	return	function(e,c)
@@ -2368,7 +2368,7 @@ FusionSpell = {}
 ---         { [0xff] = FusionSpell.FUSION_OPERATION_GRAVE }
 ---     }
 ---     ```
---- @field post_select_mat_location? integer|nil
+--- @field post_select_mat_location? integer
 ---     Location(s) to look for materials after they've been selected.
 --- @field additional_fcheck? FUSION_FGCHECK_FUNCTION
 ---     Optional final check to validate the selected material group.
@@ -2389,14 +2389,43 @@ FusionSpell = {}
 ---     Opponent-side locations to search for materials before they are selected.
 
 
---- Add LOCATION_EXTRA to EFFECT_EXTRA_FUSION_MATERIAL list, remove once core updated
+
+--- Add LOCATION_EXTRA and opponent mzone to EFFECT_EXTRA_FUSION_MATERIAL list, remove once core updated
 function FusionSpell.GetFusionMaterial(tp,locations)
-    local res=Duel.GetFusionMaterial(tp,locations)
-    local g=Duel.GetMatchingGroup(Card.IsHasEffect,tp,LOCATION_EXTRA,0,nil,EFFECT_EXTRA_FUSION_MATERIAL)
-    if #g>0 then
-        res:Merge(g)
-    end
-    return res
+	local res=Duel.GetFusionMaterial(tp,locations)
+	local g_from_extra=Duel.GetMatchingGroup(Card.IsHasEffect,tp,LOCATION_EXTRA,0,nil,EFFECT_EXTRA_FUSION_MATERIAL)
+	if #g_from_extra>0 then
+		res:Merge(g_from_extra)
+	end
+	local g_from_opponent_field=Duel.GetMatchingGroup(Card.IsHasEffect,tp,0,LOCATION_ONFIELD,nil,EFFECT_EXTRA_FUSION_MATERIAL)
+	if #g_from_opponent_field>0 then
+		res:Merge(g_from_opponent_field)
+	end
+	return res
+end
+
+--- Workaround for IsCanBeFusionMaterial, remove once core fixes
+--- @param c Card
+--- @param tc Card
+--- @param sumtype? integer
+function FusionSpell.IsCanBeFusionMaterial(c,tc,sumtype)
+	sumtype=sumtype or SUMMON_TYPE_FUSION
+	--- Prohibition will prevent card to be fusion material
+	if c:IsForbidden()==true then
+		return false
+	end
+	local can_not_be_fusion_material_effects={c:IsHasEffect(EFFECT_CANNOT_BE_FUSION_MATERIAL)}
+	for _,effect in ipairs(can_not_be_fusion_material_effects) do
+		local value=effect:GetValue()
+		if value~=nil then
+			if type(value)=='function' and value(effect,tc,sumtype)==true then
+				return false
+			elseif value==1 or value==true then
+				return false
+			end
+		end
+	end
+	return true
 end
 
 --- Get possible materials from opponent locations, must be face-up
@@ -2406,12 +2435,12 @@ end
 
 --- Registers a Fusion Summon effect to a card.
 --- @param c Card                         -- The card to register the effect to.
---- @param opts FusionEffectParams
+--- @param opts? FusionEffectParams
 --- @return Effect                        -- The registered effect object.
 function FusionSpell.RegisterSummonEffect(c,opts)
-    local e1 = FusionSpell.CreateSummonEffect(c,opts)
-    Card.RegisterEffect(c, e1)
-    return e1
+	local e1 = FusionSpell.CreateSummonEffect(c,opts)
+	Card.RegisterEffect(c, e1)
+	return e1
 end
 
 --- Creates and returns a Fusion Summon effect, attached to the specified card.
@@ -2421,73 +2450,73 @@ end
 --- @return Effect The created and configured `Effect` object.
 function FusionSpell.CreateSummonEffect(c,opts)
 	opts=opts or {}
-    local fusfilter=opts.fusfilter
-    local matfilter=opts.matfilter or aux.TRUE
-    local pre_select_mat_location=opts.pre_select_mat_location or (LOCATION_HAND | LOCATION_MZONE)
-    local mat_operation_code_map=opts.mat_operation_code_map or {}
-    local post_select_mat_location=opts.post_select_mat_location
-    local additional_fcheck=opts.additional_fcheck
-    local additional_gcheck=opts.additional_gcheck
-    local fuslocation=opts.fuslocation or LOCATION_EXTRA
-    local sumtype=opts.sumtype or SUMMON_TYPE_FUSION
-    local sumpos=opts.sumpos or POS_FACEUP
-    local stage_x_operation=opts.stage_x_operation or aux.TRUE
-    local extra_target=opts.extra_target
-    local pre_select_mat_opponent_location=opts.pre_select_mat_opponent_location
+	local fusfilter=opts.fusfilter or aux.TRUE
+	local matfilter=opts.matfilter or aux.TRUE
+	local pre_select_mat_location=opts.pre_select_mat_location or (LOCATION_HAND|LOCATION_MZONE)
+	local mat_operation_code_map=opts.mat_operation_code_map or {}
+	local post_select_mat_location=opts.post_select_mat_location
+	local additional_fcheck=opts.additional_fcheck or aux.TRUE
+	local additional_gcheck=opts.additional_gcheck or aux.TRUE
+	local fuslocation=opts.fuslocation or LOCATION_EXTRA
+	local sumtype=opts.sumtype or SUMMON_TYPE_FUSION
+	local sumpos=opts.sumpos or POS_FACEUP
+	local stage_x_operation=opts.stage_x_operation or aux.TRUE
+	local extra_target=opts.extra_target or aux.TRUE
+	local pre_select_mat_opponent_location=opts.pre_select_mat_opponent_location or 0
 
-    -- Ensure material operation fallbacks are present
-    table.insert(mat_operation_code_map,{ [LOCATION_GRAVE] = FusionSpell.FUSION_OPERATION_BANISH })
-    table.insert(mat_operation_code_map,{ [0xff] = FusionSpell.FUSION_OPERATION_GRAVE })
+	-- Ensure material operation fallbacks are present
+	table.insert(mat_operation_code_map,{ [LOCATION_GRAVE] = FusionSpell.FUSION_OPERATION_BANISH })
+	table.insert(mat_operation_code_map,{ [0xff] = FusionSpell.FUSION_OPERATION_GRAVE })
 
-    -- Build and return the effect
-    local e1 = Effect.CreateEffect(c)
-    e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_FUSION_SUMMON)
-    e1:SetType(EFFECT_TYPE_ACTIVATE)
-    e1:SetCode(EVENT_FREE_CHAIN)
-    e1:SetTarget(FusionSpell.GetSummonTarget(
-        fusfilter,
-        matfilter,
-        pre_select_mat_location,
-        mat_operation_code_map,
-        post_select_mat_location,
-        additional_fcheck,
-        additional_gcheck,
-        fuslocation,
-        sumtype,
-        sumpos,
-        extra_target,
-        pre_select_mat_opponent_location
-    ))
-    e1:SetOperation(FusionSpell.GetSummonOperation(
-        fusfilter,
-        matfilter,
-        pre_select_mat_location,
-        mat_operation_code_map,
-        post_select_mat_location,
-        additional_fcheck,
-        additional_gcheck,
-        fuslocation,
-        sumtype,
-        sumpos,
-        stage_x_operation,
-        pre_select_mat_opponent_location
-    ))
+	-- Build and return the effect
+	local e1 = Effect.CreateEffect(c)
+	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_FUSION_SUMMON)
+	e1:SetType(EFFECT_TYPE_ACTIVATE)
+	e1:SetCode(EVENT_FREE_CHAIN)
+	e1:SetTarget(FusionSpell.GetSummonTarget(
+		fusfilter,
+		matfilter,
+		pre_select_mat_location,
+		mat_operation_code_map,
+		post_select_mat_location,
+		additional_fcheck,
+		additional_gcheck,
+		fuslocation,
+		sumtype,
+		sumpos,
+		extra_target,
+		pre_select_mat_opponent_location
+	))
+	e1:SetOperation(FusionSpell.GetSummonOperation(
+		fusfilter,
+		matfilter,
+		pre_select_mat_location,
+		mat_operation_code_map,
+		post_select_mat_location,
+		additional_fcheck,
+		additional_gcheck,
+		fuslocation,
+		sumtype,
+		sumpos,
+		stage_x_operation,
+		pre_select_mat_opponent_location
+	))
 
-    return e1
+	return e1
 end
 
----@param fusfilter (fun(c:Card):boolean)? filter for the monster to be Fusion Summoned
----@param matfilter (fun(c:Card):boolean)? filter for the materials, use it only under very strong limitation like D-Fusion.
----@param pre_select_mat_location (integer|FUSION_SPELL_PRE_SELECT_MAT_LOCATION_FUNCTION)? location where to find the materials before known the materials
+---@param fusfilter fun(c:Card):boolean filter for the monster to be Fusion Summoned
+---@param matfilter fun(c:Card):boolean filter for the materials, use it only under very strong limitation like D-Fusion.
+---@param pre_select_mat_location integer|FUSION_SPELL_PRE_SELECT_MAT_LOCATION_FUNCTION location where to find the materials before known the materials
 ---@param mat_operation_code_map {[integer]:FUSION_OPERATION_CODE}[] operation code to do for the materials, it will be check in order
 ---@param post_select_mat_location integer? location where to find the materials after known the materials
----@param additional_fcheck function? function to check the final material group fits the requirement
----@param additional_gcheck function? function to check the part of potiential material group fits the requirement to improve performance
+---@param additional_fcheck FUSION_FGCHECK_FUNCTION function to check the final material group fits the requirement
+---@param additional_gcheck FUSION_FGCHECK_FUNCTION function to check the part of potiential material group fits the requirement to improve performance
 ---@param fuslocation integer location where to summon fusion monsters from (default LOCATION_EXTRA), use it on Clock Lizard
 ---@param sumtype integer summon type
 ---@param sumpos integer summon position
----@param extra_target function? extra target function to add opration info etc
----@param pre_select_mat_opponent_location (integer|FUSION_SPELL_PRE_SELECT_MAT_LOCATION_FUNCTION)? location where to find the materials before known the materials on opponent location
+---@param extra_target fun(e:Effect, tp:integer, eg:Group, ep:integer, ev:integer, re:Effect, r:integer, rp:integer, chk:integer):nil extra target function to add opration info etc
+---@param pre_select_mat_opponent_location integer|FUSION_SPELL_PRE_SELECT_MAT_LOCATION_FUNCTION location where to find the materials before known the materials on opponent location
 function FusionSpell.GetSummonTarget(
 		fusfilter,
 		matfilter,
@@ -2501,9 +2530,12 @@ function FusionSpell.GetSummonTarget(
 		sumpos,
 		extra_target,
 		pre_select_mat_opponent_location)
-    return function(e,tp,eg,ep,ev,re,r,rp,chk)
-        if chk==0 then
-            local sg=Duel.IsExistingMatchingCard(
+	return function(e,tp,eg,ep,ev,re,r,rp,chk)
+		if chk==0 then
+			if extra_target(e,tp,eg,ep,ev,re,r,rp,chk)==false then
+				return false
+			end
+			local sg=Duel.IsExistingMatchingCard(
 					FusionSpell.SummonTargetFilter,tp,fuslocation,0,1,nil,
 					--- FusionSpell.SummonTargetFilter param
 					fusfilter,matfilter,e,tp,pre_select_mat_location,mat_operation_code_map,post_select_mat_location,additional_fcheck,sumtype,sumpos,pre_select_mat_opponent_location)
@@ -2518,26 +2550,24 @@ function FusionSpell.GetSummonTarget(
 				end
 			end
 			return false
-        end
-        Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,fuslocation)
-		if extra_target~=nil then
-			extra_target(e,tp,eg,ep,ev,re,r,rp,chk)
 		end
-    end
+		Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,fuslocation)
+		extra_target(e,tp,eg,ep,ev,re,r,rp,chk)
+	end
 end
 
----@param fusfilter	fun(c:Card):boolean filter for the monster to be Fusion Summoned
+---@param fusfilter fun(c:Card):boolean filter for the monster to be Fusion Summoned
 ---@param matfilter	fun(c:Card):boolean filter for the materials, use it only under very strong limitation like D-Fusion.
 ---@param pre_select_mat_location integer|FUSION_SPELL_PRE_SELECT_MAT_LOCATION_FUNCTION location where to find the materials before known the materials
 ---@param mat_operation_code_map {[integer]:FUSION_OPERATION_CODE}[] operation code to do for the materials, it will be check in order
 ---@param post_select_mat_location integer? location where to find the materials after known the materials
----@param additional_fcheck function? function to check the final material group fits the requirement
----@param additional_gcheck function? function to check the part of potiential material group fits the requirement to improve performance
+---@param additional_fcheck function function to check the final material group fits the requirement
+---@param additional_gcheck function function to check the part of potiential material group fits the requirement to improve performance
 ---@param fuslocation integer location where to summon fusion monsters from, use it on Clock Lizard
 ---@param sumtype integer summon type
 ---@param sumpos integer summon position
 ---@param stage_x_operation function callback function when special summon is in progress. will be called with different stage name
----@param pre_select_mat_opponent_location integer|FUSION_SPELL_PRE_SELECT_MAT_LOCATION_FUNCTION? location where to find the materials before known the materials on opponent location
+---@param pre_select_mat_opponent_location integer|FUSION_SPELL_PRE_SELECT_MAT_LOCATION_FUNCTION location where to find the materials before known the materials on opponent location
 function FusionSpell.GetSummonOperation(
 		fusfilter,
 		matfilter,
@@ -2551,8 +2581,8 @@ function FusionSpell.GetSummonOperation(
 		sumpos,
 		stage_x_operation,
 		pre_select_mat_opponent_location)
-    return function(e,tp,eg,ep,ev,re,r,rp)
-        local sg=Duel.GetMatchingGroup(
+	return function(e,tp,eg,ep,ev,re,r,rp)
+		local sg=Duel.GetMatchingGroup(
 				FusionSpell.SummonTargetFilter,tp,fuslocation,0,nil,
 				--- FusionSpell.SummonTargetFilter param
 				fusfilter,matfilter,e,tp,pre_select_mat_location,mat_operation_code_map,post_select_mat_location,additional_fcheck,sumtype,sumpos,pre_select_mat_opponent_location)
@@ -2569,19 +2599,19 @@ function FusionSpell.GetSummonOperation(
 		end
 		local tc=nil
 
-        if #sg>0 or can_chain_material==true then
-            local materials=Group.CreateGroup()
+		if #sg>0 or can_chain_material==true then
+			local materials=Group.CreateGroup()
 			local fusion_effect=nil
 
-            while #materials==0 do
-                Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+			while #materials==0 do
+				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 				---@type Group
 				local fusion_targets=sg:Clone()
 				for _, ce_sg in pairs(ce_sgs) do
 					fusion_targets:Merge(ce_sg)
 				end
 
-                tc=fusion_targets:Select(tp,1,1,nil):GetFirst()
+				tc=fusion_targets:Select(tp,1,1,nil):GetFirst()
 
 				---@type Effect[]
 				local avaliable_fusion_effect = {}
@@ -2608,10 +2638,9 @@ function FusionSpell.GetSummonOperation(
 							pre_select_mat_location,
 							mat_operation_code_map,
 							post_select_mat_location,
+							sumtype,
 							pre_select_mat_opponent_location)
-					if additional_fcheck~=nil then
-						aux.FCheckAdditional=FusionSpell.GetFusionSpellFCheckAdditionalFunction(additional_fcheck,tp,c)
-					end
+					aux.FCheckAdditional=FusionSpell.GetFusionSpellFCheckAdditionalFunction(additional_fcheck,tp,tc,pre_select_mat_location,post_select_mat_location,pre_select_mat_opponent_location)
 					materials=Duel.SelectFusionMaterial(tp,tc,mg,nil,tp)
 					aux.FCheckAdditional=nil
 				else
@@ -2620,55 +2649,93 @@ function FusionSpell.GetSummonOperation(
 					local chain_material_filter=fusion_effect:GetTarget()
 					local chain_mg=chain_material_filter(fusion_effect,e,tp)
 					assert(#chain_mg>0, "we are trying to apply a chain material, but it has no possible material")
-					if additional_fcheck~=nil then
-						aux.FCheckAdditional=FusionSpell.GetFusionSpellFCheckAdditionalFunctionForChainMaterial(additional_fcheck,tp,c)
-					end
+					aux.FCheckAdditional=FusionSpell.GetFusionSpellFCheckAdditionalFunctionForChainMaterial(additional_fcheck)
 					materials=Duel.SelectFusionMaterial(tp,tc,chain_mg)
 					aux.FCheckAdditional=nil
 				end
-            end
+			end
 
 			assert(tc~=nil)
 			assert(fusion_effect~=nil)
 
-            if #materials>0 then
+			if #materials>0 then
 				if fusion_effect==e then
 					--- fusion with fusion spell
 					tc:SetMaterial(materials)
 					local all_locations=FusionSpell.GetAllLocationsForTargetCard(tc,tp,pre_select_mat_location,post_select_mat_location)
-					---@type Effect[]
+					---@type {[Effect]:true}
 					local applied_extra_effects={}
 					---@type {[FUSION_OPERATION_FUNCTION]:Group}
 					local material_grouped_by_op={}
-					--For material that can be material only by 1 effect, either fusion spell or extra material effect, do the operation on it.
-					--For material that can be material by multiple effect, ask user which to apply.
-					for material in aux.Next(materials) do
-						local material_effects=FusionSpell.GetMaterialEffects(material,tc,all_locations,materials)
-						if material_effects~=nil and #material_effects>0 then
-							local material_effect=nil
-							if #material_effects==1 then
-								material_effect=material_effects[1]
-							else
-								-- more than one effect. ask player to choose from one.
-								-- TODO: let user select them in group
-								material_effect=FusionSpell.MultiMaterialEffectPrompt(material_effects,tp,e)
-							end
-							local fusion_operation=nil
-							if material_effect==true then
-								local fusion_operation_code=FusionSpell.GetOperationCodeByMaterialLocation(material:GetLocation(),mat_operation_code_map)
-								fusion_operation=FusionSpell.GetFusionOperationByCode(fusion_operation_code)
-							else
-								-- extra material effects
-								local fusion_operation_code=material_effect:GetOperation()()
-								fusion_operation=FusionSpell.GetFusionOperationByCode(fusion_operation_code,material:GetLocation(),mat_operation_code_map)
-								table.insert(applied_extra_effects,material_effect)
-							end
-							assert(fusion_operation~=nil)
-							material_grouped_by_op[fusion_operation]=material_grouped_by_op[fusion_operation] or Group.CreateGroup()
-							material_grouped_by_op[fusion_operation]:AddCard(material)
+					local materials_with_one_material_effect=materials:Filter(function(mc) return (#FusionSpell.GetMaterialEffects(mc,tp,tc,all_locations,pre_select_mat_opponent_location))==1 end,nil)
+					for material in aux.Next(materials_with_one_material_effect) do
+						--For material that can be material only by 1 effect, either fusion spell or extra material effect, do the operation on it.
+						local fusion_operation=nil
+						local material_effect=FusionSpell.GetMaterialEffects(material,tp,tc,all_locations,pre_select_mat_opponent_location)[1]
+
+						if material_effect==true then
+							local fusion_operation_code=FusionSpell.GetOperationCodeByMaterialLocation(material:GetLocation(),mat_operation_code_map)
+							fusion_operation=FusionSpell.GetFusionOperationByCode(fusion_operation_code)
 						else
-							--else we are in trouble
-							assert(false,string.format("card %d has no material effect",material:GetCode()))
+							-- extra material effects
+							--- pay the operation cost, only valid in 影牢の呪縛 as of 2025 May
+							local material_cost=material_effect:GetCost()
+							if material_cost~=nil then
+								material_cost(material_effect,tp,eg,ep,ev,re,r,rp)
+							end
+							local fusion_operation_code=material_effect:GetOperation()()
+							fusion_operation=FusionSpell.GetFusionOperationByCode(fusion_operation_code,material:GetLocation(),mat_operation_code_map)
+							applied_extra_effects[material_effect]=true
+						end
+
+						assert(fusion_operation~=nil)
+						material_grouped_by_op[fusion_operation]=material_grouped_by_op[fusion_operation] or Group.CreateGroup()
+						material_grouped_by_op[fusion_operation]:AddCard(material)
+					end
+					local materials_with_two_material_effect=materials:Filter(function(mc) return (#FusionSpell.GetMaterialEffects(mc,tp,tc,all_locations,pre_select_mat_opponent_location))==2 end,nil)
+					assert(#materials_with_one_material_effect+#materials_with_two_material_effect==#materials, "We can not have one material have zero/3+ material effect yet")
+					--For material that can be material by multiple effect, ask user which to apply.
+					--As of 2025 May, if a material could be used as extra material, it must be able to be used as fusion spell material. The code below is based on this assumption.
+					--   If we have Aiラブ融合 + 影牢の呪縛 or 多層融合 + アマゾネスの秘術 in same archetype, is code would fail in some scenario.
+					--First, group them by extra_material_effect
+					---@type {[Effect]:Group}
+					local material_grouped_by_extra_material_effect={}
+					for material in aux.Next(materials_with_two_material_effect) do
+						local material_effect=FusionSpell.GetExtraMaterialEffect(material,tp,tc)
+						assert(material_effect~=nil, "We can not have a material w/o extra material effect when it has 2 options")
+						material_grouped_by_extra_material_effect[material_effect]=material_grouped_by_extra_material_effect[material_effect] or Group.CreateGroup()
+						material_grouped_by_extra_material_effect[material_effect]:AddCard(material)
+					end
+
+					---For each group, let user select the material that apply the extra material effect.
+					for material_effect,grouped_materials in pairs(material_grouped_by_extra_material_effect) do
+						Duel.Hint(HINT_SELECTMSG,tp,material_effect:GetDescription())
+						--- in case of アマゾネスの秘術 or 影牢の呪縛, limit the maximuim number to choose
+						local extra_material_limit=material_effect:GetLabel() or #grouped_materials
+						local materials_to_apply=grouped_materials:Select(tp,0,extra_material_limit,nil)
+						local rest_materials=grouped_materials-materials_to_apply
+						if #rest_materials>0 then
+							for material in aux.Next(rest_materials) do
+								local fusion_operation_code=FusionSpell.GetOperationCodeByMaterialLocation(material:GetLocation(),mat_operation_code_map)
+								local fusion_operation=FusionSpell.GetFusionOperationByCode(fusion_operation_code)
+								material_grouped_by_op[fusion_operation]=material_grouped_by_op[fusion_operation] or Group.CreateGroup()
+								material_grouped_by_op[fusion_operation]:AddCard(material)
+							end
+						end
+						if #materials_to_apply>0 then
+							applied_extra_effects[material_effect]=true
+							local fusion_operation_code=material_effect:GetOperation()()
+							for material in aux.Next(materials_to_apply) do
+								local fusion_operation=FusionSpell.GetFusionOperationByCode(fusion_operation_code,material:GetLocation(),mat_operation_code_map)
+								assert(fusion_operation~=nil)
+								--- pay the operation cost, only valid in 影牢の呪縛 as of 2025 May
+								local material_cost=material_effect:GetCost()
+								if material_cost~=nil then
+									material_cost(material_effect,tp,eg,ep,ev,re,r,rp)
+								end
+								material_grouped_by_op[fusion_operation]=material_grouped_by_op[fusion_operation] or Group.CreateGroup()
+								material_grouped_by_op[fusion_operation]:AddCard(material)
+							end
 						end
 					end
 
@@ -2678,7 +2745,7 @@ function FusionSpell.GetSummonOperation(
 					end
 
 					-- mark effect as used once. if count limit reached, reset the effect
-					for _,effect in ipairs(applied_extra_effects) do
+					for effect,_ in pairs(applied_extra_effects) do
 						effect:UseCountLimit(tp)
 						if effect:CheckCountLimit(tp)==false then
 							effect:Reset()
@@ -2690,33 +2757,34 @@ function FusionSpell.GetSummonOperation(
 				else
 					--- fusion with chain material
 					fusion_effect:GetOperation()(e,e,tp,tc,materials,sumtype,sumpos)
-					--- use the chain material effect, reset if exhaused
+					--- use the chain material effect, reset if exhausted
 					fusion_effect:UseCountLimit(tp)
 					if fusion_effect:CheckCountLimit(tp)==false then
 						fusion_effect:Reset()
 					end
 				end
-            end
+			end
 
 			stage_x_operation(e,tc,tp,FusionSpell.STAGE_BEFORE_SUMMON_COMPLETE)
 			Duel.SpecialSummonComplete()
 			stage_x_operation(e,tc,tp,FusionSpell.STAGE_BEFORE_PROCEDURE_COMPLETE)
-            tc:CompleteProcedure()
+			tc:CompleteProcedure()
 			stage_x_operation(e,tc,tp,FusionSpell.STAGE_AT_SUMMON_OPERATION_FINISH)
-        end
+		end
 		stage_x_operation(e,tc,tp,FusionSpell.STAGE_AT_ALL_OPERATION_FINISH)
-    end
+	end
 end
 
 ---@param pre_select_mat_location integer|(fun(tc:Card,tp:integer):integer) location where to find the materials before known the materials
 ---@return integer locations all possible locations of the material
 function FusionSpell.GetAllLocationsForTargetCard(tc,tp,pre_select_mat_location,post_select_mat_location)
 	local all_locations=0
-	if type(pre_select_mat_location)=="function" then
-		all_locations=all_locations|pre_select_mat_location(tc,tp)
-	else
-		assert(pre_select_mat_location~=nil, "pre_select_mat_location is nil")
-		all_locations=all_locations|pre_select_mat_location
+	if pre_select_mat_location~=nil then
+		if type(pre_select_mat_location)=="function" then
+			all_locations=all_locations|pre_select_mat_location(tc,tp)
+		else
+			all_locations=all_locations|pre_select_mat_location
+		end
 	end
 	if post_select_mat_location~=nil then
 		all_locations=all_locations|post_select_mat_location
@@ -2726,7 +2794,7 @@ end
 
 ---@param matfilter	fun(c:Card):boolean filter for the materials, use it only under very strong limitation like D-Fusion.
 ---@param pre_select_mat_location integer|function location where to find the materials before known the materials
----@param pre_select_mat_opponent_location integer|FUSION_SPELL_PRE_SELECT_MAT_LOCATION_FUNCTION? location where to find the materials before known the materials on opponent location
+---@param pre_select_mat_opponent_location integer|FUSION_SPELL_PRE_SELECT_MAT_LOCATION_FUNCTION location where to find the materials before known the materials on opponent location
 function FusionSpell.GetMaterialsGroupForTargetCard(
 		tc,
 		tp,
@@ -2735,18 +2803,20 @@ function FusionSpell.GetMaterialsGroupForTargetCard(
 		pre_select_mat_location,
 		mat_operation_code_map,
 		post_select_mat_location,
-		pre_select_mat_opponent_location)
+		sumtype,
+		pre_select_mat_opponent_location
+	)
 	local all_locations=FusionSpell.GetAllLocationsForTargetCard(tc,tp,pre_select_mat_location,post_select_mat_location)
 	local mg=FusionSpell.GetFusionMaterial(tp,all_locations)
-
-	if pre_select_mat_opponent_location~=nil then
-	 	if type(pre_select_mat_opponent_location)=="function" then
-			pre_select_mat_opponent_location=pre_select_mat_opponent_location(tc,tp)
-		end
-		local opponent_mg=FusionSpell.GetFusionMaterialFromOpponentLocation(tp,pre_select_mat_opponent_location)
-		if #opponent_mg>0 then
-			mg:Merge(opponent_mg)
-		end
+	local calculated_mat_opponent_location=0
+	if type(pre_select_mat_opponent_location)=="function" then
+		calculated_mat_opponent_location=pre_select_mat_opponent_location(tc,tp)
+	else
+		calculated_mat_opponent_location=pre_select_mat_opponent_location
+	end
+	local opponent_mg=FusionSpell.GetFusionMaterialFromOpponentLocation(tp,calculated_mat_opponent_location)
+	if #opponent_mg>0 then
+		mg:Merge(opponent_mg)
 	end
 
 	-- filter by the strong material filter, target card can not be fusion material of itself
@@ -2754,8 +2824,12 @@ function FusionSpell.GetMaterialsGroupForTargetCard(
 	--- filter out card can not be affected by effect
 	mg=mg:Filter(aux.NOT(Card.IsImmuneToEffect),nil,e)
 	--- filter out card can not be material
-	mg=mg:Filter(Card.IsCanBeFusionMaterial,nil,tc)
+	--- comment out, currently core can not return correct value if affected by EFFECT_EXTRA_FUSION_MATERIAL.
+	--mg=mg:Filter(Card.IsCanBeFusionMaterial,tc)
+	--- workaround until core fixes
+	mg=mg:Filter(FusionSpell.IsCanBeFusionMaterial,tc,sumtype)
 	--- in order to be qualified for being material, it need to be able to perform the operation.
+	--- @param mc Card
 	mg=mg:Filter(function(mc)
 		local can_be_fusion_spell_material=false
 		if mc:IsLocation(all_locations) then
@@ -2782,7 +2856,7 @@ function FusionSpell.GetMaterialsGroupForTargetCard(
 end
 
 ---@param location integer
----@param mat_operation_code_map {[integer]:FUSION_OPERATION_CODE}[]? operation code to do for the materials, it will be check in order
+---@param mat_operation_code_map {[integer]:FUSION_OPERATION_CODE}[] operation code to do for the materials, it will be check in order
 function FusionSpell.GetOperationCodeByMaterialLocation(location,mat_operation_code_map)
 	for _,map in ipairs(mat_operation_code_map) do
 		for key,value in pairs(map) do
@@ -2798,14 +2872,12 @@ end
 ---@param pre_select_mat_location integer|function location where to find the materials before known the materials (default LOCATION_HAND|LOCATION_MZONE)
 ---@param pre_select_mat_opponent_location integer|FUSION_SPELL_PRE_SELECT_MAT_LOCATION_FUNCTION? location where to find the materials before known the materials on opponent location
 function FusionSpell.SummonTargetFilter(c,fusfilter,matfilter,e,tp,pre_select_mat_location,mat_operation_code_map,post_select_mat_location,additional_fcheck,sumtype,sumpos,pre_select_mat_opponent_location)
-	local res=c:IsType(TYPE_FUSION) and (not fusfilter or fusfilter(c,tp)) and c:IsCanBeSpecialSummoned(e,sumtype,tp,false,false,sumpos)
+	local res=c:IsType(TYPE_FUSION) and fusfilter(c,tp) and c:IsCanBeSpecialSummoned(e,sumtype,tp,false,false,sumpos)
 	if res==false then
 		return false
 	end
-	local mg=FusionSpell.GetMaterialsGroupForTargetCard(c,tp,e,matfilter,pre_select_mat_location,mat_operation_code_map,post_select_mat_location,pre_select_mat_opponent_location)
-	if additional_fcheck~=nil then
-		aux.FCheckAdditional=FusionSpell.GetFusionSpellFCheckAdditionalFunction(additional_fcheck,tp,c)
-	end
+	local mg=FusionSpell.GetMaterialsGroupForTargetCard(c,tp,e,matfilter,pre_select_mat_location,mat_operation_code_map,post_select_mat_location,sumtype,pre_select_mat_opponent_location)
+	aux.FCheckAdditional=FusionSpell.GetFusionSpellFCheckAdditionalFunction(additional_fcheck,tp,c,pre_select_mat_location,post_select_mat_location,pre_select_mat_opponent_location)
 	res=c:CheckFusionMaterial(mg,nil,tp)
 	aux.FCheckAdditional=nil
 	return res
@@ -2851,14 +2923,13 @@ function FusionSpell.IsExistsChainMaterialSummonTargets(e,tp,fusfilter,additiona
 end
 
 ---@param c Card
+---@return boolean result Whether c could be fusion summoned by this chain material effect
 function FusionSpell.ChainMaterialSummonTargetFilter(c,fusfilter,e,tp,mg,additional_fcheck,sumtype,sumpos)
 	local res=c:IsType(TYPE_FUSION) and (not fusfilter or fusfilter(c,tp)) and c:IsCanBeSpecialSummoned(e,sumtype,tp,false,false,sumpos)
 	if res==false then
 		return false
 	end
-	if additional_fcheck~=nil then
-		aux.FCheckAdditional=FusionSpell.GetFusionSpellFCheckAdditionalFunctionForChainMaterial(additional_fcheck)
-	end
+	aux.FCheckAdditional=FusionSpell.GetFusionSpellFCheckAdditionalFunctionForChainMaterial(additional_fcheck)
 	res=c:CheckFusionMaterial(mg,nil,tp)
 	aux.FCheckAdditional=nil
 	return res
@@ -2899,10 +2970,10 @@ function FusionSpell.GetFusionOperationByCode(code,matlocation,fusion_spell_oper
 	elseif code==FusionSpell.FUSION_OPERATION_INHERIT then
 		if matlocation==nil or fusion_spell_operation_code_map==nil then
 			-- we are in trouble
-			assert(false, "we have an material that inhreits, but operation can be inhreited")
+			assert(false, "we have a material that inhreits, but operation can be inhreited")
 			return FusionSpell.GraveMaterial
 		end
-		return FusionSpell.GetFusionOperationByCode(fusion_spell_operation_code_map[matlocation])
+		return FusionSpell.GetFusionOperationByCode(FusionSpell.GetOperationCodeByMaterialLocation(matlocation,fusion_spell_operation_code_map))
 	end
 end
 
@@ -2923,9 +2994,10 @@ function FusionSpell.GetFusionFilterByCode(code,matlocation,fusion_spell_operati
 	elseif code==FusionSpell.FUSION_OPERATION_INHERIT then
 		if matlocation==nil or fusion_spell_operation_code_map==nil then
 			-- we are in trouble
-			return nil
+			assert(false, "we have a material that inhreits, but operation can be inhreited")
+			return FusionSpell.GraveMaterialFilter
 		end
-		return FusionSpell.GetFusionFilterByCode(fusion_spell_operation_code_map[matlocation])
+		return FusionSpell.GetFusionFilterByCode(FusionSpell.GetOperationCodeByMaterialLocation(matlocation,fusion_spell_operation_code_map))
 	end
 end
 
@@ -2995,23 +3067,32 @@ end
 
 --Returns a list of effect, if element is the EFFECT_EXTRA_FUSION_MATERIAL, stands for it can be included by that extra material effect.
 --if element is true, stands for it can be included by the fusion effect itself.
+---@param pre_select_mat_opponent_location integer|FUSION_SPELL_PRE_SELECT_MAT_LOCATION_FUNCTION location where to find the materials before known the materials on opponent location
 ---@return (true|Effect)[]
-function FusionSpell.GetMaterialEffects(c,summon_card,matlocation,materials)
-    local res={}
-    if c:IsLocation(matlocation) then
-        table.insert(res,true)
-    end
-    local extra_effs={c:IsHasEffect(EFFECT_EXTRA_FUSION_MATERIAL)}
-	for _,eff in ipairs(extra_effs) do
-        if not summon_card then
-            table.insert(res,eff)
-        end
-        local val=eff:GetValue()
-        if (type(val)=="function" and val(eff,summon_card)) or val==1 then
-            table.insert(res,eff)
-        end
+function FusionSpell.GetMaterialEffects(c,tp,summon_card,matlocation,pre_select_mat_opponent_location)
+	local res={}
+	local calculated_mat_opponent_location=0
+	if type(pre_select_mat_opponent_location)=="function" then
+		calculated_mat_opponent_location=pre_select_mat_opponent_location(summon_card,tp)
+	else
+		calculated_mat_opponent_location=pre_select_mat_opponent_location
 	end
-    return res
+	if c:IsControler(tp) and c:IsLocation(matlocation) then
+		table.insert(res,true)
+	elseif c:IsControler(1-tp) and c:IsLocation(calculated_mat_opponent_location) then
+		table.insert(res,true)
+	end
+	local extra_effs={c:IsHasEffect(EFFECT_EXTRA_FUSION_MATERIAL)}
+	for _,eff in ipairs(extra_effs) do
+		if not summon_card then
+			table.insert(res,eff)
+		end
+		local val=eff:GetValue()
+		if (type(val)=="function" and val(eff,summon_card)) or val==1 then
+			table.insert(res,eff)
+		end
+	end
+	return res
 end
 
 --Returns the 1st EFFECT_EXTRA_FUSION_MATERIAL is applied on Card c.
@@ -3062,17 +3143,51 @@ function FusionSpell.MultiMaterialEffectPrompt(effects,tp,e)
 end
 
 --- filter out materials that does not necessary come from fusion spell and pass to the gcheck of fusion spell
---- @param fusion_spell_additional_fcheck_function FUSION_FGCHECK_FUNCTION
-function FusionSpell.GetFusionSpellFCheckAdditionalFunction(fusion_spell_additional_fcheck_function,tp,tc)
+--- for each extra material effect, check the maximuim size is not exceeded.
+--As of 2025 May, if a material could be used as extra material, it must be able to be used as fusion spell material. The code below is based on this assumption.
+--   If we have Aiラブ融合 + 影牢の呪縛 or 多層融合 + アマゾネスの秘術 in same archetype, is code would fail in some scenario.
+---@param fusion_spell_additional_fcheck_function FUSION_FGCHECK_FUNCTION
+---@param tp integer
+---@param tc Card
+---@param pre_select_mat_location integer|function location where to find the materials before known the materials (default LOCATION_HAND|LOCATION_MZONE)
+---@param post_select_mat_location integer?
+---@param pre_select_mat_opponent_location (integer|FUSION_SPELL_PRE_SELECT_MAT_LOCATION_FUNCTION)? location where to find the materials before known the materials on opponent location
+function FusionSpell.GetFusionSpellFCheckAdditionalFunction(fusion_spell_additional_fcheck_function,tp,tc,pre_select_mat_location,post_select_mat_location,pre_select_mat_opponent_location)
+	---@param mg Group
 	return (function(f_tp,mg,fc)
+		--- filter out materials that can only be added by extra material effects, and check the count limit
+		local mandartory_extra_mg=mg:Filter(function (mc)
+			local material_effects=FusionSpell.GetMaterialEffects(mc,tp,tc,FusionSpell.GetAllLocationsForTargetCard(tc,tp,pre_select_mat_location,post_select_mat_location),pre_select_mat_opponent_location)
+			if (#material_effects)==1 and material_effects[1]~=true then
+				return true
+			end
+			return false
+		end,nil)
+		--- group by extra material effect
+		---@type {[Effect]:Group}
+		local material_grouped_by_extra_material_effect={}
+		for material in aux.Next(mandartory_extra_mg) do
+			local material_effect=FusionSpell.GetExtraMaterialEffect(material,tp,tc)
+			material_grouped_by_extra_material_effect[material_effect]=material_grouped_by_extra_material_effect[material_effect] or Group.CreateGroup()
+			material_grouped_by_extra_material_effect[material_effect]:AddCard(material)
+		end
+		--- check count limit for each effect
+		for extra_material_effect,materials in pairs(material_grouped_by_extra_material_effect) do
+			if extra_material_effect:GetLabel()~=nil then
+				if #materials>extra_material_effect:GetLabel() then
+					return false
+				end
+			end
+		end
+		
 		local extra_mg=mg:Filter(FusionSpell.GetExtraMaterialEffect,nil,tp,tc)
 		return fusion_spell_additional_fcheck_function(f_tp,mg-extra_mg,fc,mg)
 	end)
 end
 
---- all material must come from chain material, only pass all and pass to the gcheck of fusion spell
+--- all material must come from chain material, only pass all material group to the gcheck of fusion spell
 --- @param fusion_spell_additional_fcheck_function FUSION_FGCHECK_FUNCTION
-function FusionSpell.GetFusionSpellFCheckAdditionalFunctionForChainMaterial(fusion_spell_additional_fcheck_function,tp,c)
+function FusionSpell.GetFusionSpellFCheckAdditionalFunctionForChainMaterial(fusion_spell_additional_fcheck_function)
 	return (function(f_tp,mg,fc)
 		return fusion_spell_additional_fcheck_function(f_tp,Group.CreateGroup(),fc,mg)
 	end)

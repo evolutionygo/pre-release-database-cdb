@@ -45,7 +45,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,g)
 	end
-    -- Can only use Dragon or Machine "Cyber" monsters as Fusion Material this turn
+	-- Can only use Dragon or Machine "Cyber" monsters as Fusion Material this turn
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetCode(EFFECT_CANNOT_BE_FUSION_MATERIAL)
@@ -55,7 +55,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetValue(s.fuslimit)
 	e1:SetReset(RESET_PHASE+PHASE_END)
 	Duel.RegisterEffect(e1,tp)
-   	--Can also banish monsters from your GY as material once when you Fusion Summon this turn
+	   --Can also banish monsters from your GY as material once when you Fusion Summon this turn
 	local e2=Effect.CreateEffect(e:GetHandler())
 	e2:SetDescription(aux.Stringid(id,2))
 	e2:SetType(EFFECT_TYPE_FIELD)
@@ -63,7 +63,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	e2:SetTargetRange(LOCATION_GRAVE,0)
 	e2:SetCountLimit(1)
 	e2:SetTarget(s.mttg)
-    e2:SetOperation(function() return FusionSpell.FUSION_OPERATION_BANISH end)
+	e2:SetOperation(function() return FusionSpell.FUSION_OPERATION_BANISH end)
 	e2:SetValue(1)
 	e2:SetReset(RESET_PHASE+PHASE_END)
 	Duel.RegisterEffect(e2,tp)
