@@ -2785,9 +2785,9 @@ function FusionSpell.GetMaterialsGroupForTargetCard(
 	mg=mg:Filter(aux.NOT(Card.IsImmuneToEffect),nil,e)
 	--- filter out card can not be material
 	--- comment out, currently core can not return correct value if affected by EFFECT_EXTRA_FUSION_MATERIAL.
-	--mg=mg:Filter(Card.IsCanBeFusionMaterial,tc)
+	--mg=mg:Filter(Card.IsCanBeFusionMaterial,nil,tc,sumtype)
 	--- workaround until core fixes
-	mg=mg:Filter(FusionSpell.IsCanBeFusionMaterial,tc,sumtype)
+	mg=mg:Filter(function(mc) return FusionSpell.IsCanBeFusionMaterial(mc,tc,sumtype) end,nil)
 	--- in order to be qualified for being material, it need to be able to perform the operation.
 	--- @param mc Card
 	mg=mg:Filter(function(mc)
