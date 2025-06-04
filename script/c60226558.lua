@@ -19,7 +19,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 	--spsummon
 	local e3=FusionSpell.CreateSummonEffect(c,{
-		fuslimit=s.fuslimit,
+		fusfilter=s.fusfilter,
 		gc=s.gc
 	})
 	e3:SetType(EFFECT_TYPE_IGNITION)
@@ -63,7 +63,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 
-function s.fuslimit(c)
+function s.fusfilter(c)
 	return c:IsSetCard(0x9d)
 end
 

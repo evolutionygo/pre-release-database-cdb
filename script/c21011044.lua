@@ -8,7 +8,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e0)
 	--fusion summon
 	local e1=FusionSpell.CreateSummonEffect(c,{
-		fuslimit=s.fuslimit,
+		fusfilter=s.fusfilter,
 		pre_select_mat_location=LOCATION_MZONE|LOCATION_GRAVE,
 		mat_operation_code_map={
 			{ [LOCATION_REMOVED] = FusionSpell.FUSION_OPERATION_GRAVE },
@@ -26,7 +26,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 
-function s.fuslimit(c)
+function s.fusfilter(c)
 	return c:IsSetCard(0x9d)
 end
 
