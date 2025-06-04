@@ -3,7 +3,7 @@ local s,id,o=GetID()
 function s.initial_effect(c)
 	--Activate
 	local e1=FusionSpell.CreateSummonEffect(c,{
-		fuslimit=s.fuslimit,
+		fusfilter=s.fusfilter,
 		pre_select_mat_location=s.pre_select_mat_location,
 	})
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_FUSION_SUMMON+CATEGORY_DECKDES)
@@ -11,7 +11,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 
-function s.fuslimit(c)
+function s.fusfilter(c)
 	return c:IsSetCard(0x9d)
 end
 
