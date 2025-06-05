@@ -36,7 +36,7 @@ function s.initial_effect(c)
 	e4:SetTarget(function(_,mc) return mc:IsFaceup() and mc:IsType(TYPE_MONSTER) end)
 	e4:SetCost(s.extra_material_cost)
 	e4:SetOperation(function() return FusionSpell.FUSION_OPERATION_INHERIT end)
-	e4:SetValue(function(fusion_effect,tc) return tc and tc:IsSetCard(0x9d) and tc:IsControler(fusion_effect:GetHandlerPlayer()) end)
+	e4:SetValue(function(extra_material_effect,tc) return tc and tc:IsSetCard(0x9d) and tc:IsControler(extra_material_effect:GetHandlerPlayer()) end)
 	e4:SetLabel(1)  --- at most 1 material per fusion effect
 	c:RegisterEffect(e4)
 end

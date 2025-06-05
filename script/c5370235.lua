@@ -64,7 +64,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	e2:SetCountLimit(1)
 	e2:SetTarget(s.mttg)
 	e2:SetOperation(function() return FusionSpell.FUSION_OPERATION_BANISH end)
-	e2:SetValue(function(fusion_effect,c) return c and c:IsControler(fusion_effect:GetHandlerPlayer()) end)
+	e2:SetValue(function(extra_material_effect,c) return c and c:IsControler(extra_material_effect:GetHandlerPlayer()) end)
 	e2:SetReset(RESET_PHASE+PHASE_END)
 	Duel.RegisterEffect(e2,tp)
 end
