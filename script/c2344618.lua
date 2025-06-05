@@ -89,7 +89,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 			e1:SetTargetRange(LOCATION_GRAVE,0)
 			e1:SetTarget(function(_,c) return c:IsAbleToRemove() and c:IsType(TYPE_MONSTER) end)
 			e1:SetOperation(function() return FusionSpell.FUSION_OPERATION_BANISH end)
-			e1:SetValue(function(fusion_effect,c) return c and c:IsSetCard(0xdf) and c:IsControler(fusion_effect:GetHandlerPlayer()) end)
+			e1:SetValue(function(extra_material_effect,c) return c and c:IsSetCard(0xdf) and c:IsControler(extra_material_effect:GetHandlerPlayer()) end)
 			e1:SetReset(RESET_PHASE|PHASE_END)
 			Duel.RegisterEffect(e1,tp)
 		end

@@ -32,7 +32,7 @@ function s.fusop(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetTargetRange(LOCATION_EXTRA,0)
 	e1:SetTarget(function(_,c) return c:IsAbleToGrave() and c:IsType(TYPE_MONSTER) and c:IsSetCard(0x4) end)
 	e1:SetOperation(function() return FusionSpell.FUSION_OPERATION_GRAVE end)
-	e1:SetValue(function(fusion_effect,c) return c and c:IsSetCard(0x4) and c:IsControler(fusion_effect:GetHandlerPlayer()) end)
+	e1:SetValue(function(extra_material_effect,c) return c and c:IsSetCard(0x4) and c:IsControler(extra_material_effect:GetHandlerPlayer()) end)
 	e1:SetLabel(1)  --- at most 1 material per fusion effect
 	e1:SetReset(RESET_PHASE|PHASE_END)
 	Duel.RegisterEffect(e1,tp)

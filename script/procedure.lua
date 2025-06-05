@@ -2467,7 +2467,7 @@ function FusionSpell.GetSummonTarget(
 			end
 			-- --- check for chain material targets
 			if sumtype&SUMMON_TYPE_FUSION~=0 then
-				local ce_sg=FusionSpell.IsExistsChainMaterialSummonTargets(e,tp,fusfilter,additional_fcheck,additional_fgoalcheck,fuslocation,sumtype,sumpos,gc)
+				local ce_sg=FusionSpell.IsExistsChainMaterialSummonTargets(e,tp,fusfilter,matfilter,additional_fcheck,additional_fgoalcheck,fuslocation,sumtype,sumpos,gc)
 				if ce_sg==true then
 					return true
 				end
@@ -2480,7 +2480,7 @@ function FusionSpell.GetSummonTarget(
 end
 
 ---@param fusfilter fun(c:Card):boolean filter for the monster to be Fusion Summoned
----@param matfilter	fun(c:Card):boolean filter for the materials, use it only under very strong limitation like D-Fusion.
+---@param matfilter	fun(c:Card):boolean filter for the materials, use it only under very strong limitation like D－フュージョン.
 ---@param pre_select_mat_location integer|FUSION_SPELL_PRE_SELECT_MAT_LOCATION_FUNCTION location where to find the materials before known the materials
 ---@param mat_operation_code_map {[integer]:FUSION_OPERATION_CODE}[] operation code to do for the materials, it will be check in order
 ---@param post_select_mat_location integer? location where to find the materials after known the materials
@@ -2508,35 +2508,31 @@ function FusionSpell.GetSummonOperation(
 		gc
 	)
 	return function(e,tp,eg,ep,ev,re,r,rp)
+		local fusion_targets=Group.CreateGroup()
 		local sg=Duel.GetMatchingGroup(
 				FusionSpell.SummonTargetFilter,tp,fuslocation,0,nil,
 				--- FusionSpell.SummonTargetFilter param
-				fusfilter,matfilter,e,tp,pre_select_mat_location,mat_operation_code_map,post_select_mat_location,additional_fcheck,additional_fgoalcheck,sumtype,sumpos,pre_select_mat_opponent_location,gc)
+				fusfilter,aux.NecroValleyFilter(matfilter),e,tp,pre_select_mat_location,mat_operation_code_map,post_select_mat_location,additional_fcheck,additional_fgoalcheck,sumtype,sumpos,pre_select_mat_opponent_location,gc)
+		fusion_targets:Merge(sg)
 		--- check for chain material targets
 		local ce_sgs={}
-		local can_chain_material=false
 		if sumtype&SUMMON_TYPE_FUSION~=0 then
-			ce_sgs=FusionSpell.ListChainMaterialSummonTargets(e,tp,fusfilter,additional_fcheck,additional_fgoalcheck,fuslocation,sumtype,sumpos,gc)
-			--- if there's any chain material effect has valid target
-			for _ in pairs(ce_sgs) do
-				can_chain_material=true
-				break
+			ce_sgs=FusionSpell.ListChainMaterialSummonTargets(e,tp,fusfilter,aux.NecroValleyFilter(matfilter),additional_fcheck,additional_fgoalcheck,fuslocation,sumtype,sumpos,gc)
+			--- add chain material targets
+			for _,ce_sg in pairs(ce_sgs) do
+				fusion_targets:Merge(ce_sg)
 			end
 		end
+
 		local tc=nil
 
-		if #sg>0 or can_chain_material==true then
+		if #fusion_targets>0 then
 			local materials=Group.CreateGroup()
 			local fusion_effect=nil
 			local fusion_succeeded=false
 
 			while #materials==0 do
 				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-				---@type Group
-				local fusion_targets=sg:Clone()
-				for _, ce_sg in pairs(ce_sgs) do
-					fusion_targets:Merge(ce_sg)
-				end
 
 				tc=fusion_targets:Select(tp,1,1,nil):GetFirst()
 
@@ -2561,7 +2557,7 @@ function FusionSpell.GetSummonOperation(
 							tc,
 							tp,
 							e,
-							matfilter,
+							aux.NecroValleyFilter(matfilter),
 							pre_select_mat_location,
 							mat_operation_code_map,
 							post_select_mat_location,
@@ -2576,7 +2572,7 @@ function FusionSpell.GetSummonOperation(
 					--- use chain material effect
 					---@type function
 					local chain_material_filter=fusion_effect:GetTarget()
-					local chain_mg=chain_material_filter(fusion_effect,e,tp)
+					local chain_mg=chain_material_filter(fusion_effect,e,tp):Filter(aux.NecroValleyFilter(matfilter),nil)
 					assert(#chain_mg>0, "we are trying to apply a chain material, but it has no possible material")
 					aux.FCheckAdditional=FusionSpell.GetFusionSpellFCheckAdditionalFunctionForChainMaterial(additional_fcheck)
 					aux.FGoalCheckAdditional=FusionSpell.GetFusionSpellFGoalCheckAdditionalFunctionForChainMaterial(additional_fgoalcheck)
@@ -2678,7 +2674,7 @@ function FusionSpell.GetSummonOperation(
 					end
 
 					-- before do the operations to the materials, hint the opponent selected materials
-					local confirm_materials=materials:Filter(Card.IsLocation,nil,LOCATION_HAND|LOCATION_EXTRA|LOCATION_DECK)
+					local confirm_materials=materials:Filter(function(c) return c:IsLocation(LOCATION_HAND|LOCATION_EXTRA|LOCATION_DECK) or c:IsFacedown() end,nil)
 					if #confirm_materials>0 then
 						Duel.ConfirmCards(1-tp,confirm_materials)
 					end
@@ -2848,14 +2844,15 @@ end
 
 ---@return {[Effect]:Group} effect_targets_map Return a map of different chain material to potiential fusion targets
 ---@param gc fun(e:Effect):Card|nil
-function FusionSpell.ListChainMaterialSummonTargets(e,tp,fusfilter,additional_fcheck,additional_fgoalcheck,fuslocation,sumtype,sumpos,gc)
+function FusionSpell.ListChainMaterialSummonTargets(e,tp,fusfilter,matfilter,additional_fcheck,additional_fgoalcheck,fuslocation,sumtype,sumpos,gc)
 	local chain_material_effects={Duel.IsPlayerAffectedByEffect(tp,EFFECT_CHAIN_MATERIAL)}
 	---@type {[Effect]:Group}
 	local chain_material_targets={}
 	for _,ce in ipairs(chain_material_effects) do
 		---@type function
 		local chain_material_filter=ce:GetTarget()
-		local chain_mg=chain_material_filter(ce,e,tp)
+		---@type Group
+		local chain_mg=chain_material_filter(ce,e,tp):Filter(matfilter,nil)
 		if #chain_mg>0 then
 			local ce_fusfilter=ce:GetValue()
 			local ce_sg=Duel.GetMatchingGroup(FusionSpell.ChainMaterialSummonTargetFilter,tp,fuslocation,0,nil,
@@ -2871,13 +2868,13 @@ end
 
 ---@return boolean res return whether there is a valid target for any chain material effect
 ---@param gc fun(e:Effect):Card|nil
-function FusionSpell.IsExistsChainMaterialSummonTargets(e,tp,fusfilter,additional_fcheck,additional_fgoalcheck,fuslocation,sumtype,sumpos,gc)
+function FusionSpell.IsExistsChainMaterialSummonTargets(e,tp,fusfilter,matfilter,additional_fcheck,additional_fgoalcheck,fuslocation,sumtype,sumpos,gc)
 	local chain_material_effects={Duel.IsPlayerAffectedByEffect(tp,EFFECT_CHAIN_MATERIAL)}
 	---@type {[Effect]:Group}
 	for _,ce in ipairs(chain_material_effects) do
 		---@type function
 		local chain_material_filter=ce:GetTarget()
-		local chain_mg=chain_material_filter(ce,e,tp)
+		local chain_mg=chain_material_filter(ce,e,tp):Filter(matfilter)
 		if #chain_mg>0 then
 			local ce_fusfilter=ce:GetValue()
 			local res=Duel.IsExistingMatchingCard(FusionSpell.ChainMaterialSummonTargetFilter,tp,fuslocation,0,1,nil,

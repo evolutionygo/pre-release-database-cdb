@@ -12,7 +12,8 @@ function s.initial_effect(c)
 			{ [LOCATION_DECK] = FusionSpell.FUSION_OPERATION_GRAVE },
 			{ [0xff] = FusionSpell.FUSION_OPERATION_SHUFFLE }
 		},
-		extra_target=s.extra_target
+		extra_target=s.extra_target,
+		stage_x_operation=s.stage_x_operation
 	})
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
@@ -48,4 +49,31 @@ function s.extra_target(e,tp,eg,ep,ev,re,r,rp,chk)
 		return true
 	end
 	Duel.SetOperationInfo(0,CATEGORY_TODECK,nil,1,tp,LOCATION_ONFIELD+LOCATION_GRAVE+LOCATION_REMOVED)
+end
+
+---@type FUSION_SPELL_STAGE_X_CALLBACK_FUNCTION
+function s.stage_x_operation(e,tc,tp,stage)
+	if stage==FusionSpell.STAGE_AT_ALL_OPERATION_FINISH then
+		local c=e:GetHandler()
+		if c:IsRelateToChain() then
+			local e1=Effect.CreateEffect(c)
+			e1:SetType(EFFECT_TYPE_SINGLE)
+			e1:SetCode(EFFECT_CANNOT_ATTACK)
+			e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+			e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+			c:RegisterEffect(e1)
+		end
+		local e2=Effect.CreateEffect(c)
+		e2:SetType(EFFECT_TYPE_FIELD)
+		e2:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+		e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+		e2:SetTargetRange(1,0)
+		e2:SetReset(RESET_PHASE+PHASE_END)
+		e2:SetTarget(s.splimit)
+		Duel.RegisterEffect(e2,tp)
+	end
+end
+
+function s.splimit(e,c)
+	return not c:IsType(TYPE_FUSION) and c:IsLocation(LOCATION_EXTRA)
 end
