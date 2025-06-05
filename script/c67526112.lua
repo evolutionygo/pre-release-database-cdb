@@ -9,7 +9,8 @@ function s.initial_effect(c)
 			{ [LOCATION_GRAVE] = FusionSpell.FUSION_OPERATION_BANISH },
 			{ [0xff] = FusionSpell.FUSION_OPERATION_GRAVE }
 		},
-		extra_target=s.extra_target
+		extra_target=s.extra_target,
+		stage_x_operation=s.stage_x_operation
 	})
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_FUSION_SUMMON+CATEGORY_DESTROY)
@@ -39,6 +40,7 @@ end
 ---@type FUSION_SPELL_STAGE_X_CALLBACK_FUNCTION
 function s.stage_x_operation(e,tc,tp,stage,mg_fuison_spell,mg_all)
 	if stage==FusionSpell.STAGE_AT_SUMMON_OPERATION_FINISH then
+		local c=e:GetHandler()
 		local e0=Effect.CreateEffect(c)
 		e0:SetType(EFFECT_TYPE_SINGLE)
 		e0:SetCode(EFFECT_CANNOT_DIRECT_ATTACK)

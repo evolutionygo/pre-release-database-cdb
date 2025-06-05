@@ -14,7 +14,8 @@ function s.initial_effect(c)
 			{ [LOCATION_REMOVED] = FusionSpell.FUSION_OPERATION_GRAVE },
 			{ [0xff] = FusionSpell.FUSION_OPERATION_BANISH }
 		},
-		extra_target=s.extra_target
+		extra_target=s.extra_target,
+		stage_x_operation=s.stage_x_operation
 	})
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_FUSION_SUMMON+CATEGORY_REMOVE+CATEGORY_TOGRAVE)
 	e1:SetType(EFFECT_TYPE_QUICK_O)
@@ -30,12 +31,10 @@ function s.fusfilter(c)
 	return c:IsSetCard(0x9d)
 end
 
-function s.filter3(c)
-	return c:IsType(TYPE_MONSTER) and c:IsCanBeFusionMaterial() and c:IsAbleToRemove()
-end
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetCurrentPhase()==PHASE_MAIN1 or Duel.GetCurrentPhase()==PHASE_MAIN2
 end
+
 function s.extra_target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		return true
