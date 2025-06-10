@@ -61,20 +61,20 @@ end
 function s.disop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local rc=re:GetHandler()
-	if Duel.NegateEffect(ev) and rc:IsRelateToEffect(re) then
+	if Duel.NegateEffect(ev) and rc then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 		e1:SetCode(EVENT_CHAIN_SOLVING)
 		e1:SetCondition(s.discon1)
 		e1:SetOperation(s.disop1)
-		e1:SetLabelObject(rc)
+		e1:SetLabel(rc:GetOriginalCodeRule())
 		e1:SetReset(RESET_PHASE+PHASE_END)
 		Duel.RegisterEffect(e1,tp)
 	end
 end
 function s.discon1(e,tp,eg,ep,ev,re,r,rp)
-	local tc=e:GetLabelObject()
-	return re:GetHandler():IsOriginalCodeRule(tc:GetOriginalCodeRule()) and re:IsActiveType(TYPE_MONSTER)
+	local code=e:GetLabel()
+	return re:GetHandler():IsOriginalCodeRule(code) and re:IsActiveType(TYPE_MONSTER)
 end
 function s.disop1(e,tp,eg,ep,ev,re,r,rp)
 	Duel.NegateEffect(ev)
