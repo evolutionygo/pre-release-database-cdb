@@ -2874,7 +2874,7 @@ function FusionSpell.IsExistsChainMaterialSummonTargets(e,tp,fusfilter,matfilter
 	for _,ce in ipairs(chain_material_effects) do
 		---@type function
 		local chain_material_filter=ce:GetTarget()
-		local chain_mg=chain_material_filter(ce,e,tp):Filter(matfilter)
+		local chain_mg=chain_material_filter(ce,e,tp):Filter(matfilter,nil)
 		if #chain_mg>0 then
 			local ce_fusfilter=ce:GetValue()
 			local res=Duel.IsExistingMatchingCard(FusionSpell.ChainMaterialSummonTargetFilter,tp,fuslocation,0,1,nil,
