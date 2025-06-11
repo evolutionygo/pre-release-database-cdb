@@ -76,11 +76,12 @@ function s.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_DISABLE,eg,1,0,0)
 end
 function s.disop(e,tp,eg,ep,ev,re,r,rp)
+	local rc=re:GetHandler()
 	if not Duel.NegateEffect(ev) then return end
 	if Duel.IsExistingMatchingCard(s.confilter,tp,LOCATION_GRAVE,0,2,nil)
-		and re:GetHandler():IsRelateToChain(ev)
+		and rc:IsRelateToChain(ev) and rc:IsDestructable()
 		and Duel.SelectYesNo(tp,aux.Stringid(id,3)) then
 		Duel.BreakEffect()
-		Duel.Destroy(eg,REASON_EFFECT)
+		Duel.Destroy(rc,REASON_EFFECT)
 	end
 end
