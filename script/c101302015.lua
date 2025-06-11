@@ -57,7 +57,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.thfilter(c,typ)
-	return c:IsAbleToHand() and (c:IsSetCard(0x2d1) or c:IsCode(5318639))
+	return c:IsAbleToHand() and (c:IsSetCard(0x2d1) and not c:IsCode(id) or c:IsCode(5318639))
 end
 function s.gcheck(g)
 	return g:FilterCount(Card.IsCode,nil,5318639)<=1
