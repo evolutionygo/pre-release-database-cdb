@@ -78,7 +78,7 @@ end
 function s.disop(e,tp,eg,ep,ev,re,r,rp)
 	if not Duel.NegateEffect(ev) then return end
 	if Duel.IsExistingMatchingCard(s.confilter,tp,LOCATION_GRAVE,0,2,nil)
-		and re:GetHandler():IsRelateToEffect(re)
+		and re:GetHandler():IsRelateToChain()
 		and Duel.SelectYesNo(tp,aux.Stringid(id,3)) then
 		Duel.BreakEffect()
 		Duel.Destroy(eg,REASON_EFFECT)

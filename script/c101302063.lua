@@ -8,13 +8,13 @@ function s.initial_effect(c)
 	e1:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND+CATEGORY_DRAW+CATEGORY_HANDES)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
+	e1:SetHintTiming(0,TIMING_END_PHASE)
 	e1:SetTarget(s.target)
 	e1:SetOperation(s.activate)
 	c:RegisterEffect(e1)
 	--set
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
-	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetProperty(EFFECT_FLAG_DELAY)
 	e2:SetCode(EVENT_DESTROYED)
@@ -22,15 +22,6 @@ function s.initial_effect(c)
 	e2:SetTarget(s.settg)
 	e2:SetOperation(s.setop)
 	c:RegisterEffect(e2)
-end
-function s.tgfilter(c)
-	return (c:IsRace(RACE_SPELLCASTER) or c:IsType(TYPE_SPELL)) and c:IsAbleToGrave()
-end
-function s.spfilter(c,e,tp)
-	return c:IsSetCard(0x128,0x150) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
-end
-function s.tgfilter(c)
-	return c:IsSetCard(0x2d1) and c:IsType(TYPE_MONSTER) and c:IsAbleToGrave()
 end
 function s.thfilter(c)
 	return c:IsCode(5318639) and c:IsAbleToHand()
@@ -44,8 +35,8 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local op=0
 	if b1 or b2 then
 		op=aux.SelectFromOptions(tp,
-			{b1,aux.Stringid(id,1),1},
-			{b2,aux.Stringid(id,2),2})
+			{b1,aux.Stringid(id,2),1},
+			{b2,aux.Stringid(id,3),2})
 	end
 	e:SetLabel(op)
 	if op==1 then
@@ -65,19 +56,22 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 end
 function s.cfilter(c)
-	return (c:IsSetCard(0x2d1) or c:IsCode(5318639)) and c:IsDiscardable()
+	return (c:IsSetCard(0x2d1) or c:IsType(TYPE_QUICKPLAY)) and c:IsDiscardable()
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetLabel()==1 then
 		local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 		Duel.Draw(p,d,REASON_EFFECT)
-		Duel.ShuffleHand(p)
 		Duel.BreakEffect()
 		if Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_HAND,0,1,nil) then
-			Duel.DiscardHand(tp,s.cfilter,1,1,REASON_EFFECT+REASON_DISCARD)
+			local dg=Duel.SelectMatchingCard(p,s.cfilter,p,LOCATION_HAND,0,1,1,nil)
+			if dg:GetCount()>0 then
+				Duel.ShuffleHand(p)
+				Duel.SendtoGrave(dg,REASON_EFFECT+REASON_DISCARD,p)
+			end
 		else
 			local sg=Duel.GetFieldGroup(p,LOCATION_HAND,0)
-			Duel.SendtoGrave(sg,REASON_EFFECT+REASON_DISCARD)
+			Duel.SendtoGrave(sg,REASON_EFFECT+REASON_DISCARD,p)
 		end
 	elseif e:GetLabel()==2 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
@@ -98,7 +92,7 @@ function s.settg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.setop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsRelateToChain() then
+	if c:IsRelateToChain() and aux.NecroValleyFilter()(c) then
 		Duel.SSet(tp,c)
 	end
 end
