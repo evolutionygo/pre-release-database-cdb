@@ -6,6 +6,7 @@ function s.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND+CATEGORY_DRAW+CATEGORY_HANDES)
+	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetHintTiming(0,TIMING_END_PHASE)
@@ -42,6 +43,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if op==1 then
 		if e:IsCostChecked() then
 			e:SetCategory(CATEGORY_DRAW+CATEGORY_HANDES)
+			e:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 			Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1)
 		end
 		Duel.SetTargetPlayer(tp)
@@ -50,6 +52,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	elseif op==2 then
 		if e:IsCostChecked() then
 			e:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND)
+			e:SetProperty(0)
 			Duel.RegisterFlagEffect(tp,id+o,RESET_PHASE+PHASE_END,0,1)
 		end
 		Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK+LOCATION_GRAVE)
