@@ -56,14 +56,14 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 end
 function s.cfilter(c)
-	return (c:IsSetCard(0x2d1) or c:IsType(TYPE_QUICKPLAY)) and c:IsDiscardable()
+	return (c:IsSetCard(0x2d1) or c:IsType(TYPE_QUICKPLAY)) and c:IsDiscardable(REASON_EFFECT)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetLabel()==1 then
 		local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 		Duel.Draw(p,d,REASON_EFFECT)
 		Duel.BreakEffect()
-		if Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_HAND,0,1,nil) then
+		if Duel.IsExistingMatchingCard(s.cfilter,p,LOCATION_HAND,0,1,nil) then
 			local dg=Duel.SelectMatchingCard(p,s.cfilter,p,LOCATION_HAND,0,1,1,nil)
 			if dg:GetCount()>0 then
 				Duel.ShuffleHand(p)

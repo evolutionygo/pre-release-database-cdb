@@ -23,14 +23,8 @@ function s.initial_effect(c)
 	e2:SetOperation(s.setop)
 	c:RegisterEffect(e2)
 end
-function s.tgfilter(c)
-	return (c:IsRace(RACE_SPELLCASTER) or c:IsType(TYPE_SPELL)) and c:IsAbleToGrave()
-end
-function s.spfilter(c,e,tp)
-	return c:IsSetCard(0x128,0x150) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
-end
 function s.thfilter2(c)
-	return c:IsSetCard(0x2d1) and c:IsLevelBelow(4) and c:IsType(TYPE_MONSTER) and c:IsAbleToGrave()
+	return c:IsSetCard(0x2d1) and c:IsLevelBelow(4) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
 end
 function s.thfilter(c)
 	return c:IsCode(5318639) and c:IsAbleToHand()
@@ -51,7 +45,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if op==1 then
 		if e:IsCostChecked() then
 			e:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND)
-			Duel.RegisterFlagEffect(tp,id+o,RESET_PHASE+PHASE_END,0,1)
+			Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1)
 		end
 		Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 	elseif op==2 then
