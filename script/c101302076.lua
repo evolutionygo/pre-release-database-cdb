@@ -57,6 +57,7 @@ function s.drtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		and dg:CheckSubGroup(s.gcheck,3,3) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
 	local g=dg:SelectSubGroup(tp,s.gcheck,false,3,3)
+	Duel.SetTargetCard(g)
 	Duel.SetOperationInfo(0,CATEGORY_TODECK,g,3,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
 end
