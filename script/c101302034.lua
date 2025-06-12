@@ -58,10 +58,13 @@ function s.chainlm(e,rp,tp)
 end
 function s.negcon(e,tp,eg,ep,ev,re,r,rp)
 	if ep==tp or e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) then return false end
-	if not re:IsHasProperty(EFFECT_FLAG_CARD_TARGET) then return false end
-	local g=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)
-	if g and g:IsExists(Card.IsLocation,1,nil,LOCATION_ONFIELD) then
-		e:SetLabel(1)
+	if re:IsHasProperty(EFFECT_FLAG_CARD_TARGET) then
+		local g=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)
+		if g and g:IsExists(Card.IsLocation,1,nil,LOCATION_ONFIELD) then
+			e:SetLabel(1)
+		else
+			e:SetLabel(0)
+		end
 	else
 		e:SetLabel(0)
 	end
