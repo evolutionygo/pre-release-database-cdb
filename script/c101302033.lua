@@ -77,7 +77,7 @@ function s.rsop(e,tp,eg,ep,ev,re,r,rp)
 	if c:IsControler(1-tp) or not c:IsRelateToEffect(e) or not mg:IsContains(c) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	aux.RCheckAdditional=s.rcheck(c)
-	local tg=Duel.SelectMatchingCard(tp,s.rsfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp,mg)
+	local tg=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.rsfilter),tp,LOCATION_GRAVE,0,1,1,nil,e,tp,mg)
 	local tc=tg:GetFirst()
 	if tc then
 		mg=mg:Filter(Card.IsCanBeRitualMaterial,tc,tc)
