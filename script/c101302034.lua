@@ -12,7 +12,6 @@ function s.initial_effect(c)
 	--protection
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
-	e1:SetCategory(CATEGORY_DRAW+CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetRange(LOCATION_HAND)
 	e1:SetCountLimit(1,id)
@@ -34,7 +33,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function s.mat_filter(c)
-	return c:IsType(TYPE_RITUAL)
+	return c:IsAllTypes(TYPE_RITUAL+TYPE_MONSTER)
 end
 function s.prcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return not e:GetHandler():IsPublic() end
@@ -49,7 +48,7 @@ function s.prop(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.actop(e,tp,eg,ep,ev,re,r,rp)
 	local rc=re:GetHandler()
-	if rc:IsAllTypes(TYPE_MONSTER+TYPE_RITUAL) and rc:IsSetCard(0x138) and ep==tp then
+	if rc:IsAllTypes(TYPE_MONSTER+TYPE_RITUAL) and rc:IsSetCard(0x138) and re:IsActiveType(TYPE_MONSTER) and ep==tp then
 		Duel.SetChainLimit(s.chainlm)
 	end
 end
@@ -78,7 +77,7 @@ function s.negtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 end
 function s.negop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToEffect(re)
+	if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToChain(ev)
 		and Duel.Destroy(eg,REASON_EFFECT)~=0
 		and e:GetLabel()==1
 		and Duel.IsExistingMatchingCard(Card.IsReleasableByEffect,tp,0,LOCATION_MZONE,1,nil)
@@ -88,7 +87,8 @@ function s.negop(e,tp,eg,ep,ev,re,r,rp)
 		local tc=g:GetFirst()
 		if tc then
 			Duel.BreakEffect()
-			Duel.Release(tc,REASON_EFFECT)
+			Duel.HintSelection(g)
+			Duel.Release(g,REASON_EFFECT)
 		end
 	end
 end

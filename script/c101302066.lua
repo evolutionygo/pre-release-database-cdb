@@ -17,10 +17,10 @@ function s.initial_effect(c)
 	e2:SetTarget(s.thtg)
 	e2:SetOperation(s.thop)
 	c:RegisterEffect(e2)
-	--draw
+	--trigger
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,1))
-	e3:SetCategory(CATEGORY_DRAW+CATEGORY_RELEASE)
+	e3:SetCategory(CATEGORY_DRAW+CATEGORY_RELEASE+CATEGORY_HANDES)
 	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e3:SetProperty(EFFECT_FLAG_DELAY)
@@ -48,11 +48,12 @@ function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(s.thfilter,tp,LOCATION_DECK,0,nil)
-	if #g>0 then
+	if #g>0 and g:CheckSubGroup(s.gcheck,2,2) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 		local sg=g:SelectSubGroup(tp,s.gcheck,false,2,2)
 		if sg then
 			Duel.SendtoHand(sg,nil,REASON_EFFECT)
+			Duel.ConfirmCards(1-tp,sg)
 		end
 	end
 end
@@ -96,9 +97,12 @@ function s.drop(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetLabel()==1 then
 		local p=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER)
 		if Duel.Draw(p,2,REASON_EFFECT)==2 then
-			Duel.ShuffleHand(p)
-			Duel.BreakEffect()
-			Duel.DiscardHand(p,nil,1,1,REASON_EFFECT+REASON_DISCARD)
+			local dg=Duel.SelectMatchingCard(p,Card.IsDiscardable,p,LOCATION_HAND,0,1,1,nil,REASON_EFFECT+REASON_DISCARD)
+			if dg:GetCount()>0 then
+				Duel.BreakEffect()
+				Duel.ShuffleHand(p)
+				Duel.SendtoGrave(dg,REASON_EFFECT+REASON_DISCARD,p)
+			end
 		end
 	elseif e:GetLabel()==2 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
@@ -106,7 +110,8 @@ function s.drop(e,tp,eg,ep,ev,re,r,rp)
 		local tc=g:GetFirst()
 		if tc then
 			Duel.BreakEffect()
-			Duel.Release(tc,REASON_EFFECT)
+			Duel.HintSelection(g)
+			Duel.Release(g,REASON_EFFECT)
 		end
 	end
 end

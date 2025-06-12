@@ -5,7 +5,7 @@ function s.initial_effect(c)
 	--search
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
-	e1:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND)
+	e1:SetCategory(CATEGORY_TOHAND)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e1:SetProperty(EFFECT_FLAG_DELAY)
@@ -48,7 +48,7 @@ function s.srop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.rscon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetCurrentPhase()==PHASE_MAIN1 or Duel.GetCurrentPhase()==PHASE_MAIN2
+	return Duel.IsMainPhase()
 end
 function s.rcheck(gc)
 	return  function(tp,g,c)
@@ -65,16 +65,16 @@ function s.rstg(e,tp,eg,ep,ev,re,r,rp,chk)
 		aux.RCheckAdditional=s.rcheck(c)
 		local res=mg:IsContains(c) and Duel.IsExistingMatchingCard(s.rsfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp,mg)
 		aux.RCheckAdditional=nil
-		return res and Duel.GetFlagEffect(tp,id)==0 
+		return res and Duel.GetFlagEffect(tp,id)==0
 	end
 	Duel.RegisterFlagEffect(tp,id,RESET_CHAIN,0,1)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE)
 end
 function s.rsop(e,tp,eg,ep,ev,re,r,rp)
-	::cancel::
 	local c=e:GetHandler()
 	local mg=Duel.GetRitualMaterial(tp)
-	if c:IsControler(1-tp) or not c:IsRelateToEffect(e) or not mg:IsContains(c) then return end
+	if c:IsControler(1-tp) or not c:IsRelateToChain() or not mg:IsContains(c) then return end
+	::cancel::
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	aux.RCheckAdditional=s.rcheck(c)
 	local tg=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.rsfilter),tp,LOCATION_GRAVE,0,1,1,nil,e,tp,mg)
@@ -84,7 +84,7 @@ function s.rsop(e,tp,eg,ep,ev,re,r,rp)
 		if tc.mat_filter then
 			mg=mg:Filter(tc.mat_filter,tc,tp)
 		else
-		mg:RemoveCard(tc)
+			mg:RemoveCard(tc)
 		end
 		if not mg:IsContains(c) then return end
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
