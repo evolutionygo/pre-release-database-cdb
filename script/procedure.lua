@@ -2742,7 +2742,6 @@ function FusionSpell.GetAllLocationsForTargetCard(tc,tp,pre_select_mat_location,
 		all_locations=all_locations|pre_select_mat_location
 	end
 	if post_select_mat_location~=nil then
-
 		all_locations=all_locations|post_select_mat_location
 	end
 	return all_locations
@@ -2775,10 +2774,12 @@ function FusionSpell.GetMaterialsGroupForTargetCard(
 		mg:Merge(opponent_mg)
 	end
 
-	-- filter by the strong material filter, target card can not be fusion material of itself
+	--- filter by the strong material filter, target card can not be fusion material of itself
 	mg=mg:Filter(matfilter,tc)
 	--- filter out card can not be affected by effect
 	mg=mg:Filter(aux.NOT(Card.IsImmuneToEffect),nil,e)
+	--- filter out card that are facedown banished
+	mg=mg:Filter(function(c) return not(c:IsLocation(LOCATION_REMOVED) and c:IsFacedown()) end,nil)
 	--- filter out card can not be material
 	--- comment out, currently core can not return correct value if affected by EFFECT_EXTRA_FUSION_MATERIAL.
 	--mg=mg:Filter(Card.IsCanBeFusionMaterial,nil,tc,sumtype)
