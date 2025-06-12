@@ -77,7 +77,7 @@ end
 function s.negop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToEffect(re)
 		and Duel.Destroy(eg,REASON_EFFECT)~=0
-		and e:GetLabel(1)
+		and e:GetLabel()==1
 		and Duel.IsExistingMatchingCard(Card.IsReleasableByEffect,tp,0,LOCATION_MZONE,1,nil)
 		and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
