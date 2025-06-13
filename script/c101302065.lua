@@ -12,7 +12,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function s.thfilter(c)
-	return c:IsSetCard(0x162) and c:IsType(TYPE_PENDULUM) and c:IsAbleToGrave()
+	return c:IsSetCard(0x162) and c:IsType(TYPE_PENDULUM) and c:IsAbleToHand()
 end
 function s.gcheck(g)
 	return g:GetClassCount(Card.GetCurrentScale)==2
@@ -21,13 +21,16 @@ function s.spfilter(c,e,tp)
 	return c:IsSetCard(0x162) and c:IsType(TYPE_PENDULUM) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
+	local c=e:GetHandler()
 	local g=Duel.GetMatchingGroup(s.thfilter,tp,LOCATION_DECK,0,nil)
 	local b1=g:CheckSubGroup(s.gcheck,2,2)
-		and Duel.GetFieldGroupCount(tp,LOCATION_HAND,0)>0
+		and Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,1,c,REASON_EFFECT)
 		and (not e:IsCostChecked()
 			or Duel.GetFlagEffect(tp,id)==0)
-	local b2=Duel.GetFlagEffect(tp,id+o)==0 and Duel.GetFlagEffect(tp,id+o*3)==0
-	local b3=Duel.IsPlayerAffectedByEffect(tp,59822133)
+	local b2=Duel.GetFlagEffect(tp,id+o*3)==0
+		and (not e:IsCostChecked()
+			or Duel.GetFlagEffect(tp,id+o)==0)
+	local b3=not Duel.IsPlayerAffectedByEffect(tp,59822133)
 		and Duel.GetLocationCount(tp,LOCATION_MZONE)>1
 		and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_PZONE,0,2,nil,e,tp)
 		and (not e:IsCostChecked()
@@ -43,20 +46,20 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:SetLabel(op)
 	if op==1 then
 		if e:IsCostChecked() then
-			e:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND+CATEGORY_SPECIAL_SUMMON)
+			e:SetCategory(CATEGORY_HANDES|CATEGORY_SEARCH|CATEGORY_TOHAND|CATEGORY_SPECIAL_SUMMON)
 			Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1)
 		end
-		Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,2,tp,LOCATION_DECK)
 		Duel.SetOperationInfo(0,CATEGORY_HANDES,nil,0,tp,1)
+		Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,2,tp,LOCATION_DECK)
 	elseif op==2 then
 		if e:IsCostChecked() then
-			Duel.RegisterFlagEffect(tp,id+o,RESET_PHASE+PHASE_END,0,1)
 			e:SetCategory(0)
+			Duel.RegisterFlagEffect(tp,id+o,RESET_PHASE+PHASE_END,0,1)
 		end
 	elseif op==3 then
 		if e:IsCostChecked() then
-			Duel.RegisterFlagEffect(tp,id+o*2,RESET_PHASE+PHASE_END,0,1)
 			e:SetCategory(CATEGORY_SPECIAL_SUMMON)
+			Duel.RegisterFlagEffect(tp,id+o*2,RESET_PHASE+PHASE_END,0,1)
 		end
 		Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,2,tp,LOCATION_PZONE)
 	end
@@ -67,13 +70,14 @@ end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if e:GetLabel()==1 then
-		if Duel.DiscardHand(tp,aux.TRUE,1,1,REASON_EFFECT+REASON_DISCARD)==0 then return end
+		if Duel.DiscardHand(tp,Card.IsDiscardable,1,1,REASON_EFFECT+REASON_DISCARD,nil,REASON_EFFECT)==0 then return end
 		local g=Duel.GetMatchingGroup(s.thfilter,tp,LOCATION_DECK,0,nil)
-		if #g>0 then
+		if #g>0 and g:CheckSubGroup(s.gcheck,2,2) then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-			local sg=g:SelectSubGroup(tp,s.gcheck,false,2,2)
-			if sg then
-				Duel.SendtoHand(sg,nil,REASON_EFFECT)
+			local ag=g:SelectSubGroup(tp,s.gcheck,false,2,2)
+			if ag then
+				Duel.SendtoHand(ag,nil,REASON_EFFECT)
+				Duel.ConfirmCards(1-tp,ag)
 				local dt=Duel.GetMatchingGroupCount(aux.TRUE,tp,0,LOCATION_MZONE,nil)
 				local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 				if ft<=0 then return end
@@ -84,6 +88,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 					local g=Duel.SelectMatchingCard(tp,s.spfilter2,tp,LOCATION_HAND,0,1,ft,nil,e,tp)
 					if g:GetCount()>0 then
 						Duel.BreakEffect()
+						Duel.ShuffleHand(tp)
 						Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 					end
 				end

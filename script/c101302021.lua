@@ -9,7 +9,7 @@ function s.initial_effect(c)
 	e1:SetCategory(CATEGORY_TOHAND)
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e1:SetRange(LOCATION_PZONE)
-	e1:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DELAY)
+	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e1:SetCondition(s.thcon)
 	e1:SetTarget(s.thtg)
@@ -58,7 +58,7 @@ function s.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.cfilter,1,nil,tp)
 end
 function s.rthfilter(c)
-	return c:IsFaceupEx() and c:IsSetCard(0x162) and c:IsAbleToHand() and not c:IsCode(id)
+	return c:IsFaceupEx() and c:IsSetCard(0x162) and c:IsAbleToHand()
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_PZONE) and chkc:IsControler(tp) and s.rthfilter(chkc) end
@@ -99,7 +99,7 @@ function s.chkcon(g,tp)
 end
 function s.effcon(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(s.scfilter,tp,LOCATION_PZONE,0,nil)
-	return s.chkcon(g,tp) 
+	return s.chkcon(g,tp)
 end
 function s.effectfilter(e,ct)
 	local p=e:GetHandler():GetControler()
@@ -113,7 +113,7 @@ function s.thcon3(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.cfilter2,1,nil,tp)
 end
 function s.thfilter2(c)
-	return c:IsFaceupEx() and not c:IsCode(id) and c:IsSetCard(0x162) and c:IsAbleToHand()
+	return c:IsFaceupEx() and c:IsSetCard(0x162) and c:IsAbleToHand()
 end
 function s.thtg3(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter2,tp,LOCATION_EXTRA+LOCATION_GRAVE,0,1,nil) end
@@ -121,7 +121,7 @@ function s.thtg3(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.thop3(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g=Duel.SelectMatchingCard(tp,s.thfilter2,tp,LOCATION_EXTRA+LOCATION_GRAVE,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.thfilter2),tp,LOCATION_EXTRA+LOCATION_GRAVE,0,1,1,nil)
 	if #g>0 then
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,g)
