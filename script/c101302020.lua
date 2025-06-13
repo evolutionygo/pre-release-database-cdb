@@ -88,7 +88,7 @@ function s.spfilter2(c,e,tp,res,rc)
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 		and (res and (not c:IsLocation(LOCATION_EXTRA)
 		and Duel.GetMZoneCount(tp,rc)>0
-		or Duel.GetLocationCountFromEx(tp,tp,rc,c)>0)
+		or c:IsLocation(LOCATION_EXTRA) and Duel.GetLocationCountFromEx(tp,tp,rc,c)>0)
 		or c:IsLocation(LOCATION_HAND) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0)
 end
 function s.sptg2(e,tp,eg,ep,ev,re,r,rp,chk)
