@@ -76,7 +76,7 @@ function s.spcost2(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	local g=Duel.GetMatchingGroup(s.spfilter2,tp,LOCATION_HAND+LOCATION_GRAVE+LOCATION_EXTRA,0,nil,e,tp,c:IsReleasable(),c)
 	if chk==0 then return g:GetCount()>0 end
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and c:IsReleasable() and g:IsExists(Card.IsLocation,1,nil,LOCATION_HAND) and not Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and g:IsExists(Card.IsLocation,1,nil,LOCATION_HAND) and (not c:IsReleasable() or not Duel.SelectYesNo(tp,aux.Stringid(id,2))) then
 		e:SetLabel(0)
 	else
 		Duel.Release(c,REASON_COST)
