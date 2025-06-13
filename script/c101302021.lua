@@ -58,7 +58,7 @@ function s.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.cfilter,1,nil,tp)
 end
 function s.rthfilter(c)
-	return c:IsFaceupEx() and c:IsSetCard(0x162) and c:IsAbleToHand() and not c:IsCode(id)
+	return c:IsFaceupEx() and c:IsSetCard(0x162) and c:IsAbleToHand()
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_PZONE) and chkc:IsControler(tp) and s.rthfilter(chkc) end
