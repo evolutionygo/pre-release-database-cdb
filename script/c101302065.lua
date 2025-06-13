@@ -12,7 +12,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function s.thfilter(c)
-	return c:IsSetCard(0x162) and c:IsType(TYPE_PENDULUM) and c:IsAbleToGrave()
+	return c:IsSetCard(0x162) and c:IsType(TYPE_PENDULUM) and c:IsAbleToHand()
 end
 function s.gcheck(g)
 	return g:GetClassCount(Card.GetCurrentScale)==2
@@ -27,7 +27,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 		and (not e:IsCostChecked()
 			or Duel.GetFlagEffect(tp,id)==0)
 	local b2=Duel.GetFlagEffect(tp,id+o)==0 and Duel.GetFlagEffect(tp,id+o*3)==0
-	local b3=Duel.IsPlayerAffectedByEffect(tp,59822133)
+	local b3=not Duel.IsPlayerAffectedByEffect(tp,59822133)
 		and Duel.GetLocationCount(tp,LOCATION_MZONE)>1
 		and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_PZONE,0,2,nil,e,tp)
 		and (not e:IsCostChecked()
