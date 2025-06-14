@@ -12,7 +12,7 @@ variables:
 #   dependencies: []
 #   tags:
 #     - linux
-#   image: git-registry.mycard.moe/nanahira/srvpro:lite
+#   image: git-registry.moenext.com/nanahira/srvpro:lite
 #   variables:
 #     DATABASE_FILE: expansions/test-release.cdb
 #   script:
@@ -40,13 +40,55 @@ merge_databases:
     paths:
       - test-release.cdb
 
+add_script_diff:
+  stage: prepare
+  dependencies: []
+  tags:
+    - linux
+  script:
+    - git clone https://code.moenext.com/mycard/ygopro-scripts-888
+    - cd ygopro-scripts-888
+    - git remote add stable https://github.com/mycard/ygopro-scripts
+    - git fetch stable refs/heads/master
+    # now FETCH_HEAD is the commit of stable/master
+    - |
+      copy_out() {
+        target=../script/$1
+        if [ -f "$target" ]; then
+          echo "File $target already exists, skipping copy."
+        elif [ -f "$1" ]; then
+          echo "Copying $1 to $target"
+          cp "$1" ../script/
+        else
+          echo "File $1 not found, skipping."
+        fi
+      }
+      for file in $(git diff --name-only --diff-filter=A FETCH_HEAD -- '*.lua'); do
+        copy_out "$file"
+      done
+      for file in $(git diff --name-only --diff-filter=M FETCH_HEAD -- '*.lua'); do
+        if [ -f "$file" ]; then
+          current_time=$(git log -1 --format="%ct" HEAD -- "$file")
+          stable_time=$(git log -1 --format="%ct" FETCH_HEAD -- "$file")
+          if [ -n "$current_time" ] && [ -n "$current_time" ] && [ "$current_time" -lt "$stable_time" ]; then
+            echo "File $file is older than stable/master, skipping copy."
+          else
+            copy_out "$file"
+          fi
+        fi
+      done
+    - cd ..
+  artifacts:
+    paths:
+      - script
+
 .json:
   stage: prepare2
   dependencies:
     - merge_databases
   tags:
     - linux
-  image: git-registry.mycard.moe/mycard/ygopro-cdb-descgen:master-x86
+  image: git-registry.moenext.com/mycard/ygopro-cdb-descgen:master-x86
   variables:
     YGOPRO_PIC_URL_PREFIX: 'https://cdn02.moecube.com:444/ygopro-super-pre/data/pics/'
     YGOPRO_PIC_URL_SUFFIX: '.jpg?version=11.20'
@@ -58,7 +100,7 @@ merge_databases:
     - apt update;apt -y install wget
     - currentPath=$PWD
     - cd /usr/src/app
-    - wget -O strings.conf https://code.mycard.moe/mycard/ygopro-database/-/raw/master/locales/zh-CN/strings.conf
+    - wget -O strings.conf https://code.moenext.com/mycard/ygopro-database/-/raw/master/locales/zh-CN/strings.conf
     - env GIT_PATH=$currentPath node dist $currentPath/test-release.cdb ./strings.conf $currentPath/test-strings.conf > $currentPath/$OUTPUT_FILENAME
     - cd $currentPath
   artifacts:
@@ -88,7 +130,7 @@ neos:
     - mkdir neos
     - sqlite3 test-release.cdb .dump >> ygopro-super-pre-neos.sql
     - sqlite3 test-update.cdb .dump >> ygopro-super-pre-neos.sql
-    - wget -O cards.cdb https://code.mycard.moe/mycard/ygopro-database/-/raw/master/locales/zh-CN/cards.cdb
+    - wget -O cards.cdb https://code.moenext.com/mycard/ygopro-database/-/raw/master/locales/zh-CN/cards.cdb
     - sqlite3 cards.cdb .dump >> ygopro-super-pre-neos.sql
     - cat ygopro-super-pre-neos.sql | sqlite3 neos/ygopro-super-pre-neos.cdb || true
   artifacts:
@@ -99,6 +141,7 @@ pack:
   stage: pack
   dependencies:
     - merge_databases
+    - add_script_diff
     - json
     - json2
   tags: 
@@ -129,6 +172,7 @@ server:
   stage: pack
   dependencies:
     - merge_databases
+    - add_script_diff
   tags: 
     - linux
   script:
@@ -138,7 +182,7 @@ server:
     - mv *.conf server-dist
     - mv script server-dist
     # merge ygopro-pre-data
-    # - git clone --depth=1 https://code.mycard.moe/mycard/ygopro-pre-data
+    # - git clone --depth=1 https://code.moenext.com/mycard/ygopro-pre-data
     # - mv ygopro-pre-data/expansions/* server-dist/
     # - mv ygopro-pre-data/script/* server-dist/script/
   artifacts:
@@ -152,7 +196,7 @@ server:
   tags: 
     - linux
   script:
-    - aws s3 --endpoint=https://minio.mycard.moe:9000 sync $uploadDir/ s3://mycard/ygopro-super-pre/$uploadDir
+    - aws s3 --endpoint=https://minio.moenext.com:9000 sync $uploadDir/ s3://mycard/ygopro-super-pre/$uploadDir
 
 upload_archive:
   extends: .minio
@@ -180,9 +224,9 @@ upload_neos:
 upload_version_json:
   extends: .minio
   script:
-    - aws s3 --endpoint=https://minio.mycard.moe:9000 cp data/version.txt s3://mycard/ygopro-super-pre/versions/$CI_COMMIT_REF_NAME/version.txt
-    - aws s3 --endpoint=https://minio.mycard.moe:9000 cp data/test-release.json s3://mycard/ygopro-super-pre/versions/$CI_COMMIT_REF_NAME/test-release.json
-    - aws s3 --endpoint=https://minio.mycard.moe:9000 cp data/test-release-v2.json s3://mycard/ygopro-super-pre/versions/$CI_COMMIT_REF_NAME/test-release-v2.json
+    - aws s3 --endpoint=https://minio.moenext.com:9000 cp data/version.txt s3://mycard/ygopro-super-pre/versions/$CI_COMMIT_REF_NAME/version.txt
+    - aws s3 --endpoint=https://minio.moenext.com:9000 cp data/test-release.json s3://mycard/ygopro-super-pre/versions/$CI_COMMIT_REF_NAME/test-release.json
+    - aws s3 --endpoint=https://minio.moenext.com:9000 cp data/test-release-v2.json s3://mycard/ygopro-super-pre/versions/$CI_COMMIT_REF_NAME/test-release-v2.json
 
 deploy:
   stage: deploy
@@ -196,7 +240,7 @@ deploy:
     appVersion: $CI_COMMIT_REF_NAME
   script:
     - apt update; apt -y install tar zstd curl jq
-    - git clone https://code.mycard.moe/mycard/mycard-package-script
+    - git clone https://code.moenext.com/mycard/mycard-package-script
     - cd mycard-package-script
     - ./index.sh makeBuild ygopro-super-pre ../data || true
     - ./index.sh makeBuild ygopro2-super-pre ../data || true
@@ -228,7 +272,7 @@ deploy:
 deploy_to_tiramisu:
   extends: .deploy_to_server
   variables:
-    SERVER_HOST: tiramisu.mycard.moe
+    SERVER_HOST: tiramisu.moenext.com
     SERVER_USER: mycard
 
 deploy_to_koishi:
