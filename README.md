@@ -69,6 +69,7 @@ https://cdn02.moecube.com:444/ygopro-super-pre/versions/master/test-release-v2.j
 - （可选但建议）在 https://github.com/Fluorohydride/ygopro-scripts 提交相关的脚本 PR。
 - 把 PR 的分支合并到 https://code.moenext.com/mycard/ygopro-scripts-888 内。
 - 在本仓库创建 `script-fix-xxx.cdb` 列出正在测试的卡。
+- 如果需要修改提示文本等，请在 `test-update-xxx.cdb` 列出正在测试的卡。
 
 完成上述步骤后，`ygopro-scripts-888` 分支和正式脚本库的差异部分，会自动更新到 888 服务器。
 

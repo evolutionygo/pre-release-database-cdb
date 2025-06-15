@@ -28,10 +28,12 @@ merge_databases:
     - linux
   script:
     - apt update --allow-insecure-repositories && apt -y install sqlite3
-    - ls -1 *.cdb | sed -e '/test-update.cdb/d' -e '/script-fix.*\.cdb$/d' | xargs -I '{}' sqlite3 '{}' .dump | sqlite3 test-release.cdb || true
+    - ls -1 *.cdb | sed -e '/test-update.*\.cdb$/d' -e '/script-fix.*\.cdb$/d' | xargs -I '{}' sqlite3 '{}' .dump | sqlite3 test-release.cdb || true
+    - ls -1 test-update*.cdb | xargs -I '{}' sqlite3 '{}' .dump | sqlite3 test-update.cdb || true
   artifacts:
     paths:
       - test-release.cdb
+      - test-update.cdb
 
 add_script_diff:
   stage: prepare
