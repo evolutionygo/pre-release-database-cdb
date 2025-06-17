@@ -22,7 +22,7 @@ function s.initial_effect(c)
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,1))
 	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
-	e3:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
+	e3:SetProperty(EFFECT_FLAG_DELAY)
 	e3:SetRange(LOCATION_FZONE)
 	e3:SetCode(EVENT_LEAVE_FIELD)
 	e3:SetCountLimit(1,id)
@@ -54,7 +54,10 @@ function s.reccon(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.recop(e,tp,eg,ep,ev,re,r,rp)
 	local rec=eg:FilterCount(s.cfilter,nil,tp)
-	Duel.Recover(tp,rec*500,REASON_EFFECT)
+	if rec>0 then
+		Duel.Hint(HINT_CARD,0,id)
+		Duel.Recover(tp,rec*500,REASON_EFFECT)
+	end
 end
 function s.cspfilter(c,tp)
 	return c:IsPreviousLocation(LOCATION_MZONE) and c:IsPreviousPosition(POS_FACEUP) and c:IsPreviousControler(tp) and c:IsPreviousSetCard(0x2d2)

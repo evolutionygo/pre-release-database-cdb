@@ -18,6 +18,7 @@ function s.initial_effect(c)
 	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e2:SetRange(LOCATION_MZONE)
+	e2:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_MAIN_END)
 	e2:SetCountLimit(1,id)
 	e2:SetCondition(s.descon)
 	e2:SetCost(s.descost)
@@ -37,13 +38,13 @@ function s.ecfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0x2d2) and c:IsType(TYPE_LINK)
 end
 function s.descon(e,tp,eg,ep,ev,re,r,rp)
+	if not Duel.IsMainPhase() then return false end
 	local lg=Duel.GetMatchingGroup(s.ecfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 	local lg2=Group.CreateGroup()
 	for lc in aux.Next(lg) do
 		lg2:Merge(lc:GetLinkedGroup())
 	end
 	return lg2 and lg2:IsContains(e:GetHandler())
-		and (Duel.GetCurrentPhase()==PHASE_MAIN1 or Duel.GetCurrentPhase()==PHASE_MAIN2)
 end
 function s.descost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.CheckLPCost(tp,500) end
@@ -60,7 +61,7 @@ end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if c:IsRelateToChain() and tc:IsRelateToChain() then
+	if c:IsRelateToChain() and tc:IsRelateToChain() and tc:IsType(TYPE_MONSTER) then
 		local g=Group.FromCards(c,tc)
 		Duel.Destroy(g,REASON_EFFECT)
 	end
