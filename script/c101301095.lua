@@ -53,11 +53,8 @@ function s.reccon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.cfilter,1,nil,tp)
 end
 function s.recop(e,tp,eg,ep,ev,re,r,rp)
-	local rec=eg:FilterCount(s.cfilter,nil,tp)
-	if rec>0 then
-		Duel.Hint(HINT_CARD,0,id)
-		Duel.Recover(tp,rec*500,REASON_EFFECT)
-	end
+	Duel.Hint(HINT_CARD,0,id)
+	Duel.Recover(tp,500,REASON_EFFECT)
 end
 function s.cspfilter(c,tp)
 	return c:IsPreviousLocation(LOCATION_MZONE) and c:IsPreviousPosition(POS_FACEUP) and c:IsPreviousControler(tp) and c:IsPreviousSetCard(0x2d2)

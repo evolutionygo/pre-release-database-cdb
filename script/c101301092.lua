@@ -59,13 +59,13 @@ end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tg=Duel.GetTargetsRelateToChain()
-	if tg:GetCount()>0 and c:IsRelateToChain() then
+	if c:IsRelateToChain() then
 		tg:AddCard(c)
-		if Duel.Destroy(tg,REASON_EFFECT)~=0 then
-			local dam=Duel.GetOperatedGroup():GetCount()
-			if dam>0 then
-				Duel.Damage(1-tp,dam*500,REASON_EFFECT)
-			end
+	end
+	if tg:GetCount()>0 and Duel.Destroy(tg,REASON_EFFECT)~=0 then
+		local dam=Duel.GetOperatedGroup():GetCount()
+		if dam>0 then
+			Duel.Damage(1-tp,dam*500,REASON_EFFECT)
 		end
 	end
 end
