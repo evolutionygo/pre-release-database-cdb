@@ -61,7 +61,8 @@ function s.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.disop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if Duel.Destroy(c,REASON_EFFECT)>0 and Duel.NegateEffect(ev) and re:GetHandler():IsRelateToChain(ev) then
+	if c:IsRelateToChain() and Duel.Destroy(c,REASON_EFFECT)>0
+		and Duel.NegateEffect(ev) and re:GetHandler():IsRelateToChain(ev) then
 		Duel.Destroy(eg,REASON_EFFECT)
 	end
 end

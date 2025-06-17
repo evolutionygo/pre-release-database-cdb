@@ -47,7 +47,7 @@ function s.valfilter(c)
 end
 function s.atkval(e,c)
 	local g=e:GetHandler():GetLinkedGroup():Filter(s.valfilter,nil)
-	return g:GetSum(Card.GetAttack)
+	return g:GetSum(Card.GetBaseAttack)
 end
 function s.eacon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetLinkedGroup():IsExists(s.valfilter,1,nil)
