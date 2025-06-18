@@ -204,6 +204,11 @@ server:
     paths:
       - server-dist
 
+server_clear:
+  extends: .server
+  dependencies:
+    - merge_databases
+
 .minio:
   stage: deploy
   dependencies:
@@ -298,3 +303,12 @@ deploy_to_koishi:
   variables:
     SERVER_HOST: koishi.momobako.com
     SERVER_USER: nanahira
+
+deploy_to_koishi_clear:
+  extends: .deploy_to_koishi
+  dependencies:
+    - server_clear
+  variables:
+    SERVER_HOST: koishi.momobako.com
+    SERVER_USER: nanahira
+    SERVER_PATH: ~/ygopro-super-pre-clear/expansions
