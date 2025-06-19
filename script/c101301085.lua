@@ -38,7 +38,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function s.lcheck(g)
-	return g:GetClassCount(Card.GetLinkRace)==g:GetCount() and g:GetClassCount(Card.GetLinkAttribute)==g:GetCount()
+	return not aux.SameValueCheck(g,Card.GetLinkRace) and not aux.SameValueCheck(g,Card.GetLinkAttribute)
 end
 function s.piercetg(e,c)
 	return c:IsAllTypes(TYPE_RITUAL+TYPE_MONSTER) and e:GetHandler():GetLinkedGroup():IsContains(c)
