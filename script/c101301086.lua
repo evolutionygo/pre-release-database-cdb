@@ -1,4 +1,4 @@
---READ YING OF RITE
+--Readying of Rites
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--Activate
@@ -39,8 +39,10 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	if tc then
 		Duel.SendtoHand(tc,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,tc)
-		if tc:IsType(TYPE_PENDULUM) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.IsPlayerCanSpecialSummonMonster(tp,101301186,0,TYPES_TOKEN_MONSTER,300,300,4,RACE_FIEND,ATTRIBUTE_DARK) and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
-			local token=Duel.CreateToken(tp,101301186)
+		if tc:IsType(TYPE_PENDULUM) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+			and Duel.IsPlayerCanSpecialSummonMonster(tp,id+o,0,TYPES_TOKEN_MONSTER,300,300,1,RACE_FIEND,ATTRIBUTE_DARK)
+			and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
+			local token=Duel.CreateToken(tp,id+o)
 			Duel.SpecialSummonStep(token,0,tp,tp,false,false,POS_FACEUP)
 			local e1=Effect.CreateEffect(e:GetHandler())
 			e1:SetType(EFFECT_TYPE_FIELD)
@@ -49,7 +51,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			e1:SetRange(LOCATION_MZONE)
 			e1:SetAbsoluteRange(tp,1,0)
 			e1:SetTarget(s.splimit)
-			e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+			e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_CONTROL)
 			token:RegisterEffect(e1,true)
 			Duel.SpecialSummonComplete()
 		end
@@ -60,7 +62,7 @@ function s.splimit(e,c)
 end
 function s.drcon(e,tp,eg,ep,ev,re,r,rp)
 	local ec=eg:GetFirst()
-	return ep~=tp and ec:GetControler()==tp and ec:IsAllTypes(TYPE_RITUAL+TYPE_MONSTER)
+	return ep~=tp and ec:IsControler(tp) and ec:IsAllTypes(TYPE_RITUAL+TYPE_MONSTER)
 end
 function s.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsPlayerCanDraw(tp,1) end

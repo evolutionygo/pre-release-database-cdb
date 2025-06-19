@@ -46,13 +46,14 @@ end
 function s.thfilter(c,race,att)
 	return c:IsAllTypes(TYPE_RITUAL+TYPE_MONSTER) and c:IsAbleToHand() and c:GetRace()~=race and c:GetAttribute()~=att
 end
-function s.costfilter(c)
-	return c:IsAllTypes(TYPE_RITUAL+TYPE_MONSTER) and Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil,c:GetRace(),c:GetAttribute())
+function s.costfilter(c,tp)
+	return c:IsAllTypes(TYPE_RITUAL+TYPE_MONSTER) and not c:IsPublic()
+		and Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil,c:GetRace(),c:GetAttribute())
 end
 function s.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.costfilter,tp,LOCATION_HAND,0,1,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.costfilter,tp,LOCATION_HAND,0,1,nil,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONFIRM)
-	local tc=Duel.SelectMatchingCard(tp,s.costfilter,tp,LOCATION_HAND,0,1,1,nil):GetFirst()
+	local tc=Duel.SelectMatchingCard(tp,s.costfilter,tp,LOCATION_HAND,0,1,1,nil,tp):GetFirst()
 	e:SetLabel(tc:GetRace(),tc:GetAttribute())
 	Duel.ConfirmCards(1-tp,tc)
 end
@@ -69,11 +70,11 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.ConfirmCards(1-tp,g)
 	end
 end
-function s.cthfilter(c)
+function s.cthfilter(c,tp)
 	return c:IsSummonPlayer(tp) and c:IsSummonType(SUMMON_TYPE_RITUAL)
 end
 function s.cthcon(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(s.cthfilter,1,nil) and not Duel.IsDamageCalculated()
+	return eg:IsExists(s.cthfilter,1,nil,tp)
 end
 function s.cthtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() and chkc:IsControler(1-tp) and chkc:IsAbleToHand() end
@@ -84,7 +85,7 @@ function s.cthtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function s.cthop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
+	if tc:IsRelateToChain() then
 		Duel.SendtoHand(tc,nil,REASON_EFFECT)
 	end
 end
