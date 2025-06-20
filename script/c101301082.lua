@@ -1,6 +1,9 @@
 --Luce the Dusk's Dark
 local s,id,o=GetID()
 function s.initial_effect(c)
+	--fusion material
+	aux.AddFusionProcFunRep(c,s.ffilter,3,true)
+	c:EnableReviveLimit()
 	--destroy
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,1))
@@ -35,6 +38,10 @@ function s.initial_effect(c)
 	e3:SetValue(1)
 	c:RegisterEffect(e3)
 end
+function s.ffilter(c,fc)
+	return c:GetOwner()==fc:GetControler() and c:IsRace(RACE_FAIRY+RACE_FIEND)
+		and c:IsLocation(LOCATION_GRAVE)
+end
 function s.tgfilter(c)
 	return c:IsRace(RACE_FAIRY+RACE_FIEND) and c:IsAbleToGrave()
 end
@@ -65,10 +72,10 @@ function s.descon2(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.cfilter,1,e:GetHandler(),tp)
 end
 function s.destg2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsOnField() and chkc:IsControler(1-tp) end
-	if chk==0 then return Duel.IsExistingTarget(nil,tp,0,LOCATION_ONFIELD,1,nil) end
+	if chkc then return chkc:IsOnField() end
+	if chk==0 then return Duel.IsExistingTarget(nil,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g=Duel.SelectTarget(tp,nil,tp,0,LOCATION_ONFIELD,1,1,nil)
+	local g=Duel.SelectTarget(tp,nil,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
 end
 function s.desop2(e,tp,eg,ep,ev,re,r,rp)

@@ -1,6 +1,9 @@
 --Phychic Omnibuster
 local s,id,o=GetID()
 function s.initial_effect(c)
+	--synchro summon
+	aux.AddSynchroProcedure(c,nil,aux.NonTuner(Card.IsRace,RACE_PSYCHO),1)
+	c:EnableReviveLimit()
 	--remove
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
@@ -16,7 +19,7 @@ function s.initial_effect(c)
 end
 function s.rmcon(e,tp,eg,ep,ev,re,r,rp)
 	local loc=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_LOCATION)
-	return bit.band(loc,LOCATION_ONFIELD)~=0
+	return bit.band(loc,LOCATION_ONFIELD)~=0 and rp==1-tp
 		and not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED)
 end
 function s.rmcost(e,tp,eg,ep,ev,re,r,rp,chk)
