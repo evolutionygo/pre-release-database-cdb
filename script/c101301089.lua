@@ -32,7 +32,7 @@ function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local b2=Duel.GetFlagEffect(tp,id+o)==0
 	local b3=Duel.GetFlagEffect(tp,id+o*2)==0
 	if chk==0 then return (b1 or b2 or b3) and Duel.GetFieldGroupCount(tp,0,LOCATION_HAND)~=0
-		and Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,0,LOCATION_HAND,1,nil) end
+		and Duel.IsExistingMatchingCard(nil,tp,0,LOCATION_HAND,1,nil) end
 	local op=0
 	if b1 or b2 or b3 then
 		op=aux.SelectFromOptions(tp,
@@ -70,8 +70,8 @@ function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 		end
 		if Duel.Remove(sg,POS_FACEUP,REASON_EFFECT)~=0 then
 			local tc=sg:GetFirst()
-			local fid=tc:GetFieldID()
-			tc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,0,1,fid)
+			local fid=c:GetFieldID()
+			tc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,1,fid)
 			local e1=Effect.CreateEffect(e:GetHandler())
 			e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 			e1:SetCode(EVENT_PHASE+PHASE_END)
@@ -90,13 +90,12 @@ function s.efilter(e,re)
 	return re:GetOwner():IsType(e:GetLabel())
 end
 function s.retcon(e,tp,eg,ep,ev,re,r,rp)
-	local fid=e:GetLabel()
 	local tc=e:GetLabelObject()
-	if tc:GetFlagEffectLabel(id)==fid then
+	if tc:GetFlagEffectLabel(id)==e:GetLabel() then
+		return true
+	else
 		e:Reset()
 		return false
-	else
-		return Duel.GetTurnPlayer()==1-tp and Duel.GetTurnCount()~=e:GetLabel()
 	end
 end
 function s.retop(e,tp,eg,ep,ev,re,r,rp)
