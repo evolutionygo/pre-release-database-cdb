@@ -92,6 +92,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		e2:SetReset(RESET_EVENT+RESETS_STANDARD)
 		sc:RegisterEffect(e2)
 	end
+	Duel.SpecialSummonComplete()
 end
 function s.atkval(e,c)
 	return Duel.GetOverlayCount(e:GetHandlerPlayer(),1,1)*200
