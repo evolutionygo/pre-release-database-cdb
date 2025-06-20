@@ -6,7 +6,7 @@ function s.initial_effect(c)
 	e1:SetDescription(aux.Stringid(id,1))
 	e1:SetCategory(CATEGORY_DESTROY+CATEGORY_TOGRAVE)
 	e1:SetType(EFFECT_TYPE_IGNITION)
-	e1:SetRange(LOCATION_SZONE)
+	e1:SetRange(LOCATION_MZONE)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetCountLimit(1,id)
 	e1:SetTarget(s.destg)
@@ -15,10 +15,10 @@ function s.initial_effect(c)
 	--destroy 2
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,2))
-	e2:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_DAMAGE)
+	e2:SetCategory(CATEGORY_DESTROY)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
-	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
-	e2:SetRange(LOCATION_HAND)
+	e2:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DELAY)
+	e2:SetRange(LOCATION_MZONE)
 	e2:SetCode(EVENT_DESTROYED)
 	e2:SetCondition(s.descon2)
 	e2:SetTarget(s.destg2)
@@ -62,7 +62,7 @@ function s.cfilter(c,tp)
 		and c:IsReason(REASON_EFFECT)
 end
 function s.descon2(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(s.cfilter,1,c,tp)
+	return eg:IsExists(s.cfilter,1,e:GetHandler(),tp)
 end
 function s.destg2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() and chkc:IsControler(1-tp) end
@@ -76,4 +76,7 @@ function s.desop2(e,tp,eg,ep,ev,re,r,rp)
 	if tc:IsRelateToChain() then
 		Duel.Destroy(tc,REASON_EFFECT)
 	end
+end
+function s.indtg(e,c)
+	return c:GetSequence()==0 or c:GetSequence()==4
 end

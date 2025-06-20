@@ -33,9 +33,9 @@ function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local op=0
 	if b1 or b2 or b3 then
 		op=aux.SelectFromOptions(tp,
-			{b1,aux.Stringid(id,1),TYPE_MONSTER},
-			{b2,aux.Stringid(id,2),TYPE_SPELL},
-			{b3,aux.Stringid(id,3),TYPE_TRAP})
+			{b1,1050,TYPE_MONSTER},
+			{b2,1051,TYPE_SPELL},
+			{b3,1052,TYPE_TRAP})
 	end
 	e:SetLabel(op)
 	if op==TYPE_MONSTER then
