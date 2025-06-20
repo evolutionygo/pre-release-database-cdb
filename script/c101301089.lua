@@ -31,8 +31,7 @@ function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local b1=Duel.GetFlagEffect(tp,id)==0
 	local b2=Duel.GetFlagEffect(tp,id+o)==0
 	local b3=Duel.GetFlagEffect(tp,id+o*2)==0
-	if chk==0 then return (b1 or b2 or b3) and Duel.GetFieldGroupCount(tp,0,LOCATION_HAND)~=0
-		and Duel.IsExistingMatchingCard(nil,tp,0,LOCATION_HAND,1,nil) end
+	if chk==0 then return (b1 or b2 or b3) and Duel.GetFieldGroupCount(tp,0,LOCATION_HAND)~=0 end
 	local op=0
 	if b1 or b2 or b3 then
 		op=aux.SelectFromOptions(tp,
