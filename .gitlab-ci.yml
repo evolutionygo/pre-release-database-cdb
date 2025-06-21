@@ -86,11 +86,11 @@ add_script_diff:
   image: git-registry.moenext.com/mycard/ygopro-cdb-descgen:master-x86
   variables:
     YGOPRO_PIC_URL_PREFIX: 'https://cdn02.moecube.com:444/ygopro-super-pre/data/pics/'
-    YGOPRO_PIC_URL_SUFFIX: '.jpg?version=11.20'
+    YGOPRO_PIC_URL_SUFFIX: '.jpg?version=15.13'
     FIELDS: 'name,desc,overallString,picUrl'
     GIT_DEPTH: '1000'
     OUTPUT_FILENAME: test-release.json
-    REF_COMMIT: '15.11' # 更新的时候改这里，修改成上一个tag的版本号
+    REF_COMMIT: '15.12' # 更新的时候改这里，修改成上一个tag的版本号
   script:
     - apt update;apt -y install wget
     - currentPath=$PWD
