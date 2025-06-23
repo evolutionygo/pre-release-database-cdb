@@ -1,4 +1,4 @@
---Phychic Omnibuster
+--Psychic Omnibuster
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--synchro summon
@@ -66,6 +66,7 @@ function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 			e1:SetLabel(e:GetLabel())
 			e1:SetValue(s.efilter)
 			c:RegisterEffect(e1)
+			Duel.BreakEffect()
 		end
 		if Duel.Remove(sg,POS_FACEUP,REASON_EFFECT)~=0 then
 			local tc=sg:GetFirst()
