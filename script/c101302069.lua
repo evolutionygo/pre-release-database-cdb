@@ -6,7 +6,6 @@ function s.initial_effect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_SEARCH+CATEGORY_TOHAND+CATEGORY_DECKDES)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
-	e1:SetCountLimit(1)
 	e1:SetCost(s.cost)
 	e1:SetTarget(s.target)
 	e1:SetOperation(s.activate)
@@ -61,10 +60,14 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 			return b1
 		end
 	end
-	if e:IsCostChecked() and e:GetLabel()==1 then
-		e:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	if e:GetLabel()==1 then
+		if e:IsCostChecked() then
+			e:SetCategory(CATEGORY_SPECIAL_SUMMON)
+			Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1)
+		end
 		Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK+LOCATION_GRAVE+LOCATION_HAND)
 	elseif e:IsCostChecked() then
+		Duel.RegisterFlagEffect(tp,id+o,RESET_PHASE+PHASE_END,0,1)
 		e:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_TOHAND+CATEGORY_SEARCH+CATEGORY_DECKDES)
 	end
 end
