@@ -23,9 +23,9 @@ function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local check=Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and Duel.GetFieldGroupCount(tp,0,LOCATION_MZONE)>0
 	local b1=Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil,e,tp,check)
-		and Duel.GetFlagEffect(tp,id+o)==0
-	local b2=Duel.CheckReleaseGroup(tp,s.costfilter,1,nil,e,tp)
 		and Duel.GetFlagEffect(tp,id)==0
+	local b2=Duel.CheckReleaseGroup(tp,s.costfilter,1,nil,e,tp)
+		and Duel.GetFlagEffect(tp,id+o)==0
 	if chk==0 then return b1 or b2 end
 	local op=0
 	if b1 or b2 then
@@ -63,11 +63,11 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if e:GetLabel()==1 then
 		if e:IsCostChecked() then
 			e:SetCategory(CATEGORY_SPECIAL_SUMMON)
-			Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1)
+			Duel.RegisterFlagEffect(tp,id+o,RESET_PHASE+PHASE_END,0,1)
 		end
 		Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK+LOCATION_GRAVE+LOCATION_HAND)
 	elseif e:IsCostChecked() then
-		Duel.RegisterFlagEffect(tp,id+o,RESET_PHASE+PHASE_END,0,1)
+		Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1)
 		e:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_TOHAND+CATEGORY_SEARCH+CATEGORY_DECKDES)
 	end
 end
