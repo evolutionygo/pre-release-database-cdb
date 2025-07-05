@@ -47,7 +47,7 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsRelateToChain() and c:IsLocation(LOCATION_HAND)then
+	if c:IsRelateToChain() and c:IsLocation(LOCATION_HAND) then
 		Duel.Summon(tp,c,true,nil)
 	end
 end

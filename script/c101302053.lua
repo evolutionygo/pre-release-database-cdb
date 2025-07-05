@@ -11,6 +11,7 @@ function s.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_QUICK_O)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetCode(EVENT_FREE_CHAIN)
+	e1:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_MAIN_END)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCountLimit(1,id)
 	e1:SetCondition(s.spcon)
@@ -30,7 +31,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetCurrentPhase()==PHASE_MAIN1 or Duel.GetCurrentPhase()==PHASE_MAIN2
+	return Duel.IsMainPhase()
 end
 function s.costfilter(c,e,tp)
 	return c:IsAttribute(ATTRIBUTE_FIRE) and c:GetOriginalLevel()>2 and Duel.GetMZoneCount(tp,c)>0
@@ -38,12 +39,13 @@ function s.costfilter(c,e,tp)
 end
 function s.spfilter(c,e,tp,lv,race)
 	return c:IsAttribute(ATTRIBUTE_FIRE) and c:IsLevelBelow(lv-1)
-		and c:IsRace(race)
+		and (c:GetOriginalRace()&race)~=0
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE)
 end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.CheckReleaseGroup(tp,s.costfilter,1,nil,e,tp) end
-	local g=Duel.SelectReleaseGroup(tp,s.costfilter,1,1,nil,e,tp)
+	local c=e:GetHandler()
+	if chk==0 then return Duel.CheckReleaseGroup(tp,s.costfilter,1,c,e,tp) end
+	local g=Duel.SelectReleaseGroup(tp,s.costfilter,1,1,c,e,tp)
 	e:SetLabel(g:GetFirst():GetOriginalLevel(),g:GetFirst():GetOriginalRace())
 	Duel.Release(g,REASON_COST)
 end
@@ -57,7 +59,7 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToChain() then
+	if tc:IsRelateToChain() and aux.NecroValleyFilter()(tc) then
 		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
 	end
 end
