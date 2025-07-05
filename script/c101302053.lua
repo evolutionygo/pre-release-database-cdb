@@ -34,7 +34,7 @@ function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsMainPhase()
 end
 function s.costfilter(c,e,tp)
-	return c:IsAttribute(ATTRIBUTE_FIRE) and c:GetOriginalLevel()>2 and Duel.GetMZoneCount(tp,c)>0
+	return c:IsAttribute(ATTRIBUTE_FIRE) and c:GetOriginalLevel()>1 and Duel.GetMZoneCount(tp,c)>0
 		and Duel.IsExistingTarget(s.spfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp,c:GetOriginalLevel(),c:GetOriginalRace())
 end
 function s.spfilter(c,e,tp,lv,race)
@@ -65,12 +65,12 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.repfilter(c,tp)
 	return c:IsControler(tp) and c:IsOnField()
-		and c:IsLocation(LOCATION_SZONE) and c:IsFacedown()
+		and c:IsLocation(LOCATION_SZONE) and not c:IsLocation(LOCATION_FZONE) and c:IsFacedown()
 		and c:IsReason(REASON_EFFECT) and not c:IsReason(REASON_REPLACE)
 end
 function s.desreptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-	if chk==0 then return eg:IsExists(s.repfilter,1,nil,tp)
+	if chk==0 then return rp==1-tp and eg:IsExists(s.repfilter,1,nil,tp)
 		and c:IsAbleToRemove() and not c:IsStatus(STATUS_DESTROY_CONFIRMED+STATUS_BATTLE_DESTROYED) end
 	return Duel.SelectEffectYesNo(tp,c,96)
 end
