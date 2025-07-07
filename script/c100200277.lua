@@ -41,9 +41,6 @@ function s.spcon(e,c)
 	return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and Duel.IsExistingMatchingCard(s.spcfilter,tp,LOCATION_SZONE,0,1,nil)
 end
-function s.descon(e,tp,eg,ep,ev,re,r,rp)
-	return not Duel.IsExistingMatchingCard(nil,tp,LOCATION_PZONE,0,1,e:GetHandler())
-end
 function s.desfilter(c)
 	return c:IsFaceup() and c:IsType(TYPE_SPELL+TYPE_TRAP)
 end
@@ -64,7 +61,7 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if c:IsRelateToChain() and tc:IsRelateToChain() then
 		local g=Group.FromCards(c,tc)
-		if Duel.Destroy(g,REASON_EFFECT)~=0 then
+		if Duel.Destroy(g,REASON_EFFECT)==2 then
 			Duel.BreakEffect()
 			Duel.Draw(tp,1,REASON_EFFECT)
 		end
