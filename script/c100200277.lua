@@ -51,10 +51,10 @@ function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()
 	if chkc then return chkc:IsOnField() and chkc:IsControler(tp) and chkc~=c and s.desfilter(chkc) end
 	if chk==0 then return c:IsDestructable()
-		and Duel.IsExistingTarget(s.desfilter,tp,LOCATION_ONFIELD,0,1,c,TYPE_SPELL+TYPE_TRAP)
+		and Duel.IsExistingTarget(s.desfilter,tp,LOCATION_ONFIELD,0,1,c)
 		and Duel.IsPlayerCanDraw(tp,1) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g=Duel.SelectTarget(tp,s.desfilter,tp,LOCATION_ONFIELD,0,1,1,c,TYPE_SPELL+TYPE_TRAP)
+	local g=Duel.SelectTarget(tp,s.desfilter,tp,LOCATION_ONFIELD,0,1,1,c)
 	g:AddCard(c)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,g:GetCount(),0,0)
 	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
@@ -74,17 +74,21 @@ function s.xyzfilter(c)
 	return c:IsFaceup() and c:IsType(TYPE_XYZ)
 end
 function s.xyztg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	local c=e:GetHandler()
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and s.xyzfilter(chkc) end
 	if chk==0 then return Duel.IsExistingTarget(s.xyzfilter,tp,LOCATION_MZONE,0,1,nil)
 		and e:GetHandler():IsCanOverlay() end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
 	Duel.SelectTarget(tp,s.xyzfilter,tp,LOCATION_MZONE,0,1,1,nil)
-	Duel.SetOperationInfo(0,CATEGORY_LEAVE_GRAVE,e:GetHandler(),1,0,0)
+	if c:IsLocation(LOCATION_GRAVE) then
+		Duel.SetOperationInfo(0,CATEGORY_LEAVE_GRAVE,c,1,0,0)
+	end
 end
 function s.xyzop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToChain() and not tc:IsImmuneToEffect(e) and c:IsRelateToChain() and c:IsCanOverlay() then
+	if tc:IsRelateToChain() and not tc:IsImmuneToEffect(e)
+		and c:IsRelateToChain() and c:IsCanOverlay() and aux.NecroValleyFilter()(c) then
 		Duel.Overlay(tc,Group.FromCards(c))
 	end
 end
