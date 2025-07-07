@@ -4,14 +4,15 @@ function s.initial_effect(c)
 	aux.AddMaterialCodeList(c,63977008,60800381,44508094)
 	--Activate
 	local e1=Effect.CreateEffect(c)
-	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
+	e1:SetDescription(aux.Stringid(id,0))
+	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH+CATEGORY_HANDES)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetCountLimit(1,id+EFFECT_COUNT_CODE_OATH)
 	e1:SetTarget(s.target)
 	e1:SetOperation(s.activate)
 	c:RegisterEffect(e1)
-	--substitute as a monster
+	--lvdown
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetType(EFFECT_TYPE_IGNITION)
@@ -22,32 +23,40 @@ function s.initial_effect(c)
 	e2:SetOperation(s.lvop)
 	c:RegisterEffect(e2)
 end
-function s.cfilter(c)
+function s.thfilter1(c)
 	return c:IsCode(63977008) and c:IsAbleToHand()
 end
+function s.thfilter2(c)
+	return (aux.IsCodeListed(c,60800381) or aux.IsCodeListed(c,44508094)) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
+end
 function s.thfilter(c)
-	return (c:IsCode(63977008) or (aux.IsCodeListed(c,60800381) or aux.IsCodeListed(c,44508094)) and c:IsType(TYPE_MONSTER)) and c:IsAbleToHand()
+	return (c:IsCode(63977008) or (aux.IsCodeListed(c,60800381) or aux.IsCodeListed(c,44508094)) and c:IsType(TYPE_MONSTER))
+		and c:IsAbleToHand()
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		local g=Duel.GetMatchingGroup(s.thfilter,tp,LOCATION_DECK,0,nil)
-		return g:GetClassCount(Card.GetCode)>=2 and g:IsExists(s.cfilter,1,nil)
+		return g:CheckSubGroup(aux.gffcheck,2,2,s.thfilter1,nil,s.thfilter2,nil)
 	end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,2,tp,LOCATION_DECK)
 end
 function s.check(g)
-	return g:GetClassCount(Card.GetCode)>=2 and g:IsExists(s.cfilter,1,nil) 
+	return g:GetClassCount(Card.GetCode)>=2 and g:IsExists(s.cfilter,1,nil)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(s.thfilter,tp,LOCATION_DECK,0,nil)
-	if g:GetClassCount(Card.GetCode)<2 then return end
+	if not g:CheckSubGroup(aux.gffcheck,2,2,s.thfilter1,nil,s.thfilter2,nil) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local tg1=g:SelectSubGroup(tp,s.check,false,2,2)
-	Duel.SendtoHand(tg1,nil,REASON_EFFECT)
-	Duel.ConfirmCards(1-tp,tg1)
-	Duel.ShuffleHand(tp)
-	Duel.BreakEffect()
-	Duel.DiscardHand(tp,nil,1,1,REASON_EFFECT+REASON_DISCARD)
+	local tg1=g:SelectSubGroup(tp,aux.gffcheck,false,2,2,s.thfilter1,nil,s.thfilter2,nil)
+	if #tg1==2 then
+		Duel.SendtoHand(tg1,nil,REASON_EFFECT)
+		Duel.ConfirmCards(1-tp,tg1)
+		Duel.BreakEffect()
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DISCARD)
+		local dg=Duel.SelectMatchingCard(tp,aux.TRUE,tp,LOCATION_HAND,0,1,1,nil)
+		Duel.ShuffleHand(tp)
+		Duel.SendtoGrave(dg,REASON_EFFECT+REASON_DISCARD)
+	end
 end
 function s.lvfilter(c)
 	return c:IsType(TYPE_SYNCHRO) and c:GetLevel()>1 and c:IsFaceup()
@@ -61,7 +70,8 @@ end
 function s.lvop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToChain() and tc:IsFaceup() and not tc:IsImmuneToEffect(e) then
+	if tc:IsRelateToChain() and tc:IsFaceup() and tc:IsType(TYPE_MONSTER) and tc:GetLevel()>1
+		and not tc:IsImmuneToEffect(e) then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_UPDATE_LEVEL)

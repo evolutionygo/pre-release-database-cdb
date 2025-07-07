@@ -47,26 +47,27 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
-	local tg=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_GRAVE,0,nil,e,tp)
-	if ft<=0 then return end
-	if Duel.IsPlayerAffectedByEffect(tp,59822133) then ft=1 end
-	local g=nil
-	if tg:GetCount()>ft then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-		g=tg:Select(tp,ft,ft,nil)
-	else
-		g=tg
-	end
-	if g:GetCount()>0 then
-		for tc in aux.Next(g) do
-			Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP)
-			local e1=Effect.CreateEffect(e:GetHandler())
-			e1:SetType(EFFECT_TYPE_SINGLE)
-			e1:SetCode(EFFECT_CANNOT_TRIGGER)
-			e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
-			tc:RegisterEffect(e1)
+	local tg=Duel.GetMatchingGroup(aux.NecroValleyFilter(s.spfilter),tp,LOCATION_GRAVE,0,nil,e,tp)
+	if ft>0 then
+		if Duel.IsPlayerAffectedByEffect(tp,59822133) then ft=1 end
+		local g=nil
+		if tg:GetCount()>ft then
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+			g=tg:Select(tp,ft,ft,nil)
+		else
+			g=tg
 		end
-		Duel.SpecialSummonComplete()
+		if g:GetCount()>0 then
+			for tc in aux.Next(g) do
+				Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP)
+				local e1=Effect.CreateEffect(e:GetHandler())
+				e1:SetType(EFFECT_TYPE_SINGLE)
+				e1:SetCode(EFFECT_CANNOT_TRIGGER)
+				e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+				tc:RegisterEffect(e1)
+			end
+			Duel.SpecialSummonComplete()
+		end
 	end
 	local e2=Effect.CreateEffect(e:GetHandler())
 	e2:SetType(EFFECT_TYPE_FIELD)

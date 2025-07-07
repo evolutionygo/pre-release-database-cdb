@@ -28,7 +28,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function s.thfilter(c)
-	return (aux.IsCodeListed(c,63977008,60800381) and c:IsType(TYPE_SPELL+TYPE_TRAP) or c:IsCode(8529136)) and c:IsAbleToHand()
+	return (aux.IsCodeListed(c,60800381) and c:IsType(TYPE_SPELL+TYPE_TRAP) or c:IsCode(63977008)) and c:IsAbleToHand()
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil) end
@@ -43,8 +43,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.atkcon(e,tp,eg,ep,ev,re,r,rp)
-	local ph=Duel.GetCurrentPhase()
-	return ph>=PHASE_BATTLE_START and ph<=PHASE_BATTLE
+	return Duel.IsBattlePhase() and Duel.GetTurnPlayer()==e:GetHandlerPlayer()
 end
 function s.atktg(e,c)
 	return aux.IsCodeListed(c,60800381) or c:IsOriginalSetCard(0x43) and c:IsType(TYPE_SYNCHRO)
