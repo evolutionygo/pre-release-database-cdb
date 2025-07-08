@@ -17,7 +17,7 @@ function s.initial_effect(c)
 	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetCategory(CATEGORY_EQUIP)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e2:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
 	e2:SetCode(EVENT_DESTROYED)
 	e2:SetCountLimit(1,id+o)
 	e2:SetCondition(s.eqcon)
@@ -99,14 +99,15 @@ end
 function s.tgfilter(c)
 	return c:IsFaceup()
 end
-function s.eqfilter2(c)
-	return c:IsSetCard(0x2d3) and c:IsType(TYPE_MONSTER)
+function s.eqfilter2(c,tp)
+	return c:IsSetCard(0x2d3) and c:IsType(TYPE_MONSTER) and not c:IsForbidden()
+		and c:CheckUniqueOnField(tp,LOCATION_SZONE)
 end
 function s.eqtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and s.tgfilter(chkc) end
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0
 		and Duel.IsExistingTarget(s.tgfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil)
-		and Duel.IsExistingMatchingCard(s.eqfilter2,tp,LOCATION_DECK,0,1,nil) end
+		and Duel.IsExistingMatchingCard(s.eqfilter2,tp,LOCATION_DECK,0,1,nil,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EQUIP)
 	Duel.SelectTarget(tp,s.tgfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_EQUIP,nil,1,tp,LOCATION_DECK)
@@ -115,7 +116,7 @@ function s.eqop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToChain() and tc:IsFaceup() and Duel.GetLocationCount(tp,LOCATION_SZONE)>0 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EQUIP)
-		local g=Duel.SelectMatchingCard(tp,s.eqfilter2,tp,LOCATION_DECK,0,1,1,nil)
+		local g=Duel.SelectMatchingCard(tp,s.eqfilter2,tp,LOCATION_DECK,0,1,1,nil,tp)
 		local ec=g:GetFirst()
 		if ec then
 			if not Duel.Equip(tp,ec,tc) then return end
