@@ -99,14 +99,14 @@ end
 function s.tgfilter(c)
 	return c:IsFaceup()
 end
-function s.eqfilter(c)
+function s.eqfilter2(c)
 	return c:IsSetCard(0x2d3) and c:IsType(TYPE_MONSTER)
 end
 function s.eqtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and s.tgfilter(chkc) end
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0
 		and Duel.IsExistingTarget(s.tgfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil)
-		and Duel.IsExistingMatchingCard(s.eqfilter,tp,LOCATION_DECK,0,1,nil) end
+		and Duel.IsExistingMatchingCard(s.eqfilter2,tp,LOCATION_DECK,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EQUIP)
 	Duel.SelectTarget(tp,s.tgfilter,tp,LOCATION_MZONE,0,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_EQUIP,nil,1,tp,LOCATION_DECK)
@@ -125,12 +125,12 @@ function s.eqop(e,tp,eg,ep,ev,re,r,rp)
 			e1:SetCode(EFFECT_EQUIP_LIMIT)
 			e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 			e1:SetLabelObject(tc)
-			e1:SetValue(s.eqlimit)
+			e1:SetValue(s.eqlimit2)
 			e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 			ec:RegisterEffect(e1)
 		end
 	end
 end
-function s.eqlimit(e,c)
+function s.eqlimit2(e,c)
 	return c==e:GetLabelObject()
 end
