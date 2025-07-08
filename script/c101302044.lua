@@ -93,7 +93,6 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 		local sg=Duel.GetFieldGroup(tp,LOCATION_ONFIELD,LOCATION_ONFIELD):Select(tp,1,1,nil)
 		Duel.HintSelection(sg)
-		Duel.BreakEffect()
 		Duel.Destroy(sg,REASON_EFFECT)
 	end
 end
