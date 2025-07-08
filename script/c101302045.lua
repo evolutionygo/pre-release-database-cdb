@@ -1,4 +1,4 @@
---終獄龍機Ⅻ-ドラストリウス
+--終獄龍機ⅩⅡ－ドラストリウス
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--xyz summon
@@ -57,6 +57,7 @@ function s.eqop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.SelectMatchingCard(tp,s.eqfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,aux.ExceptThisCard(e),tp)
 	local tc=g:GetFirst()
 	if tc then
+		Duel.HintSelection(g)
 		if not Duel.Equip(tp,tc,c) then return end
 		local e1=Effect.CreateEffect(c)
 		e1:SetProperty(EFFECT_FLAG_OWNER_RELATE)
@@ -94,9 +95,10 @@ function s.negop(e,tp,eg,ep,ev,re,r,rp)
 		and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 		Duel.BreakEffect()
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EQUIP)
-		local g=Duel.SelectMatchingCard(tp,s.eqfilter,tp,0,LOCATION_MZONE,1,1,nil,tp)
+		local g=Duel.SelectMatchingCard(tp,s.eqfilter,tp,0,LOCATION_MZONE,1,1,aux.ExceptThisCard(e),tp)
 		local tc=g:GetFirst()
 		if tc then
+			Duel.HintSelection(g)
 			if not Duel.Equip(tp,tc,c) then return end
 			local e1=Effect.CreateEffect(c)
 			e1:SetProperty(EFFECT_FLAG_OWNER_RELATE)

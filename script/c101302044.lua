@@ -46,20 +46,21 @@ end
 function s.eqcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_XYZ)
 end
-function s.eqfilter(c)
-	return c:IsType(TYPE_EQUIP) and not c:IsForbidden()
+function s.eqfilter(c,tp)
+	return c:IsType(TYPE_EQUIP) and not c:IsForbidden() and c:CheckUniqueOnField(tp,LOCATION_SZONE)
 end
 function s.eqtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0
-		and Duel.IsExistingMatchingCard(s.eqfilter,tp,LOCATION_GRAVE,0,1,nil) end
+		and Duel.IsExistingMatchingCard(s.eqfilter,tp,LOCATION_GRAVE,0,1,nil,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_EQUIP,nil,1,tp,LOCATION_GRAVE)
 end
 function s.eqop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsFacedown() or not c:IsRelateToChain() then return end
-	if Duel.GetLocationCount(tp,LOCATION_SZONE)<1 then return end
+	local ft=Duel.GetLocationCount(tp,LOCATION_SZONE)
+	if ft<1 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EQUIP)
-	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.eqfilter),tp,LOCATION_GRAVE,0,1,ft,nil)
+	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.eqfilter),tp,LOCATION_GRAVE,0,1,ft,nil,tp)
 	if g:GetCount()>0 then
 		for tc in aux.Next(g) do
 			Duel.Equip(tp,tc,c,false,true)
