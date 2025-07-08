@@ -1,4 +1,4 @@
---獄神機Doom-Z
+--獄神機Doom－Z
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddCodeList(c,101302044)
@@ -43,7 +43,9 @@ function s.cfilter(c,e,tp)
 		and aux.MustMaterialCheck(c,tp,EFFECT_MUST_BE_XMATERIAL)
 end
 function s.spfilter(c,e,tp,mc)
-	return c:IsRank(mc:GetLevel()) and (c:IsSetCard(0x2d3) or c:IsCode(101302044)) and c:IsType(TYPE_XYZ) and mc:IsCanBeXyzMaterial(c) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false) and Duel.GetLocationCountFromEx(tp,tp,mc,c)>0
+	return c:IsRank(mc:GetLevel()) and (c:IsSetCard(0x2d3) or c:IsCode(101302044)) and c:IsAllTypes(TYPE_XYZ+TYPE_MONSTER)
+		and mc:IsCanBeXyzMaterial(c) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false)
+		and Duel.GetLocationCountFromEx(tp,tp,mc,c)>0
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end
@@ -57,7 +59,8 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
 	if not aux.MustMaterialCheck(tc,tp,EFFECT_MUST_BE_XMATERIAL) then return end
-	if tc:IsFacedown() or not tc:IsRelateToChain() or tc:IsControler(1-tp) or tc:IsImmuneToEffect(e) then return end
+	if tc:IsFacedown() or not tc:IsRelateToChain() or not tc:IsType(TYPE_MONSTER)
+		or tc:IsControler(1-tp) or tc:IsImmuneToEffect(e) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_EXTRA,0,1,1,nil,e,tp,tc)
 	local sc=g:GetFirst()
@@ -70,7 +73,11 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Overlay(sc,Group.FromCards(tc))
 		Duel.SpecialSummon(sc,SUMMON_TYPE_XYZ,tp,tp,false,false,POS_FACEUP)
 		sc:CompleteProcedure()
-		if c:IsRelateToChain() and Duel.GetLocationCount(tp,LOCATION_SZONE)>0 then
+		if c:IsRelateToChain() and c:IsControler(tp) then
+			if Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 then
+				Duel.SendtoGrave(c,REASON_RULE)
+				return
+			end
 			if not Duel.Equip(tp,c,sc) then return end
 			--equip limit
 			local e1=Effect.CreateEffect(c)
