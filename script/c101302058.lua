@@ -94,6 +94,7 @@ function s.lv_or_rk(c)
 	end
 end
 function s.atkop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 	local g=Duel.SelectMatchingCard(tp,aux.TRUE,tp,LOCATION_ONFIELD,0,1,1,aux.ExceptThisCard(e))
 	if g:GetCount()>0 then
@@ -101,12 +102,30 @@ function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Destroy(g,REASON_EFFECT)
 	end
 	if c:IsRelateToChain() and c:IsFaceup() then
-		local e2=Effect.CreateEffect(c)
-		e2:SetType(EFFECT_TYPE_SINGLE)
+		local e1=Effect.CreateEffect(c)
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+		e1:SetCode(EFFECT_UPDATE_ATTACK)
+		e1:SetValue(s.lv_or_rk(c))
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+		c:RegisterEffect(e1)
+		local e2=Effect.CreateEffect(e:GetHandler())
 		e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-		e2:SetCode(EFFECT_UPDATE_ATTACK)
-		e2:SetValue(s.lv_or_rk(c))
-		e2:SetReset(RESET_EVENT+RESETS_STANDARD)
+		e2:SetType(EFFECT_TYPE_SINGLE)
+		e2:SetCode(EFFECT_DIRECT_ATTACK)
+		e2:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
 		c:RegisterEffect(e2)
+		local e3=Effect.CreateEffect(c)
+		e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+		e3:SetCode(EVENT_DAMAGE_STEP_END)
+		e3:SetOperation(s.desop)
+		e3:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_DAMAGE)
+		c:RegisterEffect(e3)
+	end
+end
+function s.desop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	if c:IsRelateToBattle() and c:IsFaceup() then
+		Duel.Destroy(c,REASON_EFFECT)
 	end
 end
