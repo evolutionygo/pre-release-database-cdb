@@ -60,15 +60,6 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local g=Duel.SelectTarget(tp,s.spfilter,tp,0,LOCATION_GRAVE,1,1,nil,e,tp)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
 end
-function s.rmfilter(c)
-	return c:IsFaceup() and c:IsAbleToRemove()
-end
-function s.fselect(g)
-	return g:GetClassCount(Card.GetControler)==g:GetCount() and g:IsExists(s.fcheck,1,nil,g)
-end
-function s.fcheck(c,g)
-	return g:IsExists(Card.IsRace,1,c,c:GetRace())
-end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
