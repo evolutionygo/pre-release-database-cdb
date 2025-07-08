@@ -71,6 +71,10 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SpecialSummon(sc,SUMMON_TYPE_XYZ,tp,tp,false,false,POS_FACEUP)
 		sc:CompleteProcedure()
 		if c:IsRelateToChain() and Duel.GetLocationCount(tp,LOCATION_SZONE)>0 then
+			if Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 or tc:IsFacedown() then
+       			Duel.SendtoGrave(c,REASON_EFFECT)
+    		    return
+    		end
 			if not Duel.Equip(tp,c,sc) then return end
 			--equip limit
 			local e1=Effect.CreateEffect(c)
