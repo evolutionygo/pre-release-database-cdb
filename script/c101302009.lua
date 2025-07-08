@@ -17,6 +17,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 	local e3=e1:Clone()
 	e3:SetCode(EVENT_DESTROYED)
+	e3:SetCondition(s.thcon)
 	c:RegisterEffect(e3)
 	--spsummon
 	local e4=Effect.CreateEffect(c)
@@ -30,6 +31,9 @@ function s.initial_effect(c)
 	e4:SetTarget(s.xyztg)
 	e4:SetOperation(s.xyzop)
 	c:RegisterEffect(e4)
+end
+function s.thcon(e,tp,eg,ep,ev,re,r,rp,chk)
+	return e:GetHandler():IsReason(REASON_EFFECT)
 end
 function s.thfilter(c)
 	return c:IsSetCard(0x2d3) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
@@ -61,7 +65,8 @@ function s.xyztg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.xyzop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if not c:IsRelateToChain() then return end
+	if not c:IsRelateToChain() or c:IsFacedown() then return end
+	if not aux.MustMaterialCheck(tc,tp,EFFECT_MUST_BE_XMATERIAL) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local sg=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_EXTRA,0,1,1,nil,e,tp,c:GetLevel())
 	local sc=sg:GetFirst()

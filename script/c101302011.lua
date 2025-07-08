@@ -38,7 +38,7 @@ function s.splimit(e,c)
 	return not c:IsType(TYPE_XYZ) and c:IsLocation(LOCATION_EXTRA)
 end
 function s.cfilter(c,e,tp)
-	return c:IsFaceup() and c:IsLevelAbove(1)
+	return c:IsFaceup() and c:IsLevelAbove(1) and c:IsType(TYPE_EFFECT)
 		and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp,c)
 		and aux.MustMaterialCheck(c,tp,EFFECT_MUST_BE_XMATERIAL)
 end
