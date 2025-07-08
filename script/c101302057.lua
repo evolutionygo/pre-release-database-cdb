@@ -1,4 +1,4 @@
---終刻撃針（ドゥームズ・レイダー）
+--終刻撃針
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--Activate
@@ -43,21 +43,26 @@ function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 	local dg=Duel.SelectMatchingCard(tp,s.cfilter,tp,LOCATION_HAND+LOCATION_ONFIELD,0,1,1,aux.ExceptThisCard(e),e,tp)
-	if dg:GetCount()>0 and Duel.Destroy(dg,REASON_EFFECT)~=0 then
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_OPERATECARD)
-		local g=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp,nil)
-		local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
-		local tc=g:GetFirst()
-		if tc then
-			Duel.BreakEffect()
-			if tc:IsAbleToHand() and (not tc:IsCanBeSpecialSummoned(e,0,tp,false,false) or ft<=0 or Duel.SelectOption(tp,1190,1152)==0) then
-				Duel.SendtoHand(tc,nil,REASON_EFFECT)
-				Duel.ConfirmCards(1-tp,tc)
-			else
-				Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
+	if dg:GetCount()>0 then
+		local fg=dg:Filter(Card.IsLocation,nil,LOCATION_ONFIELD)
+		if fg:GetCount()>0 then
+			Duel.HintSelection(fg)
+		end
+		if Duel.Destroy(dg,REASON_EFFECT)~=0 then
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_OPERATECARD)
+			local g=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp,nil)
+			local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+			local tc=g:GetFirst()
+			if tc then
+				Duel.BreakEffect()
+				if tc:IsAbleToHand() and (not tc:IsCanBeSpecialSummoned(e,0,tp,false,false) or ft<=0 or Duel.SelectOption(tp,1190,1152)==0) then
+					Duel.SendtoHand(tc,nil,REASON_EFFECT)
+					Duel.ConfirmCards(1-tp,tc)
+				else
+					Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
+				end
 			end
 		end
 	end

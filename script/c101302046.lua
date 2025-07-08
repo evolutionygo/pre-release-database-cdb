@@ -40,6 +40,10 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 	local g=Duel.SelectMatchingCard(tp,s.desfilter,tp,LOCATION_HAND+LOCATION_ONFIELD,0,1,1,nil)
+	local fg=g:Filter(Card.IsLocation,nil,LOCATION_ONFIELD)
+	if fg:GetCount()>0 then
+		Duel.HintSelection(fg)
+	end
 	if Duel.Destroy(g,REASON_EFFECT)>0
 		and Duel.IsExistingMatchingCard(aux.TRUE,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil)
 		and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
