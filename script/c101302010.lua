@@ -1,4 +1,4 @@
---終刻竜機Ⅶ-エララ
+--終刻竜機Ⅶ－エララ
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--set
@@ -16,7 +16,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 	local e3=e1:Clone()
 	e3:SetCode(EVENT_DESTROYED)
-	e3:SetCondition(s.thcon)
+	e3:SetCondition(s.setcon)
 	c:RegisterEffect(e3)
 	--spsummon
 	local e4=Effect.CreateEffect(c)
@@ -31,18 +31,16 @@ function s.initial_effect(c)
 	e4:SetOperation(s.xyzop)
 	c:RegisterEffect(e4)
 end
-function s.thcon(e,tp,eg,ep,ev,re,r,rp,chk)
+function s.setcon(e,tp,eg,ep,ev,re,r,rp,chk)
 	return e:GetHandler():IsReason(REASON_EFFECT)
 end
 function s.setfilter(c)
 	return c:IsSetCard(0x2d3) and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsSSetable()
 end
 function s.settg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0
-		and Duel.IsExistingMatchingCard(s.setfilter,tp,LOCATION_DECK,0,1,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.setfilter,tp,LOCATION_DECK,0,1,nil) end
 end
 function s.setop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SET)
 	local g=Duel.SelectMatchingCard(tp,s.setfilter,tp,LOCATION_DECK,0,1,1,nil)
 	local tc=g:GetFirst()
@@ -55,7 +53,8 @@ function s.xyzcon(e,tp,eg,ep,ev,re,r,rp)
 	return g:GetCount()>0
 end
 function s.spfilter(c,e,tp,lv)
-	return c:IsRace(RACE_MACHINE) and c:IsAttribute(ATTRIBUTE_WIND) and c:IsRank(lv) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false) and Duel.GetLocationCountFromEx(tp,tp,nil,c)>0
+	return c:IsRace(RACE_MACHINE) and c:IsAttribute(ATTRIBUTE_WIND) and c:IsRank(lv)
+		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false) and Duel.GetLocationCountFromEx(tp,tp,nil,c)>0
 end
 function s.xyztg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()

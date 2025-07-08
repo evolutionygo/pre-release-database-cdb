@@ -1,4 +1,4 @@
---終刻竜機ⅩⅡ-ドラスティア
+--終刻竜機ⅩⅡ－ドラスティア
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--spsummon
@@ -51,10 +51,8 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 			Duel.BreakEffect()
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EQUIP)
 			local g=Duel.SelectMatchingCard(tp,s.eqfilter,tp,LOCATION_DECK,0,1,1,nil,c,tp)
-			local tc=g:GetFirst()
-			if tc then
-				if not Duel.Equip(tp,tc,c) then return end
-			end
+			local ec=g:GetFirst()
+			if ec then Duel.Equip(tp,ec,c) end
 		end
 	end
 end
@@ -63,7 +61,8 @@ function s.xyzcon(e,tp,eg,ep,ev,re,r,rp)
 	return g:GetCount()>0
 end
 function s.spfilter(c,e,tp,lv)
-	return c:IsRace(RACE_MACHINE) and c:IsAttribute(ATTRIBUTE_WIND) and c:IsRank(lv) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false) and Duel.GetLocationCountFromEx(tp,tp,nil,c)>0
+	return c:IsRace(RACE_MACHINE) and c:IsAttribute(ATTRIBUTE_WIND) and c:IsRank(lv)
+		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false) and Duel.GetLocationCountFromEx(tp,tp,nil,c)>0
 end
 function s.xyztg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
