@@ -46,5 +46,5 @@ function s.atkcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsBattlePhase() and Duel.GetTurnPlayer()==e:GetHandlerPlayer()
 end
 function s.atktg(e,c)
-	return aux.IsCodeListed(c,60800381) or c:IsOriginalSetCard(0x43) and c:IsType(TYPE_SYNCHRO)
+	return aux.IsCodeListed(c,60800381) or c:IsOriginalSetCard(0x66) and c:IsType(TYPE_SYNCHRO)
 end
