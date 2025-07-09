@@ -13,7 +13,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function s.cfilter(c)
-	return c:IsType(TYPE_SPELL+TYPE_TRAP)
+	return c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToHand()
 end
 function s.filter0(c)
 	return c:IsOnField() and c:IsAbleToRemove()
@@ -72,7 +72,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	e:SetLabel(op)
 	if op==1 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
-		local g=Duel.SelectTarget(tp,Card.IsAbleToHand,tp,0,LOCATION_ONFIELD,1,1,nil)
+		local g=Duel.SelectTarget(tp,s.cfilter,tp,0,LOCATION_ONFIELD,1,1,nil)
 		if e:IsCostChecked() then
 			e:SetCategory(CATEGORY_TOHAND)
 			e:SetProperty(EFFECT_FLAG_CARD_TARGET)

@@ -25,17 +25,17 @@ function s.initial_effect(c)
 	e2:SetValue(1)
 	c:RegisterEffect(e2)
 	--control
-	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(id,1))
-	e2:SetCategory(CATEGORY_CONTROL)
-	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e2:SetProperty(EFFECT_FLAG_DELAY)
-	e2:SetCode(EVENT_DESTROYED)
-	e2:SetCountLimit(1,id+o)
-	e2:SetCondition(s.ctcon)
-	e2:SetTarget(s.cttg)
-	e2:SetOperation(s.ctop)
-	c:RegisterEffect(e2)
+	local e3=Effect.CreateEffect(c)
+	e3:SetDescription(aux.Stringid(id,1))
+	e3:SetCategory(CATEGORY_CONTROL)
+	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e3:SetProperty(EFFECT_FLAG_DELAY)
+	e3:SetCode(EVENT_DESTROYED)
+	e3:SetCountLimit(1,id+o)
+	e3:SetCondition(s.ctcon)
+	e3:SetTarget(s.cttg)
+	e3:SetOperation(s.ctop)
+	c:RegisterEffect(e3)
 end
 function s.ffilter(c)
 	return c:IsFusionSetCard(0x2d4)
@@ -45,13 +45,13 @@ function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return ph==PHASE_MAIN1 or ph==PHASE_MAIN2
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetFieldGroupCount(tp,0,LOCATION_EXTRA)>2 end
+	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsFacedown,tp,0,LOCATION_EXTRA,1,nil) end
 end
 function s.spfilter(c,e,tp)
 	return c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
-	local hg=Duel.GetFieldGroup(tp,0,LOCATION_EXTRA)
+	local hg=Duel.GetFieldGroup(tp,0,LOCATION_EXTRA):Filter(Card.IsFacedown,nil)
 	local g=hg:RandomSelect(tp,2)
 	if g:GetCount()<1 then return end
 	Duel.ConfirmCards(1-tp,g)
@@ -85,6 +85,6 @@ function s.ctop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONTROL)
 	local g=Duel.SelectMatchingCard(tp,Card.IsControlerCanBeChanged,tp,0,LOCATION_MZONE,1,ct,nil)
 	if g:GetCount()>0 then
-		Duel.GetControl(tg,tp,PHASE_END)
+		Duel.GetControl(g,tp)
 	end
 end
