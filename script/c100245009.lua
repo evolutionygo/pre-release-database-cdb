@@ -34,7 +34,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		or Duel.GetFlagEffect(tp,id)==0
 			and Duel.IsExistingMatchingCard(aux.AND(Card.IsFaceup,Card.IsSetCard),tp,LOCATION_MZONE,0,1,nil,0x2d4))
 	local chkf=tp
-	local mg1=Duel.GetFusionMaterial(tp):Filter(s.filter1,nil)
+	local mg1=Duel.GetFusionMaterial(tp):Filter(s.filter1,nil,e)
 	local mg2=Duel.GetMatchingGroup(s.filter3,tp,LOCATION_GRAVE,0,nil)
 	mg1:Merge(mg2)
 	local e1=Effect.CreateEffect(e:GetHandler())
