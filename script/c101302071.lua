@@ -53,7 +53,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.desfilter(c,tp,e,ec)
-	return c:IsSummonLocation(LOCATION_EXTRA) and c:IsLocation(LOCATION_MZONE) and c:IsSummonPlayer(1-tp)(1-tp) and c:IsCanBeEffectTarget(e) and c:IsFaceup()
+	return c:IsSummonLocation(LOCATION_EXTRA) and c:IsLocation(LOCATION_MZONE) and c:IsSummonPlayer(1-tp) and c:IsCanBeEffectTarget(e) and c:IsFaceup()
 		and c:IsAttackAbove(ec:GetAttack()+1)
 end
 function s.descon(e,tp,eg,ep,ev,re,r,rp)
