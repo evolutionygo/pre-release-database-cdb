@@ -29,12 +29,12 @@ end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local rc=re:GetHandler()
 	if not Duel.NegateActivation(ev) then return end
-	if rc:IsRelateToChain() and Duel.Destroy(eg,REASON_EFFECT)~=0
+	if rc:IsRelateToEffect(re) and Duel.Destroy(eg,REASON_EFFECT)~=0
 		and not (rc:IsLocation(LOCATION_HAND+LOCATION_DECK) or rc:IsLocation(LOCATION_REMOVED) and rc:IsFacedown())
 		and aux.NecroValleyFilter()(rc) then
 		if rc:IsType(TYPE_MONSTER) and (not rc:IsLocation(LOCATION_EXTRA) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 				or rc:IsLocation(LOCATION_EXTRA) and rc:IsFaceup() and Duel.GetLocationCountFromEx(tp,tp,nil,rc)>0)
-			and rc:IsCanBeSpecialSummoned(e,0,tp,false,false,0)
+			and rc:IsCanBeSpecialSummoned(e,0,tp,false,false)
 			and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
 			Duel.BreakEffect()
 			Duel.SpecialSummon(rc,0,tp,tp,false,false,POS_FACEUP)

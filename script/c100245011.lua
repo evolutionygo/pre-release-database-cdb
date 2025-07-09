@@ -29,7 +29,7 @@ end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local rc=re:GetHandler()
 	if not Duel.NegateActivation(ev) then return end
-	if rc:IsRelateToChain() and Duel.Destroy(eg,REASON_EFFECT)~=0
+	if rc:IsRelateToEffect(re) and Duel.Destroy(eg,REASON_EFFECT)~=0
 		and not (rc:IsLocation(LOCATION_HAND+LOCATION_DECK) or rc:IsLocation(LOCATION_REMOVED) and rc:IsFacedown())
 		and aux.NecroValleyFilter()(rc) then
 		if (rc:IsType(TYPE_FIELD) or Duel.GetLocationCount(tp,LOCATION_SZONE)>0)
