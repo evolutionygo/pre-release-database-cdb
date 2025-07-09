@@ -20,7 +20,7 @@ function s.initial_effect(c)
 	--destroy
 	local custom_code=aux.RegisterMergedDelayedEvent_ToSingleCard(c,id,EVENT_SPSUMMON_SUCCESS)
 	local e3=Effect.CreateEffect(c)
-	e3:SetDescription(aux.Stringid(id,2))
+	e3:SetDescription(aux.Stringid(id,1))
 	e3:SetCategory(CATEGORY_DESTROY+CATEGORY_DAMAGE)
 	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e3:SetCode(custom_code)
@@ -74,9 +74,11 @@ function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		Duel.Hint(HINTMSG_DESTROY,tp,HINTMSG_DESTROY)
 		sg=Duel.SelectTarget(tp,aux.IsInGroup,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil,g)
 	end
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,sg,1,0,0)
+	local dg=sg:Clone()
+	dg:AddCard(ec)
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,dg,2,0,0)
 	if sg:GetFirst():IsFaceup() and math.max(0,sg:GetFirst():GetTextAttack())>0 then
-		Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,0)
+		Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,PLAYER_ALL,0)
 	end
 end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
@@ -91,9 +93,11 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 			atk=atk+math.max(0,dc:GetTextAttack())
 		end
 		if atk>0 then
-			Duel.Damage(tp,atk,REASON_EFFECT)
-			Duel.BreakEffect()
-			Duel.Damage(1-tp,atk,REASON_EFFECT)
+			local val=Duel.Damage(tp,atk,REASON_EFFECT)
+			if val>0 and Duel.GetLP(tp)>0 then
+				Duel.BreakEffect()
+				Duel.Damage(1-tp,val,REASON_EFFECT)
+			end
 		end
 	end
 end
