@@ -7,7 +7,7 @@ function s.initial_effect(c)
 	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SPECIAL_SUMMON+CATEGORY_FUSION_SUMMON+CATEGORY_REMOVE)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
-	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e1:SetProperty(EFFECT_FLAG_FUSION_SUMMON|EFFECT_FLAG_CARD_TARGET)
 	e1:SetTarget(s.target)
 	e1:SetOperation(s.activate)
 	c:RegisterEffect(e1)
@@ -69,7 +69,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if op==1 then
 		if e:IsCostChecked() then
 			e:SetCategory(CATEGORY_TOHAND)
-			e:SetProperty(EFFECT_FLAG_CARD_TARGET)
+			e:SetProperty(EFFECT_FLAG_FUSION_SUMMON|EFFECT_FLAG_CARD_TARGET)
 			Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1)
 		end
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
@@ -78,7 +78,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	elseif op==2 then
 		if e:IsCostChecked() then
 			e:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_FUSION_SUMMON+CATEGORY_REMOVE)
-			e:SetProperty(0)
+			e:SetProperty(EFFECT_FLAG_FUSION_SUMMON)
 			Duel.RegisterFlagEffect(tp,id+o,RESET_PHASE+PHASE_END,0,1)
 		end
 		Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
