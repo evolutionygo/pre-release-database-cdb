@@ -38,7 +38,6 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
 			Duel.BreakEffect()
 			Duel.SpecialSummon(rc,0,tp,tp,false,false,POS_FACEUP)
-			Duel.ConfirmCards(1-tp,rc)
 		end
 	end
 end

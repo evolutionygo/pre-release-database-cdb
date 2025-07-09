@@ -53,7 +53,7 @@ end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local hg=Duel.GetFieldGroup(tp,0,LOCATION_EXTRA)
 	local g=hg:RandomSelect(tp,2)
-	if g:GetCount()<2 then return end
+	if g:GetCount()<1 then return end
 	Duel.ConfirmCards(1-tp,g)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and g:IsExists(s.spfilter,1,nil,e,tp)
@@ -83,7 +83,7 @@ function s.ctop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local ct=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONTROL)
-	local g=Duel.SelectTarget(tp,Card.IsControlerCanBeChanged,tp,0,LOCATION_MZONE,1,ct,nil)
+	local g=Duel.SelectMatchingCard(tp,Card.IsControlerCanBeChanged,tp,0,LOCATION_MZONE,1,ct,nil)
 	if g:GetCount()>0 then
 		Duel.GetControl(tg,tp,PHASE_END)
 	end
