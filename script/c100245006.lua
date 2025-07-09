@@ -51,13 +51,13 @@ end
 function s.spcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
-	local rg=Duel.GetReleaseGroup(tp,false,REASON_SPSUMMON):Filter(Card.IsCanBeFusionMaterial,nil,sc,SUMMON_TYPE_SPECIAL)
+	local rg=Duel.GetReleaseGroup(tp,false,REASON_SPSUMMON):Filter(Card.IsCanBeFusionMaterial,nil,c,SUMMON_TYPE_SPECIAL)
 	return rg:CheckSubGroup(s.fselect,2,2,tp,c)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,c)
-	local rg=Duel.GetReleaseGroup(tp,false,REASON_SPSUMMON):Filter(Card.IsCanBeFusionMaterial,nil,sc,SUMMON_TYPE_SPECIAL)
+	local rg=Duel.GetReleaseGroup(tp,false,REASON_SPSUMMON):Filter(Card.IsCanBeFusionMaterial,nil,c,SUMMON_TYPE_SPECIAL)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
-	local sg=rg:SelectSubGroup(tp,s.fselect,true,2,2,tp)
+	local sg=rg:SelectSubGroup(tp,s.fselect,true,2,2,tp,c)
 	if sg then
 		sg:KeepAlive()
 		e:SetLabelObject(sg)

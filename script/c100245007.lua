@@ -49,14 +49,14 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.spfilter(c,e,tp)
 	return c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+		and Duel.GetLocationCountFromEx(tp,tp,nil,c)>0
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local hg=Duel.GetFieldGroup(tp,0,LOCATION_EXTRA):Filter(Card.IsFacedown,nil)
 	local g=hg:RandomSelect(tp,2)
 	if g:GetCount()<1 then return end
 	Duel.ConfirmCards(1-tp,g)
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and g:IsExists(s.spfilter,1,nil,e,tp)
+	if g:IsExists(s.spfilter,1,nil,e,tp)
 		and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local sg=g:FilterSelect(tp,s.spfilter,1,1,nil,e,tp)
