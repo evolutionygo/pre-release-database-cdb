@@ -1,4 +1,4 @@
---見えざる神 ジャウザー
+--見えざる神ジャウザー
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--fusion material

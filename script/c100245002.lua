@@ -1,4 +1,4 @@
---見えざる手 ヤドエル
+--見えざる手ヤドエル
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--search

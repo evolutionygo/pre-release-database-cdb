@@ -1,4 +1,4 @@
---見えざる手 ブレアス
+--見えざる手ブレアス
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--special summon

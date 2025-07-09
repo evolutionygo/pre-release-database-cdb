@@ -1,4 +1,4 @@
---見えざる手 ゴッドス
+--見えざる手ゴッドス
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--special summon
