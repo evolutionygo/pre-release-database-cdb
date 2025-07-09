@@ -1,4 +1,4 @@
---見えざる手 イブエル
+--見えざる手イブエル
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--special summon

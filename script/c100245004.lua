@@ -1,4 +1,4 @@
---見えざる手 ガイガス
+--見えざる手ガイガス
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--special summon

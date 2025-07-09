@@ -1,4 +1,4 @@
---見えざる神 ゼノ
+--見えざる神ゼノ
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddFusionProcFunRep(c,s.ffilter,3,true)
