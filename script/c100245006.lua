@@ -43,7 +43,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function s.cfilter(c,tp,g)
-	return c:GetOwner()==1-tp and g:IsExists(Card.IsRace,1,c,RACE_ILLUSION)
+	return c:GetOwner()==1-tp and c:IsFaceup() and g:IsExists(Card.IsRace,1,c,RACE_ILLUSION)
 end
 function s.fselect(g,tp,ec)
 	return g:IsExists(s.cfilter,1,nil,tp,g) and Duel.GetLocationCountFromEx(tp,tp,g,ec)>0
@@ -66,7 +66,8 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,c)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp,c)
 	local g=e:GetLabelObject()
-	Duel.Release(g,REASON_SPSUMMON)
+	c:SetMaterial(g)
+	Duel.Release(g,REASON_SPSUMMON|REASON_MATERIAL)
 	g:DeleteGroup()
 end
 function s.thfilter(c)

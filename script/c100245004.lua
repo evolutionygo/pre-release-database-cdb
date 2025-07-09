@@ -72,6 +72,6 @@ function s.spop2(e,tp,eg,ep,ev,re,r,rp)
 		if sg:GetCount()>0 then
 			Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP)
 		end
-		Duel.ShuffleDeck(1-tp)
 	end
+	Duel.ShuffleDeck(1-tp)
 end
