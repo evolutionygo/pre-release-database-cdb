@@ -25,6 +25,7 @@ function s.initial_effect(c)
 	e4:SetType(EFFECT_TYPE_QUICK_O)
 	e4:SetCode(EVENT_FREE_CHAIN)
 	e4:SetRange(LOCATION_MZONE)
+	e4:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_END_PHASE)
 	e4:SetCountLimit(1,id+o)
 	e4:SetCondition(s.xyzcon)
 	e4:SetTarget(s.xyztg)
@@ -50,7 +51,7 @@ function s.setop(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.xyzcon(e,tp,eg,ep,ev,re,r,rp)
 	local g=e:GetHandler():GetEquipGroup()
-	return g:GetCount()>0
+	return g:GetCount()>0 and not g:IsExists(aux.NOT(Card.IsCanOverlay),1,nil)
 end
 function s.spfilter(c,e,tp,lv)
 	return c:IsRace(RACE_MACHINE) and c:IsAttribute(ATTRIBUTE_WIND) and c:IsRank(lv)
@@ -62,6 +63,7 @@ function s.xyztg(e,tp,eg,ep,ev,re,r,rp,chk)
 		and aux.MustMaterialCheck(nil,tp,EFFECT_MUST_BE_XMATERIAL)
 		and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp,c:GetLevel()) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
+	Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
 end
 function s.xyzop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
