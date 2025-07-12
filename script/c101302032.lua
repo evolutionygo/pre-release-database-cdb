@@ -1,4 +1,4 @@
---WAKE CUP! マキ
+--WAKE CUP！ マキ
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--spsummon
