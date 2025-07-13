@@ -267,6 +267,7 @@ deploy:
     - cd mycard-package-script
     - ./index.sh makeBuild ygopro-super-pre ../data || true
     - ./index.sh makeBuild ygopro2-super-pre ../data || true
+    - ./index.sh makeBuild mdpro3-super-pre ../data || true
     - cd ..
   only:
     # - master
