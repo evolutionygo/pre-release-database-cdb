@@ -37,7 +37,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local tc=og:Filter(aux.NOT(Card.IsType),nil,TYPE_FUSION):GetFirst()
 	Duel.SetTargetCard(tc)
 	local fc=og:Filter(aux.TRUE,tc):GetFirst()
-	Duel.SetLabelObject(fc)
+	e:SetLabelObject(fc)
 	og:DeleteGroup()
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK+LOCATION_GRAVE)
 end
