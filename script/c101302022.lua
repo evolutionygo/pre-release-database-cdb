@@ -76,7 +76,7 @@ function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local g=Duel.GetTargetsRelateToChain()
+	local g=Duel.GetTargetsRelateToChain():Filter(aux.NecroValleyFilter(),nil)
 	if g:GetCount()>0 then
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 	end
