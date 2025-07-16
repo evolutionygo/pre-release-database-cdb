@@ -46,10 +46,10 @@ function s.sprcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
 	return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(s.sprfilter,tp,LOCATION_GRAVE,0,3,nil)
+		and Duel.IsExistingMatchingCard(s.sprfilter,tp,LOCATION_GRAVE,0,2,e:GetHandler())
 end
 function s.sprtg(e,tp,eg,ep,ev,re,r,rp,chk,c)
-	local g=Duel.GetMatchingGroup(s.sprfilter,tp,LOCATION_GRAVE,0,nil)
+	local g=Duel.GetMatchingGroup(s.sprfilter,tp,LOCATION_GRAVE,0,e:GetHandler())
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local sg=g:CancelableSelect(tp,2,2,nil)
 	if sg then
