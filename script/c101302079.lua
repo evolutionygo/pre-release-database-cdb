@@ -39,10 +39,10 @@ end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	local g=Duel.GetMatchingGroup(aux.NecroValleyFilter(s.spfilter),1-tp,LOCATION_GRAVE,0,nil,e,1-tp)
-	if tc and tc:IsRelateToChain() and tc:IsType(TYPE_MONSTER) and Duel.SendtoHand(tc,nil,REASON_EFFECT) 
-		and tc:IsLocation(LOCATION_HAND+LOCATION_EXTRA) and 
-		not Duel.IsExistingMatchingCard(Card.IsType,tp,LOCATION_GRAVE,0,1,nil,TYPE_TRAP) 
-		and g:GetCount()>0 and Duel.GetLocationCount(1-tp,LOCATION_MZONE)>0 
+	if tc and tc:IsRelateToChain() and tc:IsType(TYPE_MONSTER) and Duel.SendtoHand(tc,nil,REASON_EFFECT)
+		and tc:IsLocation(LOCATION_HAND+LOCATION_EXTRA) and
+		not Duel.IsExistingMatchingCard(Card.IsType,tp,LOCATION_GRAVE,0,1,nil,TYPE_TRAP)
+		and g:GetCount()>0 and Duel.GetLocationCount(1-tp,LOCATION_MZONE)>0
 		and Duel.SelectYesNo(1-tp,aux.Stringid(id,2)) then
 		Duel.Hint(HINT_SELECTMSG,1-tp,HINTMSG_SPSUMMON)
 		local sg=g:Select(1-tp,1,1,nil)
@@ -50,8 +50,9 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	end
 	if e:GetLabel()==100 then
 		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetDescription(aux.Stringid(id,3))
 		e1:SetType(EFFECT_TYPE_FIELD)
-		e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+		e1:SetProperty(EFFECT_FLAG_CLIENT_HINT+EFFECT_FLAG_PLAYER_TARGET)
 		e1:SetCode(EFFECT_CANNOT_ACTIVATE)
 		e1:SetTargetRange(1,0)
 		e1:SetValue(s.aclimit)
