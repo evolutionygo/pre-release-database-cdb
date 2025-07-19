@@ -48,21 +48,26 @@ end
 function s.damtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	local dam=Duel.GetMatchingGroupCount(s.cfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,nil)*100
-	if re:GetHandler():IsCode(73580471) then
-		dam=dam+2400
-		e:SetLabel(1)
-	else
-		e:SetLabel(0)
+	if dam>0 then
+		if re:GetHandler():IsCode(73580471) then
+			dam=dam+2400
+			e:SetLabel(1)
+		else
+			e:SetLabel(0)
+		end
+		Duel.SetTargetPlayer(1-tp)
+		Duel.SetTargetParam(dam)
+		Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,dam)
 	end
-	Duel.SetTargetPlayer(1-tp)
-	Duel.SetTargetParam(dam)
-	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,dam)
 end
 function s.damop(e,tp,eg,ep,ev,re,r,rp)
 	local p=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER)
 	local dam=Duel.GetMatchingGroupCount(s.cfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,nil)*100
-	if e:GetLabel()==1 then
-		dam=dam+2400
+	if dam>0 then
+		local val=Duel.Damage(p,dam,REASON_EFFECT)
+		if val>0 and Duel.GetLP(p)>0 and e:GetLabel()==1 then
+			Duel.BreakEffect()
+			Duel.Damage(p,2400,REASON_EFFECT)
+		end
 	end
-	Duel.Damage(p,dam,REASON_EFFECT)
 end
