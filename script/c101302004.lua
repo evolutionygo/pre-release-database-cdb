@@ -13,8 +13,9 @@ function s.initial_effect(c)
 	e1:SetTarget(s.sptg)
 	e1:SetOperation(s.spop)
 	c:RegisterEffect(e1)
-	--
+	--special summon
 	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_TO_GRAVE)
@@ -27,11 +28,12 @@ function s.initial_effect(c)
 end
 function s.cfilter(c)
 	return c:IsFaceup()
-		and (aux.IsCodeListed(c,73580471) or c:IsCode(73580471)
-		or c:IsRace(RACE_PLANT) and c:IsType(TYPE_SYNCHRO))
+		and (c:IsCode(73580471)
+			or aux.IsCodeListed(c,73580471) and c:IsType(TYPE_MONSTER)
+			or c:IsRace(RACE_PLANT) and c:IsAllTypes(TYPE_SYNCHRO+TYPE_MONSTER))
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_MZONE,0,1,nil)
+	return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_ONFIELD,0,1,nil)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
@@ -51,7 +53,6 @@ function s.spcost2(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,1,nil) end
 	Duel.DiscardHand(tp,Card.IsDiscardable,1,1,REASON_COST+REASON_DISCARD)
 end
-
 function s.spfilter(c,e,tp)
 	return c:IsRace(RACE_PLANT) and c:IsDefenseBelow(1500) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end

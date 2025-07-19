@@ -1,4 +1,4 @@
---真竜凰騎マリアムネＰ
+--真竜凰騎マリアムネP
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--summon with s/t

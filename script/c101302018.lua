@@ -1,4 +1,4 @@
---真竜魔王マスターＰ
+--真竜魔王マスターP
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--summon with 3 tribute
@@ -88,13 +88,14 @@ function s.negtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 end
 function s.negop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToEffect(re) then
+	if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToChain(ev) then
 		Duel.Destroy(eg,REASON_EFFECT)
 	end
 end
 function s.tpcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	return (c:IsReason(REASON_BATTLE) or (c:IsReason(REASON_EFFECT) and c:GetReasonPlayer()==1-tp and c:IsPreviousControler(tp)))
+		and c:IsPreviousLocation(LOCATION_MZONE) and c:IsSummonType(SUMMON_TYPE_ADVANCE)
 end
 	local ph=Duel.GetCurrentPhase()
 function s.tpop(e,tp,eg,ep,ev,re,r,rp)
