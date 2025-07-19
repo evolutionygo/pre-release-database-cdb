@@ -38,7 +38,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.cfilter(c,tp)
 	return c:IsPreviousPosition(POS_FACEUP) and c:IsPreviousControler(tp) and c:IsPreviousLocation(LOCATION_MZONE) and c:IsLocation(LOCATION_GRAVE)
-		and c:IsPreviousSetCard(0xf9)
+		and c:IsPreviousSetCard(0xf9) and c:IsSetCard(0xf9) and c:IsType(TYPE_MONSTER)
 		and c:IsReason(REASON_BATTLE+REASON_EFFECT)
 end
 function s.setcon(e,tp,eg,ep,ev,re,r,rp)
