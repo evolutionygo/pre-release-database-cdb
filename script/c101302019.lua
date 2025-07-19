@@ -17,7 +17,6 @@ function s.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_HAND)
 	e2:SetCountLimit(1,id)
-	e2:SetCondition(s.spscon)
 	e2:SetTarget(s.spstg)
 	e2:SetOperation(s.spsop)
 	c:RegisterEffect(e2)
@@ -35,10 +34,6 @@ function s.initial_effect(c)
 	local e4=e3:Clone()
 	e4:SetCode(EVENT_SPSUMMON_SUCCESS)
 	c:RegisterEffect(e4)
-end
-function s.spscon(e,tp,eg,ep,ev,re,r,rp)
-	local ph=Duel.GetCurrentPhase()
-	return ph==PHASE_MAIN1 or ph==PHASE_MAIN2
 end
 function s.desfilter(c,tp)
 	return c:IsFaceupEx() and c:IsSetCard(0xf9) and (Duel.GetMZoneCount(tp,c)>0 or Duel.GetLocationCount(tp,LOCATION_MZONE)>0)
