@@ -4,7 +4,7 @@ function s.initial_effect(c)
 	aux.AddCodeList(c,73580471)
 	--special summon
 	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(id,1))
+	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e1:SetCode(EVENT_SUMMON_SUCCESS)
@@ -85,8 +85,8 @@ function s.lvop(e,tp,eg,ep,ev,re,r,rp)
 		local op=0
 		if tc:IsLevel(1) then op=1
 		else op=aux.SelectFromOptions(tp,
-			{true,aux.Stringid(id,3),1},
-			{true,aux.Stringid(id,4),-1})
+			{true,aux.Stringid(id,2),1},
+			{true,aux.Stringid(id,3),-1})
 		end
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)

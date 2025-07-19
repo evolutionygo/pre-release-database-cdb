@@ -19,7 +19,7 @@ function s.initial_effect(c)
 	--pos
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
-	e2:SetCategory(CATEGORY_ATKCHANGE)
+	e2:SetCategory(CATEGORY_POSITION)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DELAY)
 	e2:SetCode(EVENT_TO_GRAVE)
@@ -72,7 +72,7 @@ function s.postg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function s.posop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and tc:IsLocation(LOCATION_MZONE) and tc:IsFaceup() then
+	if tc:IsRelateToChain() and c:IsType(TYPE_MONSTER) and tc:IsLocation(LOCATION_MZONE) and tc:IsFaceup() then
 		Duel.ChangePosition(tc,POS_FACEDOWN_DEFENSE)
 	end
 end
