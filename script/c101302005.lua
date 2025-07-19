@@ -69,7 +69,8 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.atkcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(aux.AND(Card.IsFaceup,Card.IsType),tp,LOCATION_MZONE,0,1,nil,TYPE_SYNCHRO)
+	local p=e:GetHandlerPlayer()
+	return Duel.IsExistingMatchingCard(aux.AND(Card.IsFaceup,Card.IsType),p,LOCATION_MZONE,0,1,nil,TYPE_SYNCHRO)
 end
 function s.lvfilter(c)
 	return c:IsFaceup() and c:IsLevelAbove(1) and c:IsRace(RACE_PLANT)

@@ -35,12 +35,15 @@ function s.initial_effect(c)
 	e4:SetCode(EVENT_SPSUMMON_SUCCESS)
 	c:RegisterEffect(e4)
 end
-function s.desfilter(c,tp)
-	return c:IsFaceupEx() and c:IsSetCard(0xf9) and (Duel.GetMZoneCount(tp,c)>0 or Duel.GetLocationCount(tp,LOCATION_MZONE)>0)
+function s.desfilter(c,tp,sc,e,chk)
+	return c:IsFaceupEx() and c:IsSetCard(0xf9) and
+		(not chk
+			or Duel.GetMZoneCount(tp,c)>0 and sc:IsCanBeSpecialSummoned(e,0,tp,false,false)
+			or Duel.GetLocationCount(1-tp,LOCATION_MZONE)>0 and sc:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP,1-tp))
 end
 function s.spstg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-	local g=Duel.GetMatchingGroup(s.desfilter,tp,LOCATION_HAND+LOCATION_ONFIELD,0,c,tp)
+	local g=Duel.GetMatchingGroup(s.desfilter,tp,LOCATION_HAND+LOCATION_ONFIELD,0,c,tp,c,e,true)
 	if chk==0 then return #g>0 and c:IsCanBeSpecialSummoned(e,0,tp,false,false) end
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,c,1,0,0)
@@ -48,7 +51,16 @@ end
 function s.spsop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g=Duel.SelectMatchingCard(tp,s.desfilter,tp,LOCATION_HAND+LOCATION_ONFIELD,0,1,1,aux.ExceptThisCard(e),tp)
+	local dg=nil
+	if Duel.IsExistingMatchingCard(s.desfilter,tp,LOCATION_HAND+LOCATION_ONFIELD,0,1,aux.ExceptThisCard(e),tp,c,e,true) then
+		dg=Duel.GetMatchingGroup(s.desfilter,tp,LOCATION_HAND+LOCATION_ONFIELD,0,aux.ExceptThisCard(e),tp,c,e,true)
+	else
+		dg=Duel.GetMatchingGroup(s.desfilter,tp,LOCATION_HAND+LOCATION_ONFIELD,0,aux.ExceptThisCard(e),tp,c,e,false)
+	end
+	local g=dg:Select(tp,1,1,aux.ExceptThisCard(e))
+	if g:FilterCount(Card.IsLocation,nil,LOCATION_ONFIELD)>0 then
+		Duel.HintSelection(g)
+	end
 	if Duel.Destroy(g,REASON_EFFECT)>0 then
 		Duel.AdjustAll()
 		if not c:IsRelateToChain() or (not c:IsCanBeSpecialSummoned(e,0,tp,false,false) and not c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP,1-tp)) then return end
@@ -67,7 +79,7 @@ function s.spsop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.rmcon(e,tp,eg,ep,ev,re,r,rp)
-	return c:IsSummonLocation(LOCATION_HAND)
+	return e:GetHandler():IsSummonLocation(LOCATION_HAND)
 end
 function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
