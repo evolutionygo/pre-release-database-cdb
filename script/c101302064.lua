@@ -37,7 +37,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.cfilter(c,tp)
-	return c:IsPreviousPosition(POS_FACEUP) and c:IsPreviousControler(tp) and c:IsPreviousLocation(LOCATION_MZONE)
+	return c:IsPreviousPosition(POS_FACEUP) and c:IsPreviousControler(tp) and c:IsPreviousLocation(LOCATION_MZONE) and c:IsLocation(LOCATION_GRAVE)
 		and c:IsPreviousSetCard(0xf9)
 		and c:IsReason(REASON_BATTLE+REASON_EFFECT)
 end
@@ -51,7 +51,7 @@ function s.tgfilter(c,e,tp)
 		r=LOCATION_REASON_CONTROL
 	end
 	return Duel.GetLocationCount(tp,LOCATION_SZONE,tp,r)>0 and not c:IsForbidden() and c:CheckUniqueOnField(tp)
-		and c:IsCanBeEffectTarget(e)
+		and c:IsCanBeEffectTarget(e) and c:IsLocation(LOCATION_GRAVE)
 end
 function s.settg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local mg=eg:Filter(s.cfilter,nil,tp):Filter(s.tgfilter,nil,e,tp)
