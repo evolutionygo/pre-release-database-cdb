@@ -10,15 +10,15 @@ function s.initial_effect(c)
 	e1:SetOperation(s.activate)
 	c:RegisterEffect(e1)
 	--set
+	local custom_code=aux.RegisterMergedDelayedEvent_ToSingleCard(c,id,EVENT_DESTROYED)
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
-	e2:SetCode(EVENT_DESTROYED)
+	e2:SetCode(custom_code)
 	e2:SetRange(LOCATION_SZONE)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
 	e2:SetCountLimit(1,id)
 	e2:SetCondition(s.setcon)
-	e2:SetCost(aux.bfgcost)
 	e2:SetTarget(s.settg)
 	e2:SetOperation(s.setop)
 	c:RegisterEffect(e2)
@@ -42,7 +42,7 @@ function s.cfilter(c,tp)
 		and c:IsReason(REASON_BATTLE+REASON_EFFECT)
 end
 function s.setcon(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(s.cfilter,1,nil,tp) and not eg:IsContains(e:GetHandler())
+	return eg:IsExists(s.cfilter,1,nil,tp)
 end
 function s.tgfilter(c,e,tp)
 	local r=LOCATION_REASON_TOFIELD
@@ -50,7 +50,7 @@ function s.tgfilter(c,e,tp)
 		if not c:IsAbleToChangeControler() then return false end
 		r=LOCATION_REASON_CONTROL
 	end
-	return Duel.GetLocationCount(tp,LOCATION_SZONE,tp,r)>0
+	return Duel.GetLocationCount(tp,LOCATION_SZONE,tp,r)>0 and not c:IsForbidden() and c:CheckUniqueOnField(tp)
 		and c:IsCanBeEffectTarget(e)
 end
 function s.settg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
@@ -66,7 +66,7 @@ function s.settg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function s.setop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToChain() and tc:IsType(TYPE_MONSTER)
+	if tc:IsRelateToChain() and tc:IsType(TYPE_MONSTER) and aux.NecroValleyFilter()(tc)
 		and Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true) then
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetCode(EFFECT_CHANGE_TYPE)

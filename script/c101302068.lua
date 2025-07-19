@@ -32,7 +32,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local cg=Duel.GetMatchingGroup(s.cfilter,tp,LOCATION_GRAVE,0,nil)
 	local tg=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_EXTRA,0,nil,e,tp)
 	local _,maxlink=tg:GetMaxGroup(Card.GetLink)
-	local b2=cg:CheckSubGroup(s.fselect,1,maxlink,tg)
+	local b2=#tg>0 and cg:CheckSubGroup(s.fselect,1,maxlink,tg)
 		and Duel.GetFlagEffect(tp,id+o)==0
 	if chk==0 then return b1 or b2 end
 	local op=0
