@@ -7,6 +7,7 @@ function s.initial_effect(c)
 	e1:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND+CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
+	e1:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_END_PHASE)
 	e1:SetTarget(s.target)
 	e1:SetOperation(s.activate)
 	c:RegisterEffect(e1)
@@ -25,7 +26,6 @@ function s.spfilter(c,e,tp)
 		and c:IsCanBeSpecialSummoned(e,0,tp,true,false) and Duel.GetLocationCountFromEx(tp,tp,nil,c)>0
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	local ch=Duel.GetCurrentChain()
 	local b1=Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil)
 		and (not e:IsCostChecked()
 			or Duel.GetFlagEffect(tp,id)==0)
@@ -33,8 +33,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local tg=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_EXTRA,0,nil,e,tp)
 	local _,maxlink=tg:GetMaxGroup(Card.GetLink)
 	local b2=cg:CheckSubGroup(s.fselect,1,maxlink,tg)
-		and (not e:IsCostChecked()
-			or Duel.GetFlagEffect(tp,id+o)==0)
+		and Duel.GetFlagEffect(tp,id+o)==0
 	if chk==0 then return b1 or b2 end
 	local op=0
 	if b1 or b2 then
