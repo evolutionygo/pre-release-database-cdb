@@ -173,6 +173,11 @@ pack:
     - mv test-release.json data/
     - mv test-release-v2.json data/
     - git show -s --format=%ct $CI_COMMIT_SHA > data/version.txt
+    # 仅在 tag 构建时写入 latest-tag.txt
+    - |
+      if [ -n "$CI_COMMIT_TAG" ]; then
+        echo "$CI_COMMIT_TAG" > data/latest-tag.txt
+      fi
     - cd data
     - 7z a -mx9 ../archive/ygopro-super-pre.zip pics script pack *.cdb *.conf *.ini
     - cd ..
