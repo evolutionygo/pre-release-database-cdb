@@ -15,7 +15,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function s.fselect(g)
-	return g:FilterCount(Card.IsType,TYPE_SPELL+TYPE_TRAP)<=1 and g:FilterCount(Card.IsType,TYPE_MONSTER)<=1
+	return g:FilterCount(Card.IsType,nil,TYPE_SPELL+TYPE_TRAP)<=1 and g:FilterCount(Card.IsType,nil,TYPE_MONSTER)<=1
 end
 function s.tdfilter(c)
 	return c:IsSetCard(0x1c9) and not c:IsCode(id) and c:IsAbleToDeck()
@@ -34,7 +34,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	if #rg==0 or rg:IsExists(aux.NOT(Card.IsAbleToRemove),1,nil) then return end
 	local dg=Duel.GetMatchingGroup(s.tdfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,nil)
 	if Duel.Remove(rg,POS_FACEUP,REASON_EFFECT)>0
-		and dg:GetCount()>0 and Duel.IsPlayerCanDraw(tp)
+		and dg:GetCount()>0 and Duel.IsPlayerCanDraw(tp,1)
 		and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
 		local sg=dg:Select(tp,1,1,nil)
