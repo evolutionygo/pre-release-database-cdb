@@ -77,7 +77,7 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		and aux.MustMaterialCheck(nil,tp,EFFECT_MUST_BE_SMATERIAL)
 	end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
-	local sg=rg:SelectSubGroup(tp,s.fselect,false,2,e,tp)
+	local sg=rg:SelectSubGroup(tp,s.fselect,false,2,2,e,tp)
 	Duel.SetTargetCard(sg)
 	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,sg,2,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
