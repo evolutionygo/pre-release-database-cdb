@@ -92,3 +92,9 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 end
+function s.checkop(e,tp,eg,ep,ev,re,r,rp)
+	if not re then return end
+	if re:IsActiveType(TYPE_MONSTER) and re:GetHandler():IsType(TYPE_SYNCHRO) then
+		e:GetHandler():RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD-RESET_TOFIELD-RESET_TEMP_REMOVE,0,1)
+	end
+end
