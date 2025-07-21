@@ -31,7 +31,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local rg=Duel.GetTargetsRelateToChain():Filter(aux.NecroValleyFilter(),nil)
-	if #rg==0 or rg:IsExists(aux.NOT(Card.IsAbleToRemove),1,nil) then return end
+	if #rg==0 then return end
 	local dg=Duel.GetMatchingGroup(s.tdfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,nil)
 	if Duel.Remove(rg,POS_FACEUP,REASON_EFFECT)>0
 		and dg:GetCount()>0 and Duel.IsPlayerCanDraw(tp,1)
