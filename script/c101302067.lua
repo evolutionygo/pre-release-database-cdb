@@ -79,13 +79,13 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
 	local sg=rg:SelectSubGroup(tp,s.fselect,false,2,2)
 	Duel.SetTargetCard(sg)
-	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,g,2,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,sg,2,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tg=Duel.GetTargetsRelateToChain()
-	if Duel.SendtoGrave(tg,REASON_EFFECT)==2 and tc:IsExists(Card.IsLocation,2,nil,LOCATION_GRAVE) and aux.MustMaterialCheck(nil,tp,EFFECT_MUST_BE_SMATERIAL) then
+	if Duel.SendtoGrave(tg,REASON_EFFECT)==2 and tg:IsExists(Card.IsLocation,2,nil,LOCATION_GRAVE) and aux.MustMaterialCheck(nil,tp,EFFECT_MUST_BE_SMATERIAL) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_EXTRA,0,1,1,nil,e,tp)
 		local tc=g:GetFirst()

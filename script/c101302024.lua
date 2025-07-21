@@ -84,7 +84,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
 		local tc=Duel.SelectMatchingCard(tp,s.pfilter,tp,LOCATION_DECK,0,1,1,nil,tp):GetFirst()
 		if tc then
-			if c:IsType(TYPE_CONTINUOUS) then
+			if tc:IsType(TYPE_CONTINUOUS) then
 				Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
 			else
 				Duel.MoveToField(tc,tp,tp,LOCATION_FZONE,POS_FACEUP,true)
