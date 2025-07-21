@@ -66,13 +66,13 @@ function s.fselect(g,e,tp)
 	return g:IsExists(Card.IsCode,1,nil,30581601)
 		and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp,g)
 end
-function s.spfilter(c,e,tp)
+function s.spfilter(c,e,tp,sg)
 	return c:IsSetCard(0x1ca) and c:IsType(TYPE_SYNCHRO) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_SYNCHRO,tp,false,false)
-		and Duel.GetLocationCountFromEx(tp,tp,nil,c)>0
+		and Duel.GetLocationCountFromEx(tp,tp,sg,c)>0
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end
-	local rg=Duel.GetMatchingGroup(s.tgfilter,tp,LOCATION_MZONE,0,nil,e)
+	local rg=Duel.GetMatchingGroup(s.tgfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil,e)
 	if chk==0 then return rg:CheckSubGroup(s.fselect,2,2,e,tp)
 		and aux.MustMaterialCheck(nil,tp,EFFECT_MUST_BE_SMATERIAL)
 	end
@@ -88,7 +88,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	if tg:GetCount()~=2 then return end
 	if Duel.SendtoGrave(tg,REASON_EFFECT)==2 and tg:IsExists(Card.IsLocation,2,nil,LOCATION_GRAVE) and aux.MustMaterialCheck(nil,tp,EFFECT_MUST_BE_SMATERIAL) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-		local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_EXTRA,0,1,1,nil,e,tp)
+		local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_EXTRA,0,1,1,nil,e,tp,nil)
 		local tc=g:GetFirst()
 		if tc then
 			tc:SetMaterial(nil)
