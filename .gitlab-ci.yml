@@ -176,7 +176,7 @@ pack:
     # 仅在 tag 构建时写入 latest-tag.txt
     - |
       if [ -n "$CI_COMMIT_TAG" ]; then
-        echo "https://cdn02.moecube.com:444/ygopro-super-pre/archive/ygopro-super-pre-${CI_COMMIT_TAG}.ypk" > data/latest-tag.txt
+        echo "https://cdncf.moecube.com/ygopro-super-pre/archive/ygopro-super-pre-${CI_COMMIT_TAG}.ypk" > data/latest-tag.txt
       fi
     - cd data
     - 7z a -mx9 ../archive/ygopro-super-pre.zip pics script pack *.cdb *.conf *.ini
