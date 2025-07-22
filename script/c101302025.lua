@@ -1,4 +1,4 @@
---K9-04号 咒
+--K9－04号 咒
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--summon with no tribute
@@ -57,7 +57,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetRange(LOCATION_MZONE)
 		e1:SetAbsoluteRange(tp,1,0)
 		e1:SetTarget(s.splimit)
-		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+		e1:SetReset(RESET_EVENT|RESETS_STANDARD|RESET_CONTROL)
 		tc:RegisterEffect(e1,true)
 	end
 end
