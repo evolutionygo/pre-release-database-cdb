@@ -59,6 +59,6 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.dmcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():IsSetCard(0x1be)
+	return e:GetHandler():IsSetCard(0x1cb)
 		and Duel.GetCustomActivityCount(id,1-e:GetHandlerPlayer(),ACTIVITY_CHAIN)>0
 end
