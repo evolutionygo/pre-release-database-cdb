@@ -36,7 +36,7 @@ function s.ntcon(e,c,minc)
 		and Duel.IsExistingMatchingCard(aux.TRUE,c:GetControler(),0,LOCATION_HAND,2,nil)
 end
 function s.spfilter(c,e,tp)
-	return c:IsSetCard(0x1be) and not c:IsRace(RACE_MACHINE) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsSetCard(0x1cb) and not c:IsRace(RACE_MACHINE) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
@@ -61,7 +61,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.cfilter(c,tp)
-	return c:IsFaceup() and c:IsSetCard(0x1be) and c:IsAbleToGraveAsCost()
+	return c:IsFaceup() and c:IsSetCard(0x1cb) and c:IsAbleToGraveAsCost()
 end
 function s.cfcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_ONFIELD,0,1,nil,tp) end
@@ -70,7 +70,7 @@ function s.cfcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SendtoGrave(g,REASON_COST)
 end
 function s.splimit(e,c)
-	return not c:IsSetCard(0x1be) and c:IsLocation(LOCATION_EXTRA)
+	return not c:IsSetCard(0x1cb) and c:IsLocation(LOCATION_EXTRA)
 end
 function s.cftg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(aux.NOT(Card.IsPublic),tp,0,LOCATION_HAND,1,nil) end
