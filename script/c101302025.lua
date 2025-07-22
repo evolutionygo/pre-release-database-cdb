@@ -59,6 +59,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetTarget(s.splimit)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 		tc:RegisterEffect(e1,true)
+		tc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id,3))
 	end
 end
 function s.cfilter(c,tp)
