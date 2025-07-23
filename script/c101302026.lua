@@ -30,8 +30,7 @@ function s.cfilter(c)
 	return c:IsSummonLocation(LOCATION_EXTRA)
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
-	local ph=Duel.GetCurrentPhase()
-	return (ph==PHASE_MAIN1 or ph==PHASE_MAIN2)
+	return Duel.IsMainPhase()
 		and Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
