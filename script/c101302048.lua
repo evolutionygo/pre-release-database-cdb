@@ -67,19 +67,20 @@ function s.efilter(re)
 			   return te==re and te:IsActivated()
 		   end
 end
-function s.setfilter(c)
+function s.setfilter(c,tp)
 	return c:IsType(TYPE_SPELL) and c:IsSSetable()
+		and (Duel.GetLocationCount(tp,LOCATION_SZONE)>0 or c:IsType(TYPE_FIELD))
 end
 function s.settg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=e:GetHandler():GetOverlayGroup()
-	if chk==0 then return g:IsExists(s.setfilter,1,nil) end
+	if chk==0 then return g:IsExists(s.setfilter,1,nil,tp) end
 end
 function s.setop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToChain() then
 		local g=c:GetOverlayGroup()
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SET)
-		local sg=g:FilterSelect(tp,s.setfilter,1,1,nil)
+		local sg=g:FilterSelect(tp,s.setfilter,1,1,nil,tp)
 		if sg:GetCount()>0 then
 			Duel.SSet(tp,sg:GetFirst())
 		end
