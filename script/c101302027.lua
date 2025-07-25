@@ -75,6 +75,8 @@ function s.cfop(e,tp,eg,ep,ev,re,r,rp,ac)
 		Duel.BreakEffect()
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONFIRM)
 		local tc=g:Select(tp,1,1,nil):GetFirst()
+		Duel.ConfirmCards(1-tp,tc)
+		Duel.ShuffleHand(tp)
 		if tc:IsType(TYPE_MONSTER) then
 			Duel.ChangePosition(ac,POS_FACEUP_DEFENSE)
 		elseif tc:IsType(TYPE_SPELL) then
