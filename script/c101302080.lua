@@ -1,7 +1,7 @@
 --
 local s,id,o=GetID()
 function s.initial_effect(c)
-	c:EnableCounterPermit(0x70)
+	c:EnableCounterPermit(0x71)
 	--Activate
 	local e0=Effect.CreateEffect(c)
 	e0:SetType(EFFECT_TYPE_ACTIVATE)
@@ -58,20 +58,20 @@ function s.coucon(e,tp,eg,ep,ev,re,r,rp)
 	return rp==1-tp
 end
 function s.coutg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsCanAddCounter(tp,0x70,Duel.GetCurrentChain(),e:GetHandler()) end
-	Duel.SetOperationInfo(0,CATEGORY_COUNTER,nil,Duel.GetCurrentChain(),0,0x70)
+	if chk==0 then return Duel.IsCanAddCounter(tp,0x71,Duel.GetCurrentChain(),e:GetHandler()) end
+	Duel.SetOperationInfo(0,CATEGORY_COUNTER,nil,Duel.GetCurrentChain(),0,0x71)
 end
 function s.couop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToChain() then
-		c:AddCounter(0x70,Duel.GetCurrentChain())
+		c:AddCounter(0x71,Duel.GetCurrentChain())
 	end
 end
 function s.cicon(e)
-	return e:GetHandler():GetCounter(0x70)<10
+	return e:GetHandler():GetCounter(0x71)<10
 end
 function s.adjustcon(e)
-	return e:GetHandler():GetCounter(0x70)>9
+	return e:GetHandler():GetCounter(0x71)>9
 end
 function s.adjustop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_CARD,0,id)
