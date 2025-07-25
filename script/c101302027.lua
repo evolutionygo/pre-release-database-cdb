@@ -7,7 +7,6 @@ function s.initial_effect(c)
 	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_QUICK_O)
 	e1:SetCode(EVENT_BE_BATTLE_TARGET)
-	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetRange(LOCATION_HAND)
 	e1:SetCountLimit(1,id)
 	e1:SetCondition(s.atkcon)
@@ -78,7 +77,7 @@ function s.cfop(e,tp,eg,ep,ev,re,r,rp,ac)
 		local tc=g:Select(tp,1,1,nil):GetFirst()
 		if tc:IsType(TYPE_MONSTER) then
 			Duel.ChangePosition(ac,POS_FACEUP_DEFENSE)
-		elseif tc:IsType(TYPE_MONSTER) then
+		elseif tc:IsType(TYPE_SPELL) then
 			local e1=Effect.CreateEffect(e:GetHandler())
 			e1:SetType(EFFECT_TYPE_SINGLE)
 			e1:SetCode(EFFECT_SET_ATTACK_FINAL)
