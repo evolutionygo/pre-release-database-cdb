@@ -1,10 +1,10 @@
---蹴神-VARefar
+--蹴神－VARefar
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--special summon
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
-	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SPECIAL_SUMMON)
+	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_REMOVE)
 	e1:SetType(EFFECT_TYPE_QUICK_O)
 	e1:SetCode(EVENT_BE_BATTLE_TARGET)
 	e1:SetRange(LOCATION_HAND)
@@ -36,6 +36,8 @@ end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
+	local ac=Duel.GetAttacker()
+	Duel.SetTargetCard(ac)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
 function s.cfilter2(c,ac)
@@ -47,8 +49,8 @@ end
 function s.spop1(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToChain() and Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)~=0 then
-		local ac=Duel.GetAttacker()
-		if ac and ac:IsRelateToBattle() then
+		local ac=Duel.GetFirstTarget()
+		if ac and ac:IsRelateToChain() and ac:IsType(TYPE_MONSTER) then
 			s.cfop(e,tp,eg,ep,ev,re,r,rp,ac)
 		end
 	end
@@ -63,16 +65,17 @@ function s.spop2(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToChain() and Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)~=0 then
 		local ac=Duel.GetFirstTarget()
-		if ac and ac:IsRelateToEffect(e) and ac:IsType(TYPE_MONSTER) then
+		if ac and ac:IsRelateToChain() and ac:IsType(TYPE_MONSTER) then
 			s.cfop(e,tp,eg,ep,ev,re,r,rp,ac)
 		end
 	end
 end
 function s.cfop(e,tp,eg,ep,ev,re,r,rp,ac)
 	local g=Duel.GetMatchingGroup(s.cfilter2,tp,LOCATION_HAND,0,nil,ac)
-	if not ac:IsLocation(LOCATION_MZONE) then return end
+	if not ac:IsLocation(LOCATION_MZONE) or not ac:IsControler(1-tp) then return end
 	if g:GetCount()>0 and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
 		Duel.BreakEffect()
+		Duel.HintSelection(Group.FromCards(ac))
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONFIRM)
 		local tc=g:Select(tp,1,1,nil):GetFirst()
 		Duel.ConfirmCards(1-tp,tc)

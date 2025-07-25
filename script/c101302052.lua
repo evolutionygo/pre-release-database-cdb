@@ -47,6 +47,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.thfilter),tp,LOCATION_GRAVE,0,1,1,nil)
 	local tc=g:GetFirst()
 	if not tc then return end
+	Duel.HintSelection(g)
 	if Duel.SendtoHand(tc,nil,REASON_EFFECT)~=0 and tc:IsLocation(LOCATION_HAND) then
 		Duel.ConfirmCards(1-tp,tc)
 		local e1=Effect.CreateEffect(e:GetHandler())

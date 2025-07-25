@@ -1,4 +1,4 @@
---漆梏の喰獣  ケルゼブス
+--漆梏の喰獣 ケルゼブス
 local s,id,o=GetID()
 function s.initial_effect(c)
 	c:EnableReviveLimit()
@@ -38,7 +38,7 @@ function s.atkval(e,c)
 end
 function s.matcon(e,tp,eg,ep,ev,re,r,rp)
 	return re:IsHasType(EFFECT_TYPE_ACTIVATE)
-		and re:IsActiveType(TYPE_QUICKPLAY) or re:GetHandler():GetType()==TYPE_SPELL
+		and (re:IsActiveType(TYPE_QUICKPLAY) or re:GetHandler():GetType()==TYPE_SPELL)
 end
 function s.mattg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return re:GetHandler():IsCanOverlay() and e:GetHandler():IsType(TYPE_XYZ) end

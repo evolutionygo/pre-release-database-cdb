@@ -37,13 +37,13 @@ end
 function s.tgtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()
 	if chkc then return chkc:IsControler(1-tp) and chkc:IsLocation(LOCATION_MZONE) and chkc:IsFaceup() end
-	if chk==0 then return Duel.RemoveCounter(tp,1,0,0x70,1,REASON_COST)
+	if chk==0 then return Duel.IsCanRemoveCounter(tp,1,0,0x70,1,REASON_COST)
 		and Duel.IsExistingTarget(Card.IsFaceup,tp,0,LOCATION_MZONE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
 	local tc=Duel.SelectTarget(tp,Card.IsFaceup,tp,0,LOCATION_MZONE,1,1,nil):GetFirst()
 	local b1=Duel.IsCanRemoveCounter(tp,1,0,0x70,1,REASON_COST)
-	local b2=not tc:IsAttack(0) and Duel.IsCanRemoveCounter(tp,1,0,0x70,2,REASON_COST)
-	local b3=aux.NegateEffectMonsterFilter(tc) and Duel.IsCanRemoveCounter(tp,1,0,0x70,3,REASON_COST)
+	local b2=Duel.IsCanRemoveCounter(tp,1,0,0x70,2,REASON_COST) and not tc:IsAttack(0)
+	local b3=Duel.IsCanRemoveCounter(tp,1,0,0x70,3,REASON_COST) and aux.NegateEffectMonsterFilter(tc)
 	local b4=Duel.IsCanRemoveCounter(tp,1,0,0x70,4,REASON_COST)
 	local op=aux.SelectFromOptions(tp,
 			{b1,aux.Stringid(id,1),1},
