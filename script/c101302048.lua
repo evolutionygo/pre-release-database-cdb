@@ -64,7 +64,7 @@ function s.matop(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.efilter(re)
 	return function(e,te)
-			   return te==re
+			   return te==re and te:IsActivated()
 		   end
 end
 function s.setfilter(c)

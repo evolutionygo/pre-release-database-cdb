@@ -62,8 +62,9 @@ function s.tgtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function s.tgop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
+	if not tc or not tc:IsRelateToChain() or not tc:IsType(TYPE_MONSTER) then return end
 	if e:GetLabel()==1 then
-		if tc:IsRelateToChain() and tc:IsFaceup() then
+		if tc:IsFaceup() then
 			local e1=Effect.CreateEffect(e:GetHandler())
 			e1:SetType(EFFECT_TYPE_SINGLE)
 			e1:SetCode(EFFECT_UPDATE_ATTACK)
@@ -72,7 +73,7 @@ function s.tgop(e,tp,eg,ep,ev,re,r,rp)
 			tc:RegisterEffect(e1)
 		end
 	elseif e:GetLabel()==2 then
-		if tc:IsRelateToChain() and tc:IsFaceup() then
+		if tc:IsFaceup() then
 			local e1=Effect.CreateEffect(e:GetHandler())
 			e1:SetType(EFFECT_TYPE_SINGLE)
 			e1:SetCode(EFFECT_SET_ATTACK_FINAL)
@@ -81,7 +82,7 @@ function s.tgop(e,tp,eg,ep,ev,re,r,rp)
 			tc:RegisterEffect(e1)
 		end
 	elseif e:GetLabel()==3 then
-		if tc:IsFaceup() and tc:IsRelateToChain() and tc:IsCanBeDisabledByEffect(e) then
+		if tc:IsFaceup() and tc:IsCanBeDisabledByEffect(e) then
 			Duel.NegateRelatedChain(tc,RESET_TURN_SET)
 			local e1=Effect.CreateEffect(e:GetHandler())
 			e1:SetType(EFFECT_TYPE_SINGLE)
@@ -96,8 +97,6 @@ function s.tgop(e,tp,eg,ep,ev,re,r,rp)
 			tc:RegisterEffect(e2)
 		end
 	elseif e:GetLabel()==4 then
-		if tc:IsRelateToChain() then
-			Duel.Destroy(tc,REASON_EFFECT)
-		end
+		Duel.Destroy(tc,REASON_EFFECT)
 	end
 end

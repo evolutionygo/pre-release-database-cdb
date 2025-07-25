@@ -32,7 +32,7 @@ function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return ep==tp and bit.band(r,REASON_BATTLE+REASON_EFFECT)~=0
 end
 function s.spfilter(c,e,tp)
-	return c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsLevelAbove(3) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 		and (not c:IsLocation(LOCATION_EXTRA) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		or Duel.GetLocationCountFromEx(tp,tp,nil,c)>0)
 end
@@ -43,7 +43,7 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 		and Duel.IsExistingMatchingCard(s.spfilter,tp,loc,0,1,nil,e,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,loc)
 end
-function s.sptg(e,tp,eg,ep,ev,re,r,rp)
+function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local loc=LOCATION_HAND+LOCATION_GRAVE
 	if ev>=2000 then loc=loc+LOCATION_DECK+LOCATION_EXTRA end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
