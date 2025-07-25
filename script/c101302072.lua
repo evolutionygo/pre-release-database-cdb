@@ -37,14 +37,14 @@ end
 function s.tgtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()
 	if chkc then return chkc:IsControler(1-tp) and chkc:IsLocation(LOCATION_MZONE) and chkc:IsFaceup() end
-	if chk==0 then return c:IsCanRemoveCounter(tp,0x70,1,REASON_COST) 
+	if chk==0 then return Duel.IsCanRemoveCounter(tp,1,0,0x70,1,REASON_COST)
 		and Duel.IsExistingTarget(Card.IsFaceup,tp,0,LOCATION_MZONE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
 	local tc=Duel.SelectTarget(tp,Card.IsFaceup,tp,0,LOCATION_MZONE,1,1,nil):GetFirst()
-	local b1=c:IsCanRemoveCounter(tp,0x70,1,REASON_COST) 
-	local b2=not tc:IsAttack(0) and c:IsCanRemoveCounter(tp,0x70,2,REASON_COST) 
-	local b3=aux.NegateEffectMonsterFilter(tc) and c:IsCanRemoveCounter(tp,0x70,3,REASON_COST) 
-	local b4=c:IsCanRemoveCounter(tp,0x70,4,REASON_COST) 
+	local b1=Duel.IsCanRemoveCounter(tp,1,0,0x70,1,REASON_COST)
+	local b2=Duel.IsCanRemoveCounter(tp,1,0,0x70,2,REASON_COST) and not tc:IsAttack(0)
+	local b3=Duel.IsCanRemoveCounter(tp,1,0,0x70,3,REASON_COST) and aux.NegateEffectMonsterFilter(tc)
+	local b4=Duel.IsCanRemoveCounter(tp,1,0,0x70,4,REASON_COST)
 	local op=aux.SelectFromOptions(tp,
 			{b1,aux.Stringid(id,1),1},
 			{b2,aux.Stringid(id,2),2},
@@ -87,13 +87,13 @@ function s.tgop(e,tp,eg,ep,ev,re,r,rp)
 			local e1=Effect.CreateEffect(e:GetHandler())
 			e1:SetType(EFFECT_TYPE_SINGLE)
 			e1:SetCode(EFFECT_DISABLE)
-			e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+			e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 			tc:RegisterEffect(e1)
 			local e2=Effect.CreateEffect(e:GetHandler())
 			e2:SetType(EFFECT_TYPE_SINGLE)
 			e2:SetCode(EFFECT_DISABLE_EFFECT)
 			e2:SetValue(RESET_TURN_SET)
-			e2:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+			e2:SetReset(RESET_EVENT+RESETS_STANDARD)
 			tc:RegisterEffect(e2)
 		end
 	elseif e:GetLabel()==4 then

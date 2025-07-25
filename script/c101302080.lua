@@ -1,4 +1,4 @@
---
+--お菊さんの皿算用
 local s,id,o=GetID()
 function s.initial_effect(c)
 	c:EnableCounterPermit(0x71)
@@ -7,7 +7,7 @@ function s.initial_effect(c)
 	e0:SetType(EFFECT_TYPE_ACTIVATE)
 	e0:SetCode(EVENT_FREE_CHAIN)
 	c:RegisterEffect(e0)
-	--to extra
+	--add counter
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_COUNTER)
@@ -41,10 +41,10 @@ function s.initial_effect(c)
 	e4:SetCondition(s.adjustcon)
 	e4:SetOperation(s.adjustop)
 	c:RegisterEffect(e4)
-	--
+	--deckdes
 	local e5=Effect.CreateEffect(c)
 	e5:SetDescription(aux.Stringid(id,1))
-	e5:SetCategory(CATEGORY_TOGRAVE)
+	e5:SetCategory(CATEGORY_DECKDES)
 	e5:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e5:SetProperty(EFFECT_FLAG_DELAY)
 	e5:SetCode(EVENT_TO_GRAVE)
