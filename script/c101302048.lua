@@ -1,4 +1,4 @@
---漆梏の喰獸  ケルゼブス
+--漆梏の喰獣  ケルゼブス
 local s,id,o=GetID()
 function s.initial_effect(c)
 	c:EnableReviveLimit()

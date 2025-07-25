@@ -71,6 +71,7 @@ function s.spop2(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.cfop(e,tp,eg,ep,ev,re,r,rp,ac)
 	local g=Duel.GetMatchingGroup(s.cfilter2,tp,LOCATION_HAND,0,nil,ac)
+	if not ac:IsLocation(LOCATION_MZONE) then return end
 	if g:GetCount()>0 and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
 		Duel.BreakEffect()
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONFIRM)
