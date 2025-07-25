@@ -50,7 +50,7 @@ function s.tgtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 			{b2,aux.Stringid(id,2),2},
 			{b3,aux.Stringid(id,3),3},
 			{b4,aux.Stringid(id,4),4})
-	c:RemoveCounter(tp,0x70,op,REASON_COST)
+	Duel.RemoveCounter(tp,1,0,0x70,op,REASON_COST)
 	if op==1 or op==2 then
 		e:SetCategory(CATEGORY_ATKCHANGE)
 	elseif op==3 then

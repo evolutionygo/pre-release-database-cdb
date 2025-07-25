@@ -29,8 +29,8 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function s.desfilter(c,tp)
-	return c:IsReason(REASON_EFFECT) and c:IsPreviousLocation(LOCATION_ONFIELD) and c:IsPreviousControler(tp)
-		and c:IsPreviousPosition(POS_FACEUP)
+	return c:IsReason(REASON_EFFECT) and c:IsPreviousLocation(LOCATION_ONFIELD)
+		and c:IsPreviousPosition(POS_FACEUP) and c:IsPreviousControler(tp)
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.desfilter,1,nil,tp)
