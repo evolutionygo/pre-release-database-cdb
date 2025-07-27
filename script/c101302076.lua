@@ -53,8 +53,7 @@ end
 function s.drtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end
 	local dg=Duel.GetMatchingGroup(s.tdfilter,tp,LOCATION_GRAVE,0,nil)
-	if chk==0 then return Duel.IsPlayerCanDraw(tp,1)
-		and dg:CheckSubGroup(s.gcheck,3,3) end
+	if chk==0 then return dg:CheckSubGroup(s.gcheck,3,3) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
 	local g=dg:SelectSubGroup(tp,s.gcheck,false,3,3)
 	Duel.SetTargetCard(g)
