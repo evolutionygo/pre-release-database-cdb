@@ -85,7 +85,7 @@ add_script_diff:
     - linux
   image: git-registry.moenext.com/mycard/ygopro-cdb-descgen:master-x86
   variables:
-    YGOPRO_PIC_URL_PREFIX: 'https://cdncf.moecube.com/ygopro-super-pre/data/pics/'
+    YGOPRO_PIC_URL_PREFIX: 'https://cdntx.moecube.com/ygopro-super-pre/data/pics/'
     YGOPRO_PIC_URL_SUFFIX: '.jpg?version=15.13'
     FIELDS: 'name,desc,overallString,picUrl'
     GIT_DEPTH: '1000'
