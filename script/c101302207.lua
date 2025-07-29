@@ -34,7 +34,7 @@ function s.desfilter(c)
 end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() and s.desfilter(chkc) end
-	if chk==0 then return Duel.GetFlagEffect(tp,id)==0 and Duel.IsExistingTarget(s.desfilter,tp,LOCATION_ONFIELD,0,1,nil) end
+	if chk==0 then return Duel.IsExistingTarget(s.desfilter,tp,LOCATION_ONFIELD,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 	local g=Duel.SelectTarget(tp,s.desfilter,tp,LOCATION_ONFIELD,0,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
@@ -43,17 +43,19 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToChain() then Duel.Destroy(tc,REASON_EFFECT) end
-	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(id,2))
-	e1:SetType(EFFECT_TYPE_FIELD)
-	e1:SetCode(EFFECT_EXTRA_PENDULUM_SUMMON)
-	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-	e1:SetTargetRange(1,0)
-	e1:SetCountLimit(1,id+o)
-	e1:SetValue(s.pendvalue)
-	e1:SetReset(RESET_PHASE+PHASE_END)
-	Duel.RegisterEffect(e1,tp)
-	Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1)
+	if Duel.GetFlagEffect(tp,id)==0 then
+		local e1=Effect.CreateEffect(c)
+		e1:SetDescription(aux.Stringid(id,2))
+		e1:SetType(EFFECT_TYPE_FIELD)
+		e1:SetCode(EFFECT_EXTRA_PENDULUM_SUMMON)
+		e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+		e1:SetTargetRange(1,0)
+		e1:SetCountLimit(1,id+o)
+		e1:SetValue(s.pendvalue)
+		e1:SetReset(RESET_PHASE+PHASE_END)
+		Duel.RegisterEffect(e1,tp)
+		Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1)
+	end
 end
 function s.pendvalue(e,c)
 	return c:IsSetCard(0xaf)
