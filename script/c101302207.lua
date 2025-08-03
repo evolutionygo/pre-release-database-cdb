@@ -64,20 +64,22 @@ function s.negcon(e,tp,eg,ep,ev,re,r,rp)
 	local loc=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_LOCATION)
 	return ep==1-tp and loc==LOCATION_HAND and re:IsActiveType(TYPE_MONSTER) and Duel.IsChainNegatable(ev)
 end
-function s.cfilter1(c,tp)
+function s.rmfilter(c)
+	return c:IsAbleToRemoveAsCost() and
+		(c:IsSetCard(0xaf) and c:IsType(TYPE_MONSTER) or c:IsSetCard(0xae))
+end
+function s.cfilter1(c)
 	return c:IsSetCard(0xaf) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost()
-		and Duel.IsExistingMatchingCard(s.cfilter2,tp,LOCATION_GRAVE,0,1,c)
 end
 function s.cfilter2(c)
 	return c:IsSetCard(0xae) and c:IsAbleToRemoveAsCost()
 end
 function s.negcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.cfilter1,tp,LOCATION_GRAVE,0,1,nil,tp) end
+	local rg=Duel.GetMatchingGroup(s.rmfilter,tp,LOCATION_GRAVE,0,nil)
+	if chk==0 then return aux.gffcheck(rg,s.cfilter1,nil,s.cfilter2,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g1=Duel.SelectMatchingCard(tp,s.cfilter1,tp,LOCATION_GRAVE,0,1,1,nil,tp)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g2=Duel.SelectMatchingCard(tp,s.cfilter2,tp,LOCATION_GRAVE,0,1,1,g1)
-	Duel.Remove(g1+g2,POS_FACEUP,REASON_COST)
+	local g=rg:SelectSubGroup(tp,aux.gffcheck,false,2,2,s.cfilter1,nil,s.cfilter2,nil)
+	Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
 function s.negtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
