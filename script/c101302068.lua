@@ -33,7 +33,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local tg=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_EXTRA,0,nil,e,tp)
 	local _,maxlink=tg:GetMaxGroup(Card.GetLink)
 	local b2=#tg>0 and cg:CheckSubGroup(s.fselect,1,maxlink,tg)
-		and Duel.GetFlagEffect(tp,id+o)==0
+		and Duel.GetFlagEffect(tp,id+o)==0 and e:IsCostChecked()
 	if chk==0 then return b1 or b2 end
 	local op=0
 	if b1 or b2 then
@@ -49,10 +49,8 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 		e:SetLabel(op,0)
 		Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 	elseif op==2 then
-		if e:IsCostChecked() then
-			Duel.RegisterFlagEffect(tp,id+o,RESET_PHASE+PHASE_END,0,1)
-			e:SetCategory(CATEGORY_SPECIAL_SUMMON)
-		end
+		Duel.RegisterFlagEffect(tp,id+o,RESET_PHASE+PHASE_END,0,1)
+		e:SetCategory(CATEGORY_SPECIAL_SUMMON)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 		local rg=cg:SelectSubGroup(tp,s.fselect,false,1,maxlink,tg)
 		Duel.Remove(rg,POS_FACEUP,REASON_COST)
