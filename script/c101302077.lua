@@ -25,6 +25,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end
 	if chk==0 then return Duel.GetMatchingGroupCount(aux.AND(Card.IsAbleToRemove,Card.IsCanBeEffectTarget),tp,0,LOCATION_GRAVE,nil,e)>0 end
 	local g=Duel.GetMatchingGroup(aux.AND(Card.IsAbleToRemove,Card.IsCanBeEffectTarget),tp,0,LOCATION_GRAVE,nil,e)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local sg=g:SelectSubGroup(tp,s.fselect,false,1,2)
 	Duel.SetTargetCard(sg)
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,sg,#sg,0,0)
