@@ -20,7 +20,7 @@ function s.initial_effect(c)
 	e2:SetTarget(s.drtg)
 	e2:SetOperation(s.drop)
 	c:RegisterEffect(e2)
-	--did
+	--disable
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,1))
 	e3:SetCategory(CATEGORY_DISABLE)
@@ -66,6 +66,7 @@ function s.drop(e,tp,eg,ep,ev,re,r,rp)
 		if Duel.SendtoDeck(g,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)>0 and g:IsExists(Card.IsLocation,1,nil,LOCATION_DECK) then
 			Duel.BreakEffect()
 			Duel.Draw(tp,1,REASON_EFFECT)
+			Duel.BreakEffect()
 		end
 	end
 	local e1=Effect.CreateEffect(e:GetHandler())
@@ -84,7 +85,7 @@ function s.atktg(e,c)
 	return c:IsAttribute(ATTRIBUTE_WIND)
 end
 function s.discon(e,tp,eg,ep,ev,re,r,rp)
-	return re:GetHandler():IsCode(5318639)
+	return re:IsActivated() and re:GetHandler():IsCode(5318639)
 end
 function s.distg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(1-tp) and chkc:IsOnField() and aux.NegateAnyFilter(chkc) end

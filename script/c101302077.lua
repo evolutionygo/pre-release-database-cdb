@@ -33,19 +33,20 @@ end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local rg=Duel.GetTargetsRelateToChain():Filter(aux.NecroValleyFilter(),nil)
 	if #rg==0 then return end
-	local dg=Duel.GetMatchingGroup(s.tdfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,nil)
-	if Duel.Remove(rg,POS_FACEUP,REASON_EFFECT)>0
-		and dg:GetCount()>0 and Duel.IsPlayerCanDraw(tp,1)
-		and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-		local sg=dg:Select(tp,1,1,nil)
-		local dtc=sg:GetFirst()
-		if dtc then
-			Duel.BreakEffect()
-			Duel.HintSelection(sg)
-			if Duel.SendtoDeck(dtc,nil,SEQ_DECKBOTTOM,REASON_EFFECT)>0 and dtc:IsLocation(LOCATION_DECK+LOCATION_EXTRA) then
+	if Duel.Remove(rg,POS_FACEUP,REASON_EFFECT)>0 then
+		local dg=Duel.GetMatchingGroup(s.tdfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,nil)
+		if dg:GetCount()>0 and Duel.IsPlayerCanDraw(tp,1)
+			and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
+			local sg=dg:Select(tp,1,1,nil)
+			local dtc=sg:GetFirst()
+			if dtc then
 				Duel.BreakEffect()
-				Duel.Draw(tp,1,REASON_EFFECT)
+				Duel.HintSelection(sg)
+				if Duel.SendtoDeck(dtc,nil,SEQ_DECKBOTTOM,REASON_EFFECT)>0 and dtc:IsLocation(LOCATION_DECK+LOCATION_EXTRA) then
+					Duel.BreakEffect()
+					Duel.Draw(tp,1,REASON_EFFECT)
+				end
 			end
 		end
 	end

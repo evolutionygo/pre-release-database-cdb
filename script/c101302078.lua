@@ -19,7 +19,7 @@ function s.spfilter(c,e,tp)
 		and Duel.IsExistingMatchingCard(s.tgfilter,tp,LOCATION_EXTRA+LOCATION_DECK,0,1,nil,c:GetAttack())
 end
 function s.tgfilter(c,atk)
-	return (c:IsSetCard(0x145) or c:IsLocation(LOCATION_EXTRA))
+	return (c:IsSetCard(0x145) or c:IsLocation(LOCATION_EXTRA)) and c:IsType(TYPE_MONSTER)
 		and c:IsAttackAbove(atk) and c:IsAbleToGrave()
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
