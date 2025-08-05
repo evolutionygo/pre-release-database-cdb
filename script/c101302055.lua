@@ -18,7 +18,7 @@ function s.initial_effect(c)
 	e2:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
 	e2:SetValue(RACE_PLANT)
 	c:RegisterEffect(e2)
-	--to grave
+	--destroyed
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
 	e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
@@ -54,9 +54,11 @@ function s.cfilter(c)
 	return c:IsFaceupEx() and c:IsRace(RACE_PLANT)
 end
 function s.regcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():IsReason(REASON_EFFECT) and re and re:IsActivated()
-		and (re:GetHandler():IsRelateToChain(ev) and re:GetHandler():IsCode(73580471)
-			or not re:GetHandler():IsRelateToChain(ev) and re:GetHandler():GetPreviousCodeOnField()==73580471)
+	if not re then return false end
+	local rc=re:GetHandler()
+	return e:GetHandler():IsReason(REASON_EFFECT) and re:IsActivated()
+		and (rc:IsRelateToChain(ev) and rc:IsCode(73580471)
+			or not rc:IsRelateToChain(ev) and rc:GetPreviousCodeOnField()==73580471)
 end
 function s.regop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
