@@ -18,17 +18,25 @@ function s.initial_effect(c)
 	e2:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
 	e2:SetValue(RACE_PLANT)
 	c:RegisterEffect(e2)
-	--damage
+	--to grave
 	local e3=Effect.CreateEffect(c)
-	e3:SetDescription(aux.Stringid(id,1))
-	e3:SetCategory(CATEGORY_DAMAGE)
-	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
-	e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+	e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 	e3:SetCode(EVENT_DESTROYED)
-	e3:SetCountLimit(1,id)
-	e3:SetTarget(s.damtg)
-	e3:SetOperation(s.damop)
+	e3:SetCondition(s.regcon)
+	e3:SetOperation(s.regop)
 	c:RegisterEffect(e3)
+	--damage
+	local e4=Effect.CreateEffect(c)
+	e4:SetDescription(aux.Stringid(id,1))
+	e4:SetCategory(CATEGORY_DAMAGE)
+	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
+	e4:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e4:SetCode(EVENT_DESTROYED)
+	e4:SetCountLimit(1,id)
+	e4:SetTarget(s.damtg)
+	e4:SetOperation(s.damop)
+	c:RegisterEffect(e4)
 end
 function s.thfilter(c)
 	return c:IsSetCard(0x1123) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
@@ -45,11 +53,20 @@ end
 function s.cfilter(c)
 	return c:IsFaceupEx() and c:IsRace(RACE_PLANT)
 end
+function s.regcon(e,tp,eg,ep,ev,re,r,rp)
+	return e:GetHandler():IsReason(REASON_EFFECT) and re and re:IsActivated()
+		and (re:GetHandler():IsRelateToChain(ev) and re:GetHandler():IsCode(73580471)
+			or not re:GetHandler():IsRelateToChain(ev) and re:GetHandler():GetPreviousCodeOnField()==73580471)
+end
+function s.regop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	c:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,1)
+end
 function s.damtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	local dam=Duel.GetMatchingGroupCount(s.cfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,nil)*100
 	if dam>0 then
-		if re:GetHandler():IsCode(73580471) then
+		if e:GetHandler():GetFlagEffect(id)>0 then
 			dam=dam+2400
 			e:SetLabel(1)
 		else

@@ -85,7 +85,7 @@ function s.atktg(e,c)
 	return c:IsAttribute(ATTRIBUTE_WIND)
 end
 function s.discon(e,tp,eg,ep,ev,re,r,rp)
-	return re:IsActivated() and re:GetHandler():IsCode(5318639)
+	return re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:GetHandler():IsCode(5318639)
 end
 function s.distg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(1-tp) and chkc:IsOnField() and aux.NegateAnyFilter(chkc) end
