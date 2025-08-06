@@ -22,14 +22,27 @@ function s.initial_effect(c)
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,1))
 	e3:SetCategory(CATEGORY_DAMAGE)
-	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
+	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
 	e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-	e3:SetCode(EVENT_DESTROYED)
+	e3:SetCode(EVENT_CUSTOM+id)
+	e3:SetRange(LOCATION_GRAVE+LOCATION_REMOVED)
 	e3:SetCountLimit(1,id)
 	e3:SetCondition(s.damcon)
 	e3:SetTarget(s.damtg)
 	e3:SetOperation(s.damop)
 	c:RegisterEffect(e3)
+	if not s.global_check then
+		s.global_check=true
+		local ge1=Effect.CreateEffect(c)
+		ge1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		ge1:SetCode(EVENT_DESTROYED)
+		ge1:SetOperation(s.checkop)
+		Duel.RegisterEffect(ge1,0)
+	end
+end
+function s.checkop(e,tp,eg,ep,ev,re,r,rp)
+	Debug.Message(eg:GetCount())
+	Duel.RaiseEvent(eg,EVENT_CUSTOM+id,re,r,rp,ep,ev)
 end
 function s.thfilter(c)
 	return c:IsSetCard(0x1123) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
@@ -49,11 +62,14 @@ end
 function s.damcon(e,tp,eg,ep,ev,re,r,rp)
 	if not re then return true end
 	local c=e:GetHandler()
+	if not eg:IsContains(c) then return false end
 	local rc=re:GetHandler()
 	if c:IsReason(REASON_EFFECT) and re:IsActivated()
-		and (rc:IsRelateToChain(ev) and rc:IsCode(73580471)
-		or not rc:IsRelateToChain(ev) and rc:GetPreviousCodeOnField()==73580471) then
-		c:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,1)
+		and (eg:IsContains(re:GetHandler()) and rc:GetPreviousCodeOnField()==73580471
+		or rc:IsCode(73580471)) then
+		e:SetLabel(1)
+	else
+		e:SetLabel(0)
 	end
 	return true
 end
@@ -61,11 +77,8 @@ function s.damtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	local dam=Duel.GetMatchingGroupCount(s.cfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,nil)*100
 	if dam>0 then
-		if e:GetHandler():GetFlagEffect(id)>0 then
+		if e:GetLabel()==1 then
 			dam=dam+2400
-			e:SetLabel(1)
-		else
-			e:SetLabel(0)
 		end
 		Duel.SetTargetPlayer(1-tp)
 		Duel.SetTargetParam(dam)
