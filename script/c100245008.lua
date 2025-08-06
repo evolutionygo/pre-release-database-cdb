@@ -15,7 +15,7 @@ function s.initial_effect(c)
 	--draw
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
-	e2:SetCategory(CATEGORY_DRAW)
+	e2:SetCategory(CATEGORY_DRAW+CATEGORY_HANDES)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_GRAVE)
 	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
@@ -78,8 +78,9 @@ function s.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.drop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.Draw(1-tp,1,REASON_EFFECT)>0 then
-		Duel.BreakEffect()
+		Duel.Hint(HINT_SELECTMSG,1-tp,HINTMSG_DISCARD)
+		local dg=Duel.SelectMatchingCard(1-tp,aux.TRUE,1-tp,LOCATION_HAND,0,1,1,nil)
 		Duel.ShuffleHand(1-tp)
-		Duel.DiscardHand(1-tp,aux.TRUE,1,1,REASON_EFFECT+REASON_DISCARD)
+		Duel.SendtoGrave(dg,REASON_EFFECT+REASON_DISCARD)
 	end
 end
