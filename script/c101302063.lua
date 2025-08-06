@@ -64,17 +64,18 @@ end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetLabel()==1 then
 		local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
-		Duel.Draw(p,d,REASON_EFFECT)
-		Duel.BreakEffect()
-		if Duel.IsExistingMatchingCard(s.cfilter,p,LOCATION_HAND,0,1,nil) then
-			local dg=Duel.SelectMatchingCard(p,s.cfilter,p,LOCATION_HAND,0,1,1,nil)
-			if dg:GetCount()>0 then
-				Duel.ShuffleHand(p)
-				Duel.SendtoGrave(dg,REASON_EFFECT+REASON_DISCARD,p)
+		if Duel.Draw(p,d,REASON_EFFECT)==d then
+			Duel.BreakEffect()
+			if Duel.IsExistingMatchingCard(s.cfilter,p,LOCATION_HAND,0,1,nil) then
+				local dg=Duel.SelectMatchingCard(p,s.cfilter,p,LOCATION_HAND,0,1,1,nil)
+				if dg:GetCount()>0 then
+					Duel.ShuffleHand(p)
+					Duel.SendtoGrave(dg,REASON_EFFECT+REASON_DISCARD,p)
+				end
+			else
+				local sg=Duel.GetFieldGroup(p,LOCATION_HAND,0)
+				Duel.SendtoGrave(sg,REASON_EFFECT+REASON_DISCARD,p)
 			end
-		else
-			local sg=Duel.GetFieldGroup(p,LOCATION_HAND,0)
-			Duel.SendtoGrave(sg,REASON_EFFECT+REASON_DISCARD,p)
 		end
 	elseif e:GetLabel()==2 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
