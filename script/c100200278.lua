@@ -65,14 +65,12 @@ function s.tgop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(Card.IsAbleToGrave,tp,LOCATION_EXTRA,0,nil)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
 	local sg=g:Select(tp,1,1,nil)
-	if sg:GetCount()>0 then
-		Duel.SendtoGrave(sg,REASON_EFFECT)
-	end
 	local g2=Duel.GetMatchingGroup(Card.IsAbleToGrave,tp,0,LOCATION_EXTRA,nil)
 	Duel.Hint(HINT_SELECTMSG,1-tp,HINTMSG_TOGRAVE)
 	local sg2=g2:Select(1-tp,1,1,nil)
-	if sg2:GetCount()>0 then
-		Duel.SendtoGrave(sg2,REASON_EFFECT)
+	sg:Merge(sg2)
+	if sg:GetCount()>0 then
+		Duel.SendtoGrave(sg,REASON_EFFECT)
 	end
 end
 function s.thfilter(c)
