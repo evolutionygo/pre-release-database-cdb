@@ -41,7 +41,6 @@ function s.initial_effect(c)
 	end
 end
 function s.checkop(e,tp,eg,ep,ev,re,r,rp)
-	Debug.Message(eg:GetCount())
 	Duel.RaiseEvent(eg,EVENT_CUSTOM+id,re,r,rp,ep,ev)
 end
 function s.thfilter(c)
@@ -60,13 +59,14 @@ function s.cfilter(c)
 	return c:IsFaceupEx() and c:IsRace(RACE_PLANT)
 end
 function s.damcon(e,tp,eg,ep,ev,re,r,rp)
-	if not re then return true end
 	local c=e:GetHandler()
 	if not eg:IsContains(c) then return false end
+	if not re or not re:IsActivated() then return true end
 	local rc=re:GetHandler()
-	if c:IsReason(REASON_EFFECT) and re:IsActivated()
+	if not rc then return true end
+	if c:IsReason(REASON_EFFECT)
 		and (eg:IsContains(re:GetHandler()) and rc:GetPreviousCodeOnField()==73580471
-		or rc:IsCode(73580471)) then
+		or not eg:IsContains(re:GetHandler()) and rc:IsCode(73580471)) then
 		e:SetLabel(1)
 	else
 		e:SetLabel(0)
