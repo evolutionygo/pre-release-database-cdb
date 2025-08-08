@@ -151,13 +151,13 @@ function s.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.ChangePosition(e:GetHandler(),POS_FACEUP_DEFENSE)
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	local g=Duel.GetMatchingGroup(Card.IsAbleToHand,tp,0,LOCATION_ONFIELD,nil)
+	local g=Duel.GetMatchingGroup(Card.IsAbleToHand,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)
 	if chk==0 then return #g>0 end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,1,0,0)
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
-	local g=Duel.GetMatchingGroup(Card.IsAbleToHand,tp,0,LOCATION_ONFIELD,nil):Select(tp,1,3,nil)
+	local g=Duel.GetMatchingGroup(Card.IsAbleToHand,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil):Select(tp,1,3,nil)
 	if #g>0 then
 		Duel.HintSelection(g)
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
@@ -186,13 +186,13 @@ function s.regop(e,tp,eg,ep,ev,re,r,rp)
 	e:GetHandler():RegisterFlagEffect(id+o,RESET_EVENT+RESETS_STANDARD+RESET_CHAIN,0,1,ct)
 end
 function s.damcon2(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():GetFlagEffect(id)>0
+	return e:GetHandler():GetFlagEffect(id+o)>0
 end
 function s.damop2(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_CARD,0,id)
 	local labels={e:GetHandler():GetFlagEffectLabel(id+o)}
 	local ct=0
 	for i=1,#labels do ct=ct+labels[i] end
-	e:GetHandler():ResetFlagEffect(id)
+	e:GetHandler():ResetFlagEffect(id+o)
 	Duel.Damage(1-tp,ct*900,REASON_EFFECT)
 end
