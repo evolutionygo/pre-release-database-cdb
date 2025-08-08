@@ -44,7 +44,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 function s.thfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x2d5) and c:IsType(TYPE_PENDULUM)
+	return c:IsFaceup() and c:IsSetCard(0x2d5) and c:GetOriginalType()&TYPE_PENDULUM~=0
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_ONFIELD) and chkc:IsControler(tp) and s:thfilter(chk) end
