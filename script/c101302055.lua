@@ -61,9 +61,15 @@ end
 function s.damcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if not eg:IsContains(c) then return false end
-	if not re or not re:IsActivated() then return true end
+	if not re or not re:IsActivated() then
+		e:SetLabel(0)
+		return true
+	end
 	local rc=re:GetHandler()
-	if not rc then return true end
+	if not rc then
+		e:SetLabel(0)
+		return true
+	end
 	if c:IsReason(REASON_EFFECT)
 		and (eg:IsContains(re:GetHandler()) and rc:GetPreviousCodeOnField()==73580471
 		or not eg:IsContains(re:GetHandler()) and rc:IsCode(73580471)) then
