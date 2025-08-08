@@ -68,6 +68,7 @@ function s.pthfilter(c,tp)
 end
 function s.pthcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.pthfilter,1,nil,tp)
+		and (Duel.GetCurrentPhase()==PHASE_MAIN1 or Duel.GetCurrentPhase()==PHASE_MAIN2)
 end
 function s.pthtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=eg:Filter(s.pthfilter,nil,tp)
