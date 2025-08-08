@@ -137,7 +137,7 @@ function s.discon(e,tp,eg,ep,ev,re,r,rp)
 	if c:IsStatus(STATUS_BATTLE_DESTROYED) then return false end
 	if not re:IsHasProperty(EFFECT_FLAG_CARD_TARGET) then return false end
 	local tg=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)
-	return Duel.IsChainDisablable(ev) and rp==1-tp and tg and tg:IsExists(s.ccfilter,1,nil,tp) and ep~=tp and e:GetHandler():IsFacedown()
+	return Duel.IsChainDisablable(ev) and tg and tg:IsExists(s.ccfilter,1,nil,tp) and ep~=tp and e:GetHandler():IsFacedown()
 end
 function s.discost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
@@ -164,5 +164,5 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.effcon(e)
 	local c=e:GetHandler()
-	return e:GetHandler():GetFlagEffect(id)>0
+	return c:GetFlagEffect(id)>0
 end

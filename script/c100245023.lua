@@ -146,13 +146,13 @@ function s.indop(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
 	e1:SetTargetRange(LOCATION_ONFIELD,0)
-	e1:SetTarget(s.indtg)
+	e1:SetTarget(s.indtg2)
 	e1:SetReset(RESET_PHASE+PHASE_END)
 	e1:SetValue(1)
 	Duel.RegisterEffect(e1,tp)
 	Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1)
 end
-function s.indtg(e,c)
+function s.indtg2(e,c)
 	return c:IsType(TYPE_MONSTER) or c:IsSetCard(0x2d5) and c:IsType(TYPE_SPELL)
 end
 function s.flipop(e,tp,eg,ep,ev,re,r,rp)
@@ -162,12 +162,12 @@ function s.damcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetFlagEffect(id)>0
 end
 function s.damfilter(c,tp)
-	return c:GetOwner()==1-tp
+	return c:GetOwner()==1-tp and c:IsType(TYPE_MONSTER)
 end
 function s.damop(e,tp,eg,ep,ev,re,r,rp)
 	local dam=eg:FilterCount(s.damfilter,nil,tp)
 	if dam>0 then
 		Duel.Hint(HINT_CARD,0,id)
-		Duel.Damage(1-tp,dam*300,REASON_EFFECT)
+		Duel.Damage(1-tp,dam*900,REASON_EFFECT)
 	end
 end

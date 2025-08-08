@@ -128,7 +128,7 @@ function s.negcon(e,tp,eg,ep,ev,re,r,rp)
 	if c:IsStatus(STATUS_BATTLE_DESTROYED) then return false end
 	local loc=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_LOCATION)
 	return ep~=tp and (LOCATION_ONFIELD)&loc~=0
-		and e:GetHandler():IsFacedown()
+		and e:GetHandler():IsFacedown() and Duel.GetTurnPlayer()==tp
 end
 function s.negcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end

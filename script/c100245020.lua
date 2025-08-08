@@ -183,16 +183,14 @@ function s.regcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.regop(e,tp,eg,ep,ev,re,r,rp)
 	local ct=eg:FilterCount(Card.IsControler,nil,1-tp)
-	e:GetHandler():RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD+RESET_CHAIN,0,1,ct)
+	e:GetHandler():RegisterFlagEffect(id+o,RESET_EVENT+RESETS_STANDARD+RESET_CHAIN,0,1,ct)
 end
 function s.damcon2(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetFlagEffect(id)>0
-		and eg:IsExists(Card.IsControler,1,nil,1-tp) and not Duel.IsChainSolving()
-		and re and re:GetOwnerPlayer()==1-tp
 end
 function s.damop2(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_CARD,0,id)
-	local labels={e:GetHandler():GetFlagEffectLabel(id)}
+	local labels={e:GetHandler():GetFlagEffectLabel(id+o)}
 	local ct=0
 	for i=1,#labels do ct=ct+labels[i] end
 	e:GetHandler():ResetFlagEffect(id)
