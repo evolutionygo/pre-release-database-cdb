@@ -1,4 +1,4 @@
---糾罪巧-Archaη.TAIL
+--糾罪巧－Archaη.TAIL
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--pendulum summon
@@ -57,10 +57,10 @@ function s.initial_effect(c)
 	local e5=Effect.CreateEffect(c)
 	e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e5:SetCode(EVENT_TO_GRAVE)
-	e5:SetRange(LOCATION_MZONE)
+	e5:SetLabelObject(c)
 	e5:SetCondition(s.damcon)
 	e5:SetOperation(s.damop)
-	c:RegisterEffect(e5)
+	Duel.RegisterEffect(e5,0)
 	Duel.AddCustomActivityCounter(id,ACTIVITY_SPSUMMON,s.counterfilter)
 end
 function s.counterfilter(c)
@@ -157,18 +157,25 @@ function s.indtg2(e,c)
 	return c:IsType(TYPE_MONSTER) or c:IsSetCard(0x2d5) and c:IsType(TYPE_SPELL) and c:IsFaceup()
 end
 function s.flipop(e,tp,eg,ep,ev,re,r,rp)
-	e:GetHandler():RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,0,1)
+	e:GetHandler():RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id,3))
+end
+function s.efffilter(c,ec)
+	return c==ec and c:IsFaceup() and c:GetFlagEffect(id)>0 and not c:IsStatus(STATUS_BATTLE_DESTROYED) and not c:IsDisabled()
 end
 function s.damcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():GetFlagEffect(id)>0
+	local c=e:GetLabelObject()
+	local p=c:GetControler()
+	return Duel.IsExistingMatchingCard(s.efffilter,p,LOCATION_MZONE,0,1,nil,c)
 end
 function s.damfilter(c,tp)
 	return c:GetOwner()==1-tp and c:IsType(TYPE_MONSTER)
 end
 function s.damop(e,tp,eg,ep,ev,re,r,rp)
-	local dam=eg:FilterCount(s.damfilter,nil,tp)
-	if dam>0 then
+	local c=e:GetLabelObject()
+	local p=c:GetControler()
+	local dam=eg:IsExists(s.damfilter,1,nil,p)
+	if dam then
 		Duel.Hint(HINT_CARD,0,id)
-		Duel.Damage(1-tp,dam*900,REASON_EFFECT)
+		Duel.Damage(1-p,900,REASON_EFFECT)
 	end
 end
