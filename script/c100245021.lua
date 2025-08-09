@@ -1,4 +1,4 @@
---糾罪巧-Astaγ.PIXIEA
+--糾罪巧－Astaγ.PIXIEA
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--pendulum summon
@@ -54,16 +54,17 @@ function s.initial_effect(c)
 	e4:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 	e4:SetOperation(s.flipop)
 	c:RegisterEffect(e4)
-	--damage
+	--cannot be targeted
 	local e5=Effect.CreateEffect(c)
 	e5:SetType(EFFECT_TYPE_FIELD)
 	e5:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
 	e5:SetProperty(EFFECT_FLAG_SET_AVAILABLE)
 	e5:SetRange(LOCATION_MZONE)
 	e5:SetTargetRange(LOCATION_ONFIELD+LOCATION_GRAVE,LOCATION_ONFIELD+LOCATION_GRAVE)
+	e5:SetLabelObject(c)
 	e5:SetCondition(s.effcon)
 	e5:SetValue(aux.tgoval)
-	c:RegisterEffect(e5)
+	Duel.RegisterEffect(e5,0)
 	Duel.AddCustomActivityCounter(id,ACTIVITY_SPSUMMON,s.counterfilter)
 end
 function s.counterfilter(c)
@@ -160,9 +161,18 @@ function s.disop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.flipop(e,tp,eg,ep,ev,re,r,rp)
-	e:GetHandler():RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,0,1)
+	e:GetHandler():RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id,4))
+end
+function s.efffilter(c,ec)
+	return c==ec and c:IsFaceup() and c:GetFlagEffect(id)>0 and not c:IsStatus(STATUS_BATTLE_DESTROYED) and not c:IsDisabled()
 end
 function s.effcon(e)
-	local c=e:GetHandler()
-	return c:GetFlagEffect(id)>0
+	local c=e:GetLabelObject()
+	local p=c:GetControler()
+	return Duel.IsExistingMatchingCard(s.efffilter,p,LOCATION_MZONE,0,1,nil,c)
+end
+function s.effval(e,re,rp)
+	local c=e:GetLabelObject()
+	local p=c:GetControler()
+	return rp==1-p
 end
