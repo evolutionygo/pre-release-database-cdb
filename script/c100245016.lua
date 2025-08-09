@@ -1,4 +1,4 @@
---糾罪巧α’-「orgIA」
+--糾罪巧α’－「orgIA」
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--pendulum summon

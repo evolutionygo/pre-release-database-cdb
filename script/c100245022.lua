@@ -34,7 +34,7 @@ function s.initial_effect(c)
 	e2:SetTarget(s.sptg)
 	e2:SetOperation(s.spop)
 	c:RegisterEffect(e2)
-	--to hand
+	--negate
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,2))
 	e3:SetCategory(CATEGORY_NEGATE+CATEGORY_DESTROY)
@@ -142,7 +142,7 @@ function s.negtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 end
 function s.negop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToEffect(re) then
+	if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToChain(ev) then
 		Duel.Destroy(eg,REASON_EFFECT)
 	end
 end
@@ -150,7 +150,7 @@ function s.posfilter(c)
 	return c:IsFaceup() and c:IsCanTurnSet()
 end
 function s.postg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.posfilter,tp,0,LOCATION_MZONE,1,nil) end
+	if chk==0 then return true end
 	local g=Duel.GetMatchingGroup(s.posfilter,tp,0,LOCATION_MZONE,nil)
 	Duel.SetOperationInfo(0,CATEGORY_POSITION,g,g:GetCount(),0,0)
 end

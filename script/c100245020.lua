@@ -1,4 +1,4 @@
---糾罪巧-Aizaβ.LEON
+--糾罪巧－Aizaβ.LEON
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--pendulum summon

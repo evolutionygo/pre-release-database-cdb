@@ -1,4 +1,4 @@
---糾罪巧θ’-「oknirIA」
+--糾罪巧θ’－「oknirIA」
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--pendulum summon

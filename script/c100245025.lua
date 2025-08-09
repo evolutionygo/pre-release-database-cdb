@@ -1,4 +1,4 @@
---糾罪巧-始導
+--糾罪巧－始導
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--Activate

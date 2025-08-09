@@ -1,4 +1,4 @@
---糾罪巧β’-「alazoneIA」
+--糾罪巧β’－「alazoneIA」
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--pendulum summon

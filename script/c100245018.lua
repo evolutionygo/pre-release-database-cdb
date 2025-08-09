@@ -1,4 +1,4 @@
---糾罪巧F’-「tromarIA」
+--糾罪巧ϝ’－「tromarIA」
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--pendulum summon

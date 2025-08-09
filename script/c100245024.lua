@@ -1,4 +1,4 @@
---糾罪都市-エニアポリス
+--糾罪都市－エニアポリス
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--Activate
