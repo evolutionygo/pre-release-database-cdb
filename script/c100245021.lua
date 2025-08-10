@@ -63,7 +63,7 @@ function s.initial_effect(c)
 	e5:SetTargetRange(LOCATION_ONFIELD+LOCATION_GRAVE,LOCATION_ONFIELD+LOCATION_GRAVE)
 	e5:SetLabelObject(c)
 	e5:SetCondition(s.effcon)
-	e5:SetValue(aux.tgoval)
+	e5:SetValue(s.effval)
 	Duel.RegisterEffect(e5,0)
 	Duel.AddCustomActivityCounter(id,ACTIVITY_SPSUMMON,s.counterfilter)
 end
