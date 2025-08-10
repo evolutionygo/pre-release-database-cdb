@@ -8,7 +8,7 @@ function s.initial_effect(c)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
 	e1:SetValue(1)
-	c:RegisterEffect(e1)	
+	c:RegisterEffect(e1)
 	--special summon
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,0))
@@ -45,13 +45,13 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.Destroy(g,REASON_EFFECT)~=0 then
 		local ct=Duel.GetOperatedGroup():GetCount()
 		local c=e:GetHandler()
-        if Duel.GetLocationCount(tp,LOCATION_MZONE)==0 then 
+        if Duel.GetLocationCount(tp,LOCATION_MZONE)==0 then
             Duel.SendtoGrave(c,REASON_EFFECT)
         end
 		if not c:IsRelateToChain() then return end
 		if Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)~=0 then
 			if ct==1 then
-				c:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,0,1)
+				c:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id,1))
 				local e1=Effect.CreateEffect(c)
 				e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 				e1:SetCode(EVENT_PHASE+PHASE_END)
@@ -65,14 +65,15 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 			else
 				--remove
 				local e2=Effect.CreateEffect(c)
+				e2:SetDescription(aux.Stringid(id,2))
 				e2:SetType(EFFECT_TYPE_FIELD)
-				e2:SetProperty(EFFECT_FLAG_SET_AVAILABLE+EFFECT_FLAG_IGNORE_RANGE+EFFECT_FLAG_IGNORE_IMMUNE)
+				e2:SetProperty(EFFECT_FLAG_SET_AVAILABLE+EFFECT_FLAG_IGNORE_RANGE+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_CLIENT_HINT)
 				e2:SetCode(EFFECT_TO_GRAVE_REDIRECT)
 				e2:SetRange(LOCATION_MZONE)
-				e2:SetReset(RESET_EVENT+RESETS_WITHOUT_TEMP_REMOVE)
+				e2:SetReset(RESET_EVENT+RESETS_STANDARD)
 				e2:SetValue(LOCATION_REMOVED)
 				e2:SetTarget(s.rmtg)
-				c:RegisterEffect(e2)			
+				c:RegisterEffect(e2)
 			end
 		end
 	end
