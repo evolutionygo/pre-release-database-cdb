@@ -75,7 +75,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.rmtg(e,c)
-	return c:GetOwner()~=e:GetHandlerPlayer() and c:IsLocation(LOCATION_ONFIELD)
+	return c:GetOwner()~=e:GetHandlerPlayer() and c:IsLocation(LOCATION_ONFIELD) and c:IsType(TYPE_MONSTER)
 end
 function s.thcon(e,tp,eg,ep,ev,re,r,rp)
 	local tc=e:GetLabelObject()
