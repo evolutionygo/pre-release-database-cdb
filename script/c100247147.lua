@@ -41,11 +41,11 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e)
+	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToChain,nil)
 	if Duel.Destroy(g,REASON_EFFECT)~=0 then
 		local ct=Duel.GetOperatedGroup():GetCount()
 		local c=e:GetHandler()
-		if not c:IsRelateToEffect(e) then return end
+		if not c:IsRelateToChain() then return end
 		if Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)~=0 then
 			if ct==1 then
 				c:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,0,1)
