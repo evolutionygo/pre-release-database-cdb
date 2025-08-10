@@ -58,13 +58,12 @@ function s.initial_effect(c)
 	local e5=Effect.CreateEffect(c)
 	e5:SetType(EFFECT_TYPE_FIELD)
 	e5:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
-	e5:SetProperty(EFFECT_FLAG_SET_AVAILABLE)
+	e5:SetProperty(EFFECT_FLAG_SET_AVAILABLE|EFFECT_FLAG_IMMEDIATELY_APPLY)
 	e5:SetRange(LOCATION_MZONE)
 	e5:SetTargetRange(LOCATION_ONFIELD+LOCATION_GRAVE,LOCATION_ONFIELD+LOCATION_GRAVE)
-	e5:SetLabelObject(c)
 	e5:SetCondition(s.effcon)
-	e5:SetValue(s.effval)
-	Duel.RegisterEffect(e5,0)
+	e5:SetValue(aux.tgoval)
+	c:RegisterEffect(e5)
 	Duel.AddCustomActivityCounter(id,ACTIVITY_SPSUMMON,s.counterfilter)
 end
 function s.counterfilter(c)
@@ -167,12 +166,6 @@ function s.efffilter(c,ec)
 	return c==ec and c:IsFaceup() and c:GetFlagEffect(id)>0 and not c:IsStatus(STATUS_BATTLE_DESTROYED) and not c:IsDisabled()
 end
 function s.effcon(e)
-	local c=e:GetLabelObject()
-	local p=c:GetControler()
-	return Duel.IsExistingMatchingCard(s.efffilter,p,LOCATION_MZONE,0,1,nil,c)
-end
-function s.effval(e,re,rp)
-	local c=e:GetLabelObject()
-	local p=c:GetControler()
-	return rp==1-p
+	local c=e:GetHandler()
+	return c:GetFlagEffect(id)>0
 end

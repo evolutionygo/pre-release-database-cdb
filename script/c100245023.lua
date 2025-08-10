@@ -34,7 +34,7 @@ function s.initial_effect(c)
 	e2:SetTarget(s.sptg)
 	e2:SetOperation(s.spop)
 	c:RegisterEffect(e2)
-	--to hand
+	--indestructable
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,2))
 	e3:SetType(EFFECT_TYPE_QUICK_O)
@@ -57,10 +57,27 @@ function s.initial_effect(c)
 	local e5=Effect.CreateEffect(c)
 	e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e5:SetCode(EVENT_TO_GRAVE)
-	e5:SetLabelObject(c)
-	e5:SetCondition(s.damcon)
-	e5:SetOperation(s.damop)
-	Duel.RegisterEffect(e5,0)
+	e5:SetProperty(EFFECT_FLAG_DELAY)
+	e5:SetRange(LOCATION_MZONE)
+	e5:SetCondition(s.damcon1)
+	e5:SetOperation(s.damop1)
+	c:RegisterEffect(e5)
+	local e6=Effect.CreateEffect(c)
+	e6:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e6:SetCode(EVENT_TO_HAND)
+	e6:SetProperty(EFFECT_FLAG_IMMEDIATELY_APPLY)
+	e6:SetRange(LOCATION_MZONE)
+	e6:SetCondition(s.regcon)
+	e6:SetOperation(s.regop)
+	c:RegisterEffect(e6)
+	local e7=Effect.CreateEffect(c)
+	e7:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e7:SetCode(EVENT_CHAIN_SOLVED)
+	e7:SetProperty(EFFECT_FLAG_IMMEDIATELY_APPLY)
+	e7:SetRange(LOCATION_MZONE)
+	e7:SetCondition(s.damcon2)
+	e7:SetOperation(s.damop2)
+	c:RegisterEffect(e7)
 	Duel.AddCustomActivityCounter(id,ACTIVITY_SPSUMMON,s.counterfilter)
 end
 function s.counterfilter(c)
@@ -157,25 +174,34 @@ function s.indtg2(e,c)
 	return c:IsType(TYPE_MONSTER) or c:IsSetCard(0x2d5) and c:IsType(TYPE_SPELL) and c:IsFaceup()
 end
 function s.flipop(e,tp,eg,ep,ev,re,r,rp)
-	e:GetHandler():RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id,3))
-end
-function s.efffilter(c,ec)
-	return c==ec and c:IsFaceup() and c:GetFlagEffect(id)>0 and not c:IsStatus(STATUS_BATTLE_DESTROYED) and not c:IsDisabled()
-end
-function s.damcon(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetLabelObject()
-	local p=c:GetControler()
-	return Duel.IsExistingMatchingCard(s.efffilter,p,LOCATION_MZONE,0,1,nil,c)
+	local c=e:GetHandler()
+	c:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id,3))
+	c:SetStatus(STATUS_EFFECT_ENABLED,true)
 end
 function s.damfilter(c,tp)
-	return c:GetOwner()==1-tp and c:IsType(TYPE_MONSTER)
+	return c:IsControler(tp) and c:IsType(TYPE_MONSTER)
 end
-function s.damop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetLabelObject()
-	local p=c:GetControler()
-	local dam=eg:IsExists(s.damfilter,1,nil,p)
-	if dam then
-		Duel.Hint(HINT_CARD,0,id)
-		Duel.Damage(1-p,900,REASON_EFFECT)
-	end
+function s.damcon1(e,tp,eg,ep,ev,re,r,rp)
+	return e:GetHandler():GetFlagEffect(id)>0
+		and eg:IsExists(s.damfilter,1,nil,1-tp) and not Duel.IsChainSolving()
+end
+function s.damop1(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_CARD,0,id)
+	local ct=eg:FilterCount(s.damfilter,nil,1-tp)
+	Duel.Damage(1-tp,ct*900,REASON_EFFECT)
+end
+function s.regcon(e,tp,eg,ep,ev,re,r,rp)
+	return e:GetHandler():GetFlagEffect(id)>0
+		and eg:IsExists(s.damfilter,1,nil,1-tp) and Duel.IsChainSolving()
+end
+function s.regop(e,tp,eg,ep,ev,re,r,rp)
+	local ct=eg:FilterCount(s.damfilter,nil,1-tp)
+	e:GetHandler():RegisterFlagEffect(id+o,RESET_EVENT+RESETS_STANDARD+RESET_CHAIN,0,1)
+end
+function s.damcon2(e,tp,eg,ep,ev,re,r,rp)
+	return e:GetHandler():GetFlagEffect(id+o)>0
+end
+function s.damop2(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_CARD,0,id)
+	Duel.Damage(1-tp,900,REASON_EFFECT)
 end

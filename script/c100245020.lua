@@ -66,17 +66,19 @@ function s.initial_effect(c)
 	local e6=Effect.CreateEffect(c)
 	e6:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e6:SetCode(EVENT_TO_HAND)
-	e6:SetLabelObject(c)
+	e6:SetProperty(EFFECT_FLAG_IMMEDIATELY_APPLY)
+	e6:SetRange(LOCATION_MZONE)
 	e6:SetCondition(s.regcon)
 	e6:SetOperation(s.regop)
-	Duel.RegisterEffect(e6,0)
+	c:RegisterEffect(e6)
 	local e7=Effect.CreateEffect(c)
 	e7:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e7:SetCode(EVENT_CHAIN_SOLVED)
-	e7:SetLabelObject(c)
+	e7:SetProperty(EFFECT_FLAG_IMMEDIATELY_APPLY)
+	e7:SetRange(LOCATION_MZONE)
 	e7:SetCondition(s.damcon2)
 	e7:SetOperation(s.damop2)
-	Duel.RegisterEffect(e7,0)
+	c:RegisterEffect(e7)
 	Duel.AddCustomActivityCounter(id,ACTIVITY_SPSUMMON,s.counterfilter)
 end
 function s.counterfilter(c)
@@ -164,7 +166,9 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.flipop(e,tp,eg,ep,ev,re,r,rp)
-	e:GetHandler():RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id,3))
+	local c=e:GetHandler()
+	c:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id,3))
+	c:SetStatus(STATUS_EFFECT_ENABLED,true)
 end
 function s.damcon1(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetFlagEffect(id)>0
@@ -176,34 +180,23 @@ function s.damop1(e,tp,eg,ep,ev,re,r,rp)
 	local ct=eg:FilterCount(Card.IsControler,nil,1-tp)
 	Duel.Damage(1-tp,ct*900,REASON_EFFECT)
 end
-function s.regfilter(c,ec,code)
-	return c==ec and c:IsFaceup() and c:GetFlagEffect(code)>0 and not c:IsStatus(STATUS_BATTLE_DESTROYED) and not c:IsDisabled()
-end
 function s.regcon(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetLabelObject()
-	local p=c:GetControler()
-	return eg:IsExists(Card.IsControler,1,nil,1-p) and Duel.IsChainSolving()
-		and re and re:GetOwnerPlayer()==1-p
-		and Duel.IsExistingMatchingCard(s.regfilter,p,LOCATION_MZONE,0,1,nil,c,id)
+	return e:GetHandler():GetFlagEffect(id)>0
+		and eg:IsExists(Card.IsControler,1,nil,1-tp) and Duel.IsChainSolving()
+		and re and re:GetOwnerPlayer()==1-tp
 end
 function s.regop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetLabelObject()
-	local p=c:GetControler()
-	local ct=eg:FilterCount(Card.IsControler,nil,1-p)
-	c:RegisterFlagEffect(id+o,RESET_EVENT+RESETS_STANDARD+RESET_CHAIN,0,1,ct)
+	local ct=eg:FilterCount(Card.IsControler,nil,1-tp)
+	e:GetHandler():RegisterFlagEffect(id+o,RESET_EVENT+RESETS_STANDARD+RESET_CHAIN,0,1,ct)
 end
 function s.damcon2(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetLabelObject()
-	local p=c:GetControler()
-	return Duel.IsExistingMatchingCard(s.regfilter,p,LOCATION_MZONE,0,1,nil,c,id+o)
+	return e:GetHandler():GetFlagEffect(id+o)>0
 end
 function s.damop2(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetLabelObject()
-	local p=c:GetControler()
 	Duel.Hint(HINT_CARD,0,id)
-	local labels={c:GetFlagEffectLabel(id+o)}
+	local labels={e:GetHandler():GetFlagEffectLabel(id+o)}
 	local ct=0
 	for i=1,#labels do ct=ct+labels[i] end
-	c:ResetFlagEffect(id+o)
-	Duel.Damage(1-p,ct*900,REASON_EFFECT)
+	e:GetHandler():ResetFlagEffect(id+o)
+	Duel.Damage(1-tp,ct*900,REASON_EFFECT)
 end
