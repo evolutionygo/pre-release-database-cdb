@@ -63,7 +63,7 @@ function s.spfilter(c)
 	return c:IsSynchroSummonable(nil) and c:IsType(TYPE_TUNER)
 end
 function s.rthfilter(c,tp,g)
-	return c:IsAbleToHand() and g:FilterCount(Card.IsCanBeSpecialSummoned,nil,0,tp,false,false)==1
+	return c:IsAbleToHand() and g:FilterCount(Card.IsCanBeSpecialSummoned,c,0,tp,false,false)==1
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(aux.NecroValleyFilter(s.thfilter),tp,LOCATION_GRAVE,0,nil,e,tp)
