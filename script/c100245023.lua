@@ -187,8 +187,7 @@ function s.damcon1(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.damop1(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_CARD,0,id)
-	local ct=eg:FilterCount(s.damfilter,nil,1-tp)
-	Duel.Damage(1-tp,ct*900,REASON_EFFECT)
+	Duel.Damage(1-tp,900,REASON_EFFECT)
 end
 function s.regcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetFlagEffect(id)>0
