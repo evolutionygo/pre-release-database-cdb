@@ -1,4 +1,4 @@
---糾罪巧-Aizaβ.LEON
+--糾罪巧－Aizaβ.LEON
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--pendulum summon
@@ -64,15 +64,17 @@ function s.initial_effect(c)
 	e5:SetOperation(s.damop1)
 	c:RegisterEffect(e5)
 	local e6=Effect.CreateEffect(c)
-	e6:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
+	e6:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e6:SetCode(EVENT_TO_HAND)
+	e6:SetProperty(EFFECT_FLAG_IMMEDIATELY_APPLY)
 	e6:SetRange(LOCATION_MZONE)
 	e6:SetCondition(s.regcon)
 	e6:SetOperation(s.regop)
 	c:RegisterEffect(e6)
 	local e7=Effect.CreateEffect(c)
-	e7:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
+	e7:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e7:SetCode(EVENT_CHAIN_SOLVED)
+	e7:SetProperty(EFFECT_FLAG_IMMEDIATELY_APPLY)
 	e7:SetRange(LOCATION_MZONE)
 	e7:SetCondition(s.damcon2)
 	e7:SetOperation(s.damop2)
@@ -135,9 +137,9 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
-	Duel.ShuffleHand(tp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_HAND,0,1,1,nil,e,tp)
+	Duel.ShuffleHand(tp)
 	if g:GetCount()>0 then
 		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEDOWN_DEFENSE)
 	end
@@ -164,7 +166,9 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.flipop(e,tp,eg,ep,ev,re,r,rp)
-	e:GetHandler():RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,0,1)
+	local c=e:GetHandler()
+	c:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id,3))
+	c:SetStatus(STATUS_EFFECT_ENABLED,true)
 end
 function s.damcon1(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetFlagEffect(id)>0

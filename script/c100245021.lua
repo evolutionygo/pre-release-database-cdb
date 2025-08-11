@@ -1,4 +1,4 @@
---糾罪巧-Astaγ.PIXIEA
+--糾罪巧－Astaγ.PIXIEA
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--pendulum summon
@@ -54,11 +54,11 @@ function s.initial_effect(c)
 	e4:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 	e4:SetOperation(s.flipop)
 	c:RegisterEffect(e4)
-	--damage
+	--cannot be targeted
 	local e5=Effect.CreateEffect(c)
 	e5:SetType(EFFECT_TYPE_FIELD)
 	e5:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
-	e5:SetProperty(EFFECT_FLAG_SET_AVAILABLE)
+	e5:SetProperty(EFFECT_FLAG_SET_AVAILABLE|EFFECT_FLAG_IMMEDIATELY_APPLY)
 	e5:SetRange(LOCATION_MZONE)
 	e5:SetTargetRange(LOCATION_ONFIELD+LOCATION_GRAVE,LOCATION_ONFIELD+LOCATION_GRAVE)
 	e5:SetCondition(s.effcon)
@@ -122,9 +122,9 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
-	Duel.ShuffleHand(tp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_HAND,0,1,1,nil,e,tp)
+	Duel.ShuffleHand(tp)
 	if g:GetCount()>0 then
 		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEDOWN_DEFENSE)
 	end
@@ -160,7 +160,10 @@ function s.disop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.flipop(e,tp,eg,ep,ev,re,r,rp)
-	e:GetHandler():RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,0,1)
+	e:GetHandler():RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id,4))
+end
+function s.efffilter(c,ec)
+	return c==ec and c:IsFaceup() and c:GetFlagEffect(id)>0 and not c:IsStatus(STATUS_BATTLE_DESTROYED) and not c:IsDisabled()
 end
 function s.effcon(e)
 	local c=e:GetHandler()

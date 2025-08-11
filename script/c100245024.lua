@@ -1,4 +1,4 @@
---糾罪都市-エニアポリス
+--糾罪都市－エニアポリス
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--Activate
@@ -47,7 +47,7 @@ function s.thfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0x2d5) and c:GetOriginalType()&TYPE_PENDULUM~=0
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_ONFIELD) and chkc:IsControler(tp) and s:thfilter(chk) end
+	if chkc then return chkc:IsLocation(LOCATION_ONFIELD) and chkc:IsControler(tp) and s.thfilter(chkc) end
 	if chk==0 then return Duel.IsExistingTarget(s.thfilter,tp,LOCATION_ONFIELD,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
 	local g=Duel.SelectTarget(tp,s.thfilter,tp,LOCATION_ONFIELD,0,1,99,nil)
@@ -61,14 +61,14 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.pthfilter(c,tp)
-	return c:IsLocation(LOCATION_MZONE) and c:IsSetCard(0x2d5) and c:IsControler(tp)
+	return c:IsLocation(LOCATION_MZONE) and c:IsSetCard(0x2d5) and c:IsControler(tp) and c:IsFaceup()
 		and (Duel.CheckLocation(tp,LOCATION_PZONE,0)
 		or Duel.CheckLocation(tp,LOCATION_PZONE,1)
 		or c:IsAbleToHand())
 end
 function s.pthcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.pthfilter,1,nil,tp)
-		and (Duel.GetCurrentPhase()==PHASE_MAIN1 or Duel.GetCurrentPhase()==PHASE_MAIN2)
+		and Duel.IsMainPhase()
 end
 function s.pthtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=eg:Filter(s.pthfilter,nil,tp)
@@ -76,7 +76,6 @@ function s.pthtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetTargetCard(g)
 end
 function s.pthop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
 	local g=eg:Filter(s.pthfilter,nil,tp)
 	local mg=g:Filter(Card.IsRelateToChain,nil)
 	if mg:GetCount()>0 then
@@ -91,6 +90,7 @@ function s.pthop(e,tp,eg,ep,ev,re,r,rp)
 		if op==1 then
 			Duel.MoveToField(tc,tp,tp,LOCATION_PZONE,POS_FACEUP,true)
 		else
+			Duel.HintSelection(og)
 			Duel.SendtoHand(tc,nil,REASON_EFFECT)
 		end
 	end
@@ -104,10 +104,20 @@ function s.damtg(e,tp,eg,ep,ev,re,r,rp,chk)
 		Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,dam)
 	end
 end
+function s.ctfilter(c)
+	return c:GetCounter(0x73)>0
+end
 function s.damop(e,tp,eg,ep,ev,re,r,rp)
-	local ct=Duel.GetCounter(tp,1,0,0x73)
-	if ct>0 then
-		Duel.RemoveCounter(tp,1,0,0x73,ct,REASON_EFFECT)
-		Duel.Damage(1-tp,ct*900,REASON_EFFECT)
+	local g=Duel.GetMatchingGroup(s.ctfilter,tp,LOCATION_ONFIELD,0,nil)
+	local tc=g:GetFirst()
+	local rmct=0
+	while tc do
+		local ct=tc:GetCounter(0x73)
+		rmct=rmct+ct
+		tc:RemoveCounter(tp,0x73,ct,REASON_EFFECT)
+		tc=g:GetNext()
+	end
+	if rmct>0 then
+		Duel.Damage(1-tp,rmct*900,REASON_EFFECT)
 	end
 end
