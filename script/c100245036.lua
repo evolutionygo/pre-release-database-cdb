@@ -62,8 +62,8 @@ end
 function s.spfilter(c)
 	return c:IsSynchroSummonable(nil) and c:IsType(TYPE_TUNER)
 end
-function s.rthfilter(c,tp,g)
-	return c:IsAbleToHand() and g:FilterCount(Card.IsCanBeSpecialSummoned,c,0,tp,false,false)==1
+function s.rthfilter(c,tp,e,g)
+	return c:IsAbleToHand() and g:FilterCount(Card.IsCanBeSpecialSummoned,c,e,0,tp,false,false)==1
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(aux.NecroValleyFilter(s.thfilter),tp,LOCATION_GRAVE,0,nil,e,tp)
@@ -71,7 +71,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local sg=g:SelectSubGroup(tp,s.sporthGroup,false,2,2,e,tp)
 	if g:GetCount()>1 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-		local tc=sg:FilterSelect(tp,s.rthfilter,1,1,nil,tp,sg):GetFirst()
+		local tc=sg:FilterSelect(tp,s.rthfilter,1,1,nil,tp,e,sg):GetFirst()
 		Duel.SendtoHand(tc,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,tc)
 		sg:RemoveCard(tc)
