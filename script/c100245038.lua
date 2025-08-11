@@ -2,7 +2,7 @@
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--synchro summon
-	aux.AddSynchroMixProcedure(c,nil,nil,nil,aux.Tuner(nil),1,99)
+	aux.AddSynchroMixProcedure(c,aux.Tuner(nil),nil,nil,aux.Tuner(nil),1,99)
 	c:EnableReviveLimit()
 	--cannot be destroy
 	local e1=Effect.CreateEffect(c)
@@ -49,18 +49,18 @@ function s.cptg(e,tp,eg,ep,ev,re,r,rp,chk)
 		and Duel.IsExistingMatchingCard(s.pfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp,eg,ep,ev,re,r,rp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local g=Duel.SelectMatchingCard(tp,s.pfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp,eg,ep,ev,re,r,rp)
-	Duel.Remove(g,POS_FACEUP,REASON_COST)
 	local tc=g:GetFirst()
-	Duel.ClearTargetCard()
-	e:SetLabelObject(tc)
 	local te=tc.killer_tune_be_material_effect
+	Duel.Remove(g,POS_FACEUP,REASON_COST)
+	e:SetProperty(te:GetProperty())
+	Duel.ClearTargetCard()
+	e:SetLabelObject(te)
 	local tg=te:GetTarget()
 	if tg then tg(e,tp,eg,ep,ev,re,r,rp,1) end
 	Duel.ClearOperationInfo(0)
 end
 function s.cpop(e,tp,eg,ep,ev,re,r,rp)
-	local tc=e:GetLabelObject()
-	local te=tc.killer_tune_be_material_effect
+	local te=e:GetLabelObject()
 	local op=te:GetOperation()
 	if op then op(e,tp,eg,ep,ev,re,r,rp) end
 end
