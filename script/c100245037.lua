@@ -30,7 +30,7 @@ function s.initial_effect(c)
 	e3:SetCode(EVENT_FREE_CHAIN)
 	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e3:SetRange(LOCATION_MZONE)
-	e3:SetHintTiming(0,TIMINGS_CHECK_MONSTER)
+	e3:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_MAIN_END)
 	e3:SetCountLimit(1,id)
 	e3:SetCondition(s.discon)
 	e3:SetCost(s.discost)
@@ -45,7 +45,7 @@ function s.lvtg(e,c)
 	return c:GetBaseAttack()<=1700
 end
 function s.discon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetCurrentPhase()==PHASE_MAIN1 or Duel.GetCurrentPhase()==PHASE_MAIN2
+	return Duel.IsMainPhase()
 end
 function s.cfilter(c)
 	return c:IsType(TYPE_TUNER) and c:IsAbleToRemoveAsCost()

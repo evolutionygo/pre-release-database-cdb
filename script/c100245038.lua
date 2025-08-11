@@ -37,7 +37,7 @@ end
 function s.cpcon(e,tp,eg,ep,ev,re,r,rp)
 	return rp==1-tp
 end
-function s.pfilter(c)
+function s.pfilter(c,e,tp,eg,ep,ev,re,r,rp)
 	if not (c:IsSetCard(0x2d6) and c:IsAbleToRemoveAsCost()) then return false end
 	local te=c.killer_tune_be_material_effect
 	if not te then return false end
@@ -46,9 +46,9 @@ function s.pfilter(c)
 end
 function s.cptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:IsCostChecked()
-		and Duel.IsExistingMatchingCard(s.pfilter,tp,LOCATION_GRAVE,0,1,nil) end
+		and Duel.IsExistingMatchingCard(s.pfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp,eg,ep,ev,re,r,rp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,s.pfilter,tp,LOCATION_GRAVE,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,s.pfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp,eg,ep,ev,re,r,rp)
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
 	local tc=g:GetFirst()
 	Duel.ClearTargetCard()
