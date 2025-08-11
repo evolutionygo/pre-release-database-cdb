@@ -46,7 +46,7 @@ end
 function s.atkcon(e)
 	return Duel.IsExistingMatchingCard(s.cfilter,e:GetHandler():GetControler(),0,LOCATION_MZONE+LOCATION_GRAVE,1,nil)
 end
-function s.cfilter1(c,e,tp)
+function s.cfilter2(c,e,tp)
 	return c:IsType(TYPE_TUNER)
 		and Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil,e,tp,c)
 end
