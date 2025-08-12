@@ -37,6 +37,12 @@ function s.initial_effect(c)
 	e3:SetOperation(s.rthop)
 	c:RegisterEffect(e3)
 	s.killer_tune_be_material_effect=e3
+	--double tuner
+	local e4=Effect.CreateEffect(c)
+	e4:SetType(EFFECT_TYPE_SINGLE)
+	e4:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e4:SetCode(21142671)
+	c:RegisterEffect(e4)
 end
 function s.tfilter(e,c)
 	return c:IsSynchroType(TYPE_TUNER)

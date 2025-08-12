@@ -30,6 +30,12 @@ function s.initial_effect(c)
 	e3:SetTarget(s.cptg)
 	e3:SetOperation(s.cpop)
 	c:RegisterEffect(e3)
+	--double tuner
+	local e4=Effect.CreateEffect(c)
+	e4:SetType(EFFECT_TYPE_SINGLE)
+	e4:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e4:SetCode(21142671)
+	c:RegisterEffect(e4)
 end
 function s.target(e,c)
 	return c~=e:GetHandler() and c:IsType(TYPE_TUNER)
