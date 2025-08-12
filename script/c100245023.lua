@@ -117,7 +117,7 @@ function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_OATH)
-	e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+	e1:SetCode(EFFECT_LIMIT_SPECIAL_SUMMON_POSITION)
 	e1:SetReset(RESET_PHASE+PHASE_END)
 	e1:SetTargetRange(1,0)
 	e1:SetTarget(s.splimit)
@@ -187,8 +187,7 @@ function s.damcon1(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.damop1(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_CARD,0,id)
-	local ct=eg:FilterCount(s.damfilter,nil,1-tp)
-	Duel.Damage(1-tp,ct*900,REASON_EFFECT)
+	Duel.Damage(1-tp,900,REASON_EFFECT)
 end
 function s.regcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetFlagEffect(id)>0

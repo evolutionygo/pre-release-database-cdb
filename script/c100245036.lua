@@ -20,6 +20,7 @@ function s.initial_effect(c)
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetType(EFFECT_TYPE_QUICK_O)
 	e2:SetCode(EVENT_FREE_CHAIN)
+	e2:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_END_PHASE)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCountLimit(1,id)
 	e2:SetCondition(s.spcon)
@@ -52,6 +53,7 @@ function s.sporthGroup(g,e,tp)
 	return g:FilterCount(s.thfilter2,nil,g,e,tp)~=0
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
+	local c=e:GetHandler()
 	local g=Duel.GetMatchingGroup(s.thfilter,tp,LOCATION_GRAVE,0,nil,e,tp)
 	if chk==0 then return Duel.GetMZoneCount(tp,c)>0 and g:CheckSubGroup(s.sporthGroup,2,2,e,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE)
@@ -60,13 +62,16 @@ end
 function s.spfilter(c)
 	return c:IsSynchroSummonable(nil) and c:IsType(TYPE_TUNER)
 end
+function s.rthfilter(c,tp,e,g)
+	return c:IsAbleToHand() and g:FilterCount(Card.IsCanBeSpecialSummoned,c,e,0,tp,false,false)==1
+end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(aux.NecroValleyFilter(s.thfilter),tp,LOCATION_GRAVE,0,nil,e,tp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
 	local sg=g:SelectSubGroup(tp,s.sporthGroup,false,2,2,e,tp)
 	if g:GetCount()>1 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-		local tc=sg:FilterSelect(tp,Card.IsAbleToHand,1,1,nil):GetFirst()
+		local tc=sg:FilterSelect(tp,s.rthfilter,1,1,nil,tp,e,sg):GetFirst()
 		Duel.SendtoHand(tc,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,tc)
 		sg:RemoveCard(tc)
@@ -75,11 +80,11 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 			if Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_EXTRA,0,1,nil)
 				and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
 				Duel.BreakEffect()
-				local g=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_EXTRA,0,nil)
-				if g:GetCount()>0 then
+				local exg=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_EXTRA,0,nil)
+				if exg:GetCount()>0 then
 					Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-					local sg=g:Select(tp,1,1,nil)
-					Duel.SynchroSummon(tp,sg:GetFirst(),nil)
+					local syg=exg:Select(tp,1,1,nil)
+					Duel.SynchroSummon(tp,syg:GetFirst(),nil)
 				end
 			end
 		end
