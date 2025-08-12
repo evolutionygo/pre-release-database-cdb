@@ -1,7 +1,7 @@
 --スクラップ・ウォリアー
 local s,id,o=GetID()
 function s.initial_effect(c)
-	aux.AddMaterialCodeList(c,60800381,63977008)
+	aux.AddMaterialCodeList(c,100244004,60800381,63977008)
 	--synchro summon
 	aux.AddSynchroProcedure(c,s.tfilter,aux.NonTuner(nil),1)
 	c:EnableReviveLimit()
@@ -27,7 +27,7 @@ function s.initial_effect(c)
 end
 s.material_setcode=0x1017
 function s.tfilter(c)
-	return c:IsCode(63977008) or c:IsHasEffect(20932152)
+	return c:IsCode(100244004) or c:IsHasEffect(20932152)
 end
 function s.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_SYNCHRO)
