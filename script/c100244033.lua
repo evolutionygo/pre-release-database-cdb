@@ -53,10 +53,8 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.effectfilter(e,ct)
 	local p=e:GetHandler():GetControler()
-	local te,tp=Duel.GetChainInfo(ct,CHAININFO_TRIGGERING_EFFECT,CHAININFO_TRIGGERING_PLAYER)
+	local te,tp,loc=Duel.GetChainInfo(ct,CHAININFO_TRIGGERING_EFFECT,CHAININFO_TRIGGERING_PLAYER,CHAININFO_TRIGGERING_LOCATION)
 	local tc=te:GetHandler()
-	return p==tp and not tc:IsCode(id) and (tc:IsOriginalSetCard(0x66) and tc:IsType(TYPE_SYNCHRO)
-		or aux.IsCodeListed(tc,60800381))
-		and Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_LOCATION)==LOCATION_MZONE
-		and te:IsActiveType(TYPE_MONSTER)
+	return p==tp and not tc:IsCode(id) and loc==LOCATION_MZONE and te:IsActiveType(TYPE_MONSTER)
+		and (tc:IsOriginalSetCard(0x66) and tc:IsType(TYPE_SYNCHRO) or aux.IsCodeListed(tc,60800381))
 end
