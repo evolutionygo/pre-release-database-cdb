@@ -1,7 +1,8 @@
 --スクラップ・ウォリアー
 local s,id,o=GetID()
 function s.initial_effect(c)
-	aux.AddMaterialCodeList(c,100244004,60800381,63977008)
+	aux.AddCodeList(c,60800381,63977008)
+	aux.AddMaterialCodeList(c,100244004)
 	--synchro summon
 	aux.AddSynchroProcedure(c,s.tfilter,aux.NonTuner(nil),1)
 	c:EnableReviveLimit()
