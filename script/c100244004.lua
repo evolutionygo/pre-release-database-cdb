@@ -32,8 +32,8 @@ function s.matval(e,c)
 	return c:IsType(TYPE_SYNCHRO) and aux.IsMaterialListSetCard(c,0x1017)
 end
 function s.repfilter(c,tp)
-	return c:IsFaceup() and c:IsOriginalSetCard(0x66) and c:IsType(TYPE_SYNCHRO)
-		or aux.IsCodeListed(c,60800381) and c:IsType(TYPE_MONSTER)
+	return c:IsFaceup() and (c:IsOriginalSetCard(0x66) and c:IsType(TYPE_SYNCHRO)
+		or aux.IsCodeListed(c,60800381) and c:IsType(TYPE_MONSTER))
 		and c:IsOnField() and c:IsControler(tp) and c:IsReason(REASON_EFFECT+REASON_BATTLE) and not c:IsReason(REASON_REPLACE)
 end
 function s.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
