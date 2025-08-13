@@ -87,5 +87,5 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RegisterEffect(e1,tp)
 end
 function s.splimit(e,c,sump,sumtype,sumpos,targetp,se)
-	return not c:IsType(TYPE_TUNER)
+	return c:GetOriginalType()&TYPE_TUNER==0
 end
