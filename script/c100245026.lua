@@ -56,7 +56,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		local rt=g:FilterCount(Card.IsLocation,nil,LOCATION_DECK+LOCATION_EXTRA)
 		if rt>0 then
 			Duel.BreakEffect()
-			Duel.Draw(p,ct,REASON_EFFECT)
+			Duel.Draw(p,rt,REASON_EFFECT)
 		end
 	end
 end
