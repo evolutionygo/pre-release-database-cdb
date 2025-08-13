@@ -1,8 +1,9 @@
---糾罪巧－裁诞
+--糾罪巧－裁誕
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_TODECK+CATEGORY_DRAW)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
@@ -22,7 +23,7 @@ function s.initial_effect(c)
 	e2:SetCondition(s.spcon)
 	e2:SetCost(aux.bfgcost)
 	e2:SetTarget(s.sptg)
-	e2:SetOperation(s.spop)
+	e2:SetOperation(s.fsop)
 	c:RegisterEffect(e2)
 	local e3=e2:Clone()
 	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
@@ -42,10 +43,21 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,p,HINTMSG_TODECK)
 	local g=Duel.SelectMatchingCard(p,s.tdfilter,p,LOCATION_HAND+LOCATION_ONFIELD,0,1,63,nil)
 	if g:GetCount()>0 then
+		local fg=g:Filter(Card.IsLocation,nil,LOCATION_ONFIELD)
+		if #fg>0 then
+			Duel.HintSelection(fg)
+		end
+		local hg=g:Filter(Card.IsLocation,nil,LOCATION_HAND)
+		if #hg>0 then
+			Duel.ConfirmCards(1-p,hg)
+		end
 		local ct=Duel.SendtoDeck(g,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)
 		Duel.ShuffleDeck(p)
-		Duel.BreakEffect()
-		Duel.Draw(p,ct,REASON_EFFECT)
+		local rt=g:FilterCount(Card.IsLocation,nil,LOCATION_DECK+LOCATION_EXTRA)
+		if rt>0 then
+			Duel.BreakEffect()
+			Duel.Draw(p,ct,REASON_EFFECT)
+		end
 	end
 end
 function s.cfilter(c,sp)
@@ -87,6 +99,7 @@ function s.fsop(e,tp,eg,ep,ev,re,r,rp)
 			local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_HAND,0,1,1,nil,e,tp)
 			if g:GetCount()>0 then
 				Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEDOWN_DEFENSE)
+				Duel.ConfirmCards(1-tp,g)
 			end
 		end
 	elseif e:GetLabel()==2 then
@@ -94,6 +107,7 @@ function s.fsop(e,tp,eg,ep,ev,re,r,rp)
 		local g=Duel.SelectMatchingCard(tp,s.posfilter,tp,LOCATION_MZONE,0,1,1,nil)
 		local tc=g:GetFirst()
 		if tc then
+			Duel.HintSelection(g)
 			Duel.ChangePosition(tc,POS_FACEUP_DEFENSE)
 		end
 	end
