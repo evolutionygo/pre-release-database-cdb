@@ -63,5 +63,5 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.splimit(e,c,sump,sumtype,sumpos,targetp,se)
-	return not c:IsType(TYPE_TUNER)
+	return c:GetOriginalType()&TYPE_TUNER==0
 end
