@@ -3,6 +3,7 @@ stages:
   - prepare2
   - pack
   - deploy
+  - deploy2
 
 variables:
   GIT_DEPTH: "1"
@@ -232,6 +233,7 @@ upload_archive:
 
 upload_data:
   extends: .minio
+  stage: deploy2
   variables:
     uploadDir: data
   only:
