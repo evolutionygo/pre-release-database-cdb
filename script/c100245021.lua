@@ -162,9 +162,6 @@ end
 function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 	e:GetHandler():RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id,4))
 end
-function s.efffilter(c,ec)
-	return c==ec and c:IsFaceup() and c:GetFlagEffect(id)>0 and not c:IsStatus(STATUS_BATTLE_DESTROYED) and not c:IsDisabled()
-end
 function s.effcon(e)
 	local c=e:GetHandler()
 	return c:GetFlagEffect(id)>0
