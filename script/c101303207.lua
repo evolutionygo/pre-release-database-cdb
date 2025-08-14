@@ -121,9 +121,9 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 				mg=mg:Filter(tc.mat_filter,tc,tp)
 			end
 			local lv=tc:GetLevel()
-			aux.GCheckAdditional=function(sg) return sg:IsExists(Card.IsSetCard,1,nil,0x102) end
+			aux.GCheckAdditional=aux.RitualCheckAdditional(tc,tc:GetLevel(),"Greater")
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-			local mat=mg:SelectSubGroup(tp,Auxiliary.RitualCheckGreater,true,1,99,tc,lv)
+			local mat=mg:SelectSubGroup(tp,aux.RitualCheck,true,1,tc:GetLevel(),tp,tc,tc:GetLevel(),"Greater")
 			aux.GCheckAdditional=nil
 			if not mat then
 				aux.RCheckAdditional=nil
