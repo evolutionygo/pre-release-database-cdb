@@ -83,7 +83,11 @@ function s.disop(e,tp,eg,ep,ev,re,r,rp)
 			e4:SetCode(EFFECT_DISABLE_TRAPMONSTER)
 			sc:RegisterEffect(e4)
 		end
-		if tc:IsRelateToChain() then Duel.Destroy(tc,REASON_EFFECT) end
+		Duel.AdjustInstantly(sc)
+		if sc:IsDisabled() and tc:IsRelateToChain() then
+			Duel.BreakEffect()
+			Duel.Destroy(tc,REASON_EFFECT)
+		end
 	end
 end
 function s.spfilter(c,e,tp)
@@ -100,5 +104,5 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_EXTRA,0,1,1,nil,e,tp)
 	local tc=g:GetFirst()
 	if not tc then return end
-	Duel.SpecialSummon(tc,SUMMON_TYPE_FUSION,tp,tp,false,false,POS_FACEUP)
+	Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
 end

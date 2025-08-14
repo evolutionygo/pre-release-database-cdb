@@ -71,7 +71,8 @@ end
 function s.thop2(e,tp,eg,ep,ev,re,r,rp)
 	local tc1,tc2=Duel.GetFirstTarget()
 	if tc1~=e:GetLabelObject() then tc1,tc2=tc2,tc1 end
-	if tc1:IsRelateToChain() and Duel.Destroy(tc1,REASON_EFFECT)>0 and tc2:IsRelateToChain() then
+	if tc1:IsRelateToChain() and Duel.Destroy(tc1,REASON_EFFECT)>0 and tc2:IsRelateToChain() and aux.NecroValleyFilter()(tc2) then
 		Duel.SendtoHand(tc2,nil,REASON_EFFECT)
+		Duel.ConfirmCards(1-tp,tc2)
 	end
 end
