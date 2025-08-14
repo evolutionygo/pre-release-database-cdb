@@ -32,9 +32,6 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	aux.FCheckAdditional=s.fcheck
 	local b1=Duel.IsExistingMatchingCard(s.fspfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp,mg,nil,chkf)
 		and (not e:IsCostChecked() or Duel.GetFlagEffect(tp,id)==0)
-	if b1 then
-		Debug.Message(1)
-	end
 	if not b1 then
 		local ce=Duel.GetChainMaterial(tp)
 		if ce~=nil then
@@ -51,9 +48,6 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local b2=Duel.IsExistingMatchingCard(aux.RitualUltimateFilter,tp,LOCATION_HAND,0,1,nil,aux.TRUE,e,tp,Group.CreateGroup(),rg,Card.GetLevel,"Greater")
 		and (not e:IsCostChecked() or Duel.GetFlagEffect(tp,id+o)==0)
 	aux.RCheckAdditional=nil
-	if b2 then
-		Debug.Message(2)
-	end
 	if chk==0 then return b1 or b2 end
 	local op=0
 	if b1 or b2 then
