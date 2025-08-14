@@ -37,7 +37,6 @@ function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local lg=c:GetColumnGroup()
 	if c:IsRelateToChain() and Duel.Destroy(c,REASON_EFFECT)>0 then
 		local ct=Duel.GetFieldGroupCount(tp,0,LOCATION_DECK)
 		if ct>5 then ct=6 end
