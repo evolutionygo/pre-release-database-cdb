@@ -1,0 +1,104 @@
+--ヴァレルシュラウド・ドラゴン
+local s,id,o=GetID()
+function s.initial_effect(c)
+	--link summon
+	aux.AddLinkProcedure(c,aux.FilterBoolFunction(Card.IsLinkType,TYPE_EFFECT),3)
+	c:EnableReviveLimit()
+	--cannot release
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_SINGLE)
+	e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e1:SetRange(LOCATION_MZONE)
+	e1:SetCode(EFFECT_UNRELEASABLE_SUM)
+	e1:SetValue(s.val)
+	c:RegisterEffect(e1)
+	local e2=e1:Clone()
+	e2:SetCode(EFFECT_UNRELEASABLE_NONSUM)
+	c:RegisterEffect(e2)
+	--disable
+	local e3=Effect.CreateEffect(c)
+	e3:SetDescription(aux.Stringid(id,1))
+	e3:SetCategory(CATEGORY_DESTROY+CATEGORY_DISABLE)
+	e3:SetType(EFFECT_TYPE_QUICK_O)
+	e3:SetCode(EVENT_FREE_CHAIN)
+	e3:SetRange(LOCATION_MZONE)
+	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e3:SetCountLimit(1)
+	e3:SetCondition(s.discon)
+	e3:SetTarget(s.distg)
+	e3:SetOperation(s.disop)
+	c:RegisterEffect(e3)
+	--add counter
+	local e4=Effect.CreateEffect(c)
+	e4:SetDescription(aux.Stringid(id,2))
+	e4:SetCategory(CATEGORY_COUNTER)
+	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e4:SetCode(EVENT_PHASE+PHASE_BATTLE_START)
+	e4:SetRange(LOCATION_MZONE)
+	e4:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
+	e4:SetCountLimit(1)
+	e4:SetTarget(s.sptg)
+	e4:SetOperation(s.spop)
+	c:RegisterEffect(e4)
+end
+function s.val(e,re,rp)
+	return rp==1-e:GetHandlerPlayer()
+end
+function s.discon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetCurrentPhase()==PHASE_MAIN1 or Duel.GetCurrentPhase()==PHASE_MAIN2
+end
+function s.desfilter(c)
+	return c:IsFaceup() and c:IsSetCard(0x102)
+end
+function s.distg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	local sg=Duel.GetMatchingGroup(aux.NegateAnyFilter,tp,0,LOCATION_ONFIELD,nil)
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and s.desfilter(chkc) end
+	if chk==0 then return sg:GetCount()>0 and Duel.IsExistingTarget(s.desfilter,tp,LOCATION_MZONE,0,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
+	local g=Duel.SelectTarget(tp,s.desfilter,tp,LOCATION_MZONE,0,1,1,nil)
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_DISABLE,sg,1,0,0)
+end
+function s.disop(e,tp,eg,ep,ev,re,r,rp)
+	local tc=Duel.GetFirstTarget()
+	local sg=Duel.GetMatchingGroup(aux.NegateAnyFilter,tp,0,LOCATION_ONFIELD,nil)
+	if sg:GetCount()>0 then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DISABLE)
+		local tg=sg:Select(tp,1,1,nil)
+		Duel.HintSelection(tg)
+		local sc=tg:GetFirst()
+		Duel.NegateRelatedChain(sc,RESET_TURN_SET)
+		local e2=Effect.CreateEffect(e:GetHandler())
+		e2:SetType(EFFECT_TYPE_SINGLE)
+		e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+		e2:SetCode(EFFECT_DISABLE)
+		e2:SetReset(RESET_EVENT+RESETS_STANDARD)
+		sc:RegisterEffect(e2)
+		local e3=e2:Clone()
+		e3:SetCode(EFFECT_DISABLE_EFFECT)
+		e3:SetValue(RESET_TURN_SET)
+		sc:RegisterEffect(e3)
+		if sc:IsType(TYPE_TRAPMONSTER) then
+			local e4=e2:Clone()
+			e4:SetCode(EFFECT_DISABLE_TRAPMONSTER)
+			sc:RegisterEffect(e4)
+		end
+		if tc:IsRelateToChain() then Duel.Destroy(tc,REASON_EFFECT) end
+	end
+end
+function s.spfilter(c,e,tp)
+	return c:IsSetCard(0x10f) and c:IsType(TYPE_LINK) and c:IsLinkBelow(4)
+		and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and Duel.GetLocationCountFromEx(tp,tp,nil,c)>0
+end
+function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp) end
+	e:GetHandler():RegisterFlagEffect(0,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id,3))
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
+end
+function s.spop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_EXTRA,0,1,1,nil,e,tp)
+	local tc=g:GetFirst()
+	if not tc then return end
+	Duel.SpecialSummon(tc,SUMMON_TYPE_FUSION,tp,tp,false,false,POS_FACEUP)
+end
