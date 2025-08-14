@@ -52,9 +52,14 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			Duel.ConfirmCards(1-p,hg)
 		end
 		local ct=Duel.SendtoDeck(g,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)
-		Duel.ShuffleDeck(p)
 		local rt=g:FilterCount(Card.IsLocation,nil,LOCATION_DECK+LOCATION_EXTRA)
 		if rt>0 then
+			if g:FilterCount(function(c) return c:IsLocation(LOCATION_DECK) and c:IsControler(p) end,nil)>0 then
+				Duel.ShuffleDeck(p)
+			end
+			if g:FilterCount(function(c) return c:IsLocation(LOCATION_DECK) and c:IsControler(1-p) end,nil)>0 then
+				Duel.ShuffleDeck(1-p)
+			end
 			Duel.BreakEffect()
 			Duel.Draw(p,rt,REASON_EFFECT)
 		end
