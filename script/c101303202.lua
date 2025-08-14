@@ -41,11 +41,15 @@ function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 		local ct=Duel.GetFieldGroupCount(tp,0,LOCATION_DECK)
 		if ct>5 then ct=6 end
 		if ct>1 then
+			local cg=Duel.GetDecktopGroup(1-tp,1)
+			if not cg:GetFirst():IsAbleToRemove(tp) then
+				return
+			end
 			local tbl={}
 			for i=1,ct do
 				table.insert(tbl,i)
 			end
-			Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,3))
+			Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,2))
 			ct=Duel.AnnounceNumber(tp,table.unpack(tbl))
 		end
 		Duel.ConfirmDecktop(1-tp,ct)

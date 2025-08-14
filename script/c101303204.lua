@@ -63,10 +63,11 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.eqfilter(c,tp)
 	return c:IsAttribute(ATTRIBUTE_DARK) and c:IsFaceup()
-		and Duel.IsExistingMatchingCard(s.eqfilter2,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil)
+		and Duel.IsExistingMatchingCard(s.eqfilter2,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil,tp)
 end
-function s.eqfilter2(c)
+function s.eqfilter2(c,tp)
 	return c:IsFaceupEx() and c:IsAttribute(ATTRIBUTE_DARK) and c:IsType(TYPE_LINK) and not c:IsForbidden()
+		and c:CheckUniqueOnField(tp,LOCATION_SZONE)
 end
 function s.eqtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and s.eqfilter(chkc,tp) end
@@ -80,9 +81,9 @@ function s.eqop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 then return end
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToCard() then
+	if tc:IsRelateToChain() and tc:IsType(TYPE_MONSTER) and tc:IsFaceup() then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EQUIP)
-		local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.eqfilter2),tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,1,nil)
+		local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.eqfilter2),tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,1,nil,tp)
 		local ec=g:GetFirst()
 		if not ec or not Duel.Equip(tp,ec,tc) then return end
 		local e1=Effect.CreateEffect(c)

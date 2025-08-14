@@ -24,6 +24,7 @@ function s.initial_effect(c)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e3:SetCountLimit(1)
+	e3:SetHintTiming(0,TIMING_MAIN_END)
 	e3:SetCondition(s.discon)
 	e3:SetTarget(s.distg)
 	e3:SetOperation(s.disop)
@@ -45,7 +46,7 @@ function s.val(e,re,rp)
 	return rp==1-e:GetHandlerPlayer()
 end
 function s.discon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetCurrentPhase()==PHASE_MAIN1 or Duel.GetCurrentPhase()==PHASE_MAIN2
+	return Duel.IsMainPhase()
 end
 function s.desfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0x102)
@@ -54,7 +55,7 @@ function s.distg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local sg=Duel.GetMatchingGroup(aux.NegateAnyFilter,tp,0,LOCATION_ONFIELD,nil)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and s.desfilter(chkc) end
 	if chk==0 then return sg:GetCount()>0 and Duel.IsExistingTarget(s.desfilter,tp,LOCATION_MZONE,0,1,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 	local g=Duel.SelectTarget(tp,s.desfilter,tp,LOCATION_MZONE,0,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_DISABLE,sg,1,0,0)
