@@ -58,6 +58,10 @@ function s.distg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local g=Duel.SelectTarget(tp,s.desfilter,tp,LOCATION_MZONE,0,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_DISABLE,sg,1,0,0)
+	Duel.SetChainLimit(s.chainlm)
+end
+function s.chainlm(e,ep,tp)
+	return tp==ep
 end
 function s.disop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
@@ -67,6 +71,7 @@ function s.disop(e,tp,eg,ep,ev,re,r,rp)
 		local tg=sg:Select(tp,1,1,nil)
 		Duel.HintSelection(tg)
 		local sc=tg:GetFirst()
+		if not sc:IsCanBeDisabledByEffect(e) then return end
 		Duel.NegateRelatedChain(sc,RESET_TURN_SET)
 		local e2=Effect.CreateEffect(e:GetHandler())
 		e2:SetType(EFFECT_TYPE_SINGLE)
@@ -84,7 +89,7 @@ function s.disop(e,tp,eg,ep,ev,re,r,rp)
 			sc:RegisterEffect(e4)
 		end
 		Duel.AdjustInstantly(sc)
-		if sc:IsDisabled() and tc:IsRelateToChain() then
+		if tc:IsRelateToChain() then
 			Duel.BreakEffect()
 			Duel.Destroy(tc,REASON_EFFECT)
 		end
