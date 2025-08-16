@@ -115,7 +115,12 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_HAND,0,1,1,nil,e,tp)
 	Duel.ShuffleHand(tp)
 	if g:GetCount()>0 then
+		local sc=g:GetFirst()
+		local hint=sc:IsPublic()
 		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEDOWN_DEFENSE)
+		if hint then
+			Duel.ConfirmCards(1-tp,g)
+		end
 	end
 end
 function s.thcon2(e,tp,eg,ep,ev,re,r,rp)
