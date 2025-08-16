@@ -4,7 +4,7 @@ function s.initial_effect(c)
 	aux.AddMaterialCodeList(c,68468459)
 	--fusion procedure
 	c:EnableReviveLimit()
-	aux.AddFusionProcMix(c,false,true,68468459,s.matfilter1,s.matfilter2,nil)
+	aux.AddFusionProcMix(c,true,true,68468459,s.matfilter1,s.matfilter2,nil)
 	--to deck
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
