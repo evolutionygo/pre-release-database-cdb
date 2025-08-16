@@ -44,7 +44,7 @@ function s.initial_effect(c)
 	--to hand
 	local e5=Effect.CreateEffect(c)
 	e5:SetDescription(aux.Stringid(id,1))
-	e5:SetCategory(CATEGORY_TODECK)
+	e5:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND)
 	e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e5:SetCode(EVENT_PHASE+PHASE_END)
 	e5:SetRange(LOCATION_GRAVE)
