@@ -31,7 +31,7 @@ function s.initial_effect(c)
 	e4:SetOperation(s.ccop)
 	c:RegisterEffect(e4)
 end
-s.counter_add_list={0x106f}
+s.counter_add_list={0x1071}
 function s.atklimit(e,c)
 	return c==e:GetHandler()
 end
@@ -40,10 +40,10 @@ function s.cccon(e,tp,eg,ep,ev,re,r,rp)
 	return c:IsRelateToBattle() and c:IsStatus(STATUS_OPPO_BATTLE)
 end
 function s.cfilter(c)
-	return c:IsControlerCanBeChanged() and c:GetCounter(0x106f)>0
+	return c:IsControlerCanBeChanged() and c:GetCounter(0x1071)>0
 end
 function s.cctg(e,tp,eg,ep,ev,re,r,rp,chk)
-	local b1=Duel.IsExistingMatchingCard(Card.IsCanAddCounter,tp,0,LOCATION_MZONE,1,nil,0x106f,1)
+	local b1=Duel.IsExistingMatchingCard(Card.IsCanAddCounter,tp,0,LOCATION_MZONE,1,nil,0x1071,1)
 	local b2=Duel.IsExistingMatchingCard(s.cfilter,tp,0,LOCATION_MZONE,1,nil)
 	if chk==0 then return b1 or b2 end
 	local op=0
@@ -55,7 +55,7 @@ function s.cctg(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:SetLabel(op)
 	if op==1 then
 		e:SetCategory(CATEGORY_COUNTER)
-		local g=Duel.GetMatchingGroup(Card.IsCanAddCounter,tp,0,LOCATION_MZONE,nil,0x106f,1)
+		local g=Duel.GetMatchingGroup(Card.IsCanAddCounter,tp,0,LOCATION_MZONE,nil,0x1071,1)
 		Duel.SetOperationInfo(0,CATEGORY_COUNTER,g,1,0,0)
 	elseif op==2 then
 		e:SetCategory(CATEGORY_CONTROL)
@@ -66,11 +66,11 @@ end
 function s.ccop(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if e:GetLabel()==1 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-		local g=Duel.SelectMatchingCard(tp,Card.IsCanAddCounter,tp,0,LOCATION_MZONE,1,1,nil,0x106f,1)
+		local g=Duel.SelectMatchingCard(tp,Card.IsCanAddCounter,tp,0,LOCATION_MZONE,1,1,nil,0x1071,1)
 		local tc=g:GetFirst()
 		if tc then
 			Duel.HintSelection(g)
-			tc:AddCounter(0x106f,1)
+			tc:AddCounter(0x1071,1)
 		end
 	else
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONTROL)
