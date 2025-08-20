@@ -74,7 +74,7 @@ function s.rmcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.GetDecktopGroup(1-tp,2)
-	if chk==0 then return #g>0 and g:IsExists(Card.IsAbleToRemove,1,nil) end
+	if chk==0 then return #g>1 and g:IsExists(Card.IsAbleToRemove,1,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,1,1-tp,LOCATION_DECK)
 end
 function s.rmop(e,tp,eg,ep,ev,re,r,rp)
