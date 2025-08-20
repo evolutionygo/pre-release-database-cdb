@@ -16,6 +16,7 @@ function s.initial_effect(c)
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_SUMMON_SUCCESS)
+	e2:SetProperty(EFFECT_FLAG_DELAY)
 	e2:SetCountLimit(1,id)
 	e2:SetTarget(s.sptg)
 	e2:SetOperation(s.spop)
@@ -68,9 +69,12 @@ end
 function s.splimit(e,c,sump,sumtype,sumpos,targetp,se)
 	return c:GetOriginalType()&TYPE_TUNER==0
 end
+function s.rmcon(e,tp,eg,ep,ev,re,r,rp)
+	return e:GetHandler():IsLocation(LOCATION_GRAVE) and r==REASON_SYNCHRO
+end
 function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.GetDecktopGroup(1-tp,2)
-	if chk==0 then return #g>0 and g:IsExists(Card.IsAbleToRemove,2,nil) end
+	if chk==0 then return #g>0 and g:IsExists(Card.IsAbleToRemove,1,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,1,1-tp,LOCATION_DECK)
 end
 function s.rmop(e,tp,eg,ep,ev,re,r,rp)
@@ -85,7 +89,7 @@ function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RevealSelectDeckSequence(false)
 	if #sg>0 then
 		Duel.DisableShuffleCheck(true)
-		Duel.Remove(sg,POS_FACEDOWN,REASON_EFFECT)
+		Duel.Remove(sg,POS_FACEUP,REASON_EFFECT)
 		g:Sub(sg)
 		if Duel.SelectOption(tp,aux.Stringid(id,2),aux.Stringid(id,3))==1 then
 			Duel.MoveSequence(g:GetFirst(),SEQ_DECKBOTTOM)
