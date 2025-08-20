@@ -1,4 +1,4 @@
---
+--キラーチューン・キュー
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--synchro custom
@@ -78,6 +78,7 @@ function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,1,1-tp,LOCATION_DECK)
 end
 function s.rmop(e,tp,eg,ep,ev,re,r,rp)
+	if not Duel.IsPlayerCanRemove(tp) then return end
 	local ct=Duel.GetFieldGroupCount(tp,0,LOCATION_DECK)
 	if ct>2 then ct=2 end
 	if ct<2 then return end
