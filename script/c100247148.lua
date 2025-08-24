@@ -21,7 +21,7 @@ function s.initial_effect(c)
 	e1:SetCondition(s.condition)
 	e1:SetTarget(s.target)
 	e1:SetOperation(s.operation)
-	c:RegisterEffect(e1)   
+	c:RegisterEffect(e1)
 end
 function s.xyzcon(e)
 	local c=e:GetHandler()
@@ -31,58 +31,63 @@ function s.ovfilter(c)
 	return c:IsFaceup() and c:IsRankBelow(3) and c:IsType(TYPE_XYZ)
 end
 function s.xyzop(e,tp,chk)
-	if chk==0 then return true end
-	e:GetHandler():RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD-RESET_TOFIELD+RESET_PHASE+PHASE_END,0,1)
+	if chk==0 then return Duel.GetFlagEffect(tp,id)==0 end
+	Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,EFFECT_FLAG_OATH,1)
 end
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsAbleToEnterBP() and not e:GetHandler():IsHasEffect(EFFECT_ATTACK_ALL)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_EFFECT)
-	end
+	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_EFFECT) end
 end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local og=e:GetHandler():GetOverlayGroup()
-	local ct=0
-	if #og>0 then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVEXYZ)
-		local sg=og:Select(tp,1,#og,nil)
-		if #sg>0 and Duel.SendtoGrave(sg,REASON_EFFECT) then
-			Duel.RaiseSingleEvent(c,EVENT_DETACH_MATERIAL,e,0,0,0,0)
-			for i,type in ipairs({TYPE_MONSTER,TYPE_SPELL,TYPE_TRAP}) do
-				if sg:IsExists(Card.IsType,1,nil,type) then
-					ct=ct+1
+	local og=c:GetOverlayGroup()
+	if c:IsRelateToChain() then
+		--atkall
+		local e1=Effect.CreateEffect(c)
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_ATTACK_ALL)
+		e1:SetValue(1)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+		c:RegisterEffect(e1)
+		if #og>0 then
+			local ct=0
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVEXYZ)
+			local sg=og:Select(tp,1,#og,nil)
+			if #sg>0 and Duel.SendtoGrave(sg,REASON_EFFECT)>0 then
+				Duel.RaiseSingleEvent(c,EVENT_DETACH_MATERIAL,e,0,0,0,0)
+				for _,type in ipairs({TYPE_MONSTER,TYPE_SPELL,TYPE_TRAP}) do
+					if sg:IsExists(Card.IsType,1,nil,type) then
+						ct=ct+1
+					end
+				end
+			end
+			if ct>0 and c:IsFaceup() then
+				--atkup
+				local e2=Effect.CreateEffect(c)
+				e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+				e2:SetType(EFFECT_TYPE_SINGLE)
+				e2:SetCode(EFFECT_UPDATE_ATTACK)
+				e2:SetValue(ct*1000)
+				e2:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+				c:RegisterEffect(e2)
+				--atkdown
+				if not c:IsHasEffect(EFFECT_REVERSE_UPDATE) then					
+					local g=Duel.GetMatchingGroup(Card.IsFaceup,tp,0,LOCATION_MZONE,nil)
+					local tc=g:GetFirst()
+					while tc do
+						local e3=Effect.CreateEffect(c)
+						e3:SetType(EFFECT_TYPE_FIELD)
+						e3:SetCode(EFFECT_UPDATE_ATTACK)
+						e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+						e3:SetValue(-ct*1000)
+						e3:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+						tc:RegisterEffect(e3)
+						tc=g:GetNext()
+					end
 				end
 			end
 		end
-	end
-	if ct>0 then
-		local e1=Effect.CreateEffect(c)
-		e1:SetType(EFFECT_TYPE_FIELD)
-		e1:SetCode(EFFECT_UPDATE_ATTACK)
-		e1:SetTargetRange(0,LOCATION_MZONE)
-		e1:SetValue(-ct*1000)
-		e1:SetReset(RESET_PHASE+PHASE_END)
-		Duel.RegisterEffect(e1,tp)
-	end
-	if c:IsFaceup() and c:IsRelateToEffect(e) then
-		if ct>0 then
-			--atkup
-			local e1=Effect.CreateEffect(c)
-			e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-			e1:SetType(EFFECT_TYPE_SINGLE)
-			e1:SetCode(EFFECT_UPDATE_ATTACK)
-			e1:SetValue(ct*1000)
-			e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
-			c:RegisterEffect(e1)
-		end
-		--atkall
-		local e2=Effect.CreateEffect(c)
-		e2:SetType(EFFECT_TYPE_SINGLE)
-		e2:SetCode(EFFECT_ATTACK_ALL)
-		e2:SetValue(1)
-		e2:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
-		c:RegisterEffect(e2)
 	end
 end
