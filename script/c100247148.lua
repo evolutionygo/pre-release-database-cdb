@@ -78,7 +78,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 					local tc=g:GetFirst()
 					while tc do
 						local e3=Effect.CreateEffect(c)
-						e3:SetType(EFFECT_TYPE_FIELD)
+						e3:SetType(EFFECT_TYPE_SINGLE)
 						e3:SetCode(EFFECT_UPDATE_ATTACK)
 						e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 						e3:SetValue(-ct*1000)
