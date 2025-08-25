@@ -15,11 +15,11 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function s.filter(c,e,tp,eg,ep,ev,re,r,rp)
-	if not (c:IsFaceupEx() and c:IsSetCard(0x2d6) and c:IsAbleToHand()) then return false end
+	if not (c:IsFaceupEx() and c:IsSetCard(0x2d6)) then return false end
 	local te=c.killer_tune_be_material_effect
-	if not te then return false end
+	if not te then return c:IsAbleToHand() end
 	local tg=te:GetTarget()
-	return not tg or tg(e,tp,eg,ep,ev,re,r,rp,0,nil,c)
+	return tg(e,tp,eg,ep,ev,re,r,rp,0,nil,c) or c:IsAbleToHand()
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then
@@ -35,8 +35,10 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	tc:CreateEffectRelation(e)
 	e:SetLabelObject(tc)
 	local te=tc.killer_tune_be_material_effect
-	local tg=te:GetTarget()
-	if tg then tg(e,tp,eg,ep,ev,re,r,rp,1) end
+	if te then
+		local tg=te:GetTarget()
+		if tg then tg(e,tp,eg,ep,ev,re,r,rp,1) end
+	end
 	Duel.ClearOperationInfo(0)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,1,0,0)
 end
@@ -44,8 +46,10 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	local tc=e:GetLabelObject()
 	if tc and tc:IsRelateToChain() then
 		local te=tc.killer_tune_be_material_effect
-		local op=te:GetOperation()
-		if op then op(e,tp,eg,ep,ev,re,r,rp) end
+		if te then
+			local op=te:GetOperation()
+			if op then op(e,tp,eg,ep,ev,re,r,rp) end
+		end
 		if aux.NecroValleyFilter()(tc) then
 			Duel.BreakEffect()
 			Duel.SendtoHand(tc,nil,REASON_EFFECT)
