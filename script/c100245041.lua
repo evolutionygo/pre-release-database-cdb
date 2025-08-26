@@ -15,7 +15,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function s.filter(c,e,tp,eg,ep,ev,re,r,rp)
-	if not (c:IsFaceupEx() and c:IsSetCard(0x2d6)) then return false end
+	if not (c:IsFaceupEx() and c:IsSetCard(0x2d6) and c:IsType(TYPE_MONSTER)) then return false end
 	local te=c.killer_tune_be_material_effect
 	if not te then return c:IsAbleToHand() end
 	local tg=te:GetTarget()
