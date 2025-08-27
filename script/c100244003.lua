@@ -1,4 +1,4 @@
---
+--クロスロードランナー
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddCodeList(c,60800381)
@@ -27,7 +27,7 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
 function s.pcfilter(c)
-	return c:IsFaceup() and (c:IsCode(60800381) or aux.IsCodeListed(c,60800381))
+	return c:IsFaceup() and (c:IsCode(60800381) or c:IsType(TYPE_MONSTER) and aux.IsCodeListed(c,60800381))
 end
 function s.posfilter(c)
 	return c:IsAttackPos() and c:IsCanChangePosition() and c:IsAttackAbove(1900)
@@ -42,7 +42,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetValue(LOCATION_REMOVED)
 		e1:SetReset(RESET_EVENT+RESETS_REDIRECT)
 		c:RegisterEffect(e1)
-		if Duel.IsExistingMatchingCard(s.pcfilter,tp,LOCATION_MZONE,0,1,c)
+		if Duel.IsExistingMatchingCard(s.pcfilter,tp,LOCATION_ONFIELD,0,1,c)
 			and Duel.IsExistingMatchingCard(s.posfilter,tp,0,LOCATION_MZONE,1,nil)
 			and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
 			local g=Duel.GetMatchingGroup(s.posfilter,tp,0,LOCATION_MZONE,nil)
