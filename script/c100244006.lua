@@ -1,4 +1,4 @@
---
+--シンクロ・ワンウェイ
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddCodeList(c,60800381)
@@ -19,6 +19,7 @@ function s.initial_effect(c)
 	e2:SetRange(LOCATION_GRAVE)
 	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetCountLimit(1,id)
+	e2:SetHintTiming(TIMING_END_PHASE)
 	e2:SetCondition(s.setcon)
 	e2:SetTarget(s.settg)
 	e2:SetOperation(s.setop)
@@ -41,16 +42,16 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		if tc:IsAbleToHand() and (not tc:IsCanBeSpecialSummoned(e,0,tp,false,false) or ft<=0 or Duel.SelectOption(tp,1190,1152)==0) then
 			Duel.SendtoHand(tc,nil,REASON_EFFECT)
 			Duel.ConfirmCards(1-tp,tc)
-		else
+		elseif ft>0 and tc:IsCanBeSpecialSummoned(e,0,tp,false,false) then
 			Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
 		end
 	end
 end
 function s.cfilter(c)
-	return c:IsFaceup() and (c:IsCode(60800381) or aux.IsCodeListed(c,60800381))
+	return c:IsFaceup() and (c:IsCode(60800381) or c:IsType(TYPE_MONSTER) and aux.IsCodeListed(c,60800381))
 end
 function s.setcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_MZONE,0,1,nil)
+	return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_ONFIELD,0,1,nil)
 end
 function s.settg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsSSetable() end
@@ -58,7 +59,7 @@ function s.settg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.setop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsRelateToChain() and Duel.SSet(tp,c)~=0 then
+	if c:IsRelateToChain() and aux.NecroValleyFilter()(c) and Duel.SSet(tp,c)~=0 then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_LEAVE_FIELD_REDIRECT)
