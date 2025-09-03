@@ -33,7 +33,7 @@ function s.tdfilter(c)
 	return c:IsFaceupEx() and c:IsSetCard(0x2d5) and (c:GetOriginalType()&TYPE_MONSTER)~=0 and c:IsAbleToDeck()
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsPlayerCanDraw(tp,1)
+	if chk==0 then return Duel.IsPlayerCanDraw(tp)
 		and Duel.IsExistingMatchingCard(s.tdfilter,tp,LOCATION_HAND+LOCATION_ONFIELD,0,1,e:GetHandler()) end
 	Duel.SetTargetPlayer(tp)
 	Duel.SetOperationInfo(0,CATEGORY_TODECK,nil,1,tp,LOCATION_HAND+LOCATION_ONFIELD)
