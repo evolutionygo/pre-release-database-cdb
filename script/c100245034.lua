@@ -81,7 +81,7 @@ function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 	if not Duel.IsPlayerCanRemove(tp) then return end
 	local ct=Duel.GetFieldGroupCount(tp,0,LOCATION_DECK)
 	if ct>2 then ct=2 end
-	if ct<2 then return end
+	if ct==0 then return end
 	Duel.ConfirmDecktop(1-tp,2)
 	local g=Duel.GetDecktopGroup(1-tp,2)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
@@ -92,7 +92,7 @@ function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.DisableShuffleCheck(true)
 		Duel.Remove(sg,POS_FACEUP,REASON_EFFECT)
 		g:Sub(sg)
-		if Duel.SelectOption(tp,aux.Stringid(id,2),aux.Stringid(id,3))==1 then
+		if #g>0 and Duel.SelectOption(tp,aux.Stringid(id,2),aux.Stringid(id,3))==1 then
 			Duel.MoveSequence(g:GetFirst(),SEQ_DECKBOTTOM)
 		end
 	end
