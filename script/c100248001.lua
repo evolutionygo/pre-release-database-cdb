@@ -75,7 +75,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
 	local tg=g:SelectSubGroup(tp,s.gcheck,false,2,2,e,tp)
 	if tg:GetCount()>1 then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local sg=tg:FilterSelect(tp,s.spfilter,1,1,nil,tg,e,tp)
 		tg:Sub(sg)
 		Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP)
