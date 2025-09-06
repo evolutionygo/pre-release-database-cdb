@@ -38,12 +38,6 @@ end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_LINK)
 end
-function s.filter(c,e,tp,sft)
-	if c:IsType(TYPE_MONSTER) then return c:IsSetCard(0x2b) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEDOWN_DEFENSE)
-	else return c:IsSetCard(0x61) and (c:IsType(TYPE_FIELD) or sft>0)
-		and c:IsSSetable(true) and not c:IsCode(id) end
-end
 function s.setfilter(c,e,tp)
 	if c:IsType(TYPE_MONSTER) then
 		return not Duel.IsPlayerAffectedByEffect(tp,59822133)
