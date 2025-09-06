@@ -19,13 +19,18 @@ function s.filter(c,e,tp,eg,ep,ev,re,r,rp)
 	local te=c.killer_tune_be_material_effect
 	if not te then return c:IsAbleToHand() end
 	local tg=te:GetTarget()
-	return tg(e,tp,eg,ep,ev,re,r,rp,0,nil,c) or c:IsAbleToHand()
+	return c:IsAbleToHand() or tg(e,tp,eg,ep,ev,re,r,rp,0,nil,c)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then
-		local te=e:GetLabelObject()
-		local tg=te:GetTarget()
-		return tg and tg(e,tp,eg,ep,ev,re,r,rp,0,chkc)
+		local cc=e:GetLabelObject()
+		if cc and cc.killer_tune_be_material_effect then
+			local ce=cc.killer_tune_be_material_effect
+			local tg=ce:GetTarget()
+			return tg and tg(e,tp,eg,ep,ev,re,r,rp,0,chkc)
+		else
+			return chkc:IsFaceupEx() and chkc:IsControler(tp) and chkc:IsSetCard(0x2d6) and chkc:IsType(TYPE_MONSTER) and chkc:IsAbleToHand()
+		end
 	end
 	if chk==0 then return Duel.IsExistingTarget(s.filter,tp,LOCATION_GRAVE+LOCATION_MZONE,0,1,nil,e,tp,eg,ep,ev,re,r,rp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
