@@ -17,7 +17,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 	--activate from hand
 	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(id,2))
+	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetType(EFFECT_TYPE_FIELD)
 	e2:SetCode(EFFECT_QP_ACT_IN_NTPHAND)
 	e2:SetRange(LOCATION_MZONE)
@@ -66,6 +66,7 @@ end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	local g=Duel.GetMatchingGroup(Card.IsSetCard,tp,LOCATION_DECK+LOCATION_HAND,0,nil,0x108)
+	if not g:CheckSubGroup(s.gcheck,2,2,e,tp) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
 	local tg=g:SelectSubGroup(tp,s.gcheck,false,2,2,e,tp)
 	if tg:GetCount()>1 then
@@ -76,6 +77,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		local tc=tg:GetFirst()
 		if tc:IsType(TYPE_MONSTER) then
 			Duel.SpecialSummon(tc,0,tp,1-tp,false,false,POS_FACEDOWN_DEFENSE)
+			Duel.ConfirmCards(tp,tc)
 		else
 			Duel.SSet(tp,tc,1-tp)
 		end
