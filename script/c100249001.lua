@@ -1,4 +1,4 @@
---魔弾の悪魔 カスパール\
+--魔弾の悪魔 カスパール
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddLinkProcedure(c,nil,2,2,s.lcheck)
