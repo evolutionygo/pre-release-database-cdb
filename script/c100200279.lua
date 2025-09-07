@@ -15,7 +15,7 @@ function s.initial_effect(c)
 	--change position
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
-	e2:SetCategory(CATEGORY_POSITION)
+	e2:SetCategory(CATEGORY_POSITION+CATEGORY_DAMAGE)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e2:SetRange(LOCATION_MZONE)
@@ -56,6 +56,12 @@ function s.cptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEDOWN)
 	local g=Duel.SelectTarget(tp,s.cpfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,3,nil)
 	Duel.SetOperationInfo(0,CATEGORY_POSITION,g,#g,0,0)
+	if g:GetCount()==3 then
+		e:SetCategory(CATEGORY_POSITION+CATEGORY_DAMAGE)
+		Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,900)
+	else
+		e:SetCategory(CATEGORY_POSITION)
+	end
 end
 function s.filter(c)
 	return c:IsRelateToChain() and c:IsLocation(LOCATION_MZONE)
@@ -64,9 +70,9 @@ end
 function s.cpop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(s.filter,nil)
 	if g:GetCount()>0 then
-		Duel.ChangePosition(g,POS_FACEUP_ATTACK)
-		local og=Duel.GetOperatedGroup()
-		if og:GetCount()==3 then
+		local oc=Duel.ChangePosition(g,POS_FACEUP_ATTACK)
+		if oc==3 then
+			Duel.BreakEffect()
 			Duel.Damage(1-tp,900,REASON_EFFECT)
 		end
 	end
