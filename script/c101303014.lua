@@ -70,7 +70,8 @@ function s.splimit(e,c)
 	return not c:IsSetCard(0x45) and c:IsLocation(LOCATION_EXTRA)
 end
 function s.cfilter(c,tp)
-	return c:GetPreviousTypeOnField()&TYPE_RITUAL~=0 and c:IsPreviousControler(tp)
+	local rm=TYPE_RITUAL|TYPE_MONSTER
+	return c:GetPreviousTypeOnField()&rm==rm and c:IsPreviousControler(tp)
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.cfilter,1,nil,tp) and not eg:IsContains(e:GetHandler())
@@ -82,7 +83,7 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsRelateToChain() and aux.NecroValleyFilter()(tc) then
+	if c:IsRelateToChain() and aux.NecroValleyFilter()(c) then
 		Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
 	end
 end
