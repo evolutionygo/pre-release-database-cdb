@@ -36,7 +36,11 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local ct=g:GetClassCount(Card.GetCode)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 	local sg=Duel.SelectTarget(tp,Card.IsFaceup,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,ct,e:GetHandler())
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,sg,sg:GetCount(),0,0)
+	if not (g:GetCount()==g:FilterCount(Card.IsAbleToRemove,nil)
+		and Duel.IsExistingMatchingCard(s.cfilter1,tp,LOCATION_MZONE,0,1,nil)
+		and Duel.IsExistingMatchingCard(s.cfilter2,tp,LOCATION_MZONE,0,1,nil)) then
+		Duel.SetOperationInfo(0,CATEGORY_DESTROY,sg,sg:GetCount(),0,0)
+	end
 end
 function s.cfilter1(c)
 	return c:IsFaceup() and c:IsSetCard(0x114) and c:IsLevelAbove(8)
@@ -56,7 +60,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.cthfilter(c,tp)
-	return c:IsSetCard(0x114) and c:IsFaceup()
+	return c:IsSetCard(0x114) and c:IsFaceup() and c:IsControler(tp)
 		and (c:IsLevelAbove(8) or c:IsLinkAbove(3))
 end
 function s.thcon(e,tp,eg,ep,ev,re,r,rp)
