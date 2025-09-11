@@ -48,7 +48,7 @@ function c1527418.cfilter(c,e,tp)
 	if c:IsLocation(LOCATION_HAND) then
 		return c:IsSetCard(0x114) and c:IsDiscardable()
 	else
-		return e:GetHandler():IsSetCard(0x114) and c:IsAbleToRemove() and c:IsHasEffect(101303062,tp)
+		return e:GetHandler():IsSetCard(0x114) and c:IsAbleToRemoveAsCost() and c:IsHasEffect(101303062,tp)
 	end
 end
 function c1527418.negcost(e,tp,eg,ep,ev,re,r,rp,chk)
