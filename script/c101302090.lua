@@ -78,7 +78,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 			local sg=g:FilterSelect(tp,s.spfilter,1,1,nil,e,tp)
 			local tc=sg:GetFirst()
-			if Duel.SpecialSummonStep(tc,0,tp,1-tp,false,false,POS_FACEUP)~=0 then
+			if Duel.SpecialSummonStep(tc,0,tp,1-tp,false,false,POS_FACEUP) then
 				local e1=Effect.CreateEffect(c)
 				e1:SetType(EFFECT_TYPE_SINGLE)
 				e1:SetCode(EFFECT_DISABLE)
