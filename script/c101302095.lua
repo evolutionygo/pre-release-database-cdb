@@ -53,7 +53,7 @@ function s.splimit(e,c)
 	return c:IsLocation(LOCATION_EXTRA) and not (c:IsRace(RACE_MACHINE) and c:GetTextAttack()>=0 and c:GetTextAttack()<=1500)
 end
 function s.cfilter(c,tp)
-	return tc:IsSetCard(0x1cf) and tc:IsLocation(LOCATION_MZONE) 
+	return c:IsSetCard(0x1cf) and c:IsLocation(LOCATION_MZONE) 
 		and c:IsControler(tp) and c:IsFaceup()
 end
 function s.discon(e,tp,eg,ep,ev,re,r,rp)
