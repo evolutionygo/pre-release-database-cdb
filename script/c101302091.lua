@@ -76,14 +76,12 @@ function s.clop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
 	if c:IsRelateToChain() and Duel.Destroy(c,REASON_EFFECT)~=0 
-		and tc:IsRelateToChain() then
-		Duel.GetControl(tc,tp,PHASE_END,1)
+		and tc:IsRelateToChain() and Duel.GetControl(tc,tp,PHASE_END,1)~=0 then
 		tc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,0,1)
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 		e1:SetCode(EVENT_PHASE+PHASE_END)
 		e1:SetCountLimit(1)
-		e1:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
 		e1:SetLabelObject(tc)
 		e1:SetCondition(s.descon)
 		e1:SetOperation(aux.EPDestroyOperation)
