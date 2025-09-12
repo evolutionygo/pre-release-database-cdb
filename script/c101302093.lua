@@ -64,10 +64,10 @@ end
 function s.tdfilter(c,e,tp)
 	return c:IsLevel(0x1cf) and c:IsType(TYPE_MONSTER)
 		and c:IsCanBeEffectTarget(e) and c:IsLevelAbove(3)
-		and (c:IsAbleToDeck() or c:IsCanBeSpecialSummoned(e,0,tp,false,false))
+		and (c:IsAbleToDeck() or c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE))
 end
 function s.fselect(g,e,tp)
-	return g:IsExists(Card.IsAbleToDeck,2,nil) and g:IsExists(Card.IsCanBeSpecialSummoned,1,nil,e,0,tp,false,false)
+	return g:IsExists(Card.IsAbleToDeck,2,nil) and g:IsExists(Card.IsCanBeSpecialSummoned,1,nil,e,0,tp,false,false,POS_FACEUP_DEFENSE)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local dg=Duel.GetMatchingGroup(s.tdfilter,tp,LOCATION_REMOVED,nil,e,tp)
@@ -85,7 +85,9 @@ end
 function s.fselect2(g,e,tp,sg)
 	local ag=sg
 	ag:Sub(g)
-	return g:IsExists(Card.IsAbleToDeck,2,nil) and ag:IsExists(Card.IsCanBeSpecialSummoned,1,nil,e,0,tp,false,false,POS_FACEUP_DEFENSE)
+	return g:IsExists(Card.IsAbleToDeck,2,nil) and (Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and ag:IsExists(Card.IsCanBeSpecialSummoned,1,nil,e,0,tp,false,false,POS_FACEUP_DEFENSE)
+		or not sg:IsExists(Card.IsCanBeSpecialSummoned,1,nil,e,0,tp,false,false,POS_FACEUP_DEFENSE)
+		or Duel.GetLocationCount(tp,LOCATION_MZONE)==0)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local tg=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToChain,nil)
@@ -95,12 +97,15 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		aux.PlaceCardsOnDeckBottom(tp,tg)
 	elseif tg:GetCount()>2 and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_OPERATECARD)
 		local sg=tg:SelectSubGroup(tp,s.fselect2,false,2,2,e,tp,g)
 		if sg:GetCount()>0 then
 			tg:Sub(sg)
 			aux.PlaceCardsOnDeckBottom(tp,sg)
-			Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
+			local tc=tg:GetFirst()
+			if Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+				and tc:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE) then
+				Duel.SpecialSummon(tg,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
+			end
 		end
 	end
 end
