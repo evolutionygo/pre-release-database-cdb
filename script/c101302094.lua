@@ -63,7 +63,7 @@ function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetTargetParam(g:GetSum(Card.GetBaseAttack))
 	Duel.SetOperationInfo(0,CATEGORY_RECOVER,nil,0,tp,g:GetSum(Card.GetBaseAttack))
 end
-function s.spfilter(c,e,tp)
+function s.spfilter2(c,e,tp)
 	return c:IsSetCard(0x1cf)
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
