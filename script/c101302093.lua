@@ -70,7 +70,7 @@ function s.fselect(g,e,tp)
 	return g:IsExists(Card.IsAbleToDeck,2,nil) and g:IsExists(Card.IsCanBeSpecialSummoned,1,nil,e,0,tp,false,false,POS_FACEUP_DEFENSE)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	local dg=Duel.GetMatchingGroup(s.tdfilter,tp,LOCATION_REMOVED,nil,e,tp)
+	local dg=Duel.GetMatchingGroup(s.tdfilter,tp,LOCATION_GRAVE,nil,e,tp)
 	if chkc then return false end
 	if chk==0 then return dg:CheckSubGroup(s.fselect,3,3,e,tp) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_OPERATECARD)
