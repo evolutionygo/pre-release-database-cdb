@@ -67,10 +67,10 @@ function s.cltg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		and chkc:IsControlerCanBeChanged() end
 	if chk==0 then return Duel.IsExistingTarget(Card.IsControlerCanBeChanged,tp,0,LOCATION_MZONE,1,nil) 
 		and Duel.GetMZoneCount(tp,c,tp,LOCATION_REASON_CONTROL)>0 end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONTROL)
 	local g=Duel.SelectTarget(tp,Card.IsControlerCanBeChanged,tp,0,LOCATION_MZONE,1,1,nil)
 	g:AddCard(e:GetHandler())
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,2,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
 end
 function s.clop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -78,5 +78,24 @@ function s.clop(e,tp,eg,ep,ev,re,r,rp)
 	if c:IsRelateToChain() and Duel.Destroy(c,REASON_EFFECT)~=0 
 		and tc:IsRelateToChain() then
 		Duel.GetControl(tc,tp,PHASE_END,1)
+		tc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,0,1)
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		e1:SetCode(EVENT_PHASE+PHASE_END)
+		e1:SetCountLimit(1)
+		e1:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
+		e1:SetLabelObject(tc)
+		e1:SetCondition(s.descon)
+		e1:SetOperation(aux.EPDestroyOperation)
+		Duel.RegisterEffect(e1,tp)
+	end
+end
+function s.descon(e,tp,eg,ep,ev,re,r,rp)
+	local tc=e:GetLabelObject()
+	if tc:GetFlagEffect(id)~=0 then
+		return true
+	else
+		e:Reset()
+		return false
 	end
 end
