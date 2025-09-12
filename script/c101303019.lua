@@ -1,4 +1,4 @@
---
+--堕天使ジェフティ
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--special summon
@@ -17,6 +17,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 	--to hand
 	local e3=Effect.CreateEffect(c)
+	e3:SetDescription(aux.Stringid(id,1))
 	e3:SetCategory(CATEGORY_TOHAND)
 	e3:SetType(EFFECT_TYPE_IGNITION)
 	e3:SetRange(LOCATION_GRAVE)
