@@ -97,7 +97,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetCode(EFFECT_UPDATE_ATTACK)
 		e1:SetValue(1000)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
-		tc:RegisterEffect(e1)
+		tc:RegisterEffect(e1,true)
 		tc:CompleteProcedure()
 	end
 end
