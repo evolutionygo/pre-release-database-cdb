@@ -55,7 +55,7 @@ function s.clcon(e,tp,eg,ep,ev,re,r,rp)
 	for lc in aux.Next(lg) do
 		lg2:Merge(lc:GetLinkedGroup())
 	end
-	return lg2 and lg2:IsContains(e:GetHandler())
+	return lg2 and lg2:IsContains(e:GetHandler()) and Duel.GetTurnPlayer()==1-tp
 end
 function s.clcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.CheckLPCost(tp,1400) end
