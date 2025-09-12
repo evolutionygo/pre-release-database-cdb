@@ -26,6 +26,8 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if re:GetHandler():IsRelateToEffect(re) then
 		Duel.SetOperationInfo(0,CATEGORY_DESTROY,eg,1,0,0)
 	end
+	local g=Duel.GetMatchingGroup(nil,tp,LOCATION_MZONE,0,nil)
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_RECOVER,nil,0,tp,2000)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
@@ -38,6 +40,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			and Duel.NegateActivation(ev)
 			and ec:IsRelateToEffect(re)
 			and Duel.Destroy(ec,REASON_EFFECT)~=0 then
+			Duel.BreakEffect()
 			Duel.Recover(tp,2000,REASON_EFFECT)
 		end
 	end
