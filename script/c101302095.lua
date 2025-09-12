@@ -61,8 +61,8 @@ function s.discon(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)
 	if not g then return false end
 	local c=e:GetHandler()
-	return tc:IsFaceup() and Duel.IsChainNegatable(ev)
-		and g:IsExists(s.cfilter,1,nil)
+	return Duel.IsChainNegatable(ev)
+		and g:IsExists(s.cfilter,1,nil,tp)
 end
 function s.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end

@@ -3,7 +3,7 @@ local s,id,o=GetID()
 function s.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
-	e1:SetCategory(CATEGORY_NEGATE+CATEGORY_TODECK+CATEGORY_DESTROY+CATEGORY_RECOVER)
+	e1:SetCategory(CATEGORY_NEGATE+CATEGORY_DESTROY+CATEGORY_RECOVER)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_CHAINING)
 	e1:SetCountLimit(1,id+EFFECT_COUNT_CODE_OATH)
@@ -18,6 +18,7 @@ end
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_MZONE,0,1,nil)
 		and re:IsActiveType(TYPE_MONSTER) and Duel.IsChainNegatable(ev)
+		and rp==1-tp
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return aux.ndcon(tp,re) end
@@ -26,9 +27,6 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 		Duel.SetOperationInfo(0,CATEGORY_DESTROY,eg,1,0,0)
 	end
 	Duel.SetOperationInfo(0,CATEGORY_RECOVER,nil,0,tp,2000)
-end
-function s.desfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x9e)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local ec=re:GetHandler()
