@@ -1,4 +1,4 @@
---R.B.Lambda Blade
+--R.B. Lambda Blade
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--to grave
@@ -49,7 +49,7 @@ function s.ecfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0x1cf) and c:IsType(TYPE_LINK)
 end
 function s.clcon(e,tp,eg,ep,ev,re,r,rp)
-	if not Duel.IsMainPhase() then return false end
+	if not Duel.IsMainPhase() or Duel.GetTurnPlayer()==tp then return false end
 	local lg=Duel.GetMatchingGroup(s.ecfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 	local lg2=Group.CreateGroup()
 	for lc in aux.Next(lg) do
@@ -63,20 +63,20 @@ function s.clcost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.cltg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp) 
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp)
 		and chkc:IsControlerCanBeChanged() end
-	if chk==0 then return Duel.IsExistingTarget(Card.IsControlerCanBeChanged,tp,0,LOCATION_MZONE,1,nil) 
+	if chk==0 then return Duel.IsExistingTarget(Card.IsControlerCanBeChanged,tp,0,LOCATION_MZONE,1,nil)
 		and Duel.GetMZoneCount(tp,c,tp,LOCATION_REASON_CONTROL)>0 end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONTROL)
 	local g=Duel.SelectTarget(tp,Card.IsControlerCanBeChanged,tp,0,LOCATION_MZONE,1,1,nil)
-	g:AddCard(e:GetHandler())
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,c,1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_CONTROL,g,1,0,0)
 end
 function s.clop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if c:IsRelateToChain() and Duel.Destroy(c,REASON_EFFECT)~=0 
-		and tc:IsRelateToChain() and Duel.GetControl(tc,tp,PHASE_END,1)~=0 then
+	if c:IsRelateToChain() and Duel.Destroy(c,REASON_EFFECT)~=0
+		and tc:IsRelateToChain() and tc:IsType(TYPE_MONSTER) and Duel.GetControl(tc,tp,PHASE_END,1)~=0 then
 		tc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,0,1)
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
