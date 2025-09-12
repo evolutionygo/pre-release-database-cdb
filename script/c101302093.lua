@@ -62,7 +62,7 @@ function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetTurnPlayer()~=tp and (ph==PHASE_MAIN1 or ph==PHASE_MAIN2)
 end
 function s.tdfilter(c,e,tp)
-	return c:IsLevel(0x1cf) and c:IsType(TYPE_MONSTER)
+	return c:IsSetCard(0x1cf) and c:IsType(TYPE_MONSTER)
 		and c:IsCanBeEffectTarget(e) and c:IsLevelAbove(3)
 		and (c:IsAbleToDeck() or c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE))
 end
