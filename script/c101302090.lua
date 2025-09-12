@@ -70,8 +70,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	if not c:IsRelateToChain() or Duel.Destroy(c,REASON_EFFECT)==0 then return end
 	local g=Duel.GetFieldGroup(tp,0,LOCATION_HAND)
 	if g:GetCount()>0 then
-		local cg=g:Filter(s.cffilter,nil)
-		Duel.ConfirmCards(tp,cg)
+		Duel.ConfirmCards(tp,g)
 		Duel.ShuffleHand(1-tp)
 		if g:IsExists(s.spfilter,1,nil,e,tp)
 			and Duel.GetLocationCount(1-tp,LOCATION_MZONE)>0
