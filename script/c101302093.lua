@@ -101,6 +101,8 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		if sg:GetCount()>0 then
 			tg:Sub(sg)
 			aux.PlaceCardsOnDeckBottom(tp,sg)
+			local og=Duel.GetOperatedGroup()
+			if not og:IsExists(Card.IsLocation,1,nil,LOCATION_DECK+LOCATION_EXTRA) then return end
 			local tc=tg:GetFirst()
 			if Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 				and tc:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE) then
