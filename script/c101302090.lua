@@ -71,7 +71,6 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetFieldGroup(tp,0,LOCATION_HAND)
 	if g:GetCount()>0 then
 		Duel.ConfirmCards(tp,g)
-		Duel.ShuffleHand(1-tp)
 		if g:IsExists(s.spfilter,1,nil,e,tp)
 			and Duel.GetLocationCount(1-tp,LOCATION_MZONE)>0
 			and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
@@ -93,5 +92,6 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 			end
 			Duel.SpecialSummonComplete()
 		end
+		Duel.ShuffleHand(1-tp)
 	end
 end
