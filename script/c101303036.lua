@@ -1,10 +1,10 @@
---
+--黄昏の堕天使ルシファー
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--material
 	aux.AddFusionProcFunRep(c,s.matfilter,2,true)
 	c:EnableReviveLimit()
-	--
+	--set
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
@@ -44,7 +44,7 @@ end
 function s.setcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_FUSION)
 end
-function s.setfilter(c,tp) 
+function s.setfilter(c,tp)
 	return c:IsSetCard(0xef) and c:IsType(TYPE_SPELL) and c:IsSSetable()
 		and (Duel.GetLocationCount(tp,LOCATION_SZONE)>1 or c:IsType(TYPE_FIELD))
 		and Duel.IsExistingMatchingCard(s.setfilter2,tp,LOCATION_DECK,0,1,nil,tp,c) 
@@ -55,7 +55,7 @@ function s.setfilter2(c,tp,tc)
 end
 function s.settg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0
-		and Duel.IsExistingMatchingCard(s.setfilter,tp,LOCATION_DECK,0,1,nil,tp) 
+		and Duel.IsExistingMatchingCard(s.setfilter,tp,LOCATION_DECK,0,1,nil,tp)
 		and Duel.IsExistingMatchingCard(s.setfilter2,tp,LOCATION_DECK,0,1,nil) end
 end
 function s.setop(e,tp,eg,ep,ev,re,r,rp)
