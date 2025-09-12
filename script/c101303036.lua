@@ -47,11 +47,9 @@ end
 function s.setfilter(c,tp) 
 	return c:IsSetCard(0xef) and c:IsType(TYPE_SPELL) and c:IsSSetable()
 		and (Duel.GetLocationCount(tp,LOCATION_SZONE)>1 or c:IsType(TYPE_FIELD))
+		and Duel.IsExistingMatchingCard(s.setfilter2,tp,LOCATION_DECK,0,1,nil,tp,c) 
 end
-function s.setfilter2(c)
-	return c:IsSetCard(0xef) and c:IsType(TYPE_TRAP) and c:IsSSetable()
-end
-function s.setfilter3(c,tp,tc)
+function s.setfilter2(c,tp,tc)
 	return c:IsSetCard(0xef) and c:IsType(TYPE_TRAP) and c:IsSSetable()
 		and (Duel.GetLocationCount(tp,LOCATION_SZONE)>1 or tc:IsType(TYPE_FIELD))
 end
@@ -66,7 +64,7 @@ function s.setop(e,tp,eg,ep,ev,re,r,rp)
 	local g1=Duel.SelectMatchingCard(tp,s.setfilter,tp,LOCATION_DECK,0,1,1,nil,tp)
 	if not g1 or g1:GetCount()==0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SET)
-	local g2=Duel.SelectMatchingCard(tp,s.setfilter3,tp,LOCATION_DECK,0,1,1,nil,tp,g1:GetFirst())
+	local g2=Duel.SelectMatchingCard(tp,s.setfilter2,tp,LOCATION_DECK,0,1,1,nil,tp,g1:GetFirst())
 	if not g2 or g2:GetCount()==0 then return end
 	g1:Merge(g2)
 	if g1:GetCount()>0 then
