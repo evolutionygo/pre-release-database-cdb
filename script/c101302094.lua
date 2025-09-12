@@ -44,20 +44,24 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToChain() then
+	if tc and tc:IsRelateToChain() then
 		if aux.NecroValleyNegateCheck(tc) then return end
 		if not aux.NecroValleyFilter()(tc) then return end
 		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
 	end
 end
-function s.thfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x1cf) and c:IsAbleToHand()
+function s.thfilter(c,e)
+	return c:IsFaceup() and c:IsSetCard(0x1cf) and c:IsAbleToHand() and c:IsCanBeEffectTarget(e)
+end
+function s.gcheck(g)
+	return g:GetSum(Card.GetBaseAttack)>0
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	local tg=Duel.GetMatchingGroup(s.thfilter,tp,LOCATION_MZONE,0,nil,e)
 	if chkc then return chkc:IsOnField() and chkc:IsControler(tp) and s.thfilter(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(s.thfilter,tp,LOCATION_MZONE,0,1,nil) end
+	if chk==0 then return tg:CheckSubGroup(s.gcheck,1,99) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
-	local g=Duel.SelectTarget(tp,s.thfilter,tp,LOCATION_MZONE,0,1,99,nil)
+	local g=tg:SelectSubGroup(tp,s.gcheck,false,1,99)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,#g,0,0)
 	Duel.SetTargetParam(g:GetSum(Card.GetBaseAttack))
 	Duel.SetOperationInfo(0,CATEGORY_RECOVER,nil,0,tp,g:GetSum(Card.GetBaseAttack))

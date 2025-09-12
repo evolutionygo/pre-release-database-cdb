@@ -59,7 +59,7 @@ function s.setop(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	local ph=Duel.GetCurrentPhase()
-	return Duel.GetTurnPlayer()~=tp and (ph==PHASE_MAIN1 or ph==PHASE_MAIN2)
+	return Duel.GetTurnPlayer()~=tp and Duel.IsMainPhase()
 end
 function s.tdfilter(c,e,tp)
 	return c:IsSetCard(0x1cf) and c:IsType(TYPE_MONSTER)
@@ -93,7 +93,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local tg=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToChain,nil)
 	if tg:GetCount()<2 then
 		return
-	elseif tg:GetCount()==2 then
+	elseif tg:GetCount()==2 and tg:IsExists(Card.IsAbleToDeck,2,nil) then
 		aux.PlaceCardsOnDeckBottom(tp,tg)
 	elseif tg:GetCount()>2 and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)

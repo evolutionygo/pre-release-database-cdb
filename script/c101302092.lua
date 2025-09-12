@@ -11,7 +11,7 @@ function s.initial_effect(c)
 	e1:SetCountLimit(1,id+EFFECT_COUNT_CODE_OATH)
 	e1:SetCondition(s.spcon)
 	c:RegisterEffect(e1)
-	--negate
+	--destroy
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetCategory(CATEGORY_DESTROY)
