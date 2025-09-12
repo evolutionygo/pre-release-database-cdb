@@ -1,0 +1,82 @@
+--R.B.Lambda Blade
+local s,id,o=GetID()
+function s.initial_effect(c)
+	--to grave
+	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(id,0))
+	e1:SetCategory(CATEGORY_TOGRAVE)
+	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e1:SetProperty(EFFECT_FLAG_DELAY)
+	e1:SetCode(EVENT_SUMMON_SUCCESS)
+	e1:SetCountLimit(1,id)
+	e1:SetTarget(s.tgtg)
+	e1:SetOperation(s.tgop)
+	c:RegisterEffect(e1)
+	local e2=e1:Clone()
+	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
+	c:RegisterEffect(e2)
+	--control
+	local e3=Effect.CreateEffect(c)
+	e3:SetDescription(aux.Stringid(id,1))
+	e3:SetCategory(CATEGORY_DESTROY+CATEGORY_CONTROL)
+	e3:SetType(EFFECT_TYPE_QUICK_O)
+	e3:SetCode(EVENT_FREE_CHAIN)
+	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e3:SetRange(LOCATION_MZONE)
+	e3:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_MAIN_END)
+	e3:SetCountLimit(1,id+o)
+	e3:SetCondition(s.clcon)
+	e3:SetCost(s.clcost)
+	e3:SetTarget(s.cltg)
+	e3:SetOperation(s.clop)
+	c:RegisterEffect(e3)
+end
+function s.tgfilter(c)
+	return not c:IsCode(id) and c:IsSetCard(0x1cf) and c:IsAbleToGrave()
+end
+function s.tgtg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(s.tgfilter,tp,LOCATION_DECK,0,1,nil) end
+	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_DECK)
+end
+function s.tgop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
+	local g=Duel.SelectMatchingCard(tp,s.tgfilter,tp,LOCATION_DECK,0,1,1,nil)
+	if g:GetCount()>0 then
+		Duel.SendtoGrave(g,REASON_EFFECT)
+	end
+end
+function s.ecfilter(c)
+	return c:IsFaceup() and c:IsSetCard(0x1cf) and c:IsType(TYPE_LINK)
+end
+function s.clcon(e,tp,eg,ep,ev,re,r,rp)
+	if not Duel.IsMainPhase() then return false end
+	local lg=Duel.GetMatchingGroup(s.ecfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
+	local lg2=Group.CreateGroup()
+	for lc in aux.Next(lg) do
+		lg2:Merge(lc:GetLinkedGroup())
+	end
+	return lg2 and lg2:IsContains(e:GetHandler())
+end
+function s.clcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.CheckLPCost(tp,1400) end
+	Duel.PayLPCost(tp,1400)
+end
+function s.cltg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	local c=e:GetHandler()
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp) 
+		and chkc:IsControlerCanBeChanged() end
+	if chk==0 then return Duel.IsExistingTarget(Card.IsControlerCanBeChanged,tp,0,LOCATION_MZONE,1,nil) 
+		and Duel.GetMZoneCount(tp,c,tp,LOCATION_REASON_CONTROL)>0 end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
+	local g=Duel.SelectTarget(tp,Card.IsControlerCanBeChanged,tp,0,LOCATION_MZONE,1,1,nil)
+	g:AddCard(e:GetHandler())
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,2,0,0)
+end
+function s.clop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	local tc=Duel.GetFirstTarget()
+	if c:IsRelateToChain() and Duel.Destroy(c,REASON_EFFECT)~=0 
+		and tc:IsRelateToChain() then
+		Duel.GetControl(tc,tp,PHASE_END,1)
+	end
+end
