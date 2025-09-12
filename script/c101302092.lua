@@ -37,13 +37,12 @@ function s.ecfilter(c)
 	return c:IsFaceup() and c:IsCode(32216688) and c:IsType(TYPE_LINK)
 end
 function s.descon(e,tp,eg,ep,ev,re,r,rp)
-	if not Duel.IsMainPhase() then return false end
 	local lg=Duel.GetMatchingGroup(s.ecfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 	local lg2=Group.CreateGroup()
 	for lc in aux.Next(lg) do
 		lg2:Merge(lc:GetLinkedGroup())
 	end
-	return lg2 and lg2:IsContains(e:GetHandler())
+	return lg2 and lg2:IsContains(e:GetHandler()) and Duel.GetAttacker():GetControler()~=tp
 end
 function s.descost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.CheckLPCost(tp,1500) end
