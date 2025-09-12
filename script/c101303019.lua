@@ -64,7 +64,7 @@ function s.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_MZONE,0,1,nil)
 end
 function s.thfilter(c)
-	return (c:IsSetCard(0xef) and not c:IsCode(id)
+	return (c:IsSetCard(0xef)
 		or c:IsSetCard(0x11d) and c:IsType(TYPE_QUICKPLAY))
 		and c:IsAbleToHand()
 end
@@ -77,7 +77,7 @@ function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
+	if tc:IsRelateToChain() and aux.NecroValleyFilter()(tc) then
 		Duel.SendtoHand(tc,nil,REASON_EFFECT)
 	end
 end

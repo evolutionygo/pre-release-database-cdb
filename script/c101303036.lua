@@ -39,7 +39,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function s.matfilter(c)
-	return c:IsFusionAttribute(ATTRIBUTE_DARK) and c:IsRace(RACE_FAIRY)
+	return c:IsFusionAttribute(ATTRIBUTE_DARK) and c:IsRace(RACE_FAIRY) and c:IsLevelAbove(6)
 end
 function s.setcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_FUSION)
@@ -47,7 +47,6 @@ end
 function s.setfilter(c,tp) 
 	return c:IsSetCard(0xef) and c:IsType(TYPE_SPELL) and c:IsSSetable()
 		and (Duel.GetLocationCount(tp,LOCATION_SZONE)>1 or c:IsType(TYPE_FIELD))
-		
 end
 function s.setfilter2(c)
 	return c:IsSetCard(0xef) and c:IsType(TYPE_TRAP) and c:IsSSetable()
@@ -62,10 +61,13 @@ function s.settg(e,tp,eg,ep,ev,re,r,rp,chk)
 		and Duel.IsExistingMatchingCard(s.setfilter2,tp,LOCATION_DECK,0,1,nil) end
 end
 function s.setop(e,tp,eg,ep,ev,re,r,rp)
+	if Duel.GetLocationCount(tp,LOCATION_SZONE)<1 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SET)
 	local g1=Duel.SelectMatchingCard(tp,s.setfilter,tp,LOCATION_DECK,0,1,1,nil,tp)
+	if not g1 or g1:GetCount()==0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SET)
 	local g2=Duel.SelectMatchingCard(tp,s.setfilter3,tp,LOCATION_DECK,0,1,1,nil,tp,g1:GetFirst())
+	if not g2 or g2:GetCount()==0 then return end
 	g1:Merge(g2)
 	if g1:GetCount()>0 then
 		Duel.SSet(tp,g1)
