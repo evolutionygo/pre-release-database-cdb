@@ -45,30 +45,30 @@ function s.setcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_FUSION)
 end
 function s.setfilter(c,tp)
-	return c:IsSetCard(0xef) and c:IsType(TYPE_SPELL) and c:IsSSetable()
-		and (Duel.GetLocationCount(tp,LOCATION_SZONE)>1 or c:IsType(TYPE_FIELD))
-		and Duel.IsExistingMatchingCard(s.setfilter2,tp,LOCATION_DECK,0,1,nil,tp,c) 
+	return c:IsSetCard(0xef) and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsSSetable()
 end
-function s.setfilter2(c,tp,tc)
+function s.gcheck(sg,tp)
+	return sg:IsExists(s.setfilter1,1,nil,tp) and sg:IsExists(s.setfilter2,1,nil,tp)
+end
+function s.setfilter1(c,tp)
+	return c:IsSetCard(0xef) and c:IsType(TYPE_SPELL) and c:IsSSetable()
+		and (Duel.GetLocationCount(tp,LOCATION_SZONE)>1
+		or Duel.GetLocationCount(tp,LOCATION_SZONE)>0 and c:IsType(TYPE_FIELD))
+end
+function s.setfilter2(c)
 	return c:IsSetCard(0xef) and c:IsType(TYPE_TRAP) and c:IsSSetable()
-		and (Duel.GetLocationCount(tp,LOCATION_SZONE)>1 or tc:IsType(TYPE_FIELD))
 end
 function s.settg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0
-		and Duel.IsExistingMatchingCard(s.setfilter,tp,LOCATION_DECK,0,1,nil,tp)
-		and Duel.IsExistingMatchingCard(s.setfilter2,tp,LOCATION_DECK,0,1,nil) end
+	local sg=Duel.GetMatchingGroup(s.setfilter,tp,LOCATION_DECK,0,nil,tp)
+	if chk==0 then return sg:CheckSubGroup(s.gcheck,2,2,tp) end
 end
 function s.setop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetLocationCount(tp,LOCATION_SZONE)<1 then return end
+	local sg=Duel.GetMatchingGroup(s.setfilter,tp,LOCATION_DECK,0,nil,tp)
+	if not sg:CheckSubGroup(s.gcheck,2,2,tp) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SET)
-	local g1=Duel.SelectMatchingCard(tp,s.setfilter,tp,LOCATION_DECK,0,1,1,nil,tp)
-	if not g1 or g1:GetCount()==0 then return end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SET)
-	local g2=Duel.SelectMatchingCard(tp,s.setfilter2,tp,LOCATION_DECK,0,1,1,nil,tp,g1:GetFirst())
-	if not g2 or g2:GetCount()==0 then return end
-	g1:Merge(g2)
-	if g1:GetCount()>0 then
-		Duel.SSet(tp,g1)
+	local g=sg:SelectSubGroup(tp,s.gcheck,false,2,2,tp)
+	if g:GetCount()==2 then
+		Duel.SSet(tp,g)
 	end
 end
 function s.cpcost(e,tp,eg,ep,ev,re,r,rp,chk)
