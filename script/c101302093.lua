@@ -40,7 +40,7 @@ function s.lcheck(g,lc)
 	return g:IsExists(Card.IsLinkSetCard,1,nil,0x1cf)
 end
 function s.atkval(e,c)
-	return Duel.GetMatchingGroup(aux.TRUE,c:GetControler(),LOCATION_MZONE,0,e:GetHandler())*500
+	return Duel.GetMatchingGroupCount(aux.TRUE,c:GetControler(),LOCATION_MZONE,0,e:GetHandler())*500
 end
 function s.setfilter(c)
 	return c:IsSetCard(0x1cf) and c:IsType(TYPE_TRAP) and c:IsSSetable()
