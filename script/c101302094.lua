@@ -63,6 +63,7 @@ function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
 	local g=tg:SelectSubGroup(tp,s.gcheck,false,1,99)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,#g,0,0)
+	Duel.SetTargetCard(g)
 	Duel.SetTargetParam(g:GetSum(Card.GetBaseAttack))
 	Duel.SetOperationInfo(0,CATEGORY_RECOVER,nil,0,tp,g:GetSum(Card.GetBaseAttack))
 end
