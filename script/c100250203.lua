@@ -5,14 +5,14 @@ function s.initial_effect(c)
 	aux.AddXyzProcedure(c,nil,7,3,s.ovfilter,aux.Stringid(id,0),3,s.xyzop)
 	c:EnableReviveLimit()
 	--immune
-	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_SINGLE)
-	e3:SetCode(EFFECT_IMMUNE_EFFECT)
-	e3:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
-	e3:SetRange(LOCATION_MZONE)
-	e3:SetCondition(s.efcon)
-	e3:SetValue(s.efilter)
-	c:RegisterEffect(e3)
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_SINGLE)
+	e1:SetCode(EFFECT_IMMUNE_EFFECT)
+	e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e1:SetRange(LOCATION_MZONE)
+	e1:SetCondition(s.efcon)
+	e1:SetValue(s.efilter)
+	c:RegisterEffect(e1)
 	--atk up
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE)
@@ -44,7 +44,7 @@ function s.ovfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0x9c,0x53) and c:IsXyzType(TYPE_XYZ)
 end
 function s.xyzop(e,tp,chk)
-	if chk==0 then return Duel.GetFlagEffect(tp,id)==0 and Duel.GetCurrentPhase()==PHASE_MAIN2 end
+	if chk==0 then return Duel.GetFlagEffect(tp,id)==0 and Duel.GetTurnPlayer()==tp and Duel.GetCurrentPhase()==PHASE_MAIN2 end
 	Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,EFFECT_FLAG_OATH,1)
 end
 function s.cfilter(c)

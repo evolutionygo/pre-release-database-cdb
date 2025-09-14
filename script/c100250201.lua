@@ -27,7 +27,6 @@ function s.initial_effect(c)
 	e4:SetCode(EVENT_CHAINING)
 	e4:SetCountLimit(1)
 	e4:SetCondition(s.discon)
-	e4:SetCost(s.discost)
 	e4:SetTarget(s.distg)
 	e4:SetOperation(s.disop)
 	c:RegisterEffect(e4)
@@ -66,12 +65,8 @@ function s.discon(e,tp,eg,ep,ev,re,r,rp)
 		and not c:IsStatus(STATUS_BATTLE_DESTROYED) and rp==1-tp
 		and re:IsActiveType(TYPE_SPELL) and Duel.IsChainDisablable(ev)
 end
-function s.discost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.CheckRemoveOverlayCard(tp,1,0,2,REASON_COST) end
-	Duel.RemoveOverlayCard(tp,1,0,2,2,REASON_COST)
-end
 function s.distg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
+	if chk==0 then return Duel.CheckRemoveOverlayCard(tp,1,0,2,REASON_EFFECT) end
 	Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
 	Duel.SetOperationInfo(0,CATEGORY_DISABLE,eg,1,0,0)
 	if re:GetHandler():IsDestructable() and re:GetHandler():IsRelateToEffect(re) then
@@ -79,7 +74,8 @@ function s.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 end
 function s.disop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.NegateEffect(ev) and re:GetHandler():IsRelateToEffect(re) then
+	if Duel.RemoveOverlayCard(tp,1,0,2,2,REASON_EFFECT)>0
+		and Duel.NegateEffect(ev) and re:GetHandler():IsRelateToChain(ev) then
 		Duel.Destroy(eg,REASON_EFFECT)
 	end
 end
