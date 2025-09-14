@@ -51,7 +51,7 @@ function s.cfilter(c)
 	return c:IsFaceupEx() and c:IsSetCard(0x9c) and c:IsType(TYPE_MONSTER)
 end
 function s.efcon(e)
-	local ct=Duel.GetMatchingGroup(s.cfilter,e:GetHandler(),LOCATION_GRAVE+LOCATION_REMOVED,0,nil)
+	local ct=Duel.GetMatchingGroup(s.cfilter,e:GetHandlerPlayer(),LOCATION_GRAVE+LOCATION_REMOVED,0,nil)
 	return ct:GetClassCount(Card.GetCode)>=7
 end
 function s.efilter(e,re)
@@ -59,7 +59,7 @@ function s.efilter(e,re)
 end
 function s.tdtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()
-	if chkc then return chkc:IsOnField() and chkc:IsAbleToDeck() and chkc:IsControler(1-tp) end
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsAbleToDeck() and chkc:IsControler(1-tp) end
 	if chk==0 then
 		if e:IsCostChecked() then
 			return c:CheckRemoveOverlayCard(tp,1,REASON_COST)
