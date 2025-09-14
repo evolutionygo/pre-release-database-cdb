@@ -47,7 +47,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	if tc:IsAbleToHand() and (not tc:IsAbleToGrave() or Duel.SelectOption(tp,1190,1191)==0) then
 		Duel.SendtoHand(tc,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,tc)
-	else
+	elseif tc:IsAbleToGrave() then
 		Duel.SendtoGrave(tc,REASON_EFFECT)
 	end
 end

@@ -77,7 +77,6 @@ function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 		and c:IsFaceup() and c:IsRelateToChain() then
 		local e2=Effect.CreateEffect(c)
 		e2:SetType(EFFECT_TYPE_SINGLE)
-		e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 		e2:SetCode(EFFECT_UPDATE_ATTACK)
 		e2:SetValue(math.ceil(tc:GetAttack()/2))
 		e2:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_DISABLE+RESET_PHASE+PHASE_END)

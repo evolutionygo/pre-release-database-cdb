@@ -22,7 +22,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 	--con or cou
 	local e4=Effect.CreateEffect(c)
-	e4:SetDescription(aux.Stringid(id,0))
+	e4:SetDescription(aux.Stringid(id,2))
 	e4:SetCategory(CATEGORY_CONTROL+CATEGORY_COUNTER)
 	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e4:SetCode(EVENT_DAMAGE_STEP_END)
@@ -65,7 +65,7 @@ function s.cctg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.ccop(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if e:GetLabel()==1 then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_COUNTER)
 		local g=Duel.SelectMatchingCard(tp,Card.IsCanAddCounter,tp,0,LOCATION_MZONE,1,1,nil,0x1071,1)
 		local tc=g:GetFirst()
 		if tc then
