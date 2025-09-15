@@ -91,10 +91,9 @@ function s.eacon(e,tp,eg,ep,ev,re,r,rp)
 		and e:GetHandler():GetReasonCard():IsSetCard(0x100d)
 		and Duel.IsAbleToEnterBP()
 end
-function s.eatg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+function s.eatg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	local sc=c:GetReasonCard()
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) and s.desfilter(chkc,atk) end
 	if chk==0 then return sc:GetMaterial():IsContains(c) and sc:IsSummonType(SUMMON_TYPE_SYNCHRO) end
 	Duel.SetTargetCard(sc)
 end
