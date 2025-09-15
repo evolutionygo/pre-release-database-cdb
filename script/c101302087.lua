@@ -11,7 +11,7 @@ function s.initial_effect(c)
 	e1:SetCategory(CATEGORY_RECOVER)
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e1:SetRange(LOCATION_MZONE)
-	e1:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
+	e1:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
 	e1:SetCode(custom_code)
 	e1:SetCountLimit(1,id)
 	e1:SetCondition(s.reccon)
@@ -33,13 +33,12 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function s.recfilter(c,tp,e)
-	return c:IsPreviousLocation(LOCATION_MZONE) and c:IsControler(1-tp) and c:IsAttackAbove(1)
+	return c:IsPreviousLocation(LOCATION_MZONE) and c:IsControler(1-tp) and c:IsAttackAbove(1) and c:IsType(TYPE_MONSTER)
 end
 function s.reccon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.recfilter,1,nil,1-tp)
 end
 function s.rectg(e,tp,eg,ep,ev,re,r,rp,chk)
-	local c=e:GetHandler()
 	local g=eg:Filter(s.recfilter,nil,tp,e)
 	if chk==0 then return #g>0 end
 	Duel.SetTargetCard(g)
@@ -47,12 +46,12 @@ function s.rectg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.recop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local g=eg:Filter(s.cfilter,nil,tp)
-	local mg=g:Filter(aux.NecroValleyFilter(Card.IsRelateToChain),nil)
+	local mg=Duel.GetTargetsRelateToChain():Filter(s.recfilter,nil,tp,e)
 	if #mg>0 and c:IsRelateToChain() then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SELECT)
 		local og=mg:Select(tp,1,1,nil)
 		local rc=og:GetFirst()
+		Duel.HintSelection(og)
 		Duel.Recover(tp,rc:GetAttack(),REASON_EFFECT)
 	end
 end
@@ -66,7 +65,7 @@ function s.tgtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.tgfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil,math.abs(Duel.GetLP(tp)-Duel.GetLP(1-tp))) end
 	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,PLAYER_ALL,LOCATION_MZONE)
 end
-function s.thop(e,tp,eg,ep,ev,re,r,rp)
+function s.tgop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
 	local g=Duel.SelectMatchingCard(tp,s.tgfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil,math.abs(Duel.GetLP(tp)-Duel.GetLP(1-tp)))
 	local tc=g:GetFirst()
