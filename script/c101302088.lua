@@ -67,9 +67,9 @@ function s.dkop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.ConfirmDecktop(1-p,1)
 	local g=Duel.GetDecktopGroup(1-p,1)
 	if g:IsExists(Card.IsType,1,nil,TYPE_MONSTER) then
-		if g:IsExists(s.filter,1,nil,1-p,tp) then
+		if g:IsExists(s.filter,1,nil,1-p,p) then
 			local tc=g:GetFirst()
-			Duel.MoveToField(tc,tp,1-tp,LOCATION_SZONE,POS_FACEUP,true)
+			Duel.MoveToField(tc,p,1-p,LOCATION_SZONE,POS_FACEUP,true)
 			local e1=Effect.CreateEffect(e:GetHandler())
 			e1:SetCode(EFFECT_CHANGE_TYPE)
 			e1:SetType(EFFECT_TYPE_SINGLE)
@@ -78,9 +78,9 @@ function s.dkop(e,tp,eg,ep,ev,re,r,rp)
 			e1:SetValue(TYPE_SPELL+TYPE_CONTINUOUS)
 			tc:RegisterEffect(e1)
 		else
-			Duel.SendtoGrave(g,REASON_RULE)
+			Duel.SendtoGrave(g,REASON_RULE,p)
 		end
-	elseif g:IsExists(Card.IsType,1,nil,TYPE_SPELL+TYPE_TRAP) and g:IsExists(Card.IsAbleToRemove,1,nil) then
-		Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
+	elseif g:IsExists(Card.IsType,1,nil,TYPE_SPELL+TYPE_TRAP) and g:IsExists(Card.IsAbleToRemove,1,nil,p) then
+		Duel.Remove(g,POS_FACEUP,REASON_EFFECT,p)
 	end
 end
