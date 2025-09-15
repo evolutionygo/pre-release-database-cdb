@@ -45,10 +45,10 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		local b2=Duel.IsExistingMatchingCard(aux.NecroValleyFilter(s.thfilter),tp,LOCATION_GRAVE,0,1,nil)
 		if not b1 and not b2 then return end
 		local op=aux.SelectFromOptions(tp,
-			{b1,aux.Stringid(id,1)},
-			{b2,aux.Stringid(id,2)},
-			{true,aux.Stringid(id,3)})
-		if op~=2 then Duel.BreakEffect() end
+			{b1,aux.Stringid(id,1),1},
+			{b2,aux.Stringid(id,2),2},
+			{true,aux.Stringid(id,3),3})
+		if op~=3 then Duel.BreakEffect() end
 		if op==1 then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
 			local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.stfilter),tp,LOCATION_GRAVE,0,1,1,nil,tp)
