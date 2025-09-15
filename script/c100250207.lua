@@ -32,7 +32,7 @@ function s.initial_effect(c)
 	e4:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e4:SetType(EFFECT_TYPE_QUICK_O)
 	e4:SetCode(EVENT_FREE_CHAIN)
-	e4:SetHintTiming(0,TIMING_BATTLE_START+TIMING_BATTLE_END)
+	e4:SetHintTiming(0,TIMING_MAIN_END+TIMING_BATTLE_START+TIMING_BATTLE_END)
 	e4:SetRange(LOCATION_MZONE)
 	e4:SetCountLimit(1)
 	e4:SetCondition(s.sccon)
@@ -76,7 +76,7 @@ end
 function s.sccon(e,tp,eg,ep,ev,re,r,rp)
 	local ph=Duel.GetCurrentPhase()
 	return not e:GetHandler():IsStatus(STATUS_CHAINING) and Duel.GetTurnPlayer()~=tp
-		and (ph==PHASE_MAIN1 or (ph>=PHASE_BATTLE_START and ph<=PHASE_BATTLE) or ph==PHASE_MAIN2)
+		and (Duel.IsMainPhase() or Duel.IsBattlePhase())
 end
 function s.sctg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
@@ -89,7 +89,7 @@ function s.sctg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.scop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsControler(1-tp) or not c:IsRelateToEffect(e) or c:IsFacedown() then return end
+	if c:IsControler(1-tp) or not c:IsRelateToChain() or c:IsFacedown() then return end
 	local mg=Duel.GetMatchingGroup(Card.IsAttribute,tp,LOCATION_MZONE,0,nil,ATTRIBUTE_EARTH)
 	local g=Duel.GetMatchingGroup(Card.IsSynchroSummonable,tp,LOCATION_EXTRA,0,nil,c,mg)
 	if g:GetCount()>0 then

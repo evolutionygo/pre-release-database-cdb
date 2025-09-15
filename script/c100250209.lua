@@ -79,11 +79,11 @@ function s.dhcon(e,tp,eg,ep,ev,re,r,rp)
 	return ep~=tp
 end
 function s.dhtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetFieldGroupCount(tp,0,LOCATION_HAND)>0 end
+	if chk==0 then return Duel.GetMatchingGroupCount(Card.IsDiscardable,tp,0,LOCATION_HAND,nil,REASON_EFFECT)>0 end
 	Duel.SetOperationInfo(0,CATEGORY_HANDES,nil,0,1-tp,1)
 end
 function s.dhop(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetFieldGroup(1-tp,LOCATION_HAND,0)
+	local g=Duel.GetMatchingGroup(Card.IsDiscardable,tp,0,LOCATION_HAND,nil,REASON_EFFECT)
 	local sg=g:RandomSelect(1-tp,1)
 	Duel.SendtoGrave(sg,REASON_DISCARD+REASON_EFFECT)
 end
@@ -100,7 +100,8 @@ end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local a=Duel.GetAttacker()
-	if c:IsRelateToChain() and Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)~=0 and a:IsAttackable() and not a:IsImmuneToEffect(e) then
-		Duel.CalculateDamage(a,c)
+	if c:IsRelateToChain() and aux.NecroValleyFilter()(c) and Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)~=0
+		and a:IsAttackable() and a:IsRelateToBattle() and not a:IsImmuneToEffect(e) then
+		Duel.ChangeAttackTarget(c)
 	end
 end
