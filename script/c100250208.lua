@@ -44,6 +44,23 @@ function s.initial_effect(c)
 	e4:SetCode(EFFECT_DESTROY_REPLACE)
 	e4:SetTarget(s.reptg)
 	c:RegisterEffect(e4)
+	--double tuner check
+	local e5=Effect.CreateEffect(c)
+	e5:SetType(EFFECT_TYPE_SINGLE)
+	e5:SetCode(EFFECT_MATERIAL_CHECK)
+	e5:SetValue(s.valcheck)
+	c:RegisterEffect(e5)
+end
+function s.valcheck(e,c)
+	local g=c:GetMaterial()
+	if g:IsExists(Card.IsType,2,nil,TYPE_TUNER) then
+		local e1=Effect.CreateEffect(c)
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+		e1:SetCode(21142671)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD-RESET_TOFIELD+RESET_PHASE+PHASE_END)
+		c:RegisterEffect(e1)
+	end
 end
 function s.cfilter(c)
 	return c:IsFaceupEx() and c:IsType(TYPE_MONSTER)
