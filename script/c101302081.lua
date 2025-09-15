@@ -75,7 +75,7 @@ function s.lvcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetEquipCount()>0
 end
 function s.lvfilter(c,lv,ec)
-	return c:IsLevelAbove(1) and not c:IsType(TYPE_TUNER) and c:IsRace(RACE_WARRIOR)
+	return c:IsFaceup() and c:IsLevelAbove(1) and not c:IsType(TYPE_TUNER) and c:IsRace(RACE_WARRIOR)
 		and (not c:IsLevel(lv) or not c:IsCode(ec:GetCode()))
 end
 function s.lvtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
@@ -102,6 +102,6 @@ function s.lvop(e,tp,eg,ep,ev,re,r,rp)
 		e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 		e2:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
 		e2:SetValue(tc:GetCode())
-		tc:RegisterEffect(e2)
+		c:RegisterEffect(e2)
 	end
 end
