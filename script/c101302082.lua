@@ -25,11 +25,11 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function s.value(e,c)
-	return Duel.GetMatchingGroupCount(Card.IsType,e:GetHandlerPlayer(),LOCATION_ONFIELD+LOCATION_GRAVE,0,nil,TYPE_EQUIP)*200
+	return Duel.GetMatchingGroupCount(aux.AND(Card.IsAllTypes,Card.IsFaceupEx),e:GetHandlerPlayer(),LOCATION_ONFIELD+LOCATION_GRAVE,0,nil,TYPE_EQUIP+TYPE_SPELL)*200
 end
 function s.spfilter(c,e,tp,ec)
 	return c:IsRace(RACE_WARRIOR) and c:IsLevel(ec:GetLevel())
-		and c:IsAttribute(ec:GetAttribute())
+		and c:IsAttribute(ec:GetAttribute()) and not c:IsCode(ec:GetCode())
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -58,13 +58,13 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.DisableSelfDestroyCheck()
 	if tc and Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)~=0 and Duel.Equip(tp,c,tc) then
 		--Add Equip limit
-		local e1=Effect.CreateEffect(tc)
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_EQUIP_LIMIT)
-		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
-		e1:SetValue(s.eqlimit)
-		c:RegisterEffect(e1)
+		local e2=Effect.CreateEffect(tc)
+		e2:SetType(EFFECT_TYPE_SINGLE)
+		e2:SetCode(EFFECT_EQUIP_LIMIT)
+		e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+		e2:SetReset(RESET_EVENT+RESETS_STANDARD)
+		e2:SetValue(s.eqlimit)
+		c:RegisterEffect(e2)
 		if ec then
 			Duel.BreakEffect()
 			Duel.Destroy(ec,REASON_EFFECT)

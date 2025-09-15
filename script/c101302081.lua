@@ -76,20 +76,20 @@ function s.lvcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.lvfilter(c,lv,ec)
 	return c:IsLevelAbove(1) and not c:IsType(TYPE_TUNER) and c:IsRace(RACE_WARRIOR)
-		and not c:IsLevel(lv) or not c:IsCode(ec:GetCode())
+		and (not c:IsLevel(lv) or not c:IsCode(ec:GetCode()))
 end
 function s.lvtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()
 	local lv=c:GetLevel()
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and s.lvfilter(chkc,lv,c) end
-	if chk==0 then return Duel.IsExistingTarget(s.lvfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil,lv,c) end
+	if chk==0 then return Duel.IsExistingTarget(s.lvfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,c,lv,c) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
-	Duel.SelectTarget(tp,s.lvfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil,lv,c)
+	Duel.SelectTarget(tp,s.lvfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,c,lv,c)
 end
 function s.lvop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	local c=e:GetHandler()
-	if tc:IsRelateToChain() and c:IsFaceup() and c:IsRelateToChain() then
+	if tc:IsFaceup() and tc:IsRelateToChain() and c:IsFaceup() and c:IsRelateToChain() then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_CHANGE_LEVEL)
@@ -99,6 +99,7 @@ function s.lvop(e,tp,eg,ep,ev,re,r,rp)
 		local e2=Effect.CreateEffect(c)
 		e2:SetType(EFFECT_TYPE_SINGLE)
 		e2:SetCode(EFFECT_CHANGE_CODE)
+		e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 		e2:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
 		e2:SetValue(tc:GetCode())
 		tc:RegisterEffect(e2)
