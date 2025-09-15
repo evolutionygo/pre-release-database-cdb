@@ -32,12 +32,10 @@ function s.matfilter(c)
 end
 function s.efilter(e,re)
 	return e:GetHandlerPlayer()~=re:GetOwnerPlayer() and re:IsActivated()
-		and (Duel.GetCurrentPhase()==PHASE_MAIN1 or Duel.GetCurrentPhase()==PHASE_MAIN2)
+		and Duel.IsMainPhase()
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
-	local ph=Duel.GetCurrentPhase()
-	return (ph>=PHASE_BATTLE_START and ph<=PHASE_BATTLE)
-		and e:GetHandler():IsSummonType(SUMMON_TYPE_FUSION)
+	return Duel.IsBattlePhase() and e:GetHandler():IsSummonType(SUMMON_TYPE_FUSION)
 end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsReleasable() end
