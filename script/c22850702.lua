@@ -33,7 +33,7 @@ function c22850702.matfilter1(c,syncard)
 	return c:IsTuner(syncard) or (c:IsAttribute(ATTRIBUTE_LIGHT+ATTRIBUTE_DARK) and c:IsLocation(LOCATION_MZONE))
 end
 function c22850702.matfilter2(c,syncard)
-	return c:IsNotTuner(syncard) and (c:IsAttribute(ATTRIBUTE_LIGHT+ATTRIBUTE_DARK) and c:IsLocation(LOCATION_MZONE))
+	return c:IsNotTuner(syncard) and (c:IsAttribute(ATTRIBUTE_LIGHT+ATTRIBUTE_DARK))
 end
 function c22850702.rmtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() and chkc:IsAbleToRemove() end
