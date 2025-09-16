@@ -36,8 +36,9 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		and Duel.IsPlayerCanSpecialSummonMonster(tp,id+o,0xef,TYPES_TOKEN_MONSTER,0,0,6,RACE_FAIRY,ATTRIBUTE_DARK) then
 		for i=1,2 do
 			local token=Duel.CreateToken(tp,id+o)
-			Duel.SpecialSummon(token,0,tp,tp,false,false,POS_FACEUP)
+			Duel.SpecialSummonStep(token,0,tp,tp,false,false,POS_FACEUP)
 		end
+		Duel.SpecialSummonComplete()
 	end
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_FIELD)
