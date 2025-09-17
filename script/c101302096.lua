@@ -24,11 +24,11 @@ end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	Duel.SetOperationInfo(0,CATEGORY_NEGATE,eg,1,0,0)
-	if re:GetHandler():IsRelateToEffect(re) then
-		Duel.SetOperationInfo(0,CATEGORY_DESTROY,eg,1,0,0)
-	end
 	local g=Duel.GetMatchingGroup(nil,tp,LOCATION_MZONE,0,nil)
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
+	if re:GetHandler():IsRelateToEffect(re) then
+		g:Merge(eg)
+	end
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,g:GetCount(),0,0)
 	Duel.SetOperationInfo(0,CATEGORY_RECOVER,nil,0,tp,2000)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)

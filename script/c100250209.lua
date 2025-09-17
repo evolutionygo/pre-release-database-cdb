@@ -102,6 +102,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local a=Duel.GetAttacker()
 	if c:IsRelateToChain() and aux.NecroValleyFilter()(c) and Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)~=0
 		and a:IsAttackable() and a:IsRelateToBattle() and not a:IsImmuneToEffect(e) then
+		Duel.BreakEffect()
 		Duel.ChangeAttackTarget(c)
 	end
 end
