@@ -1,7 +1,7 @@
 --R.B. Ga10 Pile Bunker
 local s,id,o=GetID()
 function s.initial_effect(c)
-	aux.AddCodeList(c,32216688)
+	aux.AddCodeList(c,32216688) --"R.B. The Brute Blues"
 	--special summon
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
@@ -11,7 +11,7 @@ function s.initial_effect(c)
 	e1:SetCountLimit(1,id+EFFECT_COUNT_CODE_OATH)
 	e1:SetCondition(s.spcon)
 	c:RegisterEffect(e1)
-	--destroy
+	-- Destroy all cards your opponent controls and this card
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetCategory(CATEGORY_DESTROY)
@@ -33,16 +33,9 @@ function s.spcon(e,c)
 	return Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
 		and not Duel.IsExistingMatchingCard(s.cfilter,c:GetControler(),LOCATION_MZONE,0,1,nil)
 end
-function s.ecfilter(c)
-	return c:IsFaceup() and c:IsCode(32216688) and c:IsType(TYPE_LINK)
-end
 function s.descon(e,tp,eg,ep,ev,re,r,rp)
-	local lg=Duel.GetMatchingGroup(s.ecfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
-	local lg2=Group.CreateGroup()
-	for lc in aux.Next(lg) do
-		lg2:Merge(lc:GetLinkedGroup())
-	end
-	return lg2 and lg2:IsContains(e:GetHandler()) and Duel.GetAttacker():GetControler()~=tp
+	local bc,oc=Duel.GetBattleMonster(tp)
+	return bc and oc and bc:IsCode(32216688) and bc:GetLinkedGroup():IsContains(e:GetHandler())
 end
 function s.descost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.CheckLPCost(tp,1500) end
@@ -57,8 +50,8 @@ end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local g=Duel.GetFieldGroup(tp,0,LOCATION_ONFIELD)
-	if c:IsRelateToChain() then
+	if c:IsRelateToChain() and #g>0 then
 		g:AddCard(c)
+		Duel.Destroy(g,REASON_EFFECT)
 	end
-	Duel.Destroy(g,REASON_EFFECT)
 end
