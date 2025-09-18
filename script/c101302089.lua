@@ -4,7 +4,7 @@ function s.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
-	e1:SetCategory(CATEGORY_DESTROY+CATEGORY_GRAVE_ACTION)
+	e1:SetCategory(CATEGORY_DESTROY)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetHintTiming(0,TIMING_END_PHASE+TIMING_EQUIP)
@@ -25,8 +25,10 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 	local g=Duel.SelectTarget(tp,s.desfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,c,tp)
 	if g:IsExists(Card.IsControler,1,nil,tp) then
+		e:SetCategory(CATEGORY_DESTROY|CATEGORY_TOHAND|CATEGORY_GRAVE_ACTION)
 		e:SetLabel(1)
 	else
+		e:SetCategory(CATEGORY_DESTROY)
 		e:SetLabel(0)
 	end
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
@@ -40,7 +42,7 @@ end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToChain() and Duel.Destroy(tc,REASON_EFFECT)~=0 and e:GetLabel()==1 then
+	if tc:IsRelateToChain() and tc:IsOnField() and Duel.Destroy(tc,REASON_EFFECT)~=0 and e:GetLabel()==1 then
 		local b1=Duel.IsExistingMatchingCard(aux.NecroValleyFilter(s.stfilter),tp,LOCATION_GRAVE,0,1,nil,tp)
 			and Duel.GetLocationCount(tp,LOCATION_SZONE)>0
 		local b2=Duel.IsExistingMatchingCard(aux.NecroValleyFilter(s.thfilter),tp,LOCATION_GRAVE,0,1,nil)
