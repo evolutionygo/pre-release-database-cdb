@@ -18,7 +18,7 @@ end
 function s.cfilter2(c)
 	return c:IsSetCard(0x2d7) and c:IsType(TYPE_MONSTER)
 end
-function s.filter(c,e,tp)
+function s.spfilter(c,e,tp)
 	return c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
@@ -35,7 +35,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		and e:IsCostChecked()
 	local b2=Duel.IsExistingMatchingCard(s.cfilter2,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,nil)
 		and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingTarget(s.filter,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,nil,e,tp)
+		and Duel.IsExistingTarget(s.spfilter,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,nil,e,tp)
 	if chk==0 then return b1 or b2 end
 	local op=aux.SelectFromOptions(tp,
 			{b1,aux.Stringid(id,1),1},
@@ -53,7 +53,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
 	elseif op==2 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-		local g=Duel.SelectTarget(tp,s.filter,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,1,nil,e,tp)
+		local g=Duel.SelectTarget(tp,s.spfilter,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,1,nil,e,tp)
 		if e:IsCostChecked() then
 			e:SetCategory(CATEGORY_SPECIAL_SUMMON)
 		end
