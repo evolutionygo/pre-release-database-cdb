@@ -25,7 +25,7 @@ end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then
 		if e:GetLabel()==1 then
-			return chkc:IsOnField() and chkc:IsFaceup()
+			return chkc:IsOnField() and chkc:IsFaceup() and chkc~=e:GetHandler()
 		elseif e:GetLabel()==2 then
 			return chkc:IsLocation(LOCATION_GRAVE) and s.spfilter(chkc,e,tp)
 		end
