@@ -24,7 +24,7 @@ end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then
 		if e:GetLabel()==1 then
-			return c:IsOnField() and c:IsFaceup()
+			return chkc:IsOnField() and chkc:IsFaceup()
 		elseif e:GetLabel()==2 then
 			return chkc:IsLocation(LOCATION_GRAVE) and s.spfilter(chkc,e,tp)
 		end
@@ -60,7 +60,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
 	end
 end
-function s.target(e,tp,eg,ep,ev,re,r,rp)
+function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if not tc:IsRelateToChain() then return end
 	if e:GetLabel()==1 then
