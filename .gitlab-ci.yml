@@ -78,22 +78,6 @@ add_script_diff:
     paths:
       - script
 
-minify_script:
-  stage: prepare2
-  dependencies:
-    - add_script_diff
-  tags:
-    - linux
-  image: git-registry.moenext.com/nanahira/ygopro-lua-minify
-  script:
-    - currentPath=$PWD
-    - cd /usr/src/app
-    - npm start $currentPath/script
-    - cd $currentPath
-  artifacts:
-    paths:
-      - script
-
 .json:
   stage: prepare2
   dependencies:
@@ -173,7 +157,7 @@ pack:
   stage: pack
   dependencies:
     - merge_databases
-    - minify_script
+    - add_script_diff
     - json
     - json2
   tags: 
