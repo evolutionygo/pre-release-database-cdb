@@ -63,7 +63,7 @@ end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if not tc:IsRelateToChain() then return end
-	if e:GetLabel()==1 then
+	if e:GetLabel()==1 and tc:IsOnField() then
 		Duel.Destroy(tc,REASON_EFFECT)
 	elseif e:GetLabel()==2 then
 		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
