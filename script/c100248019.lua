@@ -17,10 +17,10 @@ function s.cfilter(c)
 	return aux.IsCodeListed(c,68468459) and c:IsAbleToGraveAsCost()
 end
 function s.cfilter2(c)
-	return c:IsSetCard(0x2d7) and c:IsType(TYPE_MONSTER)
+	return c:IsFaceupEx() and c:IsSetCard(0x2d7) and c:IsType(TYPE_MONSTER)
 end
 function s.spfilter(c,e,tp)
-	return c:IsFaceupEx() and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then
