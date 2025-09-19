@@ -3,7 +3,7 @@ local s,id,o=GetID()
 function s.initial_effect(c)
 	--xyz summon
 	aux.AddXyzProcedure(c,nil,6,2,s.ovfilter,aux.Stringid(id,0),2,s.xyzop)
-	c:EnableReviveLimit() 
+	c:EnableReviveLimit()
 	--can not be xyz material
 	local e0=Effect.CreateEffect(c)
 	e0:SetType(EFFECT_TYPE_SINGLE)
@@ -73,7 +73,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 				e2:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
 				c:RegisterEffect(e2)
 				--atkdown
-				if not c:IsHasEffect(EFFECT_REVERSE_UPDATE) then					
+				if not c:IsHasEffect(EFFECT_REVERSE_UPDATE) then
 					local g=Duel.GetMatchingGroup(Card.IsFaceup,tp,0,LOCATION_MZONE,nil)
 					local tc=g:GetFirst()
 					while tc do
