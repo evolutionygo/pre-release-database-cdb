@@ -58,7 +58,6 @@ function s.setop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
-	local ph=Duel.GetCurrentPhase()
 	return Duel.GetTurnPlayer()~=tp and Duel.IsMainPhase()
 end
 function s.tdfilter(c,e,tp)
@@ -90,7 +89,7 @@ function s.fselect2(g,e,tp,sg)
 		or Duel.GetLocationCount(tp,LOCATION_MZONE)==0)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
-	local tg=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToChain,nil)
+	local tg=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(aux.NecroValleyFilter(Card.IsRelateToChain),nil)
 	if tg:GetCount()<2 then
 		return
 	elseif tg:GetCount()==2 and tg:IsExists(Card.IsAbleToDeck,2,nil) then
@@ -100,6 +99,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		local sg=tg:SelectSubGroup(tp,s.fselect2,false,2,2,e,tp,tg)
 		if sg:GetCount()>0 then
 			tg:Sub(sg)
+			Duel.HintSelection(sg)
 			aux.PlaceCardsOnDeckBottom(tp,sg)
 			local og=Duel.GetOperatedGroup()
 			if not og:IsExists(Card.IsLocation,1,nil,LOCATION_DECK+LOCATION_EXTRA) then return end
