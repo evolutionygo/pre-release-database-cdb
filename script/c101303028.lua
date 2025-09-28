@@ -42,7 +42,7 @@ end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToChain() and Duel.Destroy(tc,REASON_EFFECT)~=0 then
+	if tc:IsRelateToChain() and tc:IsType(TYPE_MONSTER) and Duel.Destroy(tc,REASON_EFFECT)~=0 then
 		if c:IsRelateToChain() then
 			Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
 		end
@@ -68,7 +68,9 @@ function s.spfilter(c,e,tp,tc)
 end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToChain() and Duel.Destroy(tc,REASON_EFFECT)~=0
+	if tc:IsRelateToChain()
+		and tc:IsType(TYPE_MONSTER)
+		and Duel.Destroy(tc,REASON_EFFECT)~=0
 		and tc:IsPreviousControler(tp)
 		and tc:GetOriginalLevel()>0
 		and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_DECK+LOCATION_HAND,0,1,nil,e,tp,tc)
