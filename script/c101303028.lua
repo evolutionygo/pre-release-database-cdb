@@ -1,4 +1,4 @@
---スレット·アームド·ドラゴン
+--スレット・アームド・ドラゴン
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--spsummon
@@ -58,13 +58,13 @@ end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE)
 		and s.desfilter2(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(s.desfilter2,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil,SUMMON_TYPE_SPECIAL) end
+	if chk==0 then return Duel.IsExistingTarget(s.desfilter2,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g=Duel.SelectTarget(tp,s.desfilter2,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil,SUMMON_TYPE_SPECIAL)
+	local g=Duel.SelectTarget(tp,s.desfilter2,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
 end
 function s.spfilter(c,e,tp,tc)
-	return c:IsRace(RACE_DRAGON) and c:IsLevel(tc:GetOriginalLevel()+2) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsRace(RACE_DRAGON) and c:GetOriginalLevel()==tc:GetOriginalLevel()+2 and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
