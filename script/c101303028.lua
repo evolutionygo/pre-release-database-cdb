@@ -43,7 +43,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToChain() and tc:IsType(TYPE_MONSTER) and Duel.Destroy(tc,REASON_EFFECT)~=0 then
-		if c:IsRelateToChain() then
+		if c:IsRelateToChain() and aux.NecroValleyFilter()(c) then
 			Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
 		end
 	end
