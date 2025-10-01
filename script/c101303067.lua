@@ -30,7 +30,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
 	local g=Duel.SelectMatchingCard(tp,s.effilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
 	local tc=g:GetFirst()
-	if tc then
+	if tc and not tc:IsImmuneToEffect(e) then
 		Duel.HintSelection(g)
 		Duel.NegateRelatedChain(tc,RESET_TURN_SET)
 		local e1=Effect.CreateEffect(c)
