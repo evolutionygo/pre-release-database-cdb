@@ -14,7 +14,7 @@ end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 	if chk==0 then return g:GetCount()>0 end
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_DISABLE,g,1,0,0)
 	if e:IsHasType(EFFECT_TYPE_ACTIVATE) then
 		Duel.SetChainLimit(s.chainlm)
 	end
@@ -71,10 +71,10 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		e7:SetCode(EFFECT_UNRELEASABLE_SUM)
 		e7:SetValue(1)
 		e7:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
-		c:RegisterEffect(e7)
+		tc:RegisterEffect(e7)
 		local e8=e7:Clone()
 		e8:SetCode(EFFECT_UNRELEASABLE_NONSUM)
-		c:RegisterEffect(e8)
+		tc:RegisterEffect(e8)
 		local e9=e7:Clone()
 		e9:SetCode(EFFECT_CANNOT_BE_FUSION_MATERIAL)
 		e9:SetValue(s.fuslimit)
