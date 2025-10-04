@@ -26,7 +26,8 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function s.spfilter1(c,e)
-	return (c:IsLocation(LOCATION_MZONE) or c:IsFaceupEx()) and c:IsCanBeFusionMaterial() and c:IsAbleToDeck() and c:IsType(TYPE_MONSTER) and not c:IsImmuneToEffect(e)
+	return (c:IsLocation(LOCATION_MZONE) or c:IsFaceupEx() and c:GetOriginalType()&TYPE_MONSTER~=0)
+		and c:IsCanBeFusionMaterial() and c:IsAbleToDeck() and not c:IsImmuneToEffect(e)
 end
 function s.spfilter2(c,e,tp,m,f,chkf)
 	return c:IsType(TYPE_FUSION) and c:IsSetCard(0x10af) and (not f or f(c))
@@ -51,6 +52,9 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 	Duel.SetOperationInfo(0,CATEGORY_TODECK,nil,1,tp,LOCATION_MZONE+LOCATION_HAND+LOCATION_REMOVED)
 end
+function s.cfilter(c)
+	return c:IsLocation(LOCATION_REMOVED) or (c:IsLocation(LOCATION_MZONE) and c:IsFaceup())
+end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local chkf=tp
 	local mg1=Duel.GetMatchingGroup(s.spfilter1,tp,LOCATION_HAND+LOCATION_MZONE+LOCATION_REMOVED,0,nil,e)
@@ -70,17 +74,21 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local tg=sg:Select(tp,1,1,nil)
 		local tc=tg:GetFirst()
-		if sg1:IsContains(tc) and (sg2==nil or not sg2:IsContains(tc) or not Duel.SelectYesNo(tp,ce:GetDescription())) then
+		if sg1:IsContains(tc) and (sg2==nil or not sg2:IsContains(tc) or ce and not Duel.SelectYesNo(tp,ce:GetDescription())) then
 			local mat1=Duel.SelectFusionMaterial(tp,tc,mg1,nil,chkf)
 			tc:SetMaterial(mat1)
 			if mat1:IsExists(Card.IsFacedown,1,nil) then
 				local cg=mat1:Filter(Card.IsFacedown,nil)
 				Duel.ConfirmCards(1-tp,cg)
 			end
+			if mat1:Filter(s.cfilter,nil):GetCount()>0 then
+				local cg=mat1:Filter(s.cfilter,nil)
+				Duel.HintSelection(cg)
+			end
 			Duel.SendtoDeck(mat1,nil,SEQ_DECKSHUFFLE,REASON_EFFECT+REASON_MATERIAL+REASON_FUSION)
 			Duel.BreakEffect()
 			Duel.SpecialSummon(tc,SUMMON_TYPE_FUSION,tp,tp,false,false,POS_FACEUP)
-		else
+		elseif ce then
 			local mat2=Duel.SelectFusionMaterial(tp,tc,mg2,nil,chkf)
 			local fop=ce:GetOperation()
 			fop(ce,e,tp,tc,mat2)
@@ -108,14 +116,23 @@ function s.tftg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	end
 end
 function s.tfop(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e)
-	local ct=math.min(g:GetCount(),(Duel.GetLocationCount(tp,LOCATION_SZONE)))
-	if ct<=0 then return end
-	if g:GetCount()>ct then
+	local g=Duel.GetTargetsRelateToChain()
+	local ct=math.min(g:GetCount(),Duel.GetLocationCount(tp,LOCATION_SZONE))
+	local pg=g
+	if ct<=0 then
+		pg=Group.CreateGroup()
+	elseif g:GetCount()>ct then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
-		g=g:Select(tp,ct,ct,nil)
+		pg=g:Select(tp,ct,ct,nil)
+		g:Sub(pg)
+	else
+		g=Group.CreateGroup()
 	end
-	for tc in aux.Next(g) do
+	for tc in aux.Next(pg) do
 		Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
+	end
+	local sg=g:Filter(Card.IsLocation,nil,LOCATION_GRAVE)
+	if sg:GetCount()>0 then
+		Duel.SendtoGrave(sg,REASON_RULE)
 	end
 end
