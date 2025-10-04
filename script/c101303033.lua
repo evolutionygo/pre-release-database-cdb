@@ -26,7 +26,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function s.spfilter1(c,e)
-	return (c:IsLocation(LOCATION_MZONE) or c:IsFaceupEx()) and c:IsCanBeFusionMaterial() and c:IsAbleToDeck() and not c:IsImmuneToEffect(e)
+	return (c:IsLocation(LOCATION_MZONE) or c:IsFaceupEx()) and c:IsCanBeFusionMaterial() and c:IsAbleToDeck() and c:IsType(TYPE_MONSTER) and not c:IsImmuneToEffect(e)
 end
 function s.spfilter2(c,e,tp,m,f,chkf)
 	return c:IsType(TYPE_FUSION) and c:IsSetCard(0x10af) and (not f or f(c))
