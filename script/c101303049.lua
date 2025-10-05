@@ -60,6 +60,11 @@ end
 function s.mvfilter(c)
 	return c:IsFaceup() and (c:IsControler(c:GetOwner()) or c:IsAbleToChangeControler()) and not c:IsForbidden() and c:CheckUniqueOnField(c:GetOwner())
 end
+function s.mvfilter2(c,e)
+	return c:IsType(TYPE_MONSTER) and (c:IsControler(c:GetOwner()) or c:IsAbleToChangeControler())
+		and not c:IsImmuneToEffect(e)
+		and not c:IsForbidden() and c:CheckUniqueOnField(c:GetOwner())
+end
 function s.isowner(c,tp)
 	return c:GetOwner()==tp
 end
@@ -76,8 +81,8 @@ function s.mvtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function s.mvop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
-	local sg=g:Filter(Card.IsRelateToEffect,nil,e):Filter(s.mvfilter,nil)
-	if g:FilterCount(s.isowner,nil,0)>Duel.GetLocationCount(0,LOCATION_SZONE) or g:FilterCount(s.isowner,nil,1)>Duel.GetLocationCount(1,LOCATION_SZONE) then return end
+	local sg=g:Filter(Card.IsRelateToEffect,nil,e):Filter(s.mvfilter2,nil,e)
+	if sg:FilterCount(s.isowner,nil,0)>Duel.GetLocationCount(0,LOCATION_SZONE) or sg:FilterCount(s.isowner,nil,1)>Duel.GetLocationCount(1,LOCATION_SZONE) then return end
 	for tc in aux.Next(sg) do
 		Duel.MoveToField(tc,tp,tc:GetOwner(),LOCATION_SZONE,POS_FACEUP,true)
 		local e1=Effect.CreateEffect(e:GetHandler())
