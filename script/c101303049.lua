@@ -1,4 +1,4 @@
---绚岚之海灵 派比安
+--絢嵐たる海霊ヴァルルーン
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddCodeList(c,5318639)
@@ -26,10 +26,9 @@ function s.initial_effect(c)
 	e2:SetTarget(s.mvtg)
 	e2:SetOperation(s.mvop)
 	c:RegisterEffect(e2)
-	--special summon
+	--place
 	local e3=Effect.CreateEffect(c)
-	e3:SetDescription(aux.Stringid(id,0))
-	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e3:SetDescription(aux.Stringid(id,2))
 	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e3:SetProperty(EFFECT_FLAG_DELAY)
 	e3:SetCode(EVENT_CHAINING)
@@ -95,7 +94,7 @@ function s.setcon(e,tp,eg,ep,ev,re,r,rp)
 	return re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:IsActiveType(TYPE_QUICKPLAY)
 end
 function s.pfilter(c,tp)
-	return c:IsType(TYPE_CONTINUOUS) and c:IsSetCard(0x1d1)
+	return c:IsAllTypes(TYPE_CONTINUOUS+TYPE_TRAP) and c:IsSetCard(0x1d1)
 		and not c:IsForbidden() and c:CheckUniqueOnField(tp)
 end
 function s.settg(e,tp,eg,ep,ev,re,r,rp,chk)
