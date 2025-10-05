@@ -7,7 +7,7 @@ function s.initial_effect(c)
 	--to hand
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
-	e1:SetCategory(CATEGORY_TOHAND)
+	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e1:SetCountLimit(1,id)
@@ -68,7 +68,7 @@ function s.gcheck(g)
 end
 function s.mvtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end
-	local g=Duel.GetMatchingGroup(s.mvfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil,tp):Filter(Card.IsCanBeEffectTarget,nil,e)
+	local g=Duel.GetMatchingGroup(s.mvfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil):Filter(Card.IsCanBeEffectTarget,nil,e)
 	if chk==0 then return g:CheckSubGroup(s.gcheck,2,2) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
 	local sg=g:SelectSubGroup(tp,s.gcheck,false,2,2)
@@ -76,18 +76,17 @@ function s.mvtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function s.mvop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
-	local sg=g:Filter(Card.IsRelateToEffect,nil,e):Filter(s.mvfilter,nil,tp)
+	local sg=g:Filter(Card.IsRelateToEffect,nil,e):Filter(s.mvfilter,nil)
+	if g:FilterCount(s.isowner,nil,0)>Duel.GetLocationCount(0,LOCATION_SZONE) or g:FilterCount(s.isowner,nil,1)>Duel.GetLocationCount(1,LOCATION_SZONE) then return end
 	for tc in aux.Next(sg) do
-		if Duel.GetLocationCount(tc:GetOwner(),LOCATION_SZONE)>0 then
-			Duel.MoveToField(tc,tp,tc:GetOwner(),LOCATION_SZONE,POS_FACEUP,true)
-			local e1=Effect.CreateEffect(e:GetHandler())
-			e1:SetCode(EFFECT_CHANGE_TYPE)
-			e1:SetType(EFFECT_TYPE_SINGLE)
-			e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-			e1:SetReset(RESET_EVENT+RESETS_STANDARD-RESET_TURN_SET)
-			e1:SetValue(TYPE_SPELL+TYPE_CONTINUOUS)
-			tc:RegisterEffect(e1)
-		end
+		Duel.MoveToField(tc,tp,tc:GetOwner(),LOCATION_SZONE,POS_FACEUP,true)
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetCode(EFFECT_CHANGE_TYPE)
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD-RESET_TURN_SET)
+		e1:SetValue(TYPE_SPELL+TYPE_CONTINUOUS)
+		tc:RegisterEffect(e1)
 	end
 end
 function s.setcon(e,tp,eg,ep,ev,re,r,rp)
