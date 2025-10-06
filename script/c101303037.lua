@@ -7,7 +7,7 @@ function s.initial_effect(c)
 	--to deck
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
-	e1:SetCategory(CATEGORY_CATEGORY_TODECK)
+	e1:SetCategory(CATEGORY_TODECK)
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
@@ -144,17 +144,19 @@ function s.tdfilter2(c,g)
 	return c:IsFaceup() and g:IsExists(s.typefilter,1,nil,c) and c:IsAbleToDeck()
 end
 function s.gcheck(g,tp)
-	return Duel.IsExistingTarget(s.tdfilter2,tp,0,LOCATION_ONFIELD,1,nil,g)
+	return Duel.IsExistingTarget(s.tdfilter2,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil,g)
 end
 function s.tdtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	local g=Duel.GetMatchingGroup(s.tdfilter,tp,LOCATION_GRAVE,0,nil,e)
+	local g=Duel.GetMatchingGroup(s.tdfilter1,tp,LOCATION_GRAVE,0,nil,e)
 	if chkc then return false end
 	if chk==0 then return g:CheckSubGroup(s.gcheck,2,2,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
 	local sg=g:SelectSubGroup(tp,s.gcheck,false,2,2,tp)
+	Duel.SetTargetCard(sg)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-	local g=Duel.SelectTarget(tp,s.tdfilter2,tp,0,LOCATION_ONFIELD,1,1,nil,sg)
-	Duel.SetOperationInfo(0,CATEGORY_TODECK,g,3,0,0)
+	local tg=Duel.SelectTarget(tp,s.tdfilter2,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil,sg)
+	sg:Merge(tg)
+	Duel.SetOperationInfo(0,CATEGORY_TODECK,sg,3,0,0)
 end
 function s.tdop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(aux.NecroValleyFilter(Card.IsRelateToChain),nil)
