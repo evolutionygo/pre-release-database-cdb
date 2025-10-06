@@ -138,7 +138,7 @@ function s.tdfilter1(c,e)
 	return c:IsSetCard(0x1c9) and c:IsCanBeEffectTarget(e) and c:IsAbleToDeck()
 end
 function s.typefilter(c,ec)
-	return ((c:GetType()&ec:GetType())&TYPE_MONSTER+TYPE_SPELL+TYPE_TRAP)~=0
+	return (c:GetType()|ec:GetType())&(TYPE_MONSTER+TYPE_SPELL+TYPE_TRAP)~=0
 end
 function s.tdfilter2(c,g)
 	return c:IsFaceup() and g:IsExists(s.typefilter,1,nil,c) and c:IsAbleToDeck()
