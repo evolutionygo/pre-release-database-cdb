@@ -43,6 +43,7 @@ function s.initial_effect(c)
 	e4:SetValue(aux.ChangeBattleDamage(1,DOUBLE_DAMAGE))
 	c:RegisterEffect(e4)
 end
+s.assault_name=60800381
 function s.val(e,c)
 	return Duel.GetMatchingGroupCount(s.filter,c:GetControler(),LOCATION_MZONE,0,nil)*1000
 end
@@ -65,7 +66,9 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and tc:IsCode(60800381) and Duel.SendtoDeck(tc,nil,0,REASON_EFFECT)>0 and tc:IsLocation(LOCATION_EXTRA)
+	if tc:IsRelateToChain() and tc:IsCode(60800381)
+		and aux.NecroValleyFilter()(tc) and Duel.SendtoDeck(tc,nil,0,REASON_EFFECT)>0
+		and tc:IsLocation(LOCATION_EXTRA)
 		and tc:IsCanBeSpecialSummoned(e,SUMMON_TYPE_SYNCHRO,tp,false,false) and Duel.GetLocationCountFromEx(tp,tp,c,tc)>0
 		and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
 		Duel.BreakEffect()

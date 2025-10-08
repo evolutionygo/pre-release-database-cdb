@@ -1,7 +1,7 @@
 --深红剑士／爆裂体
 local s,id,o=GetID()
 function s.initial_effect(c)
-	aux.AddCodeList(c,80280737)
+	aux.AddCodeList(c,80280737,80321197)
 	--Cannot special summon
 	local e0=Effect.CreateEffect(c)
 	e0:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
@@ -40,6 +40,7 @@ function s.initial_effect(c)
 	e3:SetOperation(s.spop)
 	c:RegisterEffect(e3)
 end
+s.assault_name=80321197
 function s.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return not e:GetHandler():IsPublic() end
 end
