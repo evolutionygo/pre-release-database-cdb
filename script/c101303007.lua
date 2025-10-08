@@ -63,6 +63,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		and tc:IsCanBeSpecialSummoned(e,SUMMON_TYPE_SYNCHRO,tp,false,false) and Duel.GetLocationCountFromEx(tp,tp,c,tc)>0
 		and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
 		Duel.BreakEffect()
+		tc:SetMaterial(nil)
 		Duel.SpecialSummon(tc,SUMMON_TYPE_SYNCHRO,tp,tp,false,false,POS_FACEUP)
 		sc:CompleteProcedure()
 	end
