@@ -1,4 +1,4 @@
---真卡战士／爆裂体
+--ジャンク・ウォリア／バスター
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddCodeList(c,60800381,80280737)
@@ -25,7 +25,7 @@ function s.initial_effect(c)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetValue(s.immval)
 	c:RegisterEffect(e2)
-	--summon
+	--spsummon
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,0))
 	e3:SetCategory(CATEGORY_TOEXTRA+CATEGORY_SPECIAL_SUMMON)
@@ -69,12 +69,12 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	if tc:IsRelateToChain() and tc:IsCode(60800381)
 		and aux.NecroValleyFilter()(tc) and Duel.SendtoDeck(tc,nil,0,REASON_EFFECT)>0
 		and tc:IsLocation(LOCATION_EXTRA)
-		and tc:IsCanBeSpecialSummoned(e,SUMMON_TYPE_SYNCHRO,tp,false,false) and Duel.GetLocationCountFromEx(tp,tp,c,tc)>0
+		and tc:IsCanBeSpecialSummoned(e,SUMMON_TYPE_SYNCHRO,tp,false,false) and Duel.GetLocationCountFromEx(tp,tp,nil,tc)>0
 		and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
 		Duel.BreakEffect()
 		tc:SetMaterial(nil)
 		Duel.SpecialSummon(tc,SUMMON_TYPE_SYNCHRO,tp,tp,false,false,POS_FACEUP)
-		sc:CompleteProcedure()
+		tc:CompleteProcedure()
 	end
 end
 function s.damcon(e)
