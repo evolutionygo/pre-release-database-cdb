@@ -1,8 +1,7 @@
 --真卡战士／爆裂体
 local s,id,o=GetID()
 function s.initial_effect(c)
-	aux.AddCodeList(c,60800381)
-	aux.AddCodeList(c,80280737)
+	aux.AddCodeList(c,60800381,80280737)
 	--Cannot special summon
 	local e0=Effect.CreateEffect(c)
 	e0:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
