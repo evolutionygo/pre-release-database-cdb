@@ -1,4 +1,4 @@
---
+--WAKE CUP！ アル
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--spsummon
@@ -23,7 +23,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 	--special summon
 	local e3=Effect.CreateEffect(c)
-	e3:SetDescription(aux.Stringid(id,1))
+	e3:SetDescription(aux.Stringid(id,2))
 	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e3:SetCode(EVENT_PHASE+PHASE_END)
@@ -36,7 +36,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function s.dfilter(c)
-	return c:IsType(TYPE_FLIP)
+	return c:IsType(TYPE_FLIP) and c:IsDiscardable(REASON_EFFECT)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
@@ -47,13 +47,8 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local ec=aux.ExceptThisCard(e)
-	local g=Duel.GetMatchingGroup(s.dfilter,tp,LOCATION_HAND,0,ec)
-	if #g==0 and ec then
-		g:AddCard(ec)
-	end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DISCARD)
-	local tc=g:Select(tp,1,1,nil):GetFirst()
+	local tc=Duel.SelectMatchingCard(tp,s.dfilter,tp,LOCATION_HAND,0,1,1,aux.ExceptThisCard(e))
 	if tc and Duel.SendtoGrave(tc,REASON_EFFECT+REASON_DISCARD)>0 and c:IsRelateToChain() then
 		Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP_ATTACK+POS_FACEDOWN_DEFENSE)
 	end
@@ -76,6 +71,7 @@ function s.tgop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
 	local g=Duel.SelectMatchingCard(tp,s.tgfilter,tp,0,LOCATION_ONFIELD,1,ct,nil)
 	if g:GetCount()>0 then
+		Duel.HintSelection(g)
 		Duel.SendtoGrave(g,REASON_EFFECT)
 	end
 end
