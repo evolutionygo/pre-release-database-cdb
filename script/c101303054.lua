@@ -1,4 +1,4 @@
---決闘進化-バスター・ゾーン
+--決闘進化－バスター・ゾーン
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddCodeList(c,80280737)
@@ -53,7 +53,7 @@ function s.indtg(e,c)
 	return c:IsSetCard(0x104f) and c:IsStatus(STATUS_SPSUMMON_TURN)
 end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.CheckLPCost(tp,2000) end
+	if chk==0 then return Duel.CheckLPCost(tp,2000) and Duel.GetFlagEffect(tp,101303054)==0 end
 	Duel.PayLPCost(tp,2000)
 end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
