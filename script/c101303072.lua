@@ -25,6 +25,7 @@ function s.initial_effect(c)
 	e4:SetCode(EVENT_FREE_CHAIN)
 	e4:SetRange(LOCATION_SZONE)
 	e4:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e4:SetHintTiming(TIMING_END_PHASE)
 	e4:SetCountLimit(1,id)
 	e4:SetCost(s.spcost)
 	e4:SetTarget(s.sptg)
@@ -58,7 +59,7 @@ end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local attr=e:GetLabel()
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and s.spfilter(chkc,e,tp,attr) end
-	if chk==0 then return true end
+	if chk==0 then return e:IsCostChecked() end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectTarget(tp,s.spfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp,attr)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
@@ -74,6 +75,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		local g=Duel.SelectMatchingCard(tp,aux.NegateAnyFilter,tp,0,LOCATION_ONFIELD,1,1,nil)
 		local dc=g:GetFirst()
 		if dc then
+			Duel.HintSelection(g)
 			Duel.NegateRelatedChain(dc,RESET_TURN_SET)
 			local e1=Effect.CreateEffect(c)
 			e1:SetType(EFFECT_TYPE_SINGLE)
