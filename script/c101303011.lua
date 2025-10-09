@@ -23,7 +23,7 @@ function s.initial_effect(c)
 	--switch locations
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,1))
-	e3:SetCategory(CATEGORY_TOHAND)
+	e3:SetCategory(CATEGORY_REMOVE)
 	e3:SetType(EFFECT_TYPE_QUICK_O)
 	e3:SetCode(EVENT_FREE_CHAIN)
 	e3:SetRange(LOCATION_MZONE)
@@ -40,7 +40,6 @@ function s.spcon(e,c)
 	return Duel.GetLocationCount(tp,LOCATION_MZONE,tp,LOCATION_REASON_TOFIELD,0x4)>0
 end
 function s.spval(e,c)
-	local tp=c:GetControler()
 	return 0,0x4
 end
 function s.pfilter(c,tp)
@@ -69,7 +68,7 @@ end
 function s.chop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local cs=c:GetSequence()
-	if cs>4 or cs==2 then return end
+	if not c:IsRelateToChain() or cs>4 or cs==2 then return end
 	local g=Duel.GetMatchingGroup(s.chfilter,tp,LOCATION_MZONE,0,nil)
 	if g:GetCount()==1 then
 		local tc=g:GetFirst()
@@ -79,12 +78,11 @@ function s.chop(e,tp,eg,ep,ev,re,r,rp)
 			and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 			Duel.BreakEffect()
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
-			local g=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,0,LOCATION_HAND,nil):RandomSelect(tp,1)
-			Duel.HintSelection(g)
-			Duel.SendtoHand(g,nil,REASON_EFFECT)
+			local rg=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,0,LOCATION_HAND,nil):RandomSelect(tp,1)
+			Duel.HintSelection(rg)
+			Duel.SendtoHand(rg,nil,REASON_EFFECT)
 			Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)
 			Duel.ShuffleHand(1-tp)
-			local c=e:GetHandler()
 			local fid=c:GetFieldID()
 			local e1=Effect.CreateEffect(c)
 			e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
@@ -108,4 +106,9 @@ function s.retcon(e,tp,eg,ep,ev,re,r,rp)
 		e:Reset()
 		return false
 	end
+end
+function s.retop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_CARD,0,id)
+	local tc=e:GetLabelObject()
+	Duel.SendtoHand(tc,nil,REASON_EFFECT)
 end

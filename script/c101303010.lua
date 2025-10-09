@@ -41,7 +41,6 @@ function s.spcon(e,c)
 	return Duel.GetLocationCount(tp,LOCATION_MZONE,tp,LOCATION_REASON_TOFIELD,0x4)>0
 end
 function s.spval(e,c)
-	local tp=c:GetControler()
 	return 0,0x4
 end
 function s.thfilter(c)
@@ -74,7 +73,7 @@ end
 function s.chop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local cs=c:GetSequence()
-	if cs>4 or cs==2 then return end
+	if not c:IsRelateToChain() or cs>4 or cs==2 then return end
 	local g=Duel.GetMatchingGroup(s.chfilter,tp,LOCATION_MZONE,0,nil)
 	if g:GetCount()==1 then
 		local tc=g:GetFirst()
@@ -84,9 +83,9 @@ function s.chop(e,tp,eg,ep,ev,re,r,rp)
 			and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 			Duel.BreakEffect()
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
-			local g=Duel.SelectMatchingCard(tp,s.rthfilter,tp,0,LOCATION_MZONE,1,1,nil)
-			Duel.HintSelection(g)
-			Duel.SendtoHand(g,nil,REASON_EFFECT)
+			local rg=Duel.SelectMatchingCard(tp,s.rthfilter,tp,0,LOCATION_MZONE,1,1,nil)
+			Duel.HintSelection(rg)
+			Duel.SendtoHand(rg,nil,REASON_EFFECT)
 		end
 	end
 end

@@ -1,3 +1,4 @@
+--耀聖の月詩フォルトナ
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--special summon
@@ -39,7 +40,6 @@ function s.spcon(e,c)
 	return Duel.GetLocationCount(tp,LOCATION_MZONE,tp,LOCATION_REASON_TOFIELD,0x4)>0
 end
 function s.spval(e,c)
-	local tp=c:GetControler()
 	return 0,0x4
 end
 function s.pfilter(c,tp)
@@ -48,12 +48,12 @@ function s.pfilter(c,tp)
 end
 function s.ptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0
-		and Duel.IsExistingMatchingCard(s.pfilter,tp,LOCATION_DECK,0,1,nil,tp) end
+		and Duel.IsExistingMatchingCard(s.pfilter,tp,LOCATION_HAND+LOCATION_DECK,0,1,nil,tp) end
 end
 function s.pop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
-	local tc=Duel.SelectMatchingCard(tp,s.pfilter,tp,LOCATION_DECK,0,1,1,nil,tp):GetFirst()
+	local tc=Duel.SelectMatchingCard(tp,s.pfilter,tp,LOCATION_HAND+LOCATION_DECK,0,1,1,nil,tp):GetFirst()
 	if tc then Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true) end
 end
 function s.chcon(e,tp,eg,ep,ev,re,r,rp)
@@ -71,7 +71,7 @@ end
 function s.chop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local cs=c:GetSequence()
-	if cs>4 or cs==2 then return end
+	if not c:IsRelateToChain() or cs>4 or cs==2 then return end
 	local g=Duel.GetMatchingGroup(s.chfilter,tp,LOCATION_MZONE,0,nil)
 	if g:GetCount()==1 then
 		local tc=g:GetFirst()
@@ -81,9 +81,9 @@ function s.chop(e,tp,eg,ep,ev,re,r,rp)
 			and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 			Duel.BreakEffect()
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
-			local g=Duel.SelectMatchingCard(tp,s.rthfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
-			Duel.HintSelection(g)
-			Duel.SendtoHand(g,nil,REASON_EFFECT)
+			local rg=Duel.SelectMatchingCard(tp,s.rthfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
+			Duel.HintSelection(rg)
+			Duel.SendtoHand(rg,nil,REASON_EFFECT)
 		end
 	end
 end
