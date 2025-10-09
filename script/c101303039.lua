@@ -22,6 +22,7 @@ function s.initial_effect(c)
 	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCountLimit(1,id)
+	e2:SetHintTiming(0,TIMINGS_CHECK_MONSTER)
 	e2:SetTarget(s.nstg)
 	e2:SetOperation(s.nsop)
 	c:RegisterEffect(e2)
@@ -36,6 +37,7 @@ function s.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(aux.NegateAnyFilter,tp,0,LOCATION_ONFIELD,1,nil) end
 	local g=Duel.GetMatchingGroup(aux.NegateAnyFilter,tp,0,LOCATION_ONFIELD,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DISABLE,g,g:GetCount(),0,0)
+	Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
 end
 function s.disop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -69,11 +71,12 @@ function s.nsfilter(c,tp)
 	return c:IsFaceup() and c:IsControler(tp) and c:IsLocation(LOCATION_MZONE)
 end
 function s.cfilter(c,tp)
-	local g=c:GetColumnGroup():Filter(s.nsfilter,nil,1-tp)
-	return c:IsFaceup() and c:IsSetCard(0x2d8)
+	local chk=c:GetColumnGroup():IsExists(s.nsfilter,1,nil,1-tp)
+	return c:IsFaceup() and c:IsSetCard(0x2d8) and chk
 end
 function s.nstg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_MZONE,0,1,nil,tp) end
+	Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
 end
 function s.nsop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()

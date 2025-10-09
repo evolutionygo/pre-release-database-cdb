@@ -25,7 +25,7 @@ function s.initial_effect(c)
 	e3:SetCondition(s.piercecon)
 	e3:SetTarget(s.piercetg)
 	c:RegisterEffect(e3)
-	--cannot be target
+	--cannot be destroyed
 	local e4=Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_FIELD)
 	e4:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
