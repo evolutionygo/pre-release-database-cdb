@@ -32,7 +32,7 @@ function s.indtg(e,c)
 	return c:GetSequence()==2
 end
 function s.cfilter(c,e,tp)
-	return c:IsAbleToGraveAsCost()
+	return c:IsAbleToGraveAsCost() and c:IsType(TYPE_MONSTER)
 		and Duel.GetMZoneCount(tp,c)>0
 		and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_DECK,0,1,nil,e,tp,c)
 end

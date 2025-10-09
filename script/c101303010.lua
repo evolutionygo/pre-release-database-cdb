@@ -73,7 +73,7 @@ end
 function s.chop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local cs=c:GetSequence()
-	if not c:IsRelateToChain() or not cs:IsControler(tp) or cs>4 or cs==2 then return end
+	if not c:IsRelateToChain() or not c:IsControler(tp) or cs>4 or cs==2 then return end
 	local g=Duel.GetMatchingGroup(s.chfilter,tp,LOCATION_MZONE,0,nil)
 	if g:GetCount()==1 then
 		local tc=g:GetFirst()
