@@ -65,7 +65,7 @@ function s.eqlimit(e,c)
 	return c==e:GetLabelObject()
 end
 function s.rmcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():GetEquipTarget() and e:GetHandler():IsAbleToGraveAsCost() end
+	if chk==0 then return e:GetHandler():GetEquipTarget():IsSetCard(0x29) and e:GetHandler():IsAbleToGraveAsCost() end
 	Duel.SendtoGrave(e:GetHandler(),REASON_COST)
 end
 function s.rmfilter(c)
