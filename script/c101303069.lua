@@ -19,6 +19,8 @@ function s.initial_effect(c)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e2:SetCode(EVENT_ATTACK_ANNOUNCE)
 	e2:SetRange(LOCATION_GRAVE)
+	e2:SetCountLimit(1,id+o)
+	e2:SetCondition(s.poscon)
 	e2:SetCost(aux.bfgcost)
 	e2:SetTarget(s.postg)
 	e2:SetOperation(s.posop)
@@ -49,6 +51,9 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			Duel.SpecialSummon(sg,0,tp,sp,false,false,POS_FACEDOWN_DEFENSE)
 		end
 	end
+end
+function s.poscon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetAttacker():GetControler()~=tp
 end
 function s.postg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsFacedown,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
