@@ -44,12 +44,12 @@ function s.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 		{b2,aux.Stringid(id,3),2})
 	e:SetLabel(op)
 	if op==1 then
-		Duel.SetOperationInfo(0,CATEGORY_NEGATE,eg,1,0,0)
+		Duel.SetOperationInfo(0,CATEGORY_DISABLE,eg,1,0,0)
 		if re:GetHandler():IsDestructable() and re:GetHandler():IsRelateToEffect(re) then
 			Duel.SetOperationInfo(0,CATEGORY_DESTROY,eg,1,0,0)
 		end
 	else
-		Duel.SetOperationInfo(0,CATEGORY_NEGATE,te:GetHandler(),1,0,0)
+		Duel.SetOperationInfo(0,CATEGORY_DISABLE,te:GetHandler(),1,0,0)
 		if te:GetHandler():IsDestructable() and te:GetHandler():IsRelateToEffect(te) then
 			Duel.SetOperationInfo(0,CATEGORY_DESTROY,te:GetHandler(),1,0,0)
 		end
