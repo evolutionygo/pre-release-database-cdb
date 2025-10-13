@@ -4,6 +4,11 @@ function s.initial_effect(c)
 	--synchro summon
 	aux.AddSynchroMixProcedure(c,aux.Tuner(nil),nil,nil,aux.FilterBoolFunction(Card.IsSynchroType,TYPE_SYNCHRO),1,99)
 	c:EnableReviveLimit()
+	local e0=Effect.CreateEffect(c)
+	e0:SetType(EFFECT_TYPE_SINGLE)
+	e0:SetCode(EFFECT_MATERIAL_CHECK)
+	e0:SetValue(s.valcheck)
+	c:RegisterEffect(e0)
 	--nontuner
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
@@ -24,6 +29,17 @@ function s.initial_effect(c)
 	e2:SetTarget(s.distg)
 	e2:SetOperation(s.disop)
 	c:RegisterEffect(e2)
+end
+function s.valcheck(e,c)
+	local g=c:GetMaterial()
+	if g:IsExists(Card.IsType,2,nil,TYPE_TUNER) then
+		local e1=Effect.CreateEffect(c)
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+		e1:SetCode(21142671)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD-RESET_TOFIELD+RESET_PHASE+PHASE_END)
+		c:RegisterEffect(e1)
+	end
 end
 function s.tnval(e,c)
 	return e:GetHandler():IsControler(c:GetControler())
