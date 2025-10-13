@@ -47,8 +47,8 @@ end
 function s.discon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if ev<=1 then return false end
-	return not c:IsStatus(STATUS_BATTLE_DESTROYED) and Duel.IsChainDisablable(ev)
-		or Duel.IsChainDisablable(ev-1)
+	return not c:IsStatus(STATUS_BATTLE_DESTROYED)
+		and (Duel.IsChainDisablable(ev) or Duel.IsChainDisablable(ev-1))
 end
 function s.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local b1=Duel.IsChainDisablable(ev)
@@ -73,12 +73,12 @@ function s.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.disop(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetLabel()==1 then
-		if Duel.NegateEffect(ev) and re:GetHandler():IsRelateToEffect(re) then
+		if Duel.NegateEffect(ev) and re:GetHandler():IsRelateToChain(ev) then
 			Duel.Destroy(eg,REASON_EFFECT)
 		end
 	else
 		local te=Duel.GetChainInfo(ev-1,CHAININFO_TRIGGERING_EFFECT)
-		if Duel.NegateEffect(ev-1) and te:GetHandler():IsRelateToEffect(te) then
+		if Duel.NegateEffect(ev-1) and te:GetHandler():IsRelateToChain(ev-1) then
 			Duel.Destroy(te:GetHandler(),REASON_EFFECT)
 		end
 	end
