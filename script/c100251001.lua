@@ -28,7 +28,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function s.cfilter(c)
-	return c:GetType()==TYPE_SPELL+TYPE_RITUAL and c:IsAbleToRemoveAsCost() and c:CheckActivateEffect(true,true,false)~=nil
+	return c:IsAllTypes(TYPE_RITUAL+TYPE_SPELL) and c:IsAbleToRemoveAsCost() and c:CheckActivateEffect(true,true,false)~=nil
 end
 function s.rscost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return not e:GetHandler():IsPublic()
@@ -66,11 +66,11 @@ function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local sg=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,c)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,sg,sg:GetCount(),0,0)
 end
-function s.operadesoption(e,tp,eg,ep,ev,re,r,rp)
+function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local sg=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,aux.ExceptThisCard(e))
-	if Duel.Destroy(sg,REASON_EFFECT)
-		and c:IsRelateToChain() and c:IsFaceup() then
+	if Duel.Destroy(sg,REASON_EFFECT)>0
+		and c:IsRelateToChain() and c:IsFaceup() and c:IsType(TYPE_MONSTER) then
 		Duel.BreakEffect()
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)

@@ -21,23 +21,34 @@ function s.initial_effect(c)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCondition(s.eqcon)
 	c:RegisterEffect(e2)
-	--indes
+	--atk
 	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_FIELD)
-	e3:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
+	e3:SetType(EFFECT_TYPE_SINGLE)
+	e3:SetCode(EFFECT_UPDATE_ATTACK)
+	e3:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
 	e3:SetRange(LOCATION_MZONE)
-	e3:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
-	e3:SetTarget(s.indtg)
-	e3:SetValue(1)
+	e3:SetValue(s.atkval)
 	c:RegisterEffect(e3)
-	--at limit
+	--indes
 	local e4=Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_FIELD)
+	e4:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
 	e4:SetRange(LOCATION_MZONE)
-	e4:SetTargetRange(0,LOCATION_MZONE)
-	e4:SetCode(EFFECT_CANNOT_SELECT_BATTLE_TARGET)
-	e4:SetValue(s.atlimit)
+	e4:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
+	e4:SetTarget(s.indtg)
+	e4:SetValue(1)
 	c:RegisterEffect(e4)
+	--at limit
+	local e5=Effect.CreateEffect(c)
+	e5:SetType(EFFECT_TYPE_FIELD)
+	e5:SetRange(LOCATION_MZONE)
+	e5:SetTargetRange(0,LOCATION_MZONE)
+	e5:SetCode(EFFECT_CANNOT_SELECT_BATTLE_TARGET)
+	e5:SetValue(s.atlimit)
+	c:RegisterEffect(e5)
+end
+function s.can_equip_monster(c)
+	return true
 end
 function s.eqcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetBattledGroupCount()>0
@@ -63,33 +74,39 @@ function s.eqop(e,tp,eg,ep,ev,re,r,rp)
 	if c:IsRelateToChain() and c:IsFaceup() and Duel.GetLocationCount(tp,LOCATION_SZONE)>0 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EQUIP)
 		local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.eqfilter),tp,0,LOCATION_MZONE,1,1,nil,c,tp)
-		local sc=g:GetFirst()
-		if sc and Duel.Equip(tp,sc,c,false) then
-			local e1=Effect.CreateEffect(c)
-			e1:SetType(EFFECT_TYPE_SINGLE)
-			e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-			e1:SetCode(EFFECT_EQUIP_LIMIT)
-			e1:SetReset(RESET_EVENT+RESETS_STANDARD)
-			e1:SetLabelObject(c)
-			e1:SetValue(s.eqlimit)
-			sc:RegisterEffect(e1)
-			local atk=sc:GetTextAttack()
-			if sc:IsFacedown() then atk=0 end
-			if atk<0 then atk=0 end
-			if atk>0 then
-				local e2=Effect.CreateEffect(c)
-				e2:SetType(EFFECT_TYPE_EQUIP)
-				e2:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_OWNER_RELATE)
-				e2:SetCode(EFFECT_UPDATE_ATTACK)
-				e2:SetReset(RESET_EVENT+RESETS_STANDARD)
-				e2:SetValue(atk)
-				sc:RegisterEffect(e2)
-			end
+		if g:GetCount()>0 then
+			Duel.HintSelection(g)
+			local sc=g:GetFirst()
+			s.equip_monster(c,tp,sc)
 		end
 	end
 end
+function s.equip_monster(c,tp,tc)
+	if tc and Duel.Equip(tp,tc,c,false) then
+		local e1=Effect.CreateEffect(c)
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+		e1:SetCode(EFFECT_EQUIP_LIMIT)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+		e1:SetValue(s.eqlimit)
+		tc:RegisterEffect(e1)
+		tc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,0,0)
+	end
+end
 function s.eqlimit(e,c)
-	return c==e:GetLabelObject()
+	return e:GetOwner()==c
+end
+function s.atkval(e,c)
+	local atk=0
+	local g=c:GetEquipGroup()
+	local tc=g:GetFirst()
+	while tc do
+		if tc:GetFlagEffect(id)~=0 and tc:IsFaceup() and tc:GetTextAttack()>=0 and tc:GetOriginalType()&TYPE_MONSTER~=0 then
+			atk=atk+tc:GetTextAttack()
+		end
+		tc=g:GetNext()
+	end
+	return atk
 end
 function s.indtg(e,c)
 	local tc=e:GetHandler()
