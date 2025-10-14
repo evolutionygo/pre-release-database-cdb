@@ -56,15 +56,9 @@ end
 function s.ffilter(c,fc,sub,mg,sg)
 	return c:IsRace(RACE_ILLUSION+RACE_SPELLCASTER+RACE_FIEND) and (not sg or not sg:IsExists(Card.IsRace,1,c,c:GetRace()))
 end
-function s.filter(c)
-	return c:IsRace(RACE_MACHINE)
-end
-function s.eqfilter(c,tc,tp)
-	return c:IsAbleToChangeControler()
-end
 function s.eqtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-	if chk==0 then return Duel.IsExistingMatchingCard(s.eqfilter,tp,0,LOCATION_MZONE,1,nil,c,tp)
+	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToChangeControler,tp,0,LOCATION_MZONE,1,nil)
 		and Duel.GetLocationCount(tp,LOCATION_SZONE)>0 end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
 	Duel.SetOperationInfo(0,CATEGORY_EQUIP,nil,1,1-tp,LOCATION_MZONE)
@@ -73,7 +67,7 @@ function s.eqop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToChain() and c:IsFaceup() and Duel.GetLocationCount(tp,LOCATION_SZONE)>0 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EQUIP)
-		local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.eqfilter),tp,0,LOCATION_MZONE,1,1,nil,c,tp)
+		local g=Duel.SelectMatchingCard(tp,Card.IsAbleToChangeControler,tp,0,LOCATION_MZONE,1,1,nil)
 		if g:GetCount()>0 then
 			Duel.HintSelection(g)
 			local sc=g:GetFirst()
