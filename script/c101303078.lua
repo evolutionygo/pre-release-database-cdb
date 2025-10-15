@@ -43,26 +43,30 @@ function s.mfilter(c)
 end
 function s.eqtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_MZONE) and s.mfilter(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(s.mfilter,tp,LOCATION_MZONE,0,1,nil) end
+	if chk==0 then return Duel.IsExistingTarget(s.mfilter,tp,LOCATION_MZONE,0,1,nil) and Duel.GetLocationCount(tp,LOCATION_SZONE)>0 end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
 	local g=Duel.SelectTarget(tp,s.mfilter,tp,LOCATION_MZONE,0,1,1,nil)
-	Duel.SetOperationInfo(0,CATEGORY_EQUIP,nil,1,tp,LOCATION_GRAVE)
+	Duel.SetOperationInfo(0,CATEGORY_EQUIP,nil,1,tp,LOCATION_GRAVE+LOCATION_HAND)
 end
 function s.eqop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	local ct=Duel.GetLocationCount(tp,LOCATION_SZONE)
 	if ct>2 then ct=2 end
-	if tc:IsRelateToChain() and tc:IsFaceup() and ct>0 then	 
+	if tc:IsRelateToChain() and tc:IsFaceup() and ct>0 then  
 		local g=Duel.GetMatchingGroup(aux.NecroValleyFilter(Card.CheckEquipTarget),tp,LOCATION_GRAVE+LOCATION_HAND,0,nil,tc)
 		local sg=g:SelectSubGroup(tp,aux.dncheck,false,1,ct)
+		if not sg or sg:GetCount()==0 then return end
 		for ec in aux.Next(sg) do
-			Duel.Equip(tp,ec,tc,true,true)
-			local e1=Effect.CreateEffect(e:GetHandler())
-			e1:SetType(EFFECT_TYPE_EQUIP)
-			e1:SetCode(EFFECT_CHANGE_BATTLE_DAMAGE)
-			e1:SetValue(aux.ChangeBattleDamage(1,HALF_DAMAGE))
-			e1:SetReset(RESET_EVENT+RESETS_STANDARD)
-			ec:RegisterEffect(e1,true)
+			if Duel.Equip(tp,ec,tc,true,true) then
+				local e1=Effect.CreateEffect(e:GetHandler())
+				e1:SetType(EFFECT_TYPE_EQUIP)
+				e1:SetDescription(aux.Stringid(id,2))
+				e1:SetProperty(EFFECT_FLAG_CLIENT_HINT)
+				e1:SetCode(EFFECT_CHANGE_BATTLE_DAMAGE)
+				e1:SetValue(aux.ChangeBattleDamage(1,HALF_DAMAGE))
+				e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+				ec:RegisterEffect(e1,true)
+			end
 		end
 		Duel.EquipComplete()
 	end
