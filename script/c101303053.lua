@@ -36,9 +36,9 @@ function s.filter2(c,e,tp,m,f,chkf)
 		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) and c:CheckFusionMaterial(m,nil,chkf)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	local b1=Duel.IsExistingMatchingCard(s.thfilter1,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil)
+	local b1=Duel.IsExistingMatchingCard(s.thfilter1,tp,LOCATION_DECK,0,1,nil)
 		and (not e:IsCostChecked() or Duel.GetFlagEffect(tp,id)==0)
-	local b2=Duel.IsExistingMatchingCard(s.thfilter2,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil)
+	local b2=Duel.IsExistingMatchingCard(s.thfilter2,tp,LOCATION_DECK,0,1,nil)
 		and (not e:IsCostChecked() or Duel.GetFlagEffect(tp,id+o)==0)
 	local b3=false
 	local chkf=tp
@@ -66,7 +66,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if op==1 or op==2 then
 		if e:IsCostChecked() then
 			e:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND)
-			Duel.RegisterFlagEffect(tp,id+op-1,RESET_PHASE+PHASE_END,0,1)
+			Duel.RegisterFlagEffect(tp,id+(op-1)*o,RESET_PHASE+PHASE_END,0,1)
 		end
 		Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 	elseif op==3 then
