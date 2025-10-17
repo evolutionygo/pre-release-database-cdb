@@ -22,7 +22,7 @@ function s.initial_effect(c)
 	e2:SetCode(EFFECT_CHANGE_ATTRIBUTE)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
-	e2:SetValue(ATTRIBUTE_FIRE)
+	e2:SetValue(ATTRIBUTE_EARTH)
 	c:RegisterEffect(e2)
 	--summon
 	local e3=Effect.CreateEffect(c)
