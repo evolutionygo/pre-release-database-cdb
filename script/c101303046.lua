@@ -52,24 +52,30 @@ function s.etg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.eop(e,tp,eg,ep,ev,re,r,rp)
 	local b1=Duel.IsExistingMatchingCard(Card.IsAbleToDeck,tp,LOCATION_MZONE,LOCATION_MZONE,1,aux.ExceptThisCard(e))
+		and Duel.GetFlagEffect(tp,id)==0
 	local b2=Duel.IsExistingMatchingCard(s.tdfilter,tp,0,LOCATION_ONFIELD,1,nil)
+		and Duel.GetFlagEffect(tp,id+o)==0
 	local b3=Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,0,LOCATION_EXTRA,1,nil)
+		and Duel.GetFlagEffect(tp,id+o*2)==0
 	if not (b1 or b2 or b3) then return end
 	local op=aux.SelectFromOptions(tp,
 			{b1,aux.Stringid(id,0),1},
 			{b1,aux.Stringid(id,1),2},
 			{b2,aux.Stringid(id,2),3})
 	if op==1 then
+		Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1)
 		local g=Duel.GetMatchingGroup(Card.IsAbleToDeck,tp,LOCATION_MZONE,LOCATION_MZONE,aux.ExceptThisCard(e))
 		if g:GetCount()>0 then
 			Duel.SendtoDeck(g,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)
 		end
 	elseif op==2 then
+		Duel.RegisterFlagEffect(tp,id+o,RESET_PHASE+PHASE_END,0,1)
 		local g=Duel.GetMatchingGroup(s.tdfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)
 		if g:GetCount()>0 then
 			Duel.SendtoDeck(g,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)
 		end
 	elseif op==3 then
+		Duel.RegisterFlagEffect(tp,id+o*2,RESET_PHASE+PHASE_END,0,1)
 		local g=Duel.GetFieldGroup(tp,0,LOCATION_EXTRA)
 		if g:GetCount()>0 then
 			Duel.BreakEffect()
