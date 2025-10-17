@@ -22,6 +22,7 @@ function s.initial_effect(c)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCountLimit(1,EFFECT_COUNT_CODE_CHAIN)
+	e2:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_END_PHASE)
 	e2:SetCost(s.descost)
 	e2:SetTarget(s.destg)
 	e2:SetOperation(s.desop)
@@ -46,7 +47,9 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsRelateToChain() and Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)~=0 and e:GetLabel()>0 then
+	if c:IsRelateToChain() and Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)~=0
+		and e:GetLabel()>0 and c:IsCanAddCounter(0x1f) then
+		Duel.BreakEffect()
 		c:AddCounter(0x1f,e:GetLabel())
 	end
 end
@@ -54,17 +57,20 @@ function s.descost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x1f,1,REASON_COST) end
 	e:GetHandler():RemoveCounter(tp,0x1f,1,REASON_COST)
 end
-function s.filter(c)
-	return c:IsFaceup() and c:IsSetCard(0x15) and Duel.IsExistingTarget(Card.IsFaceup,0,LOCATION_ONFIELD,LOCATION_ONFIELD,1,c)
+function s.cfilter(c,e)
+	return c:IsFaceup() and c:IsCanBeEffectTarget(e)
+end
+function s.fselect(g)
+	return g:IsExists(aux.AND(Card.IsFaceup,Card.IsSetCard),1,nil,0x15)
 end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end
-	if chk==0 then return Duel.IsExistingTarget(s.filter,tp,LOCATION_MZONE,0,1,nil) end
+	local rg=Duel.GetMatchingGroup(s.cfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil,e)
+	if chk==0 then return rg:CheckSubGroup(s.fselect,2,2) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g=Duel.SelectTarget(tp,s.filter,tp,LOCATION_MZONE,0,1,1,nil)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local ag=Duel.SelectTarget(tp,Card.IsFaceup,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,g)
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g+ag,2,0,0)
+	local sg=rg:SelectSubGroup(tp,s.fselect,false,2,2)
+	Duel.SetTargetCard(sg)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Destroy(Duel.GetTargetsRelateToChain(),REASON_EFFECT)

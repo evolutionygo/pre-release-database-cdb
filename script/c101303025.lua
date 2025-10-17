@@ -26,7 +26,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function s.cfilter(c)
-	return c:IsSetCard(0x14d,0x155) and c:IsFaceup()
+	return c:IsSetCard(0x14d,0x155) and c:IsFaceup() and not c:IsCode(id)
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_MZONE,0,1,nil)
@@ -44,7 +44,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.spfilter(c,e,tp)
 	return not c:IsCode(id)
-		and (c:IsSetCard(0x14d,0x155) or c:IsCode(68468459) or aux.IsCodeListed(c,68468459))
+		and (c:IsSetCard(0x14d,0x155) or aux.IsCodeOrListed(c,68468459))
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE)
 end
 function s.sptg2(e,tp,eg,ep,ev,re,r,rp,chk)

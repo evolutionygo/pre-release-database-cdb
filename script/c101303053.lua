@@ -16,7 +16,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetCurrentPhase()==PHASE_MAIN1 or Duel.GetCurrentPhase()==PHASE_MAIN2
+	return Duel.IsMainPhase()
 end
 function s.thfilter1(c)
 	return (c:IsCode(44839512) or c:IsSetCard(0x2066) and c:IsLevelBelow(4))
@@ -24,9 +24,6 @@ function s.thfilter1(c)
 end
 function s.thfilter2(c)
 	return c:IsSetCard(0xe9) and c:IsLevel(8) and c:IsAbleToHand()
-end
-function s.filter0(c)
-	return (c:IsLocation(LOCATION_MZONE) or c:IsFaceupEx()) and c:IsRace(RACE_ROCK) and c:IsAbleToDeck()
 end
 function s.filter1(c,e)
 	return (c:IsLocation(LOCATION_MZONE) or c:IsFaceupEx()) and c:IsRace(RACE_ROCK)
@@ -43,7 +40,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 		and (not e:IsCostChecked() or Duel.GetFlagEffect(tp,id+o)==0)
 	local b3=false
 	local chkf=tp
-	local mg1=Duel.GetMatchingGroup(s.filter0,tp,LOCATION_HAND+LOCATION_MZONE+LOCATION_GRAVE+LOCATION_REMOVED,0,nil)
+	local mg1=Duel.GetMatchingGroup(s.filter1,tp,LOCATION_HAND+LOCATION_MZONE+LOCATION_GRAVE+LOCATION_REMOVED,0,nil)
 	local res=Duel.IsExistingMatchingCard(s.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,mg1,nil,chkf)
 	if not res then
 		local ce=Duel.GetChainMaterial(tp)
@@ -59,9 +56,9 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local op=0
 	if b1 or b2 or b3 then
 		op=aux.SelectFromOptions(tp,
-			{b1,aux.Stringid(id,0),1},
-			{b2,aux.Stringid(id,1),2},
-			{b3,aux.Stringid(id,2),3})
+			{b1,aux.Stringid(id,1),1},
+			{b2,aux.Stringid(id,2),2},
+			{b3,aux.Stringid(id,3),3})
 	end
 	e:SetLabel(op)
 	if op==1 or op==2 then
@@ -78,6 +75,9 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 		Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 		Duel.SetOperationInfo(0,CATEGORY_TODECK,nil,1,tp,LOCATION_HAND+LOCATION_MZONE+LOCATION_GRAVE+LOCATION_REMOVED)
 	end
+end
+function s.cfilter(c)
+	return c:IsLocation(LOCATION_REMOVED) or (c:IsLocation(LOCATION_MZONE) and c:IsFaceup())
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetLabel()==1 then
@@ -113,14 +113,21 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 			local tg=sg:Select(tp,1,1,nil)
 			local tc=tg:GetFirst()
-			if sg1:IsContains(tc) and (sg2==nil or not sg2:IsContains(tc) or not Duel.SelectYesNo(tp,ce:GetDescription())) then
+			if sg1:IsContains(tc) and (sg2==nil or not sg2:IsContains(tc) or ce and not Duel.SelectYesNo(tp,ce:GetDescription())) then
 				local mat1=Duel.SelectFusionMaterial(tp,tc,mg1,nil,chkf)
 				tc:SetMaterial(mat1)
-				Duel.HintSelection(mat1)
+				if mat1:IsExists(Card.IsFacedown,1,nil) then
+					local cg=mat1:Filter(Card.IsFacedown,nil)
+					Duel.ConfirmCards(1-tp,cg)
+				end
+				if mat1:Filter(s.cfilter,nil):GetCount()>0 then
+					local cg=mat1:Filter(s.cfilter,nil)
+					Duel.HintSelection(cg)
+				end
 				Duel.SendtoDeck(mat1,nil,SEQ_DECKSHUFFLE,REASON_EFFECT+REASON_MATERIAL+REASON_FUSION)
 				Duel.BreakEffect()
 				Duel.SpecialSummon(tc,SUMMON_TYPE_FUSION,tp,tp,false,false,POS_FACEUP)
-			else
+			elseif ce then
 				local mat2=Duel.SelectFusionMaterial(tp,tc,mg2,nil,chkf)
 				local fop=ce:GetOperation()
 				fop(ce,e,tp,tc,mat2)

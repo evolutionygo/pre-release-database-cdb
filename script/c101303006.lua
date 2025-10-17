@@ -118,8 +118,8 @@ end
 function s.atkcon(e,tp,eg,ep,ev,re,r,rp)
 	local a=Duel.GetAttacker()
 	local b=Duel.GetAttackTarget()
-	return a:IsFaceup() and a:IsAttribute(ATTRIBUTE_EARTH)
-		and b:IsFaceup() and b:IsAttribute(ATTRIBUTE_EARTH)
+	return a and a:IsFaceup() and a:IsAttribute(ATTRIBUTE_EARTH)
+		and b and b:IsFaceup() and b:IsAttribute(ATTRIBUTE_EARTH)
 end
 function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.NegateAttack()

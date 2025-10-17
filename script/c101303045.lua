@@ -23,7 +23,7 @@ function s.initial_effect(c)
 	--spsummon or tohand
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,1))
-	e3:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_TOHAND+CATEGORY_SEARCH)
+	e3:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_TOHAND+CATEGORY_SEARCH+CATEGORY_DECKDES)
 	e3:SetType(EFFECT_TYPE_IGNITION)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetCountLimit(1,id)
@@ -56,7 +56,7 @@ function s.spcost2(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:GetHandler():RemoveOverlayCard(tp,2,2,REASON_COST)
 end
 function s.spfilter2(c,e,tp)
-	if not (c:IsSetCard(0x155,0x179) or c:IsCode(68468459) or aux.IsCodeListed(c,68468459)) then return false end
+	if not (c:IsSetCard(0x155,0x179) or aux.IsCodeOrListed(c,68468459)) then return false end
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	return c:IsAbleToHand() or (ft>0 and c:IsCanBeSpecialSummoned(e,0,tp,false,false))
 end
@@ -72,7 +72,7 @@ function s.spop2(e,tp,eg,ep,ev,re,r,rp)
 		if tc:IsAbleToHand() and (not tc:IsCanBeSpecialSummoned(e,0,tp,false,false) or ft<=0 or Duel.SelectOption(tp,1190,1152)==0) then
 			Duel.SendtoHand(tc,nil,REASON_EFFECT)
 			Duel.ConfirmCards(1-tp,tc)
-		else
+		elseif ft>0 and tc:IsCanBeSpecialSummoned(e,0,tp,false,false) then
 			Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
 		end
 	end

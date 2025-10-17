@@ -46,7 +46,7 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 			{b2,aux.Stringid(id,3),2})
 	end
 	e:SetLabel(op)
-	if op==1  then
+	if op==1 then
 		if e:IsCostChecked() then
 			e:SetCategory(CATEGORY_SPECIAL_SUMMON)
 		end
@@ -60,10 +60,12 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetLabel()==1 then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-		local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_HAND,0,1,1,nil,e,tp)
-		if g:GetCount()>0 then
-			Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
+		if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+			local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_HAND,0,1,1,nil,e,tp)
+			if g:GetCount()>0 then
+				Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
+			end
 		end
 	elseif e:GetLabel()==2 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
@@ -87,13 +89,15 @@ end
 function s.spop2(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToChain() and aux.NecroValleyFilter()(tc)
-		and Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)~=0
-		and tc:GetBaseAttack()<=1200 then
+		and Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP)~=0
+		and tc:GetTextAttack()<=1200 and tc:GetTextAttack()>=0 then
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_UPDATE_ATTACK)
+		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 		e1:SetValue(1200)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 		tc:RegisterEffect(e1)
 	end
+	Duel.SpecialSummonComplete()
 end

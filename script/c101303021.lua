@@ -21,6 +21,7 @@ function s.initial_effect(c)
 	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCountLimit(1,id+o)
+	e2:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_MAIN_END)
 	e2:SetCondition(s.thcon)
 	e2:SetCost(s.thcost)
 	e2:SetTarget(s.thtg)
@@ -45,19 +46,21 @@ end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToChain()
-		and Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)~=0 then
+		and Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)~=0
+		and c:IsCanAddCounter(0x1f,3) then
+		Duel.BreakEffect()
 		c:AddCounter(0x1f,3)
 	end
 end
 function s.thcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetCurrentPhase()==PHASE_MAIN1 or Duel.GetCurrentPhase()==PHASE_MAIN2
+	return Duel.IsMainPhase()
 end
 function s.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x1f,1,REASON_COST) end
 	e:GetHandler():RemoveCounter(tp,0x1f,1,REASON_COST)
 end
 function s.thfilter(c)
-	return (c:IsCode(66947414) or aux.IsCodeListed(c,66947414) and c:IsType(TYPE_SPELL+TYPE_TRAP)) and c:IsAbleToHand()
+	return (c:IsCode(66947414) or aux.IsCodeOrListed(c,66947414) and c:IsType(TYPE_SPELL+TYPE_TRAP)) and c:IsAbleToHand()
 end
 function s.spfilter(c,e,tp)
 	return c:IsSetCard(0x15) and c:IsLevelBelow(9) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
