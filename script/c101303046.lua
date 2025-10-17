@@ -25,6 +25,9 @@ function s.initial_effect(c)
 	e2:SetOperation(s.eop)
 	c:RegisterEffect(e2)
 end
+function s.zonelimit(e)
+	return 0x1f001f | (0x600060 & ~e:GetHandler():GetLinkedZone())
+end
 function s.cfilter(c,zone)
 	local seq=c:GetSequence()
 	if c:IsLocation(LOCATION_MZONE) then
