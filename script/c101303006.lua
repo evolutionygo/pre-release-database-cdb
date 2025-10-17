@@ -37,6 +37,9 @@ function s.initial_effect(c)
 	e4:SetOperation(s.atkop)
 	c:RegisterEffect(e4)
 end
+function s.fspcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return not e:GetHandler():IsPublic() end
+end
 function s.spfilter1(c,e)
 	return c:IsRace(RACE_ROCK) and not c:IsImmuneToEffect(e)
 end

@@ -1,8 +1,8 @@
 --磁石の戦士マグネット・テルスリオン
 local s,id,o=GetID()
 function s.initial_effect(c)
-	aux.AddCodeList()
-	c:EnableReviveLimit(c,101303005,101303006)
+	aux.AddCodeList(c,101303005,101303006)
+	c:EnableReviveLimit()
 	--cannot special summon
 	local e1=Effect.CreateEffect(c)
 	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
