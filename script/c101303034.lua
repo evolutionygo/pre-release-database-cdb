@@ -58,7 +58,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.cfilter(c)
-	return c:IsSetCard(0x2066) and c:IsLevel(8) and c:IsAbleToGraveAsCost()
+	return c:IsSetCard(0xe9) and c:IsLevel(8) and c:IsAbleToGraveAsCost()
 end
 function s.sumcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_DECK,0,1,nil) end
