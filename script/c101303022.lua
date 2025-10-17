@@ -64,7 +64,7 @@ function s.desfilter(c)
 	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsSetCard(0x15)
 end
 function s.fselect(g)
-	return g:IsExists(s.desfilter)
+	return g:IsExists(s.desfilter,1,nil)
 end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end
