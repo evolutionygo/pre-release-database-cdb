@@ -44,7 +44,7 @@ function s.spfilter2(c,e,tp,m,f,gc,chkf)
 	return c:IsType(TYPE_FUSION) and (not f or f(c))
 		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) and c:CheckFusionMaterial(m,gc,chkf)
 end
-function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
+function s.fsptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then
 		local chkf=tp
@@ -63,7 +63,7 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 end
-function s.spop(e,tp,eg,ep,ev,re,r,rp)
+function s.fspop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local chkf=tp
 	if not c:IsRelateToChain() or c:IsImmuneToEffect(e) then return end
