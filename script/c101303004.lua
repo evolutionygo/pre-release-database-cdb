@@ -20,7 +20,7 @@ function s.initial_effect(c)
 	e2:SetTarget(s.sptg)
 	e2:SetOperation(s.spop)
 	c:RegisterEffect(e2)
-	--spsummon
+	--target
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,1))
 	e3:SetCategory(CATEGORY_DESTROY+CATEGORY_CONTROL)
@@ -51,7 +51,7 @@ function s.spcostfilter(c)
 	return c:IsFaceupEx() and c:IsAbleToRemoveAsCost() and c:IsCode(101303005,101303006)
 end
 function s.gcheck(g,tp)
-	return aux.gfcheck(Card.IsCode,101303005,101303006)
+	return aux.gfcheck(g,Card.IsCode,101303005,101303006)
 		and Duel.GetMZoneCount(tp,g)>0
 end
 function s.spcon(e,c)
@@ -81,14 +81,22 @@ end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp) end
 	if chk==0 then return Duel.IsExistingTarget(aux.TRUE,tp,0,LOCATION_MZONE,1,nil) end
+	e:SetLabel(0)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 	local g=Duel.SelectTarget(tp,aux.TRUE,tp,0,LOCATION_MZONE,1,1,nil)
+	if g:GetCount()>0 then
+		local tc=g:GetFirst()
+		if not tc:IsAttribute(ATTRIBUTE_EARTH) or tc:IsFacedown() then
+			Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
+		else
+			e:SetLabel(1)
+		end
+	end
 end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToChain() and tc:IsLocation(LOCATION_MZONE) then
-		if tc:IsFaceup() and tc:IsAttribute(ATTRIBUTE_EARTH)
-			and tc:IsControlerCanBeChanged()
+		if e:GetLabel()==1 and tc:IsControlerCanBeChanged()
 			and Duel.SelectYesNo(tp,aux.Stringid(id,3)) then
 			Duel.GetControl(tc,tp)
 		else
