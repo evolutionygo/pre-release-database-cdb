@@ -1,7 +1,8 @@
 --磁石の戦士マグネット・テルスリオン
 local s,id,o=GetID()
 function s.initial_effect(c)
-	c:EnableReviveLimit()
+	aux.AddCodeList()
+	c:EnableReviveLimit(c,101303005,101303006)
 	--cannot special summon
 	local e1=Effect.CreateEffect(c)
 	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
@@ -56,7 +57,6 @@ end
 function s.spcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
-	if Duel.GetMZoneCount(tp)<=0 then return false end
 	local g=Duel.GetMatchingGroup(s.spcostfilter,tp,LOCATION_GRAVE+LOCATION_MZONE+LOCATION_HAND,0,c)
 	return g:CheckSubGroup(s.gcheck,2,2,tp)
 end
