@@ -59,9 +59,9 @@ function s.eop(e,tp,eg,ep,ev,re,r,rp)
 		and Duel.GetFlagEffect(tp,id+o*2)==0
 	if not (b1 or b2 or b3) then return end
 	local op=aux.SelectFromOptions(tp,
-			{b1,aux.Stringid(id,0),1},
-			{b2,aux.Stringid(id,1),2},
-			{b3,aux.Stringid(id,2),3})
+			{b1,aux.Stringid(id,1),1},
+			{b2,aux.Stringid(id,2),2},
+			{b3,aux.Stringid(id,3),3})
 	if op==1 then
 		Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1)
 		local g=Duel.GetMatchingGroup(Card.IsAbleToDeck,tp,LOCATION_MZONE,LOCATION_MZONE,aux.ExceptThisCard(e))
@@ -79,7 +79,7 @@ function s.eop(e,tp,eg,ep,ev,re,r,rp)
 		local g=Duel.GetFieldGroup(tp,0,LOCATION_EXTRA)
 		if g:GetCount()>0 then
 			Duel.BreakEffect()
-			Duel.ConfirmCards(tp,g)
+			Duel.ConfirmCards(tp,g,true)
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 			local tg=g:FilterSelect(tp,Card.IsAbleToRemove,1,1,nil)
 			if tg:GetCount()>0 then
