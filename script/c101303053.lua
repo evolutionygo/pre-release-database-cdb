@@ -60,8 +60,8 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if b1 or b2 or b3 then
 		op=aux.SelectFromOptions(tp,
 			{b1,aux.Stringid(id,0),1},
-			{b1,aux.Stringid(id,1),2},
-			{b2,aux.Stringid(id,2),3})
+			{b2,aux.Stringid(id,1),2},
+			{b3,aux.Stringid(id,2),3})
 	end
 	e:SetLabel(op)
 	if op==1 or op==2 then

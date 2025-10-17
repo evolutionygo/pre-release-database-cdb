@@ -60,8 +60,8 @@ function s.eop(e,tp,eg,ep,ev,re,r,rp)
 	if not (b1 or b2 or b3) then return end
 	local op=aux.SelectFromOptions(tp,
 			{b1,aux.Stringid(id,0),1},
-			{b1,aux.Stringid(id,1),2},
-			{b2,aux.Stringid(id,2),3})
+			{b2,aux.Stringid(id,1),2},
+			{b3,aux.Stringid(id,2),3})
 	if op==1 then
 		Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1)
 		local g=Duel.GetMatchingGroup(Card.IsAbleToDeck,tp,LOCATION_MZONE,LOCATION_MZONE,aux.ExceptThisCard(e))
