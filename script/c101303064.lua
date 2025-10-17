@@ -46,8 +46,8 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.dfilter(c,e,tp)
-	return c:IsFaceup() and c:IsSetCard(0x1a1)
-		and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_DECK,0,1,nil,e,tp)
+	return c:IsType(TYPE_MONSTER)
+		and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_DECK,0,1,nil,e,tp,c)
 end
 function s.spfilter(c,e,tp,ec)
 	return c:IsAttack(1200) and c:IsDefenseBelow(1000)
