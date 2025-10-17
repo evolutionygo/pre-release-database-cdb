@@ -21,14 +21,14 @@ function s.initial_effect(c)
 	e2:SetOperation(s.spop)
 	c:RegisterEffect(e2)
 	--set
-	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(id,2))
-	e2:SetType(EFFECT_TYPE_IGNITION)
-	e2:SetRange(LOCATION_GRAVE)
-	e2:SetCost(aux.bfgcost)
-	e2:SetTarget(s.settg)
-	e2:SetOperation(s.setop)
-	c:RegisterEffect(e2)
+	local e3=Effect.CreateEffect(c)
+	e3:SetDescription(aux.Stringid(id,2))
+	e3:SetType(EFFECT_TYPE_IGNITION)
+	e3:SetRange(LOCATION_GRAVE)
+	e3:SetCost(aux.bfgcost)
+	e3:SetTarget(s.settg)
+	e3:SetOperation(s.setop)
+	c:RegisterEffect(e3)
 end
 function s.thfilter(c)
 	return c:IsSetCard(0x15) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
@@ -50,7 +50,7 @@ function s.dfilter(c,e,tp)
 		and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_DECK,0,1,nil,e,tp)
 end
 function s.spfilter(c,e,tp,ec)
-	return c:IsAttack(1200) and c:IsDefenseBelow(1000) and 
+	return c:IsAttack(1200) and c:IsDefenseBelow(1000)
 		and (Duel.GetMZoneCount(tp,ec)>0
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 		or Duel.GetMZoneCount(1-tp,ec)>0
