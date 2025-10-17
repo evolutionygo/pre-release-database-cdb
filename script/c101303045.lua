@@ -1,7 +1,7 @@
 --ガンホー！スプリガンズ！
 local s,id,o=GetID()
 function s.initial_effect(c)
-	aux.AddCodeList(c,29601381)
+	aux.AddCodeList(c,29601381,68468459)
 	--xyz summon
 	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x155),4,2,nil,nil,99)
 	c:EnableReviveLimit()
@@ -56,7 +56,7 @@ function s.spcost2(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:GetHandler():RemoveOverlayCard(tp,2,2,REASON_COST)
 end
 function s.spfilter2(c,e,tp)
-	if not (c:IsSetCard(0x155,0x179) or aux.IsCodeOrListed(c,68468459)) then return false end
+	if not (c:IsSetCard(0x155,0x179) or aux.IsCodeOrListed(c,68468459) and c:IsType(TYPE_MONSTER)) then return false end
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	return c:IsAbleToHand() or (ft>0 and c:IsCanBeSpecialSummoned(e,0,tp,false,false))
 end

@@ -48,7 +48,7 @@ end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToChain() and Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)~=0
-		and e:GetLabel()>0 and c:IsCanAddCounter(0x1f) then
+		and e:GetLabel()>0 and c:IsCanAddCounter(0x1f,e:GetLabel()) then
 		Duel.BreakEffect()
 		c:AddCounter(0x1f,e:GetLabel())
 	end
@@ -70,7 +70,7 @@ function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 	local sg=rg:SelectSubGroup(tp,s.fselect,false,2,2)
 	Duel.SetTargetCard(sg)
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,sg,#sg,0,0)
 end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Destroy(Duel.GetTargetsRelateToChain(),REASON_EFFECT)

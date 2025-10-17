@@ -38,7 +38,6 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 		and (not e:IsCostChecked() or Duel.GetFlagEffect(tp,id)==0)
 	local b2=Duel.IsExistingMatchingCard(s.thfilter2,tp,LOCATION_DECK,0,1,nil)
 		and (not e:IsCostChecked() or Duel.GetFlagEffect(tp,id+o)==0)
-	local b3=false
 	local chkf=tp
 	local mg1=Duel.GetMatchingGroup(s.filter1,tp,LOCATION_HAND+LOCATION_MZONE+LOCATION_GRAVE+LOCATION_REMOVED,0,nil,e)
 	local res=Duel.IsExistingMatchingCard(s.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,mg1,nil,chkf)
@@ -50,8 +49,8 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 			local mf=ce:GetValue()
 			res=Duel.IsExistingMatchingCard(s.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,mg2,mf,chkf)
 		end
-		b3=res and (not e:IsCostChecked() or Duel.GetFlagEffect(tp,id+o*2)==0)
 	end
+	local b3=res and (not e:IsCostChecked() or Duel.GetFlagEffect(tp,id+o*2)==0)
 	if chk==0 then return b1 or b2 or b3 end
 	local op=0
 	if b1 or b2 or b3 then
@@ -76,8 +75,11 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 		Duel.SetOperationInfo(0,CATEGORY_TODECK,nil,1,tp,LOCATION_HAND+LOCATION_MZONE+LOCATION_GRAVE+LOCATION_REMOVED)
 	end
 end
-function s.cfilter(c)
-	return c:IsLocation(LOCATION_REMOVED) or (c:IsLocation(LOCATION_MZONE) and c:IsFaceup())
+function s.cffilter(c)
+	return c:IsFacedown() or c:IsLocation(LOCATION_HAND)
+end
+function s.hsfilter(c)
+	return c:IsLocation(LOCATION_GRAVE+LOCATION_REMOVED) or (c:IsLocation(LOCATION_MZONE) and c:IsFaceup())
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetLabel()==1 then
@@ -116,12 +118,12 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			if sg1:IsContains(tc) and (sg2==nil or not sg2:IsContains(tc) or ce and not Duel.SelectYesNo(tp,ce:GetDescription())) then
 				local mat1=Duel.SelectFusionMaterial(tp,tc,mg1,nil,chkf)
 				tc:SetMaterial(mat1)
-				if mat1:IsExists(Card.IsFacedown,1,nil) then
-					local cg=mat1:Filter(Card.IsFacedown,nil)
+				if mat1:IsExists(s.cffilter,1,nil) then
+					local cg=mat1:Filter(s.cffilter,nil)
 					Duel.ConfirmCards(1-tp,cg)
 				end
-				if mat1:Filter(s.cfilter,nil):GetCount()>0 then
-					local cg=mat1:Filter(s.cfilter,nil)
+				if mat1:IsExists(s.hsfilter,1,nil) then
+					local cg=mat1:Filter(s.hsfilter,nil)
 					Duel.HintSelection(cg)
 				end
 				Duel.SendtoDeck(mat1,nil,SEQ_DECKSHUFFLE,REASON_EFFECT+REASON_MATERIAL+REASON_FUSION)
