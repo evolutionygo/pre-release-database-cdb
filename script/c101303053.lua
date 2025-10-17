@@ -23,7 +23,7 @@ function s.thfilter1(c)
 		and c:IsAbleToHand()
 end
 function s.thfilter2(c)
-	return c:IsSetCard(0x2066) and c:IsLevel(8) and c:IsAbleToHand()
+	return c:IsSetCard(0xe9) and c:IsLevel(8) and c:IsAbleToHand()
 end
 function s.filter0(c)
 	return (c:IsLocation(LOCATION_MZONE) or c:IsFaceupEx()) and c:IsRace(RACE_ROCK) and c:IsAbleToDeck()
