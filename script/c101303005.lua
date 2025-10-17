@@ -1,4 +1,4 @@
---
+--磁石の戦士Σ＋
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--must attack
@@ -35,13 +35,13 @@ function s.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 function s.atkfilter(c)
-	return c:IsAttribute(ATTRIBUTE_EARTH)
+	return c:IsAttribute(ATTRIBUTE_EARTH) and c:IsFaceup()
 end
 function s.atkcon(e)
 	return Duel.IsExistingMatchingCard(s.atkfilter,e:GetHandlerPlayer(),LOCATION_MZONE,0,1,nil)
 end
 function s.atklimit(e,c)
-	return c:IsAttribute(ATTRIBUTE_EARTH)
+	return c:IsAttribute(ATTRIBUTE_EARTH) and c:IsFaceup()
 end
 function s.podfilter(c)
 	return c:IsAttribute(ATTRIBUTE_EARTH) and c:IsFaceup()
@@ -51,8 +51,8 @@ function s.podcond(e)
 	return Duel.IsExistingMatchingCard(s.podfilter,tp,0,LOCATION_MZONE,1,nil)
 end
 function s.filter(c,e,tp)
-	return not c:IsCode(id) and c:IsLevelBelow(4)
-		and (c:IsAbleToHand() or (Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and c:IsCanBeSpecialSummoned(e,0,tp,false,false)))
+	return not c:IsCode(id) and c:IsLevelBelow(4) and c:IsCode(0x2066)
+		and (c:IsAbleToHand() or Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and c:IsCanBeSpecialSummoned(e,0,tp,false,false))
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and s.filter(chkc,e,tp) end
@@ -68,7 +68,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and tc:IsCanBeSpecialSummoned(e,0,tp,false,false)
 			and (not tc:IsAbleToHand() or Duel.SelectOption(tp,1190,1152)==1) then
 			Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
-		else
+		elseif tc:IsAbleToHand() then
 			Duel.SendtoHand(tc,nil,REASON_EFFECT)
 		end
 	end
