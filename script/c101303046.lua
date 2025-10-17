@@ -40,7 +40,7 @@ function s.cfilter(c,zone)
 end
 function s.econ(e,tp,eg,ep,ev,re,r,rp)
 	local zone=Duel.GetLinkedZone(0)+(Duel.GetLinkedZone(1)<<0x10)
-	return not eg:IsContains(e:GetHandler()) and eg:IsExists(c5821478.cfilter,1,nil,zone) and e:GetHandler():GetSequence()>4
+	return not eg:IsContains(e:GetHandler()) and eg:IsExists(s.cfilter,1,nil,zone) and e:GetHandler():GetSequence()>4
 end
 function s.tdfilter(c)
 	return c:IsAbleToDeck() and c:IsType(TYPE_SPELL+TYPE_TRAP)
