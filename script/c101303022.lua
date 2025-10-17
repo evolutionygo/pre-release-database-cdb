@@ -54,8 +54,8 @@ function s.descost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x1f,1,REASON_COST) end
 	e:GetHandler():RemoveCounter(tp,0x1f,1,REASON_COST)
 end
-function s.filter(c,tp)
-	return c:IsFaceup() and c:IsSetCard(0x15) and Duel.IsExistingTarget(Card.IsFaceup,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,c)
+function s.filter(c)
+	return c:IsFaceup() and c:IsSetCard(0x15) and Duel.IsExistingTarget(Card.IsFaceup,0,LOCATION_ONFIELD,LOCATION_ONFIELD,1,c)
 end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end
