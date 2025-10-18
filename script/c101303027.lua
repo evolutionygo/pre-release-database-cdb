@@ -45,9 +45,9 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 	local g=Duel.GetMatchingGroup(s.thfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil,res)
 	if res then
-		e:GetLabel(1)
+		e:SetLabel(1)
 	else
-		e:GetLabel(0)
+		e:SetLabel(0)
 	end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,g:GetCount(),0,0)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,c,1,0,0)
