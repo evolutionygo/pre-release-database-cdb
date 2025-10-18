@@ -55,7 +55,8 @@ end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToChain() and Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)~=0 then
-		local res=(e:GetLabel()==1)
+		local res=false
+		if e:GetLabel()==1 then res=true end
 		local g=Duel.GetMatchingGroup(s.thfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil,res)
 		if g:GetCount()>0 then
 			Duel.BreakEffect()
