@@ -33,7 +33,7 @@ end
 function s.thfilter(c,res)
 	if c:IsCode(id) and c:IsLocation(LOCATION_MZONE) then return false end
 	return (res and c:IsFaceup() and c:IsType(TYPE_MONSTER)
-		or not res and c:IsType(TYPE_SPELL+TYPE_TRAP))and c:IsAbleToHand()
+		or not res and c:IsType(TYPE_SPELL+TYPE_TRAP)) and c:IsAbleToHand()
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
@@ -58,6 +58,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		local res=(e:GetLabel()==1)
 		local g=Duel.GetMatchingGroup(s.filter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil,res)
 		if g:GetCount()>0 then
+			Duel.BreakEffect()
 			Duel.SendtoHand(g,nil,REASON_EFFECT)
 		end
 	end
