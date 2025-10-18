@@ -61,17 +61,17 @@ function s.cfilter(c,e)
 	return c:IsFaceup() and c:IsCanBeEffectTarget(e)
 end
 function s.desfilter(c)
-	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsSetCard(0x15)
+	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsSetCard(0x15) and c:IsControler(tp)
 end
-function s.fselect(g)
-	return g:IsExists(s.desfilter,1,nil)
+function s.fselect(g,tp)
+	return g:IsExists(s.desfilter,1,nil,tp)
 end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end
 	local rg=Duel.GetMatchingGroup(s.cfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil,e)
-	if chk==0 then return rg:CheckSubGroup(s.fselect,2,2) end
+	if chk==0 then return rg:CheckSubGroup(s.fselect,2,2,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local sg=rg:SelectSubGroup(tp,s.fselect,false,2,2)
+	local sg=rg:SelectSubGroup(tp,s.fselect,false,2,2,tp)
 	Duel.SetTargetCard(sg)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,sg,#sg,0,0)
 end
