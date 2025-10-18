@@ -60,7 +60,7 @@ end
 function s.cfilter(c,e)
 	return c:IsFaceup() and c:IsCanBeEffectTarget(e)
 end
-function s.desfilter(c)
+function s.desfilter(c,tp)
 	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsSetCard(0x15) and c:IsControler(tp)
 end
 function s.fselect(g,tp)
