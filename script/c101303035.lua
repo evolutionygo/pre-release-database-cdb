@@ -76,7 +76,7 @@ function s.spcon(e,c)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,c)
 	local g=Duel.GetReleaseGroup(tp,true,REASON_SPSUMMON):Filter(s.spfilter,nil,tp,c)
-	local g2=duel.GetMatchingGroup(s.cfilter,tp,LOCATION_HAND,0,nil)
+	local g2=Duel.GetMatchingGroup(s.cfilter,tp,LOCATION_HAND,0,nil)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DISCARD)
 	local tc=g2:SelectUnselect(nil,tp,false,true,1,1)
 	if tc then
