@@ -53,7 +53,7 @@ end
 function s.eop(e,tp,eg,ep,ev,re,r,rp)
 	local b1=Duel.IsExistingMatchingCard(Card.IsAbleToDeck,tp,LOCATION_MZONE,LOCATION_MZONE,1,aux.ExceptThisCard(e))
 		and Duel.GetFlagEffect(tp,id)==0
-	local b2=Duel.IsExistingMatchingCard(s.tdfilter,tp,0,LOCATION_ONFIELD,1,nil)
+	local b2=Duel.IsExistingMatchingCard(s.tdfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil)
 		and Duel.GetFlagEffect(tp,id+o)==0
 	local b3=Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,0,LOCATION_EXTRA,1,nil)
 		and Duel.GetFlagEffect(tp,id+o*2)==0
