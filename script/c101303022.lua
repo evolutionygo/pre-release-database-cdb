@@ -32,8 +32,8 @@ function s.costfilter(c)
 	return c:IsSetCard(0x15) and c:IsLevelBelow(10) and c:IsAbleToGraveAsCost()
 end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	local g=Duel.GetMatchingGroup(s.costfilter,tp,LOCATION_DECK,0,nil)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.costfilter,tp,LOCATION_DECK,0,1,nil) end
+	local g=Duel.GetMatchingGroup(s.costfilter,tp,LOCATION_DECK+LOCATION_HAND,0,nil)
+	if chk==0 then return Duel.IsExistingMatchingCard(s.costfilter,tp,LOCATION_DECK+LOCATION_HAND,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
 	local tg=g:SelectSubGroup(tp,aux.dncheck,false,1,5)
 	Duel.SendtoGrave(tg,REASON_COST)
@@ -60,7 +60,7 @@ end
 function s.cfilter(c,e)
 	return c:IsFaceup() and c:IsCanBeEffectTarget(e)
 end
-function s.desfilter(c)
+function s.desfilter(c,tp)
 	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsSetCard(0x15) and c:IsControler(tp)
 end
 function s.fselect(g,tp)
