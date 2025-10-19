@@ -75,18 +75,22 @@ function s.spcon(e,c)
 		and Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_HAND,0,1,nil)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,c)
-	local g=Duel.GetReleaseGroup(tp,false,REASON_SPSUMMON):Filter(s.spfilter,nil,tp,c)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
-	local tc=g:SelectUnselect(nil,tp,false,true,1,1)
-	if tc then
-		e:SetLabelObject(tc)
-		return true
-	else return false end
+	local hg=Duel.GetMatchingGroup(s.cfilter,tp,LOCATION_HAND,0,nil)
+	local tc1=hg:SelectUnselect(nil,tp,false,true,1,1)
+	if tc1 then
+		local g=Duel.GetReleaseGroup(tp,false,REASON_SPSUMMON):Filter(s.spfilter,nil,tp,c)
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
+		local tc2=g:SelectUnselect(nil,tp,false,true,1,1)
+		if tc2 then
+			Duel.SendtoGrave(tc1,REASON_SPSUMMON+REASON_DISCARD)
+			e:SetLabelObject(tc2)
+			return true
+		else return false end
+	end
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp,c)
 	e:GetHandler():RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD-RESET_TOFIELD+RESET_PHASE+PHASE_END,0,1)
 	local g=e:GetLabelObject()
-	Duel.DiscardHand(tp,s.cfilter,1,1,REASON_SPSUMMON+REASON_DISCARD)
 	Duel.Release(g,REASON_SPSUMMON)
 end
 function s.setfilter(c)
