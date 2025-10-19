@@ -71,7 +71,7 @@ function s.spcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
 	if Duel.GetFlagEffect(tp,id)>0 then return false end
-	return Duel.CheckReleaseGroupEx(tp,s.spfilter,1,REASON_SPSUMMON,false,nil,tp,c)
+	return Duel.CheckReleaseGroupEx(tp,s.spfilter,1,REASON_SPSUMMON,true,nil,tp,c)
 		and Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_HAND,0,1,nil)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,c)
