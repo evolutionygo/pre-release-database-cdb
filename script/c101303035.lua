@@ -71,14 +71,14 @@ function s.spcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
 	if Duel.GetFlagEffect(tp,id)>0 then return false end
-	return Duel.CheckReleaseGroupEx(tp,s.spfilter,1,REASON_SPSUMMON,false,nil,tp,c)
+	return Duel.CheckReleaseGroupEx(tp,s.spfilter,1,REASON_SPSUMMON,true,nil,tp,c)
 		and Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_HAND,0,1,nil)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,c)
 	local hg=Duel.GetMatchingGroup(s.cfilter,tp,LOCATION_HAND,0,nil)
 	local tc1=hg:SelectUnselect(nil,tp,false,true,1,1)
 	if tc1 then
-		local g=Duel.GetReleaseGroup(tp,false,REASON_SPSUMMON):Filter(s.spfilter,nil,tp,c)
+		local g=Duel.GetReleaseGroup(tp,true,REASON_SPSUMMON):Filter(s.spfilter,nil,tp,c)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
 		local tc2=g:SelectUnselect(nil,tp,false,true,1,1)
 		if tc2 then
