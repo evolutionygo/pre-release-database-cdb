@@ -63,7 +63,7 @@ function s.cfilter(c,tp)
 		and Duel.IsExistingMatchingCard(s.sumfilter,tp,LOCATION_HAND+LOCATION_MZONE,0,1,nil,c)
 end
 function s.sumfilter(c,ec)
-	return aux.IsCodeListed(c,ec:GetCode()) and c:IsSetCard(0x172) and c:IsSummonable(true,nil)
+	return aux.IsCodeListed(ec,c:GetCode()) and c:IsSetCard(0x172) and c:IsSummonable(true,nil)
 end
 function s.sumtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and s.cfilter(chkc,tp) end
