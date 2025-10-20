@@ -85,7 +85,7 @@ function s.rmcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(Card.IsControler,1,nil,1-tp)
 end
 function s.rmfilter(c,tp)
-	return c:IsLocation(LOCATION_GRAVE) and c:IsControler(1-tp) and c:IsAbleToRemove(1-tp)
+	return c:IsLocation(LOCATION_GRAVE) and c:IsControler(1-tp) and c:IsAbleToRemove(1-tp) and c:IsType(TYPE_MONSTER)
 end
 function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local sg=eg:Filter(s.rmfilter,nil,tp)
