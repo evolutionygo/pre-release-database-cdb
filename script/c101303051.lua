@@ -1,7 +1,7 @@
---
+--R－ACEアビトレイター
 local s,id,o=GetID()
 function s.initial_effect(c)
-	aux.AddCodeList(c,63899465)
+	aux.AddCodeList(c,63899465,37617348)
 	c:SetSPSummonOnce(id)
 	--link summon
 	aux.AddLinkProcedure(c,aux.FilterBoolFunction(Card.IsLinkAttribute,ATTRIBUTE_FIRE),2)
@@ -64,7 +64,7 @@ function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
+	if tc:IsRelateToChain() and tc:IsOnField() then
 		Duel.Destroy(tc,REASON_EFFECT)
 	end
 end

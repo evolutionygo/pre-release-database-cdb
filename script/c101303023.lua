@@ -1,4 +1,4 @@
---
+--R－ACEクイック・アタッカー
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--special summon
@@ -31,6 +31,12 @@ function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_ONFIELD+LOCATION_HAND,0,1,e:GetHandler(),tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
 	local g=Duel.SelectMatchingCard(tp,s.cfilter,tp,LOCATION_ONFIELD+LOCATION_HAND,0,1,1,e:GetHandler(),tp)
+	if g:IsExists(Card.IsLocation,1,nil,LOCATION_HAND) then
+		Duel.ConfirmCards(1-tp,g)
+	end
+	if g:IsExists(Card.IsLocation,1,nil,LOCATION_ONFIELD) then
+		Duel.HintSelection(g)
+	end
 	Duel.SendtoDeck(g,nil,SEQ_DECKSHUFFLE,REASON_COST)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -61,12 +67,13 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,g)
 		local tc=g:GetFirst()
-		if Duel.GetFieldGroupCount(tp,0,LOCATION_MZONE)>0 then
-			if tc:IsCanBeSpecialSummoned(e,0,tp,false,false)
-				and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-				and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
-				Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
-			end
+		if Duel.GetFieldGroupCount(tp,0,LOCATION_MZONE)>0
+			and Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)==0
+			and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+			and tc:IsCanBeSpecialSummoned(e,0,tp,false,false)
+			and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
+			Duel.BreakEffect()
+			Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
 		end
 	end
 end
