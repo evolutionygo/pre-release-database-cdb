@@ -52,7 +52,7 @@ end
 function s.descon(e,tp,eg,ep,ev,re,r,rp)
 	local rc=re:GetHandler()
 	return rp==tp and re:IsHasType(EFFECT_TYPE_ACTIVATE)
-		and (rc:GetType()==TYPE_TRAP or rc:GetType()&TYPE_QUICKPLAY)
+		and (rc:GetType()==TYPE_TRAP or rc:GetType()&TYPE_QUICKPLAY==TYPE_QUICKPLAY)
 		and rc:IsSetCard(0x18b)
 end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
