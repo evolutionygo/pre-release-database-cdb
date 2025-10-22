@@ -1,4 +1,4 @@
---
+--白き竜の落胤
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddCodeList(c,68468459)
