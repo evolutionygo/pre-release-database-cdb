@@ -59,7 +59,7 @@ function s.splimit(e,c)
 	return not (c:IsType(TYPE_FUSION+TYPE_SYNCHRO) and c:IsLevel(8)) and c:IsLocation(LOCATION_EXTRA)
 end
 function s.spfilter2(c,e,tp)
-	return c:IsSetCard(0x2d7) and not c:IsType(TYPE_TUNER) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsSetCard(0x2d7) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.sptg2(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
