@@ -34,7 +34,7 @@ function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return ph==PHASE_MAIN1 or ph==PHASE_MAIN2
 end
 function s.spfilter(c,e,tp)
-	return (c:IsCode(68468459) or aux.IsCodeListed(c,68468459)) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return (c:IsCode(68468459) or aux.IsCodeListed(c,68468459)) and c:IsLevelBelow(4) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
@@ -88,9 +88,9 @@ function s.tdtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()
 	if chkc then return false end
 	if chk==0 then return Duel.IsExistingTarget(s.tdfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil,tp,c) and c:IsAbleToDeck() end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
 	local g1=Duel.SelectTarget(tp,s.tdfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,1,nil,tp,c)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
 	local g2=Duel.SelectTarget(tp,Card.IsAbleToDeck,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
 	g1:Merge(g2)
 	g1:AddCard(c)
