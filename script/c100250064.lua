@@ -3,7 +3,9 @@ local s,id,o=GetID()
 function s.initial_effect(c)
 	--fusion material
 	c:EnableReviveLimit()
-	aux.AddFusionProcShaddoll(c,ATTRIBUTE_WIND)
+    -- using new function
+	-- aux.AddFusionProcShaddoll(c,ATTRIBUTE_WIND)
+    aux.AddFusionProcFun2(c,function (mc) return mc:IsFusionSetCard(0x9d) end, function (mc) return aux.FShaddollFilter2(mc,ATTRIBUTE_WIND) end, true)
 	--cannot spsummon
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
@@ -12,7 +14,7 @@ function s.initial_effect(c)
 	e1:SetRange(LOCATION_EXTRA)
 	e1:SetValue(s.splimit)
 	c:RegisterEffect(e1)
-    --poschange
+	--poschange
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,0))
 	e2:SetCategory(CATEGORY_POSITION)
@@ -21,7 +23,7 @@ function s.initial_effect(c)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_MAIN_END)
 	e2:SetCountLimit(1,id)
-    e2:SetCondition(s.poscon)
+	e2:SetCondition(s.poscon)
 	e2:SetTarget(s.postg)
 	e2:SetOperation(s.posop)
 	c:RegisterEffect(e2)
@@ -40,11 +42,10 @@ function s.splimit(e,se,sp,st)
 	return bit.band(st,SUMMON_TYPE_FUSION)==SUMMON_TYPE_FUSION
 end
 function s.poscon(e,tp,eg,ep,ev,re,r,rp)
-    return Duel.IsMainPhase()
+	return Duel.IsMainPhase()
 end
 function s.postg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then
-		return Duel.IsExistingMatchingCard(Card.IsFacedown,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsFacedown,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_POSITION,nil,0,PLAYER_ALL,0)
 end
 function s.posop(e,tp,eg,ep,ev,re,r,rp)
@@ -56,12 +57,12 @@ function s.posop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.HintSelection(fg)
 		Duel.ChangePosition(fg,POS_FACEUP_DEFENSE)
 	end
-	local fc=fg:FilterCount(Card.IsType,nil,TYPE_FLIP)
-	if fc>0 then
+	local fct=fg:FilterCount(Card.IsType,nil,TYPE_FLIP)
+	if fct>0 then
 		local tg=Duel.GetMatchingGroup(aux.AND(Card.IsFaceup,Card.IsCanTurnSet),tp,LOCATION_MZONE,LOCATION_MZONE,fg)
 		if #tg>0 and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_POSCHANGE)
-			local sg=tg:Select(tp,1,fc,nil)
+			local sg=tg:Select(tp,1,math.min(fct,#tg),nil)
 			if #sg>0 then
 				Duel.BreakEffect()
 				Duel.HintSelection(sg)
