@@ -1,4 +1,4 @@
---
+--舌先減少
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--Activate
@@ -42,6 +42,7 @@ function s.disop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 		local g=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_DECK,0,1,1,nil,code)
 		if g:GetCount()>0 then
+			Duel.BreakEffect()
 			Duel.SendtoHand(g,nil,REASON_EFFECT)
 			Duel.ConfirmCards(1-tp,g)
 		end

@@ -1,9 +1,11 @@
---
+--禁断儀式術
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--Activate
 	local e1=aux.AddRitualProcEqual2(c,aux.TRUE,LOCATION_GRAVE,aux.TRUE,aux.FALSE,false,s.extraop)
+	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCountLimit(1,id)
+	e1:SetHintTiming(TIMINGS_CHECK_MONSTER+TIMING_END_PHASE)
 	c:RegisterEffect(e1)
 	--ritual
 	local e2=Effect.CreateEffect(c)
@@ -12,6 +14,7 @@ function s.initial_effect(c)
 	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetRange(LOCATION_GRAVE)
 	e2:SetHintTiming(0,TIMINGS_CHECK_MONSTER)
+	e2:SetCountLimit(1,id+o)
 	e2:SetCost(aux.bfgcost)
 	e2:SetOperation(s.rlop)
 	c:RegisterEffect(e2)
@@ -52,6 +55,7 @@ function s.descon(e,tp,eg,ep,ev,re,r,rp)
 	else return true end
 end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_CARD,0,id)
 	Duel.Destroy(e:GetLabelObject(),REASON_EFFECT)
 end
 function s.rlop(e,tp,eg,ep,ev,re,r,rp)

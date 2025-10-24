@@ -1,11 +1,13 @@
---
+--死地誤算守護
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--activate
 	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
+	e1:SetHintTiming(TIMING_END_PHASE)
 	e1:SetCost(s.cost)
 	e1:SetTarget(s.target)
 	e1:SetOperation(s.activate)
@@ -33,7 +35,7 @@ function s.initial_effect(c)
 	e4:SetCondition(s.lvcon(5))
 	e4:SetValue(s.efilter)
 	c:RegisterEffect(e4)
-	--lv
+	--tograve
 	local e5=Effect.CreateEffect(c)
 	e5:SetCategory(CATEGORY_TOGRAVE)
 	e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
