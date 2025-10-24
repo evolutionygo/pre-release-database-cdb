@@ -40,9 +40,9 @@ function s.initial_effect(c)
 	e5:SetCode(EVENT_PHASE+PHASE_STANDBY)
 	e5:SetRange(LOCATION_SZONE)
 	e5:SetCountLimit(1)
-	e5:SetCondition(s.tgcon)
-	e5:SetTarget(s.tgtg)
-	e5:SetOperation(s.tgop)
+	e5:SetCondition(s.tgcon2)
+	e5:SetTarget(s.tgtg2)
+	e5:SetOperation(s.tgop2)
 	c:RegisterEffect(e5)
 end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -136,17 +136,17 @@ function s.efilter(e,te)
 	return te:GetOwnerPlayer()~=e:GetHandlerPlayer() and te:GetOwner()~=e:GetOwner()
 		and te:IsActivated()
 end
-function s.tgcon(e,tp,eg,ep,ev,re,r,rp)
+function s.tgcon2(e,tp,eg,ep,ev,re,r,rp)
 	local tc=e:GetHandler():GetEquipTarget()
 	return Duel.GetTurnPlayer()==tp
 		and (tc:IsLevelAbove(7) or tc:IsRankAbove(7))
 end
-function s.tgtg(e,tp,eg,ep,ev,re,r,rp,chk)
+function s.tgtg2(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	local dg=Duel.GetMatchingGroup(Card.IsAbleToGrave,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)
 	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,dg,dg:GetCount(),0,0)
 end
-function s.tgop(e,tp,eg,ep,ev,re,r,rp)
+function s.tgop2(e,tp,eg,ep,ev,re,r,rp)
 	local dg=Duel.GetMatchingGroup(Card.IsAbleToGrave,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)
 	Duel.SendtoGrave(dg,REASON_EFFECT)
 end
