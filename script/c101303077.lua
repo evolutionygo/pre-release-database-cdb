@@ -77,7 +77,7 @@ function s.rlop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1)
 end
 function s.rlcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetFlagEffect(tp,id)>Duel.GetFlagEffect(tp,id+o)
+	return Duel.GetFlagEffect(e:GetHandlerPlayer(),id)>Duel.GetFlagEffect(e:GetHandlerPlayer(),id+o)
 end
 function s.rltg(e,c)
 	return c:IsType(TYPE_RITUAL)
