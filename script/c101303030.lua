@@ -52,7 +52,7 @@ function s.cfilter(c,tp)
 		and Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil,c:GetLevel()-1,c:GetRace())
 end
 function s.thfilter(c,level,race)
-	return c:IsLevel(level) and c:IsRace(race)
+	return c:IsLevel(level) and c:IsRace(race) and c:IsType(TYPE_MONSTER)
 		and c:IsAttribute(ATTRIBUTE_WATER) and c:IsAbleToHand()
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
