@@ -35,6 +35,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e4)
 	--lv
 	local e5=Effect.CreateEffect(c)
+	e5:SetCategory(CATEGORY_TOGRAVE)
 	e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
 	e5:SetCode(EVENT_PHASE+PHASE_STANDBY)
 	e5:SetRange(LOCATION_SZONE)
