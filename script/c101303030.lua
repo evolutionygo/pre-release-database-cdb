@@ -1,4 +1,4 @@
---
+--ファースト・ペンギン
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--special summon
@@ -45,31 +45,30 @@ function s.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONFIRM)
 	local tc=exg:Select(tp,1,1,nil):GetFirst()
 	Duel.ConfirmCards(1-tp,tc)
-	e:SetLabelObject(tc)
+	e:SetLabel(tc:GetLevel()-1,tc:GetRace())
 end
 function s.cfilter(c,tp)
-	return c:IsType(TYPE_SYNCHRO) and c:IsAttribute(ATTRIBUTE_WATER) and c:IsLevelAbove(2) and Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil,c)
+	return c:IsType(TYPE_SYNCHRO) and c:IsAttribute(ATTRIBUTE_WATER) and c:IsLevelAbove(2)
+		and Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil,c:GetLevel()-1,c:GetRace())
 end
-function s.thfilter(c,fc)
-	return c:IsLevel(fc:GetLevel()-1) and c:IsRace(fc:GetRace())
+function s.thfilter(c,level,race)
+	return c:IsLevel(level) and c:IsRace(race)
 		and c:IsAttribute(ATTRIBUTE_WATER) and c:IsAbleToHand()
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:IsCostChecked() end
-	local tc=e:GetLabelObject()
-	Duel.SetTargetCard(tc)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local tc=Duel.GetFirstTarget()
+	local lv,race=e:GetLabel()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_DECK,0,1,1,nil,tc)
+	local g=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_DECK,0,1,1,nil,lv,race)
 	local tc=g:GetFirst()
 	if tc then
 		Duel.SendtoHand(tc,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,tc)
-		if tc:IsLocation(LOCATION_HAND) and c:IsRelateToChain() and c:IsFaceup()
+		if tc:IsLocation(LOCATION_HAND) and c:IsRelateToChain() and c:IsFaceup() and c:IsType(TYPE_MONSTER)
 			and c:IsCanTurnSet() and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 			Duel.BreakEffect()
 			Duel.ChangePosition(c,POS_FACEDOWN_DEFENSE)
