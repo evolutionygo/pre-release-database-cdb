@@ -1,4 +1,4 @@
---
+--蒼穹を睨めるダーク
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--special Summon
@@ -83,7 +83,7 @@ function s.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 end
 function s.disop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.NegateEffect(ev) and re:GetHandler():IsRelateToEffect(re) then
+	if Duel.NegateEffect(ev) and re:GetHandler():IsRelateToChain(ev) then
 		Duel.Destroy(eg,REASON_EFFECT)
 	end
 end
