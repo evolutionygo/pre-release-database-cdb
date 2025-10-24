@@ -19,12 +19,15 @@ function s.initial_effect(c)
 		s.globle_check=true
 		rl_ReleaseRitualMaterial=Duel.ReleaseRitualMaterial
 		Duel.ReleaseRitualMaterial=function(mat)
-			if mat:IsExists(Card.IsLocation,1,nil,LOCATION_GRAVE) then
+			if mat:IsExists(s.rlfilter,1,nil) then
 				Duel.RegisterFlagEffect(tp,id+o,RESET_PHASE+PHASE_END,0,1)
 			end
 			rl_ReleaseRitualMaterial(mat)
 		end
 	end
+end
+function s.rlfilter(c)
+	return c:IsLocation(LOCATION_GRAVE) and c:IsType(TYPE_RITUAL)
 end
 function s.extraop(e,tp,eg,ep,ev,re,r,rp,tc,mat)
 	if not tc then return end
@@ -58,6 +61,7 @@ function s.rlop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetCode(EFFECT_EXTRA_RITUAL_MATERIAL)
 		e1:SetTargetRange(LOCATION_GRAVE,0)
 		e1:SetCondition(s.rlcon)
+		e1:SetTarget(s.rltg)
 		e1:SetValue(1)
 		e1:SetReset(RESET_PHASE+PHASE_END)
 		Duel.RegisterEffect(e1,tp)
@@ -66,4 +70,7 @@ function s.rlop(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.rlcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetFlagEffect(tp,id)>Duel.GetFlagEffect(tp,id+o)
+end
+function s.rltg(e,c)
+	return c:IsType(TYPE_RITUAL)
 end
