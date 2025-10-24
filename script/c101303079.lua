@@ -35,7 +35,7 @@ function s.thfilter(c,code)
 	return c:IsCode(code) and c:IsAbleToHand()
 end
 function s.disop(e,tp,eg,ep,ev,re,r,rp)
-	local code=Duel.GetOperationInfo(ev,CATEGORY_ANNOUNCE)
+	local code=Duel.GetChainInfo(ev,CHAININFO_TARGET_PARAM)
 	if Duel.NegateEffect(ev)
 		and Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil,code)
 		and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
