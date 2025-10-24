@@ -2,7 +2,7 @@
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--Activate
-	local e1=aux.AddRitualProcEqual2(c,aux.TRUE,LOCATION_GRAVE,aux.TRUE,aux.FALSE)
+	local e1=aux.AddRitualProcEqual2(c,aux.TRUE,LOCATION_GRAVE,aux.TRUE,aux.FALSE,false,s.extraop)
 	e1:SetCountLimit(1,id)
 	c:RegisterEffect(e1)
 	--ritual
@@ -25,6 +25,31 @@ function s.initial_effect(c)
 			rl_ReleaseRitualMaterial(mat)
 		end
 	end
+end
+function s.extraop(e,tp,eg,ep,ev,re,r,rp,tc,mat)
+	if not tc then return end
+	local fid=e:GetHandler():GetFieldID()
+	tc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,0,1,fid)
+	local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e1:SetCode(EVENT_PHASE+PHASE_END)
+	e1:SetCountLimit(1)
+	e1:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
+	e1:SetLabel(fid)
+	e1:SetLabelObject(tc)
+	e1:SetCondition(s.descon)
+	e1:SetOperation(s.desop)
+	Duel.RegisterEffect(e1,tp)
+end
+function s.descon(e,tp,eg,ep,ev,re,r,rp)
+	local tc=e:GetLabelObject()
+	if tc:GetFlagEffectLabel(id)~=e:GetLabel() then
+		e:Reset()
+		return false
+	else return true end
+end
+function s.desop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Destroy(e:GetLabelObject(),REASON_EFFECT)
 end
 function s.rlop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetFlagEffect(tp,id)==0 then
