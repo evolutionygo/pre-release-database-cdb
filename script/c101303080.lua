@@ -114,7 +114,7 @@ function s.lvop(e,tp,eg,ep,ev,re,r,rp)
 			e1:SetCode(EFFECT_UPDATE_RANK)
 		end
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
-		e1:SetValue(3)
+		e1:SetValue(1)
 		tc:RegisterEffect(e1)
 	end
 end
