@@ -19,15 +19,19 @@ function s.initial_effect(c)
 		s.globle_check=true
 		rl_ReleaseRitualMaterial=Duel.ReleaseRitualMaterial
 		Duel.ReleaseRitualMaterial=function(mat)
-			if mat:IsExists(s.rlfilter,1,nil) then
-				Duel.RegisterFlagEffect(tp,id+o,RESET_PHASE+PHASE_END,0,1)
+			if mat:IsExists(s.rlfilter,1,nil,0) then
+				Duel.RegisterFlagEffect(0,id+o,RESET_PHASE+PHASE_END,0,1)
+			end
+			if mat:IsExists(s.rlfilter,1,nil,1) then
+				Duel.RegisterFlagEffect(1,id+o,RESET_PHASE+PHASE_END,0,1)
 			end
 			rl_ReleaseRitualMaterial(mat)
 		end
 	end
 end
-function s.rlfilter(c)
+function s.rlfilter(c,tp)
 	return c:IsLocation(LOCATION_GRAVE) and c:IsType(TYPE_RITUAL)
+		and c:IsControler(tp)
 end
 function s.extraop(e,tp,eg,ep,ev,re,r,rp,tc,mat)
 	if not tc then return end
