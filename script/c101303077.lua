@@ -20,7 +20,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 	if not s.globle_check then
 		s.globle_check=true
-		rl_ReleaseRitualMaterial=Duel.ReleaseRitualMaterial
+		Ritual_ReleaseRitualMaterial=Duel.ReleaseRitualMaterial
 		Duel.ReleaseRitualMaterial=function(mat)
 			if mat:IsExists(s.rlfilter,1,nil,0) and Duel.GetFlagEffect(0,id)~=0 then
 				Duel.RegisterFlagEffect(0,id+o,RESET_PHASE+PHASE_END,0,1)
@@ -28,7 +28,7 @@ function s.initial_effect(c)
 			if mat:IsExists(s.rlfilter,1,nil,1) and Duel.GetFlagEffect(1,id)~=0 then
 				Duel.RegisterFlagEffect(1,id+o,RESET_PHASE+PHASE_END,0,1)
 			end
-			rl_ReleaseRitualMaterial(mat)
+			Ritual_ReleaseRitualMaterial(mat)
 		end
 	end
 end
