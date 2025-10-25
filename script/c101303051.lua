@@ -56,8 +56,10 @@ function s.descon(e,tp,eg,ep,ev,re,r,rp)
 		and rc:IsSetCard(0x18b)
 end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	local c=e:GetHandler()
 	if chkc then return chkc:IsOnField() and chkc:IsControler(1-tp) end
-	if chk==0 then return Duel.IsExistingTarget(nil,tp,0,LOCATION_ONFIELD,1,nil) end
+	if chk==0 then return Duel.IsExistingTarget(nil,tp,0,LOCATION_ONFIELD,1,nil) and c:GetFlagEffect(id)==0 end
+	c:RegisterFlagEffect(id,RESET_CHAIN,0,1)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 	local g=Duel.SelectTarget(tp,nil,tp,0,LOCATION_ONFIELD,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
