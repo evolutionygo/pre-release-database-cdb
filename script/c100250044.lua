@@ -20,7 +20,7 @@ function s.cfilter(c)
 	return c:IsSetCard(0x9c,0x53) and c:IsFaceup()
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsControler(1-tp) and aux.NegateMonsterFilter(chkc) and c:IsLocation(LOCATION_MZONE) end
+	if chkc then return chkc:IsControler(1-tp) and aux.NegateMonsterFilter(chkc) and chkc:IsLocation(LOCATION_MZONE) end
 	local sg=Duel.GetMatchingGroup(Card.IsDiscardable,tp,LOCATION_HAND,0,nil,REASON_EFFECT+REASON_DISCARD)
 	local b1=sg:GetCount()>0 and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_DECK,0,1,nil,e,tp)
 		and Duel.GetMZoneCount(tp)>0
