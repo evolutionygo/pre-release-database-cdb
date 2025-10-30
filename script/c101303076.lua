@@ -55,7 +55,8 @@ function s.lpop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.thcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsMainPhase() or Duel.GetTurnPlayer()~=tp and Duel.IsBattlePhase()
+	return (Duel.IsMainPhase() or Duel.GetTurnPlayer()~=tp and Duel.IsBattlePhase())
+		and e:GetHandler():IsStatus(STATUS_EFFECT_ENABLED)
 end
 function s.cfilter(c,ec,tp)
 	return c:IsFaceup() and c:IsSetCard(0x1ca) and c:IsAbleToGraveAsCost()

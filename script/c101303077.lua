@@ -33,7 +33,7 @@ function s.initial_effect(c)
 	end
 end
 function s.rlfilter(c,tp)
-	return c:IsLocation(LOCATION_GRAVE) and c:IsType(TYPE_RITUAL)
+	return c:IsLocation(LOCATION_GRAVE) and c:IsAllTypes(TYPE_RITUAL+TYPE_MONSTER)
 		and c:IsControler(tp)
 end
 function s.extraop(e,tp,eg,ep,ev,re,r,rp,tc,mat)
@@ -80,5 +80,5 @@ function s.rlcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetFlagEffect(e:GetHandlerPlayer(),id)>Duel.GetFlagEffect(e:GetHandlerPlayer(),id+o)
 end
 function s.rltg(e,c)
-	return c:IsType(TYPE_RITUAL)
+	return c:IsAllTypes(TYPE_RITUAL+TYPE_MONSTER)
 end
