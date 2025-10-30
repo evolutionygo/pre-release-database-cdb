@@ -58,7 +58,8 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.mvfilter(c)
-	return c:IsFaceup() and (c:IsControler(c:GetOwner()) or c:IsAbleToChangeControler()) and not c:IsForbidden() and c:CheckUniqueOnField(c:GetOwner())
+	return c:IsFaceup() and (c:IsControler(c:GetOwner()) or c:IsAbleToChangeControler())
+		and not c:IsForbidden() and c:CheckUniqueOnField(c:GetOwner())
 end
 function s.mvfilter2(c,e)
 	return c:IsType(TYPE_MONSTER) and (c:IsControler(c:GetOwner()) or c:IsAbleToChangeControler())
@@ -69,7 +70,8 @@ function s.isowner(c,tp)
 	return c:GetOwner()==tp
 end
 function s.gcheck(g)
-	return g:FilterCount(s.isowner,nil,0)<=Duel.GetLocationCount(0,LOCATION_SZONE) and g:FilterCount(s.isowner,nil,1)<=Duel.GetLocationCount(1,LOCATION_SZONE) and g:FilterCount(Card.IsSetCard,nil,0x1d1)>0
+	return g:FilterCount(s.isowner,nil,0)<=Duel.GetLocationCount(0,LOCATION_SZONE) and g:FilterCount(s.isowner,nil,1)<=Duel.GetLocationCount(1,LOCATION_SZONE)
+		and g:FilterCount(aux.AND(Card.IsSetCard,Card.IsFaceup),nil,0x1d1)>0
 end
 function s.mvtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end
