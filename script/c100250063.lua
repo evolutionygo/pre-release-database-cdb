@@ -48,15 +48,18 @@ function s.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 function s.efilter(e,te)
-	if te:IsActiveType(TYPE_SPELL+TYPE_TRAP) then return true
-	else return aux.qlifilter(e,te) end
+	if te:IsActiveType(TYPE_SPELL+TYPE_TRAP) then
+		return true
+	else
+		return aux.qlifilter(e,te)
+	end
 end
 function s.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.CheckLPCost(tp,800) end
 	Duel.PayLPCost(tp,800)
 end
 function s.thfilter(c)
-	return (c:IsSetCard(0x9d) or c:IsSetCard(0xc5) and c:IsType(TYPE_SPELL)) and c:IsAbleToHand()
+	return (c:IsSetCard(0x9d) or c:IsSetCard(0xc5) and c:IsType(TYPE_SPELL+TYPE_TRAP)) and c:IsAbleToHand()
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil) end

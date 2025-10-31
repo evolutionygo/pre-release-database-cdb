@@ -82,7 +82,6 @@ function s.efftg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return Duel.IsExistingTarget(s.efffilter,tp,LOCATION_GRAVE,0,1,nil,e,tp,eg,ep,ev,re,r,rp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
 	local g=Duel.SelectTarget(tp,s.efffilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp,eg,ep,ev,re,r,rp)
-	Duel.SetOperationInfo(0,CATEGORY_TODECK,g,1,0,0)
 	local tc=g:GetFirst()
 	Duel.ClearTargetCard()
 	tc:CreateEffectRelation(e)
