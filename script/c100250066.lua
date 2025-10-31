@@ -56,6 +56,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(s.thfilter,tp,LOCATION_DECK,0,nil)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	local sg=g:SelectSubGroup(tp,s.gcheck,false,2,2,tc)
+	if not sg or sg:GetCount()==0 then return end
 	Duel.SendtoHand(sg,nil,REASON_EFFECT)
 	Duel.ConfirmCards(1-tp,sg)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DISCARD)
