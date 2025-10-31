@@ -100,7 +100,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.FShaddollFilter(c,fc)
-	return c:IsCanBeFusionMaterial(fc) and (c:IsFusionSetCard(0x9d) or c:IsFusionAttribute(ATTRIBUTE_DARK+ATTRIBUTE_EARTH))
+	return c:IsCanBeFusionMaterial(fc) and (c:IsFusionSetCard(0x9d) or c:IsFusionAttribute(ATTRIBUTE_DARK+ATTRIBUTE_EARTH) or c:IsHasEffect(4904633))
 end
 function s.FShaddollExFilter(c,fc,fe)
 	return c:IsFaceup() and not c:IsImmuneToEffect(fe) and s.FShaddollFilter(c,fc)
@@ -110,10 +110,12 @@ function s.FShaddollFilter1(c,g)
 end
 function s.FShaddollFilter2(c,g,gc)
 	return c:IsFusionAttribute(ATTRIBUTE_DARK)
-		 and g:IsExists(s.FShaddollFilter3,1,Group.FromCards(c,gc))
+		and c:IsHasEffect(4904633)
+		and g:IsExists(s.FShaddollFilter3,1,Group.FromCards(c,gc))
 end
 function s.FShaddollFilter3(c)
 	return c:IsFusionAttribute(ATTRIBUTE_EARTH)
+		and c:IsHasEffect(4904633)
 end
 function s.FShaddollSpFilter1(c,fc,tp,mg,exg,chkf)
 	local emg=mg:Clone()
