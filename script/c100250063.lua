@@ -106,8 +106,10 @@ function s.FShaddollFilter3(c)
 	return c:IsFusionAttribute(ATTRIBUTE_EARTH)
 end
 function s.FShaddollSpFilter1(c,fc,tp,mg,exg,chkf)
-	local emg=mg
-	emg:Merge(exg)
+	local emg=mg:Clone()
+	if exg then
+		emg:Merge(exg)
+	end
 	return mg:CheckSubGroup(s.FShaddollgcheck,3,3,c,fc,tp,c,chkf)
 		or (exg and emg:CheckSubGroup(s.FShaddollgcheck,3,3,c,fc,tp,c,chkf))
 end

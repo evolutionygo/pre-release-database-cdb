@@ -33,8 +33,7 @@ function s.thfilter(c)
 	return c:IsSetCard(0x9d) and c:IsAbleToHand()
 end
 function s.gcheck(g,c)
-	local mg=Group.FromCards()
-	mg:Merge(g)
+	local mg=g:Clone()
 	mg:AddCard(c)
 	return mg:FilterCount(Card.IsType,nil,TYPE_MONSTER)==1
 		and mg:FilterCount(Card.IsType,nil,TYPE_SPELL)==1
