@@ -3,13 +3,19 @@ local s,id,o=GetID()
 function s.initial_effect(c)
 	--fusion material
 	c:EnableReviveLimit()
-	local e0=Effect.CreateEffect(c)
-	e0:SetType(EFFECT_TYPE_SINGLE)
-	e0:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
-	e0:SetCode(EFFECT_FUSION_MATERIAL)
-	e0:SetCondition(s.FShaddollCondition)
-	e0:SetOperation(s.FShaddollOperation)
-	c:RegisterEffect(e0)
+	-- old function
+	-- local e0=Effect.CreateEffect(c)
+	-- e0:SetType(EFFECT_TYPE_SINGLE)
+	-- e0:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	-- e0:SetCode(EFFECT_FUSION_MATERIAL)
+	-- e0:SetCondition(s.FShaddollCondition)
+	-- e0:SetOperation(s.FShaddollOperation)
+	-- c:RegisterEffect(e0)
+	aux.AddFusionProcMix(c,false,true,
+		function (mc) return mc:IsFusionSetCard(0x9d) end,
+		function (mc) return aux.FShaddollFilter2(mc,ATTRIBUTE_DARK) end,
+		function (mc) return aux.FShaddollFilter2(mc,ATTRIBUTE_EARTH) end
+	)
 	--spsummon condition
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
@@ -36,9 +42,9 @@ function s.initial_effect(c)
 	e3:SetTarget(s.thtg)
 	e3:SetOperation(s.thop)
 	c:RegisterEffect(e3)
-	--
+	--special summon
 	local e4=Effect.CreateEffect(c)
-	e4:SetDescription(aux.Stringid(id,1))
+	e4:SetDescription(aux.Stringid(id,2))
 	e4:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e4:SetProperty(EFFECT_FLAG_DELAY)
@@ -92,6 +98,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 	end
 end
+
 function s.FShaddollFilter(c,fc)
 	return c:IsCanBeFusionMaterial(fc) and (c:IsFusionSetCard(0x9d) or c:IsFusionAttribute(ATTRIBUTE_DARK+ATTRIBUTE_EARTH))
 end
@@ -103,7 +110,7 @@ function s.FShaddollFilter1(c,g)
 end
 function s.FShaddollFilter2(c,g,gc)
 	return c:IsFusionAttribute(ATTRIBUTE_DARK)
-		 and g:IsExists(s.FShaddollFilter3,1,Group.FromCards(c,gc)) 
+		 and g:IsExists(s.FShaddollFilter3,1,Group.FromCards(c,gc))
 end
 function s.FShaddollFilter3(c)
 	return c:IsFusionAttribute(ATTRIBUTE_EARTH)
