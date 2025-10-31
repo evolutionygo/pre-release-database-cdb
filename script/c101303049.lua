@@ -69,16 +69,20 @@ end
 function s.isowner(c,tp)
 	return c:GetOwner()==tp
 end
-function s.gcheck(g)
-	return g:FilterCount(s.isowner,nil,0)<=Duel.GetLocationCount(0,LOCATION_SZONE) and g:FilterCount(s.isowner,nil,1)<=Duel.GetLocationCount(1,LOCATION_SZONE)
-		and g:FilterCount(aux.AND(Card.IsSetCard,Card.IsFaceup),nil,0x1d1)>0
+function s.tgfilter(c,tp)
+	return c:IsSetCard(0x1d1) and c:IsControler(tp)
+end
+function s.gcheck(g,tp)
+	return g:FilterCount(s.isowner,nil,0)<=Duel.GetLocationCount(0,LOCATION_SZONE)
+		and g:FilterCount(s.isowner,nil,1)<=Duel.GetLocationCount(1,LOCATION_SZONE)
+		and g:FilterCount(s.tgfilter,nil,tp)>0
 end
 function s.mvtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end
 	local g=Duel.GetMatchingGroup(s.mvfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil):Filter(Card.IsCanBeEffectTarget,nil,e)
-	if chk==0 then return g:CheckSubGroup(s.gcheck,2,2) end
+	if chk==0 then return g:CheckSubGroup(s.gcheck,2,2,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
-	local sg=g:SelectSubGroup(tp,s.gcheck,false,2,2)
+	local sg=g:SelectSubGroup(tp,s.gcheck,false,2,2,tp)
 	Duel.SetTargetCard(sg)
 end
 function s.mvop(e,tp,eg,ep,ev,re,r,rp)
