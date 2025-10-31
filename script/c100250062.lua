@@ -1,7 +1,7 @@
 --影雄の烬 エグリスタ
 local s,id,o=GetID()
 function s.initial_effect(c)
-	--
+	--copy
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_FLIP+EFFECT_TYPE_TRIGGER_O)
@@ -23,56 +23,18 @@ function s.initial_effect(c)
 	e2:SetTarget(s.fsptg)
 	e2:SetOperation(s.fspop)
 	c:RegisterEffect(e2)
-	--
-	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e3:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
-	e3:SetCode(EVENT_ADJUST)
-	e3:SetRange(0xff)
-	e3:SetOperation(s.adjustop)
-	c:RegisterEffect(e3)
 	Duel.AddCustomActivityCounter(id,ACTIVITY_SPSUMMON,s.counterfilter)
+	s.shadoll_flip_effect=e1
 end
-Shaddoll_flip_effect={}
 function s.counterfilter(c)
 	return not c:IsSummonLocation(LOCATION_EXTRA) or c:IsSetCard(0x9d)
 end
 function s.rfilter(c)
 	return c:IsType(TYPE_FLIP) and c:IsSetCard(0x9d)
 end
-function s.adjustop(e,tp,eg,ep,ev,re,r,rp)
-	if not s.globle_check then
-		s.globle_check=true
-		local g=Duel.GetMatchingGroup(s.rfilter,0,0xff,0xff,nil)
-		Shaddoll_RegisterEffect=Card.RegisterEffect
-		Card.RegisterEffect=function(Card_c,Effect_e,bool)
-			if Effect_e and Effect_e:GetType() and Shaddoll_flip_effect[Card_c:GetOriginalCode()]==nil then
-				if Effect_e:GetType()&EFFECT_TYPE_FLIP==EFFECT_TYPE_FLIP then
-					Shaddoll_flip_effect[Card_c:GetOriginalCode()]=Effect_e:Clone()
-				end
-			end
-			if bool then
-				Shaddoll_RegisterEffect(Card_c,Effect_e,bool)
-			else
-				Shaddoll_RegisterEffect(Card_c,Effect_e,false)
-			end
-		end
-		for tc in aux.Next(g) do
-			if tc.initial_effect then
-				local Traitor_initial_effect=s.initial_effect
-				s.initial_effect=function() end
-				tc:ReplaceEffect(id,0)
-				s.initial_effect=Traitor_initial_effect
-				tc.initial_effect(tc)
-			end
-		end
-		Card.RegisterEffect=Shaddoll_RegisterEffect
-	end
-	e:Reset()
-end
 function s.efffilter(c,e,tp,eg,ep,ev,re,r,rp)
 	if not (c:IsSetCard(0x9d) and not c:IsRace(RACE_ROCK) and not c:IsCode(id)) then return false end
-	local te=Shaddoll_flip_effect[c:GetOriginalCode()]
+	local te=c.shadoll_flip_effect
 	if not te then return false end
 	local tg=te:GetTarget()
 	return not tg or tg and tg(e,tp,eg,ep,ev,re,r,rp,0)
@@ -86,7 +48,7 @@ function s.efftg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.ClearTargetCard()
 	tc:CreateEffectRelation(e)
 	e:SetLabelObject(tc)
-	local te=Shaddoll_flip_effect[tc:GetOriginalCode()]
+	local te=tc.shadoll_flip_effect
 	local tg=te:GetTarget()
 	if tg then tg(e,tp,eg,ep,ev,re,r,rp,1) end
 	Duel.ClearOperationInfo(0)
@@ -94,7 +56,7 @@ end
 function s.effop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=e:GetLabelObject()
 	if tc:IsRelateToEffect(e) then
-		local te=Shaddoll_flip_effect[tc:GetOriginalCode()]
+		local te=tc.shadoll_flip_effect
 		local op=te:GetOperation()
 		if op then op(e,tp,eg,ep,ev,re,r,rp) end
 	end
@@ -167,14 +129,14 @@ function s.fspop(e,tp,eg,ep,ev,re,r,rp)
 		::cancel::
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local tc=sg:Select(tp,1,1,nil):GetFirst()
-		if sg1:IsContains(tc) and (sg2==nil or not sg2:IsContains(tc) or not Duel.SelectYesNo(tp,ce:GetDescription())) then
+		if sg1:IsContains(tc) and (sg2==nil or not sg2:IsContains(tc) or ce and not Duel.SelectYesNo(tp,ce:GetDescription())) then
 			local mat=Duel.SelectFusionMaterial(tp,tc,mg1,nil,chkf)
 			if #mat<2 then goto cancel end
 			tc:SetMaterial(mat)
 			Duel.Remove(mat,POS_FACEUP,REASON_EFFECT+REASON_MATERIAL+REASON_FUSION)
 			Duel.BreakEffect()
 			Duel.SpecialSummon(tc,SUMMON_TYPE_FUSION,tp,tp,false,false,POS_FACEUP)
-		else
+		elseif ce then
 			local mat=Duel.SelectFusionMaterial(tp,tc,mg2,nil,chkf)
 			if #mat<2 then goto cancel end
 			local fop=ce:GetOperation()
