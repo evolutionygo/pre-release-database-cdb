@@ -1,4 +1,4 @@
---竜剣士ウィンドユニコーンＰ
+--竜剣士ウィンドユニコーンP
 local s,id,o=GetID()
 function s.initial_effect(c)
 	-- pendulum
@@ -36,6 +36,7 @@ function s.initial_effect(c)
 	e4:SetCode(EVENT_FREE_CHAIN)
 	e4:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e4:SetRange(LOCATION_MZONE)
+	e4:SetHintTiming(TIMINGS_CHECK_MONSTER+TIMING_END_PHASE)
 	e4:SetCountLimit(1,id+o)
 	e4:SetTarget(s.thtg)
 	e4:SetOperation(s.thop)
@@ -74,7 +75,6 @@ function s.penop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
 	else
 		if Duel.Destroy(c,REASON_EFFECT)>0 then
-			if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 			local sg=Duel.GetMatchingGroup(s.penspfilter,tp,LOCATION_PZONE,0,nil,e,tp)
 			if #sg==0 then return end
 			if #sg==1 then

@@ -1,4 +1,4 @@
---水晶機巧－ハリファイバーＰ
+--水晶機巧－ハリファイバーP
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--link summon
@@ -30,26 +30,42 @@ function s.initial_effect(c)
 	e2:SetTarget(s.sptg)
 	e2:SetOperation(s.spop)
 	c:RegisterEffect(e2)
+	--material check
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_SINGLE)
+	e3:SetCode(EFFECT_MATERIAL_CHECK)
+	e3:SetValue(s.valcheck)
+	e3:SetLabelObject(e1)
+	c:RegisterEffect(e3)
 end
 function s.lcheck(g,lc)
 	return g:IsExists(Card.IsLinkType,1,nil,TYPE_TUNER)
+end
+function s.lvcalfilter(c)
+	if c:GetOriginalType()&TYPE_MONSTER~=0 then return true end
+	local se=c:GetSpecialSummonInfo(SUMMON_INFO_REASON_EFFECT)
+	return se and se:GetHandler()==c
+end
+function s.valcheck(e,c)
+	local g=c:GetMaterial()
+	local val=g:Filter(s.lvcalfilter,nil):GetSum(Card.GetOriginalLevel)
+	e:GetLabelObject():SetLabel(val)
 end
 function s.hspcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_LINK)
 end
 function s.hspfilter(c,e,tp,lv)
 	return c:IsType(TYPE_TUNER) and c:IsLevelBelow(lv) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE)
+		and Duel.GetLocationCountFromEx(tp,tp,nil,c)>0
 end
 function s.hsptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	local g=e:GetHandler():GetMaterial()
-	local lv=g:GetSum(Card.GetLevel)
+	local lv=e:GetLabel()
 	if chk==0 then return lv>0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and Duel.IsExistingMatchingCard(s.hspfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp,lv) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 end
 function s.hspop(e,tp,eg,ep,ev,re,r,rp)
-	local g=e:GetHandler():GetMaterial()
-	local lv=g:GetSum(Card.GetLevel)
+	local lv=e:GetLabel()
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,s.hspfilter,tp,LOCATION_EXTRA,0,1,1,nil,e,tp,lv)
@@ -58,13 +74,11 @@ function s.hspop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
-	local ph=Duel.GetCurrentPhase()
-	return Duel.GetTurnPlayer()~=tp
-		and (ph==PHASE_MAIN1 or (ph>=PHASE_BATTLE_START and ph<=PHASE_BATTLE) or ph==PHASE_MAIN2)
+	return Duel.GetTurnPlayer()~=tp and (Duel.IsMainPhase() or Duel.IsBattlePhase())
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return not Duel.IsPlayerAffectedByEffect(tp,59822133)
-		and Duel.GetLocationCount(tp,LOCATION_MZONE)>=3
+		and Duel.GetMZoneCount(tp,e:GetHandler())>=3
 		and Duel.IsPlayerCanSpecialSummonMonster(tp,id+o,0,TYPES_TOKEN_MONSTER,0xea,0,1,RACE_MACHINE,ATTRIBUTE_WATER) end
 	Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,3,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,3,0,0)
