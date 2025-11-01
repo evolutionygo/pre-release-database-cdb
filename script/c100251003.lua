@@ -36,13 +36,25 @@ function s.detg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
 	local sg=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,sg,sg:GetCount(),0,0)
-	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,nil)
+	local dmg=sg:GetSum(Card.GetOriginalLevel)*200
+	if dmg>0 then
+		Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,dmg)
+	end
+end
+function s.lvcalfilter(c)
+	if c:GetOriginalType()&TYPE_MONSTER~=0 then return true end
+	local se=c:GetSpecialSummonInfo(SUMMON_INFO_REASON_EFFECT)
+	return se and se:GetHandler()==c
+end
+function s.gcheck(c,cg)
+	return cg:IsContains(c)
 end
 function s.deop(e,tp,eg,ep,ev,re,r,rp)
 	local sg=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 	if sg:GetCount()>0 then
+		local cg=sg:Filter(s.lvcalfilter,nil)
 		Duel.Destroy(sg,REASON_EFFECT)
-		local ct=Duel.GetOperatedGroup():GetSum(Card.GetOriginalLevel)
+		local ct=Duel.GetOperatedGroup():Filter(s.gcheck,nil,cg):GetSum(Card.GetOriginalLevel)
 		Duel.Damage(1-tp,ct*200,REASON_EFFECT)
 	end
 end
