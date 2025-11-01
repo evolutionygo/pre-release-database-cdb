@@ -33,15 +33,12 @@ end
 function s.damcon(e)
 	return e:GetHandler():GetOverlayCount()>0
 end
-function s.atkcon(e,tp,eg,ep,ev,re,r,rp)
-	return aux.bpcon(e,tp,eg,ep,ev,re,r,rp)
-end
 function s.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end
 	e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_COST)
 	local ct=Duel.GetOperatedGroup():GetFirst()
 	if ct:IsType(TYPE_MONSTER) then
-		e:SetLabel(ct:GetRace())
+		e:SetLabel(ct:GetOriginalRace())
 	else
 		e:SetLabel(0)
 	end
@@ -61,8 +58,8 @@ end
 function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToChain()
-		and e:GetHandler():GetEffectCount(EFFECT_EXTRA_ATTACK)==0
-		and e:GetHandler():GetEffectCount(EFFECT_EXTRA_ATTACK_MONSTER)==0 then
+		and c:GetEffectCount(EFFECT_EXTRA_ATTACK)==0
+		and c:GetEffectCount(EFFECT_EXTRA_ATTACK_MONSTER)==0 then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)

@@ -46,15 +46,12 @@ function s.lvcalfilter(c)
 	local se=c:GetSpecialSummonInfo(SUMMON_INFO_REASON_EFFECT)
 	return se and se:GetHandler()==c
 end
-function s.gcheck(c,cg)
-	return cg:IsContains(c)
-end
 function s.deop(e,tp,eg,ep,ev,re,r,rp)
 	local sg=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 	if sg:GetCount()>0 then
 		local cg=sg:Filter(s.lvcalfilter,nil)
 		Duel.Destroy(sg,REASON_EFFECT)
-		local ct=Duel.GetOperatedGroup():Filter(s.gcheck,nil,cg):GetSum(Card.GetOriginalLevel)
+		local ct=(Duel.GetOperatedGroup()&cg):GetSum(Card.GetOriginalLevel)
 		Duel.Damage(1-tp,ct*200,REASON_EFFECT)
 	end
 end
