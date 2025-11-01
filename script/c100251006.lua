@@ -19,7 +19,7 @@ function s.initial_effect(c)
 	--spsummon
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
-	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e2:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_TOKEN)
 	e2:SetType(EFFECT_TYPE_QUICK_O)
 	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetHintTiming(0,TIMING_MAIN_END+TIMING_BATTLE_START+TIMING_BATTLE_END)
@@ -60,13 +60,11 @@ function s.hspfilter(c,e,tp,lv)
 end
 function s.hsptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local lv=e:GetLabel()
-	if chk==0 then return lv>0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(s.hspfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp,lv) end
+	if chk==0 then return lv>0 and Duel.IsExistingMatchingCard(s.hspfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp,lv) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 end
 function s.hspop(e,tp,eg,ep,ev,re,r,rp)
 	local lv=e:GetLabel()
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,s.hspfilter,tp,LOCATION_EXTRA,0,1,1,nil,e,tp,lv)
 	if g:GetCount()>0 then
