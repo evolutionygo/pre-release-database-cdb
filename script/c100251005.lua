@@ -57,12 +57,14 @@ function s.pentg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local b2=Duel.IsExistingMatchingCard(s.penspfilter,tp,LOCATION_PZONE,0,1,c,e,tp)
 		and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 	if chk==0 then return b1 or b2 end
-	local op=Duel.SelectOption(tp,aux.Stringid(id,2),aux.Stringid(id,3))
+	local op=aux.SelectFromOptions(tp,
+			{b1,aux.Stringid(id,2),1},
+			{b2,aux.Stringid(id,3),2})
 	e:SetLabel(op)
-	if op==0 then
+	if op==1 then
 		e:SetCategory(CATEGORY_SPECIAL_SUMMON)
 		Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,c,1,0,0)
-	else
+	elseif op==2 then
 		e:SetCategory(CATEGORY_DESTROY+CATEGORY_SPECIAL_SUMMON)
 		Duel.SetOperationInfo(0,CATEGORY_DESTROY,c,1,0,0)
 		Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_PZONE)
@@ -71,10 +73,11 @@ end
 
 function s.penop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if e:GetLabel()==0 then
+	local op=e:GetLabel()
+	if op==1 then
 		Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
-	else
-		if Duel.Destroy(c,REASON_EFFECT)>0 then
+	elseif op==2 then
+		if Duel.Destroy(c,REASON_EFFECT)>0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then
 			local sg=Duel.GetMatchingGroup(s.penspfilter,tp,LOCATION_PZONE,0,nil,e,tp)
 			if #sg==0 then return end
 			if #sg==1 then
