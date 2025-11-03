@@ -87,9 +87,20 @@ function s.mvtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function s.mvop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
-	local sg=g:Filter(Card.IsRelateToEffect,nil,e):Filter(s.mvfilter2,nil,e)
-	if sg:FilterCount(s.isowner,nil,0)>Duel.GetLocationCount(0,LOCATION_SZONE) or sg:FilterCount(s.isowner,nil,1)>Duel.GetLocationCount(1,LOCATION_SZONE) then return end
-	for tc in aux.Next(sg) do
+	local tg=g:Filter(Card.IsRelateToEffect,nil,e):Filter(s.mvfilter2,nil,e)
+	local pg=Group.CreateGroup()
+	for p in aux.TurnPlayers() do
+		local sg=tg:Filter(s.isowner,nil,p)
+		local ct=Duel.GetLocationCount(p,LOCATION_SZONE)
+		if sg:GetCount()<=ct then
+			pg:Merge(sg)
+		elseif ct>0 then
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_OPERATECARD)
+			local tpg=sg:Select(tp,ct,ct,nil)
+			pg:Merge(tpg)
+		end
+	end
+	for tc in aux.Next(pg) do
 		Duel.MoveToField(tc,tp,tc:GetOwner(),LOCATION_SZONE,POS_FACEUP,true)
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetCode(EFFECT_CHANGE_TYPE)
@@ -98,6 +109,10 @@ function s.mvop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD-RESET_TURN_SET)
 		e1:SetValue(TYPE_SPELL+TYPE_CONTINUOUS)
 		tc:RegisterEffect(e1)
+	end
+	local gg=tg-pg
+	if gg:GetCount()>0 then
+		Duel.SendtoGrave(gg,REASON_RULE)
 	end
 end
 function s.setcon(e,tp,eg,ep,ev,re,r,rp)
