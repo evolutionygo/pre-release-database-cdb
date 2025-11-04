@@ -108,11 +108,14 @@ end
 function s.eqlimit(e,c)
 	return c==e:GetLabelObject()
 end
+function s.cqfilter(c)
+	return c:GetOriginalType()&TYPE_MONSTER==TYPE_MONSTER
+end
 function s.adval(e,c)
-	local eg=c:GetEquipGroup()
+	local eg=c:GetEquipGroup():Filter(s.cqfilter,nil)
 	return eg:GetSum(Card.GetOriginalLevel)*300
 end
 function s.descon(e)
-	local eg=e:GetHandler():GetEquipGroup()
+	local eg=e:GetHandler():GetEquipGroup():Filter(s.cqfilter,nil)
 	return eg:GetSum(Card.GetOriginalLevel)>21
 end

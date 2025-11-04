@@ -67,7 +67,7 @@ function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.GetMatchingGroup(Card.IsType,tp,LOCATION_MZONE,LOCATION_MZONE,nil,TYPE_TOKEN)
 	g:AddCard(c)
 	if chk==0 then return Duel.GetMZoneCount(tp,g)>0
-		and Duel.IsPlayerCanSpecialSummonMonster(tp,id+o*2,id,TYPES_TOKEN_MONSTER,0,0,7,RACE_FAIRY,ATTRIBUTE_WATER) end
+		and Duel.IsPlayerCanSpecialSummonMonster(tp,id+o*2,0,TYPES_TOKEN_MONSTER,0,0,7,RACE_FAIRY,ATTRIBUTE_WATER) end
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,g:GetCount(),0,0)
 end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
