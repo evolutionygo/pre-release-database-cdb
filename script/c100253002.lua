@@ -44,7 +44,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e5)
 end
 function s.desfilter(c,tp)
-	return c:IsLocation(LOCATION_SZONE) and c:IsControler(1-tp)
+	return c:IsLocation(LOCATION_SZONE) and c:IsControler(1-tp) and c:GetSequence()<5
 end
 function s.eqcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.desfilter,1,e:GetHandler(),tp)

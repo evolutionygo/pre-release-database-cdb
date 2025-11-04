@@ -32,25 +32,25 @@ function s.initial_effect(c)
 	e3:SetOperation(s.desop)
 	c:RegisterEffect(e3)
 end
-function s.filter(c,e,tp)
-	return c:IsSummonPlayer(1-tp)
+function s.filter(c)
+	return c:IsAllTypes(TYPE_EFFECT+TYPE_MONSTER) and c:IsFaceup()
 end
 function s.tkcon(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(s.filter,1,nil,nil,tp)
+	return eg:IsExists(s.filter,1,nil)
 end
-function s.cfilter(c,g,e,tp)
-	return g:IsContains(c) and c:IsType(TYPE_EFFECT) and c:IsFaceup()
+function s.cfilter(c,g,tp)
+	return g:IsContains(c) and c:IsAllTypes(TYPE_EFFECT+TYPE_MONSTER) and c:IsFaceup()
 		and Duel.GetLocationCount(1-c:GetControler(),LOCATION_MZONE)>0
 		and Duel.IsPlayerCanSpecialSummonMonster(tp,id+o,0,TYPES_TOKEN_MONSTER,0,0,3,RACE_AQUA,ATTRIBUTE_WATER,POS_FACEUP_DEFENSE,1-c:GetControler())
 end
 function s.tktg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return eg:IsContains(chkc) and chkc:IsType(TYPE_EFFECT)
+	if chkc then return eg:IsContains(chkc) and chkc:IsAllTypes(TYPE_EFFECT+TYPE_MONSTER)
 		and chkc:IsFaceup() and chkc:IsOnField()
 		and Duel.GetLocationCount(1-chkc:GetControler(),LOCATION_MZONE)>0
 		and Duel.IsPlayerCanSpecialSummonMonster(tp,id+o,0,TYPES_TOKEN_MONSTER,0,0,3,RACE_AQUA,ATTRIBUTE_WATER,POS_FACEUP_DEFENSE,1-chkc:GetControler())
 	end
-	if chk==0 then return Duel.IsExistingTarget(s.cfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil,eg,e,tp) end
-	local g=Duel.SelectTarget(tp,s.cfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil,eg,e,tp)
+	if chk==0 then return Duel.IsExistingTarget(s.cfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil,eg,tp) end
+	local g=Duel.SelectTarget(tp,s.cfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil,eg,tp)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,1,0,0)
 end
@@ -58,7 +58,7 @@ function s.tkop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if not (tc:IsRelateToChain() and tc:IsType(TYPE_MONSTER)) then return end
 	local sp=tc:GetControler()
-	if Duel.GetLocationCount(sp,LOCATION_MZONE)<=0
+	if Duel.GetLocationCount(1-sp,LOCATION_MZONE)<=0
 		or not Duel.IsPlayerCanSpecialSummonMonster(tp,id+o,0,TYPES_TOKEN_MONSTER,0,0,3,RACE_AQUA,ATTRIBUTE_WATER,POS_FACEUP_DEFENSE,1-sp) then return end
 	local token=Duel.CreateToken(tp,id+o)
 	Duel.SpecialSummon(token,0,tp,1-sp,false,false,POS_FACEUP_DEFENSE)
@@ -77,7 +77,7 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	g:AddCard(c)
 	if Duel.Destroy(g,REASON_EFFECT)~=0 then
 		local og=Duel.GetOperatedGroup()
-		if not og:IsContains(c) then return end
+		if not og:IsContains(c) or og:GetCount()<2 then return end
 		local atk=og:GetCount()-1
 		local token=Duel.CreateToken(tp,id+o*2)
 		Duel.SpecialSummon(token,0,tp,tp,false,false,POS_FACEUP)
