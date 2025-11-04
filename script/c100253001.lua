@@ -65,7 +65,7 @@ function s.ctop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
 	if c:IsRelateToChain() and tc and tc:IsRelateToChain()
-		and tc:IsControler(1-tp) then
+		and tc:IsControler(1-tp) and tc:IsType(TYPE_MONSTER) then
 		Duel.GetControl(c,1-tp)
 		local fid=c:GetFieldID()
 		if c:GetFlagEffectLabel(id)~=fid then
