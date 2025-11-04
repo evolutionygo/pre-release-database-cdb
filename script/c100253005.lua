@@ -58,7 +58,7 @@ function s.tkop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	local sp=tc:GetControler()
 	if Duel.GetLocationCount(sp,LOCATION_MZONE)<=0
-		or not Duel.IsPlayerCanSpecialSummonMonster(tp,id+o,0,TYPES_TOKEN_MONSTER,0,0,2,RACE_CYBERSE,ATTRIBUTE_LIGHT,POS_FACEUP,1-sp) then return end
+		or not Duel.IsPlayerCanSpecialSummonMonster(tp,id+o,0,TYPES_TOKEN_MONSTER,0,0,3,RACE_AQUA,ATTRIBUTE_WATER,POS_FACEUP,1-sp) then return end
 	local token=Duel.CreateToken(tp,id+o)
 	Duel.SpecialSummon(token,0,tp,1-sp,false,false,POS_FACEUP)
 end
