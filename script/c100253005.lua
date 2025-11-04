@@ -43,7 +43,11 @@ function s.cfilter(c,g,e,tp)
 		and Duel.GetLocationCount(1-c:GetControler(),LOCATION_MZONE)>0
 		and Duel.IsPlayerCanSpecialSummonMonster(tp,id+o,0,TYPES_TOKEN_MONSTER,0,0,3,RACE_AQUA,ATTRIBUTE_WATER,POS_FACEUP,1-c:GetControler())
 end
-function s.tktg(e,tp,eg,ep,ev,re,r,rp,chk)
+function s.tktg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsSummonPlayer(1-tp) and eg:IsContains(chkc)
+		and Duel.GetLocationCount(1-chkc:GetControler(),LOCATION_MZONE)>0
+		and Duel.IsPlayerCanSpecialSummonMonster(tp,id+o,0,TYPES_TOKEN_MONSTER,0,0,3,RACE_AQUA,ATTRIBUTE_WATER,POS_FACEUP,1-chkc:GetControler())
+	end
 	if chk==0 then return Duel.IsExistingTarget(s.cfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil,eg,e,tp) end
 	local g=Duel.SelectTarget(tp,s.cfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil,eg,e,tp)
 	Duel.HintSelection(g)

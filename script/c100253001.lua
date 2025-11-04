@@ -51,8 +51,9 @@ end
 function s.indfilter(c,g,tp,ec)
 	return c:IsControler(1-tp) and g:IsContains(c) and ec:IsControlerCanBeChanged()
 end
-function s.cttg(e,tp,eg,ep,ev,re,r,rp,chk)
+function s.cttg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()
+	if chkc then return chkc:IsControler(1-tp) and eg:IsContains(chkc) and c:IsControlerCanBeChanged() end
 	if chk==0 then return true end
 	local g=Duel.SelectTarget(tp,s.indfilter,tp,0,LOCATION_MZONE,1,1,nil,eg,tp,c)
 	if g and g:GetCount()>0 then
