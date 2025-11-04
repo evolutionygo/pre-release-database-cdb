@@ -30,6 +30,9 @@ end
 function s.efftg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	Duel.SetTargetCard(e:GetLabelObject())
+	if e:GetLabel()~=1 then
+		Duel.SetOperationInfo(0,CATEGORY_DICE,nil,0,tp,1)
+	end
 end
 function s.effop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
