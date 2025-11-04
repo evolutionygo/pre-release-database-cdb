@@ -55,20 +55,17 @@ function s.cttg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()
 	if chkc then return chkc:IsControler(1-tp) and eg:IsContains(chkc) and c:IsControlerCanBeChanged() end
 	if chk==0 then return true end
-	local g=Duel.SelectTarget(tp,s.indfilter,tp,0,LOCATION_MZONE,1,1,nil,eg,tp,c)
-	if g and g:GetCount()>0 then
-		Duel.HintSelection(g)
-	end
+	Duel.SelectTarget(tp,s.indfilter,tp,0,LOCATION_MZONE,1,1,nil,eg,tp,c)
 	Duel.SetOperationInfo(0,CATEGORY_CONTROL,e:GetHandler(),1,0,0)
 end
 function s.ctop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if c:IsRelateToChain() and tc and tc:IsRelateToChain()
-		and tc:IsType(TYPE_MONSTER) then
-		if tc:IsControler(1-tp) then 
+	if c:IsRelateToChain() and tc and tc:IsRelateToChain() and tc:IsType(TYPE_MONSTER) then
+		if tc:IsControler(1-tp) then
 			Duel.GetControl(c,1-tp)
 		end
+		c:SetCardTarget(tc)
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
@@ -95,7 +92,6 @@ function s.ctop(e,tp,eg,ep,ev,re,r,rp)
 		local e6=e1:Clone()
 		e6:SetCode(EFFECT_CANNOT_BE_LINK_MATERIAL)
 		tc:RegisterEffect(e6)
-		c:SetCardTarget(tc)
 	end
 end
 function s.nrcon(e)
