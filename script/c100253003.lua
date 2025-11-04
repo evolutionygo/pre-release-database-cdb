@@ -30,13 +30,15 @@ function s.pfilter(c)
 	return c:IsCode(id) and not c:IsPublic()
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.IsExistingMatchingCard(s.pfilter,tp,0,LOCATION_HAND+LOCATION_DECK,1,nil) 
+	if Duel.IsExistingMatchingCard(s.pfilter,tp,0,LOCATION_HAND+LOCATION_DECK,1,nil)
 		and Duel.SelectYesNo(1-tp,aux.Stringid(id,2)) then
 		Duel.Hint(HINT_SELECTMSG,1-tp,HINTMSG_CONFIRM)
 		local g=Duel.SelectMatchingCard(1-tp,s.pfilter,1-tp,LOCATION_HAND+LOCATION_DECK,0,1,1,nil)
 		Duel.ConfirmCards(tp,g)
 		if g:IsExists(Card.IsLocation,1,nil,LOCATION_HAND) then
 			Duel.ShuffleHand(1-tp)
+		else
+			Duel.ShuffleDeck(1-tp)
 		end
 		Duel.Recover(tp,2000,REASON_EFFECT,true)
 		Duel.Recover(1-tp,2000,REASON_EFFECT,true)
