@@ -61,11 +61,10 @@ function s.cttg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.ctop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsRelateToChain() then
-		Duel.GetControl(c,1-tp)
-	end
 	local tc=Duel.GetFirstTarget()
-	if tc and tc:IsRelateToChain() then
+	if c:IsRelateToChain() and tc and tc:IsRelateToChain()
+		and tc:IsControler(1-tp) then
+		Duel.GetControl(c,1-tp)
 		local fid=c:GetFieldID()
 		if c:GetFlagEffectLabel(id)~=fid then
 			c:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,0,1,fid)

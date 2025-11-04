@@ -3,7 +3,7 @@ local s,id,o=GetID()
 function s.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
-	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
+	e1:SetCategory(CATEGORY_DESTROY+CATEGORY_RECOVER)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetCountLimit(1,id+EFFECT_COUNT_CODE_OATH)
@@ -16,6 +16,7 @@ function s.initial_effect(c)
 	e2:SetCategory(CATEGORY_TOHAND)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
 	e2:SetCode(EVENT_TO_GRAVE)
+	e2:SetCountLimit(1,id+EFFECT_COUNT_CODE_DUEL)
 	e2:SetCondition(s.thcon)
 	e2:SetTarget(s.thtg)
 	e2:SetOperation(s.thop)
@@ -24,7 +25,6 @@ end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.GetMatchingGroup(nil,tp,0,LOCATION_MZONE,nil)
 	if chk==0 then return #g>0 end
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
 end
 function s.pfilter(c)
 	return c:IsCode(id) and not c:IsPublic()
@@ -34,9 +34,9 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		and Duel.SelectYesNo(1-tp,aux.Stringid(id,2)) then
 		Duel.Hint(HINT_SELECTMSG,1-tp,HINTMSG_CONFIRM)
 		local g=Duel.SelectMatchingCard(1-tp,s.pfilter,1-tp,LOCATION_HAND+LOCATION_DECK,0,1,1,nil)
-		Duel.ConfirmCards(1-tp,g)
+		Duel.ConfirmCards(tp,g)
 		if g:IsExists(Card.IsLocation,1,nil,LOCATION_HAND) then
-			Duel.ShuffleHand(tp)
+			Duel.ShuffleHand(1-tp)
 		end
 		Duel.Recover(tp,2000,REASON_EFFECT,true)
 		Duel.Recover(1-tp,2000,REASON_EFFECT,true)
