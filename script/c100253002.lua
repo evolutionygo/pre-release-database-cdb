@@ -74,7 +74,12 @@ function s.eqop(e,tp,eg,ep,ev,re,r,rp)
 	end
 	if seq==-1 then
 		Duel.ConfirmDecktop(tp,dcount)
-		Duel.ShuffleDeck(tp)
+		local g=Duel.GetDecktopGroup(tp,dcount)
+		Duel.SortDecktop(tp,tp,#g)
+		for i=1,#g do
+			local mg=Duel.GetDecktopGroup(tp,1)
+			Duel.MoveSequence(mg:GetFirst(),SEQ_DECKBOTTOM)
+		end
 		return
 	end
 	Duel.ConfirmDecktop(tp,dcount-seq)
