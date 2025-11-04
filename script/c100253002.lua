@@ -97,10 +97,10 @@ function s.eqop(e,tp,eg,ep,ev,re,r,rp)
 				qc:RegisterEffect(e1)
 			end
 		else
-			Duel.SendtoGrave(qc,REASON_EFFECT)
+			Duel.SendtoGrave(qc,REASON_RULE)
 		end
 	else
-		Duel.SendtoGrave(qc,REASON_EFFECT)
+		Duel.SendtoGrave(qc,REASON_RULE)
 	end
 	if #g>0 then
 		Duel.SortDecktop(tp,tp,#g)
