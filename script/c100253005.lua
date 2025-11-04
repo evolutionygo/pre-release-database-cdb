@@ -39,12 +39,13 @@ function s.tkcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.filter,1,nil,nil,tp)
 end
 function s.cfilter(c,g,e,tp)
-	return c:IsSummonPlayer(1-tp) and g:IsContains(c)
+	return c:IsSummonPlayer(1-tp) and g:IsContains(c) and c:IsType(TYPE_EFFECT)
 		and Duel.GetLocationCount(1-c:GetControler(),LOCATION_MZONE)>0
 		and Duel.IsPlayerCanSpecialSummonMonster(tp,id+o,0,TYPES_TOKEN_MONSTER,0,0,3,RACE_AQUA,ATTRIBUTE_WATER,POS_FACEUP,1-c:GetControler())
 end
 function s.tktg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsSummonPlayer(1-tp) and eg:IsContains(chkc)
+		and chkc:IsType(TYPE_EFFECT)
 		and Duel.GetLocationCount(1-chkc:GetControler(),LOCATION_MZONE)>0
 		and Duel.IsPlayerCanSpecialSummonMonster(tp,id+o,0,TYPES_TOKEN_MONSTER,0,0,3,RACE_AQUA,ATTRIBUTE_WATER,POS_FACEUP,1-chkc:GetControler())
 	end
@@ -55,6 +56,7 @@ function s.tktg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function s.tkop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
+	if not (tc:IsRelateToChain() and tc:IsType(TYPE_MONSTER)) then return end
 	local sp=tc:GetControler()
 	if Duel.GetLocationCount(sp,LOCATION_MZONE)<=0
 		or not Duel.IsPlayerCanSpecialSummonMonster(tp,id+o,0,TYPES_TOKEN_MONSTER,0,0,3,RACE_AQUA,ATTRIBUTE_WATER,POS_FACEUP,1-sp) then return end
