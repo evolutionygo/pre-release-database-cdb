@@ -43,11 +43,11 @@ function s.initial_effect(c)
 	e5:SetCondition(s.descon)
 	c:RegisterEffect(e5)
 end
-function s.desfilter(c)
-	return c:IsLocation(LOCATION_SZONE)
+function s.desfilter(c,tp)
+	return c:IsLocation(LOCATION_SZONE) and c:IsControler(1-tp)
 end
 function s.eqcon(e,tp,eg,ep,ev,re,r,rp)
-	return rp==1-tp and eg:IsExists(s.desfilter,1,e:GetHandler())
+	return eg:IsExists(s.desfilter,1,e:GetHandler(),tp)
 end
 function s.eqtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
@@ -60,31 +60,33 @@ end
 function s.eqop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)<1 then return end
-	local g=Duel.GetMatchingGroup(Card.IsType,tp,LOCATION_DECK,0,nil,TYPE_MONSTER)
 	local dcount=Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)
 	local seq=-1
-	local tc=g:GetFirst()
+	local mg=Duel.GetMatchingGroup(Card.IsType,tp,LOCATION_DECK,0,nil,TYPE_MONSTER)
+	local tc=mg:GetFirst()
 	local qc=nil
 	while tc do
 		if tc:GetSequence()>seq then
 			seq=tc:GetSequence()
 			qc=tc
 		end
-		tc=g:GetNext()
+		tc=mg:GetNext()
 	end
 	if seq==-1 then
 		Duel.ConfirmDecktop(tp,dcount)
-		local g=Duel.GetDecktopGroup(tp,dcount)
-		Duel.SortDecktop(tp,tp,#g)
-		for i=1,#g do
-			local mg=Duel.GetDecktopGroup(tp,1)
-			Duel.MoveSequence(mg:GetFirst(),SEQ_DECKBOTTOM)
+		local dg=Duel.GetDecktopGroup(tp,dcount)
+		Duel.DisableShuffleCheck()
+		Duel.SortDecktop(tp,tp,#dg)
+		for i=1,#dg do
+			local mvg=Duel.GetDecktopGroup(tp,1)
+			Duel.MoveSequence(mvg:GetFirst(),SEQ_DECKBOTTOM)
 		end
 		return
 	end
 	Duel.ConfirmDecktop(tp,dcount-seq)
-	local g=Duel.GetDecktopGroup(tp,dcount-seq-1)
-	if c:IsRelateToChain() and c:IsFaceup() then
+	local cg=Duel.GetDecktopGroup(tp,dcount-seq-1)
+	if c:IsRelateToChain() and c:IsFaceup() and qc then
+		Duel.DisableShuffleCheck()
 		if s.eqfilter(qc,c,tp) then
 			if  Duel.Equip(tp,qc,c) then
 				local e1=Effect.CreateEffect(c)
@@ -99,14 +101,14 @@ function s.eqop(e,tp,eg,ep,ev,re,r,rp)
 		else
 			Duel.SendtoGrave(qc,REASON_RULE)
 		end
-	else
+	elseif qc then
 		Duel.SendtoGrave(qc,REASON_RULE)
 	end
-	if #g>0 then
-		Duel.SortDecktop(tp,tp,#g)
-		for i=1,#g do
-			local mg=Duel.GetDecktopGroup(tp,1)
-			Duel.MoveSequence(mg:GetFirst(),SEQ_DECKBOTTOM)
+	if #cg>0 then
+		Duel.SortDecktop(tp,tp,#cg)
+		for i=1,#cg do
+			local mvg=Duel.GetDecktopGroup(tp,1)
+			Duel.MoveSequence(mvg:GetFirst(),SEQ_DECKBOTTOM)
 		end
 	end
 end
