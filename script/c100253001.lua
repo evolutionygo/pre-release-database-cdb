@@ -69,10 +69,6 @@ function s.ctop(e,tp,eg,ep,ev,re,r,rp)
 		if tc:IsControler(1-tp) then 
 			Duel.GetControl(c,1-tp)
 		end
-		local fid=c:GetFieldID()
-		if c:GetFlagEffectLabel(id)~=fid then
-			c:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,0,1,fid)
-		end
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
@@ -80,7 +76,6 @@ function s.ctop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetRange(LOCATION_MZONE)
 		e1:SetCondition(s.nrcon)
 		e1:SetValue(1)
-		e1:SetLabel(fid)
 		e1:SetLabelObject(c)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 		tc:RegisterEffect(e1)
@@ -100,10 +95,10 @@ function s.ctop(e,tp,eg,ep,ev,re,r,rp)
 		local e6=e1:Clone()
 		e6:SetCode(EFFECT_CANNOT_BE_LINK_MATERIAL)
 		tc:RegisterEffect(e6)
+		c:SetCardTarget(tc)
 	end
 end
 function s.nrcon(e)
-	local fid=e:GetLabel()
 	local c=e:GetLabelObject()
-	return c:IsFaceup() and c:GetFlagEffectLabel(id)==fid
+	return c:GetCardTarget():IsContains(e:GetHandler())
 end
