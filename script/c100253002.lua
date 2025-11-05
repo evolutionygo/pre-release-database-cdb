@@ -57,6 +57,15 @@ function s.eqfilter(c,tc,tp)
 	return c:IsType(TYPE_MONSTER)
 		and c:CheckUniqueOnField(tp) and not c:IsForbidden()
 end
+function s.confirm_decktop_s(tp,count)
+	local max_decktop=5
+	if count>max_decktop then
+		local g=Duel.GetDecktopGroup(tp,count)
+		Duel.ConfirmCards(1-tp,g)
+	else
+		Duel.ConfirmDecktop(tp,count)
+	end
+end
 function s.eqop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)<1 then return end
@@ -73,17 +82,11 @@ function s.eqop(e,tp,eg,ep,ev,re,r,rp)
 		tc=mg:GetNext()
 	end
 	if seq==-1 then
-		Duel.ConfirmDecktop(tp,dcount)
-		local dg=Duel.GetDecktopGroup(tp,dcount)
-		Duel.DisableShuffleCheck()
-		Duel.SortDecktop(tp,tp,#dg)
-		for i=1,#dg do
-			local mvg=Duel.GetDecktopGroup(tp,1)
-			Duel.MoveSequence(mvg:GetFirst(),SEQ_DECKBOTTOM)
-		end
+		s.confirm_decktop_s(tp,dcount)
+		Duel.ShuffleDeck(tp)
 		return
 	end
-	Duel.ConfirmDecktop(tp,dcount-seq)
+	s.confirm_decktop_s(tp,dcount-seq)
 	local cg=Duel.GetDecktopGroup(tp,dcount-seq-1)
 	if c:IsRelateToChain() and c:IsFaceup() and qc then
 		Duel.DisableShuffleCheck()
