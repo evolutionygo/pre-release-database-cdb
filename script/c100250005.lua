@@ -43,7 +43,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 function s.cfilter(c)
-	return c:IsFaceupEx() and c:IsSetCard(0x100d)
+	return c:IsFaceupEx() and c:IsSetCard(0x100d) and c:IsType(TYPE_MONSTER)
 end
 function s.atkcon(e)
 	return Duel.IsExistingMatchingCard(s.cfilter,e:GetHandlerPlayer(),LOCATION_MZONE+LOCATION_GRAVE+LOCATION_REMOVED,0,10,nil)
