@@ -33,7 +33,8 @@ function s.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_SYNCHRO)
 end
 function s.thfilter(c)
-	return c:GetAttack()==c:GetDefense() and c:IsRace(RACE_SPELLCASTER) and c:IsAbleToHand()
+	return c:GetAttack()==c:GetDefense() and c:IsRace(RACE_SPELLCASTER)
+		and c:IsLevel(4,8) and c:IsAbleToHand()
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil) end
