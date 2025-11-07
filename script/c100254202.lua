@@ -38,7 +38,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	if g:GetClassCount(Card.GetAttribute)<4 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	local sg=g:SelectSubGroup(tp,aux.dabcheck,false,4,4)
-	if Duel.SendtoHand(sg,nil,REASON_EFFECT)==4 then
+	if Duel.SendtoHand(sg,nil,REASON_EFFECT)>0 then
 		Duel.ConfirmCards(1-tp,sg)
 		if sg:IsExists(Card.IsLocation,1,nil,LOCATION_HAND) and Duel.GetFieldGroupCount(tp,LOCATION_HAND,0)>1 then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
