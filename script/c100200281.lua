@@ -33,7 +33,7 @@ function s.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_SYNCHRO)
 end
 function s.thfilter(c)
-	return c:GetAttack()==c:GetDefense() and c:IsRace(RACE_SPELLCASTER)
+	return aux.AtkEqualsDef(c) and c:IsRace(RACE_SPELLCASTER)
 		and c:IsLevel(4,8) and c:IsAbleToHand()
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -81,7 +81,7 @@ function s.disop(e,tp,eg,ep,ev,re,r,rp)
 			e3:SetReset(RESET_EVENT+RESETS_STANDARD)
 			tc:RegisterEffect(e3)
 		end
-		if Duel.IsExistingMatchingCard(s.cfilter,LOCATION_GRAVE,0,1,nil) and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
+		if Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_GRAVE,0,1,nil) and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 			Duel.BreakEffect()
 			Duel.Destroy(tc,REASON_EFFECT)
 		end
