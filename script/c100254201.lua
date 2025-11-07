@@ -7,7 +7,7 @@ function s.initial_effect(c)
 	--summon success
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
-	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH+CATEGORY_SPECIAL_SUMMON)
+	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH+CATEGORY_SPECIAL_SUMMON+CATEGORY_GRAVE_SPSUMMON)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e1:SetCountLimit(1,id)
@@ -28,7 +28,6 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local ct=c:GetMaterialCount()
 	if chk==0 then return ct>0 end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,0,LOCATION_GRAVE)
 end
 function s.thfilter(c)
 	return c:IsSetCard(0xc0) and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToHand()
@@ -38,14 +37,14 @@ function s.spfilter(c,e,tp)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local ct=c:GetMaterial():GetClassCount(Card.GetOriginalRace)
+	local ct=c:GetMaterial():GetClassCount(Card.GetOriginalAttribute)
 	if ct<=0 then return end
 	if ct>4 then ct=4 end
 	for i=1,ct do
 		local b1=c:IsRelateToEffect(e) and c:IsFaceup()
 		local b2=Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil)
 		local b3=Duel.IsExistingMatchingCard(Card.IsAbleToHand,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil)
-		local b4=Duel.IsExistingMatchingCard(aux.NecroValleyFilter(s.spfilter),tp,LOCATION_GRAVE,0,1,nil,e,tp)
+		local b4=Duel.IsExistingMatchingCard(aux.NecroValleyFilter(s.spfilter),tp,LOCATION_GRAVE,0,1,nil,e,tp) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		if not b1 and not b2 and not b3 and not b4 then break end
 		local op=aux.SelectFromOptions(tp,
 			{b1,aux.Stringid(id,1)},
