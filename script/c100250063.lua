@@ -54,7 +54,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 function s.efilter(e,te)
-	if te:GetHandlerPlayer()==e:GetHandlerPlayer() then
+	if te:GetHandlerPlayer()==e:GetHandlerPlayer() or not te:IsActivated() then
 		return false
 	end
 	if te:IsActiveType(TYPE_SPELL+TYPE_TRAP) then
