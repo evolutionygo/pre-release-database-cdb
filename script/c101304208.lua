@@ -4,7 +4,7 @@ function s.initial_effect(c)
 	aux.AddCodeList(c,70902743)
 	--Activate
 	local e1=Effect.CreateEffect(c)
-	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_POSITION)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetCountLimit(1,id+EFFECT_COUNT_CODE_OATH)
@@ -40,12 +40,12 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local b2=ct>=3 and Duel.GetFlagEffect(tp,id)==0
 	local b3=ct>=5 and Duel.IsExistingMatchingCard(s.posfilter,tp,0,LOCATION_MZONE,1,nil)
 	if chk==0 then return b1 or b2 or b3 end
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE+LOCATION_REMOVED)
 	local g=Duel.GetMatchingGroup(s.posfilter,tp,0,LOCATION_MZONE,nil)
 	if ct>=5 and g:GetCount()>0 then
 		Duel.SetOperationInfo(0,CATEGORY_POSITION,g,g:GetCount(),0,0)
 	end
-	if ct>=10 then
+	if ct>=10 and e:IsHasType(EFFECT_TYPE_ACTIVATE) then
 		Duel.SetChainLimit(s.chainlm)
 	end
 end
@@ -79,4 +79,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			Duel.ChangePosition(g,POS_FACEDOWN_DEFENSE)
 		end
 	end
+end
+function s.efilter(e,re)
+	return e:GetOwnerPlayer()~=re:GetOwnerPlayer() and re:IsActivated()
 end
