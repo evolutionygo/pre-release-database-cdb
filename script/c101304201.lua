@@ -82,7 +82,7 @@ function s.sumop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1)
 end
 function s.lvfilter(c)
-	return c:IsType(TYPE_TUNER) and c:IsLevelAbove(2) and not c:IsLevel(1) and c:IsFaceup()
+	return c:IsType(TYPE_TUNER) and c:IsLevelAbove(2) and c:IsFaceup()
 end
 function s.lvtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_MZONE) and s.lvfilter(chkc) end
@@ -91,7 +91,7 @@ function s.lvtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SelectTarget(tp,s.lvfilter,tp,LOCATION_MZONE,0,1,6,nil)
 end
 function s.lvopfilter(c)
-	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and not c:IsLevel(1)
+	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsLevelAbove(2)
 end
 function s.lvop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetTargetsRelateToChain():Filter(s.lvopfilter,nil)

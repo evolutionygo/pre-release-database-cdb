@@ -4,6 +4,7 @@ function s.initial_effect(c)
 	aux.AddCodeList(c,70902743)
 	--Activate
 	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_POSITION)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
@@ -37,7 +38,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local ct=Duel.GetFlagEffect(1-tp,id)
 	local b1=ct>=1 and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil,e,tp)
-	local b2=ct>=3 and Duel.GetFlagEffect(tp,id)==0
+	local b2=ct>=3 and Duel.GetFlagEffect(tp,id+o)==0
 	local b3=ct>=5 and Duel.IsExistingMatchingCard(s.posfilter,tp,0,LOCATION_MZONE,1,nil)
 	if chk==0 then return b1 or b2 or b3 end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE+LOCATION_REMOVED)
@@ -59,17 +60,19 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 		end
 	end
-	if ct>=3 and Duel.GetFlagEffect(tp,id)==0 then
+	if ct>=3 and Duel.GetFlagEffect(tp,id+o)==0 then
 		Duel.BreakEffect()
 		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetDescription(aux.Stringid(id,1))
 		e1:SetType(EFFECT_TYPE_FIELD)
 		e1:SetCode(EFFECT_IMMUNE_EFFECT)
+		e1:SetProperty(EFFECT_FLAG_CLIENT_HINT)
 		e1:SetTargetRange(LOCATION_MZONE,0)
 		e1:SetTarget(aux.TargetBoolFunction(Card.IsCode,70902743))
 		e1:SetValue(s.efilter)
 		e1:SetReset(RESET_PHASE+PHASE_END+RESET_SELF_TURN)
 		Duel.RegisterEffect(e1,tp)
-		Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END+RESET_SELF_TURN,0,1)
+		Duel.RegisterFlagEffect(tp,id+o,RESET_PHASE+PHASE_END+RESET_SELF_TURN,0,1)
 	end
 	if ct>=5 then
 		local g=Duel.GetMatchingGroup(s.posfilter,tp,0,LOCATION_MZONE,nil)
