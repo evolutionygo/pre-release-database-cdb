@@ -23,7 +23,6 @@ function s.initial_effect(c)
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetType(EFFECT_TYPE_QUICK_O)
 	e2:SetCode(EVENT_CHAINING)
-	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCountLimit(1,id+o)
 	e2:SetCondition(s.spcon)
@@ -51,7 +50,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return rp==1-tp and not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) 
+	return rp==1-tp and not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED)
 		and re:IsActiveType(TYPE_MONSTER)
 end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)

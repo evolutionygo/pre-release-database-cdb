@@ -73,8 +73,7 @@ function s.lvop(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.spcon2(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsLocation(LOCATION_GRAVE) and r==REASON_SYNCHRO
-		and (e:GetHandler():GetReasonCard():IsCode(70902743)
-		or aux.IsCodeListed(e:GetHandler():GetReasonCard(),70902743))
+		and aux.IsCodeOrListed(e:GetHandler():GetReasonCard(),70902743)
 end
 function s.spfilter(c,e,tp)
 	return c:IsRace(RACE_FIEND) and c:IsLevelBelow(4) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE)

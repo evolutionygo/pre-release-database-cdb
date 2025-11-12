@@ -43,24 +43,24 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	local tc=g:GetFirst()
 	if tc then
-		if tc:IsAbleToHand() and (not tc:IsCanBeSpecialSummoned(e,0,tp,false,false) 
-			or ft<=0 or Duel.SelectOption(tp,1190,1152)==0) then
+		local spf=tc:IsCanBeSpecialSummoned(e,0,tp,false,false) and ft>0
+		if tc:IsAbleToHand() and (not spf or Duel.SelectOption(tp,1190,1152)==0) then
 			Duel.SendtoHand(tc,nil,REASON_EFFECT)
 			Duel.ConfirmCards(1-tp,tc)
-		else
-			if Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP)~=0 then
-				local e1=Effect.CreateEffect(e:GetHandler())
-				e1:SetType(EFFECT_TYPE_SINGLE)
-				e1:SetCode(EFFECT_DISABLE)
-				e1:SetReset(RESET_EVENT+RESETS_STANDARD)
-				tc:RegisterEffect(e1)
-				local e2=Effect.CreateEffect(e:GetHandler())
-				e2:SetType(EFFECT_TYPE_SINGLE)
-				e2:SetCode(EFFECT_DISABLE_EFFECT)
-				e2:SetValue(RESET_TURN_SET)
-				e2:SetReset(RESET_EVENT+RESETS_STANDARD)
-				tc:RegisterEffect(e2)
-			end
+		elseif spf and Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP)~=0 then
+			local e1=Effect.CreateEffect(e:GetHandler())
+			e1:SetType(EFFECT_TYPE_SINGLE)
+			e1:SetCode(EFFECT_DISABLE)
+			e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+			e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+			tc:RegisterEffect(e1)
+			local e2=Effect.CreateEffect(e:GetHandler())
+			e2:SetType(EFFECT_TYPE_SINGLE)
+			e2:SetCode(EFFECT_DISABLE_EFFECT)
+			e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+			e2:SetValue(RESET_TURN_SET)
+			e2:SetReset(RESET_EVENT+RESETS_STANDARD)
+			tc:RegisterEffect(e2)
 			Duel.SpecialSummonComplete()
 		end
 	end

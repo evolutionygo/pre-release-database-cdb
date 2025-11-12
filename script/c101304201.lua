@@ -82,7 +82,7 @@ function s.sumop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1)
 end
 function s.lvfilter(c)
-	return c:IsType(TYPE_TUNER) and c:GetLevel()>0 and not c:IsLevel(1) and c:IsFaceup()
+	return c:IsType(TYPE_TUNER) and c:IsLevelAbove(2) and not c:IsLevel(1) and c:IsFaceup()
 end
 function s.lvtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_MZONE) and s.lvfilter(chkc) end
@@ -90,11 +90,15 @@ function s.lvtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
 	Duel.SelectTarget(tp,s.lvfilter,tp,LOCATION_MZONE,0,1,6,nil)
 end
+function s.lvopfilter(c)
+	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and not c:IsLevel(1)
+end
 function s.lvop(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToChain,nil):Filter(Card.IsFaceup,nil):Filter(aux.NOT(Card.IsLevel),nil,1):Filter(Card.IsType,nil,TYPE_MONSTER)
+	local g=Duel.GetTargetsRelateToChain():Filter(s.lvopfilter,nil)
 	for tc in aux.Next(g) do
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 		e1:SetCode(EFFECT_CHANGE_LEVEL)
 		e1:SetValue(1)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
