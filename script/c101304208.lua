@@ -46,11 +46,8 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 		Duel.SetOperationInfo(0,CATEGORY_POSITION,g,g:GetCount(),0,0)
 	end
 	if ct>=10 and e:GetHandler():GetOriginalCode()==id and e:IsHasType(EFFECT_TYPE_ACTIVATE) then
-		Duel.SetChainLimit(s.chainlm)
+		Duel.SetChainLimit(aux.FALSE)
 	end
-end
-function s.chainlm(e,rp,tp)
-	return tp==rp
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local ct=Duel.GetFlagEffect(1-tp,id)

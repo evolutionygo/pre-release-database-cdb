@@ -24,7 +24,7 @@ function s.initial_effect(c)
 	e2:SetOperation(s.atkop)
 	c:RegisterEffect(e2)
 end
-function s.cfilter(c,res)
+function s.cfilter(c)
 	return c:IsFaceup() and (c:IsCode(70902743) or aux.IsCodeListed(c,70902743) and c:IsType(TYPE_SYNCHRO))
 end
 function s.thfilter(c,res)
@@ -48,7 +48,7 @@ end
 function s.atkcon(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetAttacker()
 	return tc:IsControler(tp) and (tc:IsSetCard(0x104f) or tc:IsCode(70902743)) and tc:IsRelateToBattle()
-		and tc:IsChainAttackable() and tc:IsControler(tp)
+		and tc:IsChainAttackable()
 end
 function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.ChainAttack()

@@ -1,7 +1,6 @@
 --クリムゾン・ブレード・ドラゴン
 local s,id,o=GetID()
 function s.initial_effect(c)
-	aux.AddCodeList(c,70902743)
 	--synchro summon
 	aux.AddSynchroProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x57),aux.NonTuner(nil),1)
 	c:EnableReviveLimit()
@@ -68,7 +67,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local tc=e:GetHandler():GetBattleTarget()
-	if chk==0 then return tc and tc:IsFaceup() and tc:IsLevelAbove(5) end
+	if chk==0 then return tc and tc:IsFaceup() and tc:IsLevelAbove(5) and tc:IsControler(1-tp) end
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,tc,1,0,0)
 end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
