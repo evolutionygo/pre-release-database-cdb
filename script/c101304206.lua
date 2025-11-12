@@ -31,7 +31,7 @@ function s.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_SYNCHRO)
 end
 function s.thfilter(c,e,tp)
-	if c:IsSummonableCard() or not c:IsType(TYPE_MONSTER) or c:IsLevelBelow(7) then return false end
+	if c:IsSummonableCard() or not c:IsType(TYPE_MONSTER) or not c:IsLevelAbove(8) then return false end
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	return c:IsAbleToHand() or (ft>0 and c:IsCanBeSpecialSummoned(e,0,tp,false,false))
 end
