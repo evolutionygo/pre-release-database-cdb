@@ -45,7 +45,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if ct>=5 and g:GetCount()>0 then
 		Duel.SetOperationInfo(0,CATEGORY_POSITION,g,g:GetCount(),0,0)
 	end
-	if ct>=10 and e:IsHasType(EFFECT_TYPE_ACTIVATE) then
+	if ct>=10 and e:GetHandler():GetOriginalCode()==id and e:IsHasType(EFFECT_TYPE_ACTIVATE) then
 		Duel.SetChainLimit(s.chainlm)
 	end
 end
