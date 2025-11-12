@@ -25,7 +25,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function s.cfilter(c,res)
-	return c:IsFaceup() and (c:IsCode(70902743) or aux.IsCodeListed(c,70902743))
+	return c:IsFaceup() and (c:IsCode(70902743) or aux.IsCodeListed(c,70902743) and c:IsType(TYPE_SYNCHRO))
 end
 function s.thfilter(c,res)
 	return c:IsRace(RACE_FIEND) and c:IsLevelBelow(4) and c:IsAbleToHand()
@@ -39,7 +39,7 @@ end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local res=Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_MZONE,0,1,nil)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,1,nil,res)
+	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.thfilter),tp,LOCATION_DECK+LOCATION_GRAVE,0,1,1,nil,res)
 	if g:GetCount()>0 then
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,g)
@@ -48,7 +48,7 @@ end
 function s.atkcon(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetAttacker()
 	return tc:IsControler(tp) and (tc:IsSetCard(0x104f) or tc:IsCode(70902743)) and tc:IsRelateToBattle()
-		and tc:IsChainAttackable()
+		and tc:IsChainAttackable() and tc:IsControler(tp)
 end
 function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.ChainAttack()
