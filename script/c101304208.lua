@@ -63,6 +63,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 	if ct>=3 and Duel.GetFlagEffect(tp,id)==0 then
+		Duel.BreakEffect()
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_FIELD)
 		e1:SetCode(EFFECT_IMMUNE_EFFECT)
@@ -71,11 +72,12 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetValue(s.efilter)
 		e1:SetReset(RESET_PHASE+PHASE_END+RESET_SELF_TURN)
 		Duel.RegisterEffect(e1,tp)
-		Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1)
+		Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END+RESET_SELF_TURN,0,1)
 	end
 	if ct>=5 then
 		local g=Duel.GetMatchingGroup(s.posfilter,tp,0,LOCATION_MZONE,nil)
 		if g:GetCount()>0 then
+			Duel.BreakEffect()
 			Duel.ChangePosition(g,POS_FACEDOWN_DEFENSE)
 		end
 	end
