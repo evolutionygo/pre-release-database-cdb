@@ -105,14 +105,14 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetTarget(s.atktg)
 		e1:SetOperation(s.atkop)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
-		tc:RegisterEffect(e1)
+		tc:RegisterEffect(e1,true)
 		if not tc:IsType(TYPE_EFFECT) then
 			local e2=Effect.CreateEffect(e:GetHandler())
 			e2:SetType(EFFECT_TYPE_SINGLE)
 			e2:SetCode(EFFECT_ADD_TYPE)
 			e2:SetValue(TYPE_EFFECT)
 			e2:SetReset(RESET_EVENT+RESETS_STANDARD)
-			tc:RegisterEffect(e2)
+			tc:RegisterEffect(e2,true)
 		end
 		tc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id,1))
 	end
