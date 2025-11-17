@@ -46,14 +46,16 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SpecialSummonComplete()
 		if e:GetHandler():IsRelateToChain() then
 			local dg=Duel.GetMatchingGroup(s.desfilter,tp,LOCATION_SZONE,0,nil)
-			if dg:GetCount()>0 and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
+			if dg:GetCount()>0 and Duel.IsExistingMatchingCard(s.eqfilter,tp,LOCATION_GRAVE,0,1,nil)
+				and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 				Duel.BreakEffect()
 				if Duel.Destroy(dg,REASON_EFFECT)>0 then
-					local sg=Duel.GetMatchingGroup(s.eqfilter2,tp,LOCATION_GRAVE,0,nil)
+					local sg=Duel.GetMatchingGroup(aux.NecroValleyFilter(s.eqfilter2),tp,LOCATION_GRAVE,0,nil)
 					local count=Duel.GetLocationCount(tp,LOCATION_SZONE)
 					if count>sg:GetCount() then count=sg:GetCount() end
 					Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SET)
 					local tg=sg:Select(tp,count,count,nil)
+					Duel.BreakEffect()
 					Duel.SSet(tp,tg)
 					for tc in aux.Next(tg) do
 						local e1=Effect.CreateEffect(e:GetHandler())
