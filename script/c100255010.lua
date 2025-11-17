@@ -20,14 +20,14 @@ function s.spfilter(c,e,tp)
 			or c:IsLocation(LOCATION_EXTRA) and Duel.GetLocationCountFromEx(tp,tp,nil,c)>0)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	local b1=Duel.GetTurnPlayer()~=tp 
-		and (Duel.GetCurrentPhase()>=PHASE_BATTLE_START
-		and Duel.GetCurrentPhase()<=PHASE_BATTLE)
+	local b1=Duel.GetTurnPlayer()~=tp and Duel.IsBattlePhase()
 	local ch=Duel.GetCurrentChain()
 	local b2=false
 	local og=Group.CreateGroup()
+	local tsp=-1
+	local tse=nil
 	if ch>0 then
-		local tsp,tse=Duel.GetChainInfo(ch,CHAININFO_TRIGGERING_PLAYER,CHAININFO_TRIGGERING_EFFECT)
+		tsp,tse=Duel.GetChainInfo(ch,CHAININFO_TRIGGERING_PLAYER,CHAININFO_TRIGGERING_EFFECT)
 		og:AddCard(tse:GetHandler())
 		if tsp==1-tp and tse:IsActiveType(TYPE_MONSTER) and Duel.IsChainDisablable(ev) then
 			b2=Duel.GetFieldGroupCount(tp,0,LOCATION_ONFIELD)>Duel.GetFieldGroupCount(tp,LOCATION_ONFIELD,0)
@@ -46,6 +46,9 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 		e:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_DISABLE+CATEGORY_DESTROY)
 		Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE+LOCATION_EXTRA)
 		Duel.SetOperationInfo(0,CATEGORY_DISABLE,og,1,0,0)
+		if tse and tse:GetHandler():IsDestructable() and tse:GetHandler():IsRelateToEffect(tse) then
+			Duel.SetOperationInfo(0,CATEGORY_DESTROY,og,1,0,0)
+		end
 	end
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
