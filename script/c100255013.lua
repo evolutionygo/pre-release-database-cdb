@@ -37,7 +37,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		local tc=sg:GetFirst()
 		if Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)~=0 then
 			local ag=Duel.GetMatchingGroup(s.atkfilter,tp,LOCATION_GRAVE,0,nil)
-			local atk=ag:GetSum(Card.IsAttack)
+			local atk=ag:GetSum(Card.GetAttack)
 			local e2=Effect.CreateEffect(e:GetHandler())
 			e2:SetType(EFFECT_TYPE_SINGLE)
 			e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)

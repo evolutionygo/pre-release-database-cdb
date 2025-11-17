@@ -29,14 +29,14 @@ function s.initial_effect(c)
 	e3:SetCategory(CATEGORY_DESTROY)
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e3:SetProperty(EFFECT_FLAG_DELAY)
-	e3:SetCode(EVENT_TO_GRAVE)
+	e3:SetCode(EVENT_REMOVE)
 	e3:SetCountLimit(1,id)
 	e3:SetTarget(s.destg)
 	e3:SetOperation(s.desop)
 	c:RegisterEffect(e3)
 	local e4=e3:Clone()
 	e4:SetCondition(s.descon)
-	e4:SetCode(EVENT_REMOVE)
+	e4:SetCode(EVENT_TO_GRAVE)
 	c:RegisterEffect(e2)
 end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -99,7 +99,7 @@ function s.limit(c)
 end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToChain() then
+	if tc:IsRelateToChain() and tc:IsOnField() then
 		Duel.Destroy(tc,REASON_EFFECT)
 	end
 end
