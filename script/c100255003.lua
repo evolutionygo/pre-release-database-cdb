@@ -4,20 +4,20 @@ function s.initial_effect(c)
 	aux.AddCodeList(c,100255002)
 	--Activate
 	local e1=Effect.CreateEffect(c)
-	e1:SetCategory(CATEGORY_EQUIP)
 	e1:SetDescription(aux.Stringid(id,0))
+	e1:SetCategory(CATEGORY_EQUIP)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
-	e1:SetHintTiming(TIMING_DAMAGE_STEP)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e1:SetHintTiming(TIMING_ATTACK+TIMING_END_PHASE)
 	e1:SetCost(s.cost)
 	e1:SetTarget(s.target)
 	e1:SetOperation(s.operation)
 	c:RegisterEffect(e1)
 	--to hand
 	local e2=Effect.CreateEffect(c)
-	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetDescription(aux.Stringid(id,1))
+	e2:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetProperty(EFFECT_FLAG_DELAY)
 	e2:SetCode(EVENT_DESTROYED)
@@ -62,52 +62,56 @@ end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if not c:IsLocation(LOCATION_SZONE) then return end
-	if not c:IsRelateToEffect(e) or c:IsStatus(STATUS_LEAVE_CONFIRMED) then return end
+	if not c:IsRelateToChain() or c:IsStatus(STATUS_LEAVE_CONFIRMED) then return end
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and tc:IsFaceup() then
+	if c:IsRelateToChain() and tc:IsFaceup() then
 		Duel.Equip(tp,c,tc)
 		local e1=Effect.CreateEffect(c)
 		e1:SetDescription(aux.Stringid(id,2))
 		e1:SetCategory(CATEGORY_DESTROY)
 		e1:SetType(EFFECT_TYPE_QUICK_O)
-		e1:SetRange(LOCATION_SZONE)
 		e1:SetCode(EVENT_FREE_CHAIN)
-		e1:SetCondition(s.atkcon)
-		e1:SetCost(s.atkcost)
-		e1:SetOperation(s.atkop)
+		e1:SetRange(LOCATION_SZONE)
+		e1:SetHintTiming(TIMING_BATTLE_PHASE)
+		e1:SetCondition(s.descon)
+		e1:SetTarget(s.destg)
+		e1:SetOperation(s.desop)
 		c:RegisterEffect(e1)
 		--Equip limit
-		local e3=Effect.CreateEffect(c)
-		e3:SetType(EFFECT_TYPE_SINGLE)
-		e3:SetCode(EFFECT_EQUIP_LIMIT)
-		e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-		e3:SetValue(1)
-		e3:SetValue(s.eqlimit)
-		e3:SetReset(RESET_EVENT+RESETS_STANDARD)
-		c:RegisterEffect(e3)
+		local e2=Effect.CreateEffect(c)
+		e2:SetType(EFFECT_TYPE_SINGLE)
+		e2:SetCode(EFFECT_EQUIP_LIMIT)
+		e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+		e2:SetLabelObject(tc)
+		e2:SetValue(s.eqlimit)
+		e2:SetReset(RESET_EVENT+RESETS_STANDARD)
+		c:RegisterEffect(e2)
 	else
 		c:CancelToGrave(false)
 	end
 end
-function s.atkcon(e,tp,eg,ep,ev,re,r,rp)
+function s.descon(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler():GetEquipTarget()
+	return (Duel.GetCurrentPhase()>=PHASE_BATTLE_START and Duel.GetCurrentPhase()<=PHASE_BATTLE)
+		and not c:IsStatus(STATUS_CHAINING)
+end
+function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return false end
 	local c=e:GetHandler():GetEquipTarget()
 	local bc=c:GetBattleTarget()
-	return bc
+	if chk==0 then return bc and bc:IsRelateToBattle() end
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,bc,1,0,0)
 end
-function s.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	local c=e:GetHandler()
-	if chk==0 then return c:GetFlagEffect(id)==0 end
-	c:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_DAMAGE_CAL,0,1)
-end
-function s.atkop(e,tp,eg,ep,ev,re,r,rp)
+function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler():GetEquipTarget()
 	local bc=c:GetBattleTarget()
-	if c:IsRelateToBattle() and c:IsFaceup() and bc:IsRelateToBattle() then
+	if c:IsRelateToBattle() and c:IsFaceup()
+		and bc:IsRelateToBattle() and bc:IsControler(1-tp) and bc:IsType(TYPE_MONSTER) then
 		Duel.Destroy(bc,REASON_EFFECT)
 	end
 end
 function s.eqlimit(e,c)
-	return e:GetHandler():GetEquipTarget()==c or c:IsControler(e:GetHandlerPlayer())
+	return c==e:GetLabelObject()
 end
 function s.filter(c)
 	return c:IsCode(100255002) and c:IsAbleToHand()
