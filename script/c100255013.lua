@@ -49,7 +49,6 @@ end
 function s.atkcon(e,tp,eg,ep,ev,re,r,rp)
 	local rc=eg:GetFirst()
 	return rc==Duel.GetAttacker() and rc:IsStatus(STATUS_OPPO_BATTLE) and rc:IsFaceup()
-		and bit.band(rc:GetType(),0x81)==0x81
 		and rc:IsSetCard(0x7f) and rc:IsType(TYPE_XYZ)
 		and rc:IsAttackAbove(1000)
 		and rc:IsAttribute(ATTRIBUTE_LIGHT) and rc:IsControler(tp)
