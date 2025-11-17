@@ -51,6 +51,7 @@ end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetLabel()==1 then
 		if Duel.Recover(1-tp,1000,REASON_EFFECT)>0 then
+			Duel.BreakEffect()
 			Duel.SkipPhase(1-tp,PHASE_BATTLE,RESET_PHASE+PHASE_BATTLE_STEP,1)
 		end
 	else

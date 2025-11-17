@@ -55,6 +55,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		if tc:IsRankAbove(1) then lv=tc:GetRank() end
 		if lv~=0 and Duel.IsExistingMatchingCard(s.cfilter2,tp,LOCATION_MZONE,0,1,tc,lv)
 			and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
+			Duel.BreakEffect()
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
 			local g=Duel.SelectMatchingCard(tp,s.cfilter2,tp,LOCATION_MZONE,0,1,1,tc,lv)
 			local tc2=g:GetFirst()
