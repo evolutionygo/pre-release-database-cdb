@@ -36,8 +36,8 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 	if chk==0 then return b1 or b2 end
 	local op=aux.SelectFromOptions(tp,
-		{b1,aux.Stringid(id,0),1},
-		{b2,aux.Stringid(id,1),2})
+		{b1,aux.Stringid(id,1),1},
+		{b2,aux.Stringid(id,2),2})
 	e:SetLabel(op)
 	if op==1 then
 		e:SetCategory(CATEGORY_RECOVER)

@@ -3,6 +3,7 @@ local s,id,o=GetID()
 function s.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_FUSION_SUMMON)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
@@ -83,7 +84,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 				res=Duel.IsExistingMatchingCard(s.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,mg2,ec,mf,chkf)
 			end
 		end
-		if res and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
+		if res and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 			local chkf=tp
 			local mg1=Duel.GetFusionMaterial(tp):Filter(s.filter1,nil,e)
 			local sg1=Duel.GetMatchingGroup(s.filter2,tp,LOCATION_EXTRA,0,nil,e,tp,mg1,ec,nil,chkf)
