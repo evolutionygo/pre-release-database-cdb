@@ -99,7 +99,8 @@ function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end
 	local c=e:GetHandler():GetEquipTarget()
 	local bc=c:GetBattleTarget()
-	if chk==0 then return bc and bc:IsRelateToBattle() end
+	if chk==0 then return bc and bc:IsRelateToBattle() and e:GetHandler():GetFlagEffect(id)==0 end
+	e:GetHandler():RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_DAMAGE,0,1)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,bc,1,0,0)
 end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
