@@ -19,7 +19,7 @@ function s.eqfilter(c)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.eqfilter,tp,LOCATION_GRAVE,0,1,nil) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsPlayerCanSpecialSummonMonster(tp,id+o,0,TYPES_TOKEN_MONSTER,500,500,1,RACE_WARRIOR,ATTRIBUTE_EARTH) end
+		and Duel.IsPlayerCanSpecialSummonMonster(tp,id+o,0,TYPES_TOKEN_MONSTER,500,500,1,RACE_WARRIOR,ATTRIBUTE_LIGHT) end
 	Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,1,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,0,0)
 end
@@ -34,7 +34,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local ct=Duel.GetMatchingGroupCount(s.eqfilter,tp,LOCATION_GRAVE,0,nil)
 	if ft>ct then ft=ct end
 	if ft>0 then
-		if not Duel.IsPlayerCanSpecialSummonMonster(tp,id+o,0,TYPES_TOKEN_MONSTER,500,500,1,RACE_WARRIOR,ATTRIBUTE_EARTH) then return end
+		if not Duel.IsPlayerCanSpecialSummonMonster(tp,id+o,0,TYPES_TOKEN_MONSTER,500,500,1,RACE_WARRIOR,ATTRIBUTE_LIGHT) then return end
 		if Duel.IsPlayerAffectedByEffect(tp,59822133) then ft=1 end
 		local ctn=true
 		while ft>0 and ctn do

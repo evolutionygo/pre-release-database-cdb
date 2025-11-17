@@ -45,7 +45,7 @@ end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local sp=tp
 	local pos=POS_FACEUP
-	if not Duel.IsExistingMatchingCard(aux.TURE,tp,0,LOCATION_MZONE,1,nil) then
+	if not Duel.IsExistingMatchingCard(aux.TRUE,tp,0,LOCATION_MZONE,1,nil) then
 		sp=1-tp
 		pos=POS_FACEUP_DEFENSE
 	end
@@ -57,7 +57,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local sp=tp
 	local pos=POS_FACEUP
-	if not Duel.IsExistingMatchingCard(aux.TURE,tp,0,LOCATION_MZONE,1,nil) then
+	if not Duel.IsExistingMatchingCard(aux.TRUE,tp,0,LOCATION_MZONE,1,nil) then
 		sp=1-tp
 		pos=POS_FACEUP_DEFENSE
 	end

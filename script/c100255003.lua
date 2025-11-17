@@ -91,7 +91,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.descon(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler():GetEquipTarget()
+	local c=e:GetHandler()
 	return (Duel.GetCurrentPhase()>=PHASE_BATTLE_START and Duel.GetCurrentPhase()<=PHASE_BATTLE)
 		and not c:IsStatus(STATUS_CHAINING)
 end
