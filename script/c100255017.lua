@@ -1,4 +1,4 @@
---閃刀機ーアディルセイバー
+--閃刀機－アディルセイバー
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--atkup

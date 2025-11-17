@@ -4,10 +4,9 @@ function s.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
-	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_TOKEN)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
-	e1:SetHintTiming(0,TIMING_END_PHASE)
 	e1:SetTarget(s.target)
 	e1:SetOperation(s.activate)
 	c:RegisterEffect(e1)
@@ -24,6 +23,9 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,1,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,0,0)
 end
+function s.desfilter(c)
+	return c:GetSequence()<5
+end
 function s.eqfilter2(c)
 	return c:IsSSetable() and s.eqfilter(c)
 end
@@ -32,8 +34,8 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local ct=Duel.GetMatchingGroupCount(s.eqfilter,tp,LOCATION_GRAVE,0,nil)
 	if ft>ct then ft=ct end
 	if ft>0 then
-		if Duel.IsPlayerAffectedByEffect(tp,59822133) then ft=1 end
 		if not Duel.IsPlayerCanSpecialSummonMonster(tp,id+o,0,TYPES_TOKEN_MONSTER,500,500,1,RACE_WARRIOR,ATTRIBUTE_EARTH) then return end
+		if Duel.IsPlayerAffectedByEffect(tp,59822133) then ft=1 end
 		local ctn=true
 		while ft>0 and ctn do
 			local token=Duel.CreateToken(tp,id+o)
@@ -42,22 +44,26 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			if ft<=0 or not Duel.SelectYesNo(tp,aux.Stringid(id,1)) then ctn=false end
 		end
 		Duel.SpecialSummonComplete()
-		if e:GetHandler():IsRelateToEffect(e) then
-			local g=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_SZONE,0,nil)
-			if Duel.Destroy(g,REASON_EFFECT)>0 then
-				local sg=Duel.GetMatchingGroup(s.eqfilter2,tp,LOCATION_GRAVE,0,nil)
-				local count=Duel.GetLocationCount(tp,LOCATION_SZONE)
-				if count>sg:GetCount() then count=sg:GetCount() end
-				local tg=sg:Select(tp,count,count,nil)
-				Duel.SSet(tp,tg)
-				for tc in aux.Next(tg) do
-					local e1=Effect.CreateEffect(e:GetHandler())
-					e1:SetDescription(aux.Stringid(id,2))
-					e1:SetType(EFFECT_TYPE_SINGLE)
-					e1:SetCode(EFFECT_TRAP_ACT_IN_SET_TURN)
-					e1:SetProperty(EFFECT_FLAG_SET_AVAILABLE)
-					e1:SetReset(RESET_EVENT+RESETS_STANDARD)
-					tc:RegisterEffect(e1)
+		if e:GetHandler():IsRelateToChain() then
+			local dg=Duel.GetMatchingGroup(s.desfilter,tp,LOCATION_SZONE,0,nil)
+			if dg:GetCount()>0 and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
+				Duel.BreakEffect()
+				if Duel.Destroy(dg,REASON_EFFECT)>0 then
+					local sg=Duel.GetMatchingGroup(s.eqfilter2,tp,LOCATION_GRAVE,0,nil)
+					local count=Duel.GetLocationCount(tp,LOCATION_SZONE)
+					if count>sg:GetCount() then count=sg:GetCount() end
+					Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SET)
+					local tg=sg:Select(tp,count,count,nil)
+					Duel.SSet(tp,tg)
+					for tc in aux.Next(tg) do
+						local e1=Effect.CreateEffect(e:GetHandler())
+						e1:SetDescription(aux.Stringid(id,3))
+						e1:SetType(EFFECT_TYPE_SINGLE)
+						e1:SetCode(EFFECT_TRAP_ACT_IN_SET_TURN)
+						e1:SetProperty(EFFECT_FLAG_SET_AVAILABLE)
+						e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+						tc:RegisterEffect(e1)
+					end
 				end
 			end
 		end
