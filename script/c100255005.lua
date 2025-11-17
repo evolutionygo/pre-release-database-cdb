@@ -37,7 +37,7 @@ function s.initial_effect(c)
 	local e4=e3:Clone()
 	e4:SetCondition(s.descon)
 	e4:SetCode(EVENT_TO_GRAVE)
-	c:RegisterEffect(e2)
+	c:RegisterEffect(e4)
 end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return not e:GetHandler():IsPublic() end
