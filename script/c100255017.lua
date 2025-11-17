@@ -11,10 +11,10 @@ function s.initial_effect(c)
 	e1:SetRange(LOCATION_HAND)
 	e1:SetHintTiming(TIMING_DAMAGE_STEP)
 	e1:SetCountLimit(1,id)
-	e1:SetCondition(aux.dscon)
-	e1:SetCost(s.atkcost1)
+	e1:SetCondition(s.atkcon)
+	e1:SetCost(s.atkcost)
 	e1:SetTarget(s.atktg)
-	e1:SetOperation(s.atkop1)
+	e1:SetOperation(s.atkop)
 	c:RegisterEffect(e1)
 	--equip
 	local e2=Effect.CreateEffect(c)
@@ -29,7 +29,10 @@ function s.initial_effect(c)
 	e2:SetOperation(s.eqop)
 	c:RegisterEffect(e2)
 end
-function s.atkcost1(e,tp,eg,ep,ev,re,r,rp,chk)
+function s.atkcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.IsBattlePhase() and aux.dscon(e,tp,eg,ep,ev,re,r,rp)
+end
+function s.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsDiscardable() end
 	Duel.SendtoGrave(e:GetHandler(),REASON_COST+REASON_DISCARD)
 end
@@ -42,9 +45,9 @@ function s.atktg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
 	Duel.SelectTarget(tp,s.atkfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
 end
-function s.atkop1(e,tp,eg,ep,ev,re,r,rp)
+function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToChain() and tc:IsFaceup() then
+	if tc:IsRelateToChain() and tc:IsFaceup() and tc:IsType(TYPE_MONSTER) then
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_UPDATE_ATTACK)
@@ -68,7 +71,7 @@ end
 function s.eqop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if aux.NecroValleyFilter()(c) and c:IsRelateToEffect(e) and tc:IsFaceup() and tc:IsRelateToEffect(e) and tc:IsType(TYPE_MONSTER) then
+	if aux.NecroValleyFilter()(c) and c:IsRelateToChain() and tc:IsFaceup() and tc:IsRelateToChain() and tc:IsType(TYPE_MONSTER) then
 		if not Duel.Equip(tp,c,tc) then return end
 		--equip limit
 		local e1=Effect.CreateEffect(c)

@@ -50,7 +50,8 @@ function s.cfilter2(c,lv)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToChain() and Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)~=0 then
+	if tc:IsRelateToChain() and aux.NecroValleyFilter()(tc)
+		and Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)~=0 then
 		local lv=0
 		if tc:IsLevelAbove(1) then lv=tc:GetLevel() end
 		if tc:IsRankAbove(1) then lv=tc:GetRank() end
@@ -60,6 +61,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
 			local g=Duel.SelectMatchingCard(tp,s.cfilter2,tp,LOCATION_MZONE,0,1,1,tc,lv)
 			local tc2=g:GetFirst()
+			Duel.HintSelection(g)
 			local lv2=0
 			if tc2:IsLevelAbove(1) then lv2=tc2:GetLevel() end
 			if tc2:IsRankAbove(1) then lv2=tc2:GetRank() end

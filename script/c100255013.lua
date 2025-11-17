@@ -29,36 +29,37 @@ function s.atkfilter(c)
 	return c:IsSetCard(0x7f) and c:IsType(TYPE_XYZ) and c:IsAttribute(ATTRIBUTE_LIGHT)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
-	local cg=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_GRAVE,0,nil,e,tp)
+	local cg=Duel.GetMatchingGroup(aux.NecroValleyFilter(s.spfilter),tp,LOCATION_GRAVE,0,nil,e,tp)
 	if #cg>0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local sg=cg:Select(tp,1,1,nil)
 		local tc=sg:GetFirst()
-		if Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)~=0 then
+		if Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP) then
 			local ag=Duel.GetMatchingGroup(s.atkfilter,tp,LOCATION_GRAVE,0,nil)
 			local atk=ag:GetSum(Card.GetAttack)
-			local e2=Effect.CreateEffect(e:GetHandler())
-			e2:SetType(EFFECT_TYPE_SINGLE)
-			e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-			e2:SetCode(EFFECT_UPDATE_ATTACK)
-			e2:SetReset(RESET_EVENT+RESETS_STANDARD)
-			e2:SetValue(atk)
-			tc:RegisterEffect(e2)
+			local e1=Effect.CreateEffect(e:GetHandler())
+			e1:SetType(EFFECT_TYPE_SINGLE)
+			e1:SetCode(EFFECT_UPDATE_ATTACK)
+			e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+			e1:SetValue(atk)
+			tc:RegisterEffect(e1)
 		end
+		Duel.SpecialSummonComplete()
 	end
 end
 function s.atkcon(e,tp,eg,ep,ev,re,r,rp)
 	local rc=eg:GetFirst()
 	return rc==Duel.GetAttacker() and rc:IsStatus(STATUS_OPPO_BATTLE) and rc:IsFaceup()
 		and rc:IsSetCard(0x7f) and rc:IsType(TYPE_XYZ)
-		and rc:IsAttackAbove(1000)
-		and rc:IsAttribute(ATTRIBUTE_LIGHT) and rc:IsControler(tp)
+		and rc:IsAttackAbove(1000) and rc:IsControler(tp)
+		and (rc:GetOriginalAttribute()&ATTRIBUTE_LIGHT)~=0
+		and not rc:IsStatus(STATUS_DESTROY_CONFIRMED)
 end
 function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetAttacker()
-	if tc:IsFaceup() then
+	if tc:IsFaceup() and tc:IsControler(tp) and tc:IsType(TYPE_MONSTER) then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_UPDATE_ATTACK)
