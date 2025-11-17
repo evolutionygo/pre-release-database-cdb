@@ -1,6 +1,7 @@
 --ミラーバリア
 local s,id,o=GetID()
 function s.initial_effect(c)
+	aux.AddCodeList(c,100255002)
 	--Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_EQUIP)
@@ -69,7 +70,8 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetCategory(CATEGORY_ATKCHANGE)
 		e1:SetType(EFFECT_TYPE_QUICK_O)
 		e1:SetRange(LOCATION_SZONE)
-		e1:SetCode(EVENT_PRE_DAMAGE_CALCULATE)
+		e1:SetCode(EVENT_FREE_CHAIN)
+		e1:SetCondition(s.atkcon)
 		e1:SetCost(s.atkcost)
 		e1:SetOperation(s.atkop)
 		c:RegisterEffect(e1)
@@ -79,11 +81,17 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 		e3:SetCode(EFFECT_EQUIP_LIMIT)
 		e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 		e3:SetValue(1)
+		e3:SetValue(s.eqlimit)
 		e3:SetReset(RESET_EVENT+RESETS_STANDARD)
 		c:RegisterEffect(e3)
 	else
 		c:CancelToGrave(false)
 	end
+end
+function s.atkcon(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler():GetEquipTarget()
+	local bc=c:GetBattleTarget()
+	return bc
 end
 function s.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
@@ -96,6 +104,9 @@ function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 	if c:IsRelateToBattle() and c:IsFaceup() and bc:IsRelateToBattle() then
 		Duel.Destroy(bc,REASON_EFFECT)
 	end
+end
+function s.eqlimit(e,c)
+	return e:GetHandler():GetEquipTarget()==c or c:IsControler(e:GetHandlerPlayer())
 end
 function s.filter(c)
 	return c:IsCode(100255002) and c:IsAbleToHand()
