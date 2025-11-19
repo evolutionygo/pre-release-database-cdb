@@ -64,7 +64,7 @@ function s.fusfilter1(c,e,tp)
 	return c:IsType(TYPE_FUSION) and Duel.IsExistingMatchingCard(s.fusfilter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,c:GetAttribute(),c)
 end
 function s.fusfilter2(c,e,tp,att,mc)
-	return c:IsSetCard(0x9d) and c:GetAttribute()~=att and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) and c:CheckFusionMaterial()
+	return c:IsSetCard(0x9d) and not c:IsAttribute(att) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) and c:CheckFusionMaterial()
 		and Duel.GetLocationCountFromEx(tp,tp,mc,c)>0
 end
 function s.fustg(e,tp,eg,ep,ev,re,r,rp,chk)
