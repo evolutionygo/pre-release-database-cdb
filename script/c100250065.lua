@@ -61,10 +61,10 @@ function s.fuscost(e,tp,eg,ep,ev,re,r,rp,chk)
 	return true
 end
 function s.fusfilter1(c,e,tp)
-	return c:IsType(TYPE_FUSION) and Duel.IsExistingMatchingCard(s.fusfilter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,c:GetOriginalAttribute(),c)
+	return c:IsType(TYPE_FUSION) and Duel.IsExistingMatchingCard(s.fusfilter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,c:GetAttribute(),c)
 end
 function s.fusfilter2(c,e,tp,att,mc)
-	return c:IsSetCard(0x9d) and c:GetOriginalAttribute()~=att and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) and c:CheckFusionMaterial()
+	return c:IsSetCard(0x9d) and c:GetAttribute()~=att and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) and c:CheckFusionMaterial()
 		and Duel.GetLocationCountFromEx(tp,tp,mc,c)>0
 end
 function s.fustg(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -74,7 +74,7 @@ function s.fustg(e,tp,eg,ep,ev,re,r,rp,chk)
 		return aux.MustMaterialCheck(nil,tp,EFFECT_MUST_BE_FMATERIAL) and Duel.CheckReleaseGroup(tp,s.fusfilter1,1,nil,e,tp) and s.cost(e,tp,eg,ep,ev,re,r,rp,0)
 	end
 	local rg=Duel.SelectReleaseGroup(tp,s.fusfilter1,1,1,nil,e,tp)
-	e:SetLabel(rg:GetFirst():GetOriginalAttribute())
+	e:SetLabel(rg:GetFirst():GetAttribute())
 	Duel.Release(rg,REASON_COST)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 end
@@ -86,8 +86,15 @@ function s.fusop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=g:GetFirst()
 	if tc then
 		tc:SetMaterial(nil)
-		if Duel.SpecialSummon(tc,SUMMON_TYPE_FUSION,tp,tp,false,false,POS_FACEUP)~=0 then
-			tc:CompleteProcedure()
+		if Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP) then
+			local e1=Effect.CreateEffect(c)
+			e1:SetType(EFFECT_TYPE_SINGLE)
+			e1:SetCode(EFFECT_SET_ATTACK_FINAL)
+			e1:SetValue(0)
+			e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+			tc:RegisterEffect(e1)
 		end
+		Duel.SpecialSummonComplete()
+		tc:CompleteProcedure()
 	end
 end
