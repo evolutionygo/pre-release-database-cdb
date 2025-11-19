@@ -1,4 +1,4 @@
---恩底弥翁的侍女 薇儿
+--
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddCodeList(c,28553439,100200282)
@@ -36,7 +36,7 @@ function s.initial_effect(c)
 	Duel.AddCustomActivityCounter(id,ACTIVITY_CHAIN,s.chainfilter)
 end
 function s.chainfilter(re,tp,cid)
-	return not (re:IsActiveType(TYPE_SPELL) and re:IsHasType(EFFECT_TYPE_ACTIVATE))
+	return not re:IsActiveType(TYPE_SPELL)
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetCustomActivityCount(id,tp,ACTIVITY_CHAIN)>0 or Duel.GetCustomActivityCount(id,1-tp,ACTIVITY_CHAIN)>0
