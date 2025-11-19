@@ -86,8 +86,8 @@ function s.fusop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=g:GetFirst()
 	if tc then
 		tc:SetMaterial(nil)
-		if Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP) then
-			local e1=Effect.CreateEffect(c)
+		if Duel.SpecialSummonStep(tc,SUMMON_TYPE_FUSION,tp,tp,false,false,POS_FACEUP) then
+			local e1=Effect.CreateEffect(e:GetHandler())
 			e1:SetType(EFFECT_TYPE_SINGLE)
 			e1:SetCode(EFFECT_SET_ATTACK_FINAL)
 			e1:SetValue(0)
