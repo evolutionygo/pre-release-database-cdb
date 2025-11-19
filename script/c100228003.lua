@@ -1,4 +1,4 @@
---
+--エンディミオンの侍女ヴェール
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddCodeList(c,28553439,100200282)
