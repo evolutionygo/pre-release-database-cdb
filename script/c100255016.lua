@@ -120,9 +120,9 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.cfilter(c,tp,chk)
-	return c:IsType(TYPE_FUSION) and c:IsReleasableByEffect() and not chk
+	return c:IsType(TYPE_FUSION) and c:IsReleasableByEffect() and (not chk
 		or (Duel.GetMZoneCount(tp,c)>1
-			and Duel.IsPlayerCanSpecialSummonMonster(tp,id+o,0,TYPES_TOKEN_MONSTER,0,0,c:GetLevel(),RACE_SPELLCASTER,ATTRIBUTE_DARK))
+			and Duel.IsPlayerCanSpecialSummonMonster(tp,id+o,0,TYPES_TOKEN_MONSTER,0,0,c:GetLevel(),RACE_SPELLCASTER,ATTRIBUTE_DARK)))
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local rg=Duel.GetReleaseGroup(tp,false,REASON_EFFECT)
