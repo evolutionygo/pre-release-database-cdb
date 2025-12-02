@@ -7,7 +7,7 @@ function s.initial_effect(c)
 	--disable
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,1))
-	e1:SetCategory(CATEGORY_DISABLE+CATEGORY_DESTROY)
+	e1:SetCategory(CATEGORY_DISABLE+CATEGORY_DESTROY+CATEGORY_DAMAGE)
 	e1:SetType(EFFECT_TYPE_QUICK_O)
 	e1:SetCode(EVENT_CHAINING)
 	e1:SetRange(LOCATION_MZONE)
@@ -49,10 +49,12 @@ function s.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if re:GetHandler():IsDestructable() and re:GetHandler():IsRelateToEffect(re) then
 		Duel.SetOperationInfo(0,CATEGORY_DESTROY,eg,1,0,0)
 	end
+	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,1000)
 end
 function s.disop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.NegateEffect(ev) and re:GetHandler():IsRelateToEffect(re)
 		and Duel.Destroy(eg,REASON_EFFECT)~=0 then
+		Duel.BreakEffect()
 		Duel.Damage(1-tp,1000,REASON_EFFECT)
 	end
 end
