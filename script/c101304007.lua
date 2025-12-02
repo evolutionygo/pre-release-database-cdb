@@ -1,4 +1,4 @@
---
+--夜光列車ブルートラベラー
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddCodeList(c,60879050,76136345)

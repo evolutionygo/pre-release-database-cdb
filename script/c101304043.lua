@@ -1,4 +1,4 @@
---
+--超弩級砲塔列車グスタフ・ロケット
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddCodeList(c,56910167)
@@ -28,7 +28,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function s.cfilter(c)
-	return c:IsDiscardable()
+	return c:IsDiscardable(REASON_SPSUMMON)
 end
 function s.ovfilter(c)
 	return c:IsFaceup() and c:IsCode(56910167)
@@ -40,7 +40,7 @@ function s.xyzop(e,tp,chk)
 end
 function s.discon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	return not c:IsStatus(STATUS_BATTLE_DESTROYED) and Duel.IsChainDisablable(ev) 
+	return not c:IsStatus(STATUS_BATTLE_DESTROYED) and Duel.IsChainDisablable(ev)
 		and c:GetOverlayCount()>0 and ep==1-tp and re:IsActiveType(TYPE_MONSTER)
 end
 function s.distg(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -52,7 +52,7 @@ function s.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 end
 function s.disop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.NegateEffect(ev) and re:GetHandler():IsRelateToEffect(re)
+	if Duel.NegateEffect(ev) and re:GetHandler():IsRelateToChain(ev)
 		and Duel.Destroy(eg,REASON_EFFECT)~=0 then
 		Duel.BreakEffect()
 		Duel.Damage(1-tp,1000,REASON_EFFECT)
