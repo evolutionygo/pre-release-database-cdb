@@ -1,4 +1,4 @@
---妖精伝姫-マチリル
+--妖精伝姫－マチリル
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddCodeList(c,91957038,id+o)

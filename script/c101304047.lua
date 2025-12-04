@@ -1,4 +1,4 @@
---妖精伝姫-ウィキャット
+--妖精伝姫－ウィキャット
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--xyz summon
@@ -27,7 +27,7 @@ function s.initial_effect(c)
 	--return
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,1))
-	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e3:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_TOGRAVE)
 	e3:SetType(EFFECT_TYPE_QUICK_O)
 	e3:SetRange(LOCATION_GRAVE)
 	e3:SetCode(EVENT_FREE_CHAIN)
@@ -39,7 +39,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function s.etg(e,c)
-	return c:IsSetCard(0x2db) and c:GetOriginalAttribute()==ATTRIBUTE_LIGHT
+	return c:IsFaceup() and c:IsSetCard(0x2db) and c:GetOriginalAttribute()&ATTRIBUTE_LIGHT~=0
 end
 function s.efilter(e,re)
 	return re:GetOwnerPlayer()~=e:GetOwnerPlayer() and re:IsActivated()
@@ -59,15 +59,18 @@ function s.tgtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,e:GetLabel(),tp,LOCATION_DECK)
 end
 function s.tgop(e,tp,eg,ep,ev,re,r,rp)
+	local g=Duel.GetMatchingGroup(s.tgfilter,tp,LOCATION_DECK,0,nil)
+	local ct=e:GetLabel()
+	if not g:GetCount()<ct then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local g=Duel.SelectMatchingCard(tp,s.tgfilter,tp,LOCATION_DECK,0,e:GetLabel(),e:GetLabel(),nil)
-	if g:GetCount()>0 then
-		Duel.SendtoGrave(g,REASON_EFFECT)
+	local sg=g:Select(tp,ct,ct,nil)
+	if sg:GetCount()>0 then
+		Duel.SendtoGrave(sg,REASON_EFFECT)
 	end
 end
 function s.tfilter(c)
 	return c:IsFaceup() and c:IsAbleToGrave()
-		and c:IsSetCard(0x2db) and c:GetOriginalAttribute()==ATTRIBUTE_LIGHT
+		and c:IsSetCard(0x2db) and c:GetOriginalAttribute()&ATTRIBUTE_LIGHT~=0
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_MZONE) and s.tfilter(chkc) end
@@ -85,7 +88,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	if not c:IsRelateToChain() or not aux.NecroValleyFilter()(c) then return end
 	if Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)~=0 then
 		local tc=Duel.GetFirstTarget()
-		if tc:IsRelateToChain() then
+		if tc:IsRelateToChain() and tc:IsType(TYPE_MONSTER) then
 			Duel.SendtoGrave(tc,REASON_EFFECT)
 		end
 	end
