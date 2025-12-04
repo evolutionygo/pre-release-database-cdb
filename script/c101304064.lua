@@ -21,6 +21,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 	--equip
 	local e3=Effect.CreateEffect(c)
+	e3:SetDescription(aux.Stringid(id,1))
 	e3:SetCategory(CATEGORY_EQUIP)
 	e3:SetType(EFFECT_TYPE_IGNITION)
 	e3:SetRange(LOCATION_GRAVE)
@@ -30,7 +31,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function s.filter0(c)
-	return c:IsFaceup() and c:IsCode(101304116) and c:IsCanBeFusionMaterial() and c:IsAbleToGrave()
+	return c:IsFaceup() and c:IsCode(101304116) and c:IsCanBeFusionMaterial()
 end
 function s.filter1(c,e)
 	return not c:IsImmuneToEffect(e)
@@ -44,7 +45,7 @@ function s.fsptg(e,tp,eg,ep,ev,re,r,rp,chk)
 		local c=e:GetHandler()
 		local chkf=tp
 		local mg1=Duel.GetFusionMaterial(tp):Filter(s.filter1,nil,e)
-		local mg2=Duel.GetMatchingGroup(s.filter0,tp,0,LOCATION_MZONE,nil)
+		local mg2=Duel.GetMatchingGroup(s.filter0,tp,0,LOCATION_MZONE,nil):Filter(s.filter1,nil,e)
 		mg1:Merge(mg2)
 		local res=Duel.IsExistingMatchingCard(s.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,mg1,nil,chkf)
 		if not res then
@@ -99,8 +100,10 @@ function s.eqfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0x2db)
 end
 function s.eqtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	local c=e:GetHandler()
 	if chk==0 then return Duel.IsExistingMatchingCard(s.eqfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
-	Duel.SetOperationInfo(0,CATEGORY_EQUIP,e:GetHandler(),1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_LEAVE_GRAVE,c,1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_EQUIP,c,1,0,0)
 end
 function s.sumfilter(c)
 	return c:IsSummonable(true,nil) and c:IsRace(RACE_SPELLCASTER) and c:IsAttack(1850)
@@ -111,6 +114,7 @@ function s.eqop(e,tp,eg,ep,ev,re,r,rp)
 	if not aux.NecroValleyFilter()(c) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EQUIP)
 	local g=Duel.SelectMatchingCard(tp,s.eqfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
+	Duel.HintSelection(g)
 	local tc=g:GetFirst()
 	if tc and Duel.Equip(tp,c,tc)
 		and Duel.IsExistingMatchingCard(s.sumfilter,tp,LOCATION_HAND+LOCATION_MZONE,0,1,nil)
