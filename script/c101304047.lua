@@ -61,7 +61,7 @@ end
 function s.tgop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(s.tgfilter,tp,LOCATION_DECK,0,nil)
 	local ct=e:GetLabel()
-	if not g:GetCount()<ct then return end
+	if g:GetCount()<ct then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
 	local sg=g:Select(tp,ct,ct,nil)
 	if sg:GetCount()>0 then
