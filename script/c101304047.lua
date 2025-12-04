@@ -48,7 +48,7 @@ function s.tgcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then return c:CheckRemoveOverlayCard(tp,1,REASON_COST) end
 	local rt=Duel.GetMatchingGroupCount(s.tgfilter,tp,LOCATION_DECK,0,nil)
-	local ct=c:RemoveOverlayCard(tp,1,rt,REASON_COST)
+	local ct=c:RemoveOverlayCard(tp,1,math.min(2,rt),REASON_COST)
 	e:SetLabel(ct)
 end
 function s.tgfilter(c)
@@ -82,7 +82,7 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if not c:IsRelateToChain() then return end
+	if not c:IsRelateToChain() or not aux.NecroValleyFilter()(c) then return end
 	if Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)~=0 then
 		local tc=Duel.GetFirstTarget()
 		if tc:IsRelateToChain() then
