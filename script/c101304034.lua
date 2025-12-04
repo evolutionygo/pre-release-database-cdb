@@ -48,7 +48,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 function s.mfilter(c,e,sp)
-	return c:IsSetCard(0x2db) and c:IsFusionAttribute(ATTRIBUTE_LIGHT)
+	return c:IsFusionSetCard(0x2db) and c:IsFusionAttribute(ATTRIBUTE_LIGHT)
 end
 function s.descon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetLabel()==1 and e:GetHandler():IsSummonType(SUMMON_TYPE_FUSION)
