@@ -16,7 +16,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 	--spsummon
 	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(id,3))
+	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_GRAVE)
@@ -41,23 +41,22 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local ch=Duel.GetCurrentChain()
 	local b2=false
 	local og=Group.CreateGroup()
-	local tsp=-1
 	local tse=nil
 	if ch>0 then
-		tsp,tse=Duel.GetChainInfo(ch,CHAININFO_TRIGGERING_PLAYER,CHAININFO_TRIGGERING_EFFECT)
+		tse=Duel.GetChainInfo(ch,CHAININFO_TRIGGERING_EFFECT)
 		b2=tse:IsHasType(EFFECT_TYPE_ACTIVATE)
 			and (tse:IsActiveType(TYPE_QUICKPLAY) or tse:GetHandler():GetType()==TYPE_SPELL) and Duel.IsChainDisablable(ev)
 	end
 	if chk==0 then return b1 or b2 end
 	local op=aux.SelectFromOptions(tp,
-		{b1,aux.Stringid(id,1),1},
-		{b2,aux.Stringid(id,2),2})
+		{b1,aux.Stringid(id,2),1},
+		{b2,aux.Stringid(id,3),2})
 	e:SetLabel(op)
 	if op==1 then
 		e:SetCategory(CATEGORY_DESTROY)
 		local g=Duel.GetMatchingGroup(s.desfilter,tp,0,LOCATION_MZONE,nil)
 		Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
-	else
+	elseif op==2 then
 		e:SetCategory(CATEGORY_DISABLE)
 		Duel.SetOperationInfo(0,CATEGORY_DISABLE,og,1,0,0)
 	end
@@ -70,13 +69,13 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			Duel.HintSelection(g)
 			Duel.Destroy(g,REASON_EFFECT)
 		end
-	else
+	elseif e:GetLabel()==2 then
 		local ch=Duel.GetCurrentChain()
 		Duel.NegateEffect(ch-1)
 	end
 end
 function s.spfilter(c,e,tp)
-	return (c:IsCode(100200282) or aux.IsCodeListed(c,100200282)) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return aux.IsCodeOrListed(c,100200282) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_GRAVE) and s.spfilter(chkc,e,tp) end
@@ -88,7 +87,7 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
+	if tc:IsRelateToChain() and aux.NecroValleyFilter()(tc) then
 		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
 	end
 end
