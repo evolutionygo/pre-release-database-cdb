@@ -44,7 +44,6 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local tse=nil
 	if e:GetHandler():IsStatus(STATUS_CHAINING) then ch=ch-1 end
 	if ch>0 then
-		Debug.Message("ch="..ch)
 		tse=Duel.GetChainInfo(ch,CHAININFO_TRIGGERING_EFFECT)
 		b2=tse:IsHasType(EFFECT_TYPE_ACTIVATE)
 			and (tse:IsActiveType(TYPE_QUICKPLAY) or tse:GetHandler():GetType()==TYPE_SPELL) and Duel.IsChainDisablable(ev)
