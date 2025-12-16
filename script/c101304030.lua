@@ -1,6 +1,7 @@
 --デス・レジーナ・デーモン
 local s,id,o=GetID()
 function s.initial_effect(c)
+	aux.AddCodeList(c,63679166)
 	c:EnableReviveLimit()
 	--pendulum summon
 	aux.EnablePendulumAttribute(c)
@@ -44,7 +45,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 function s.thfilter(c)
-	return c:IsFaceupEx() and c:IsSetCard(0x45) and c:IsAbleToHand()
+	return c:IsFaceupEx() and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsSetCard(0x45) and c:IsAbleToHand()
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE+LOCATION_REMOVED) and s.thfilter(chkc) end
