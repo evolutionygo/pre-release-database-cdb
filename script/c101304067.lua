@@ -8,8 +8,8 @@ function s.initial_effect(c)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_END_PHASE)
 	e1:SetCountLimit(1,id+EFFECT_COUNT_CODE_OATH)
-	e1:SetTarget(s.sptg)
-	e1:SetOperation(s.spop)
+	e1:SetTarget(s.target)
+	e1:SetOperation(s.activate)
 	c:RegisterEffect(e1)
 end
 function s.setfilter(c)
@@ -18,10 +18,10 @@ end
 function s.ritual_filter(c)
 	return c:IsFaceupEx() and c:IsType(TYPE_RITUAL) and c:IsSetCard(0x45)
 end
-function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local ct=Duel.GetLocationCount(tp,LOCATION_SZONE)
 	if e:IsHasType(EFFECT_TYPE_ACTIVATE) and not e:GetHandler():IsLocation(LOCATION_SZONE) then ct=ct-1 end
-	local b1=ct>0 and Duel.IsExistingMatchingCard(s.setfilter,tp,LOCATION_DECK,0,1,nil)
+	local b1=ct>0 and Duel.IsExistingMatchingCard(s.setfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil)
 	local mg=Duel.GetRitualMaterial(tp)
 	local b2=Duel.IsExistingMatchingCard(aux.RitualUltimateFilter,tp,LOCATION_HAND+LOCATION_EXTRA,0,1,nil,s.rfilter,e,tp,mg,nil,Card.GetLevel,"Greater")
 	if chk==0 then return b1 or b2 end
@@ -50,7 +50,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			Duel.ChangePosition(tc,POS_FACEUP_DEFENSE)
 		end
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SET)
-		local g=Duel.SelectMatchingCard(tp,s.setfilter,tp,LOCATION_DECK,0,1,1,nil)
+		local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.setfilter),tp,LOCATION_DECK+LOCATION_GRAVE,0,1,1,nil)
 		local tc=g:GetFirst()
 		if tc and Duel.SSet(tp,tc)~=0 then
 			local e1=Effect.CreateEffect(e:GetHandler())
