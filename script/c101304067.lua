@@ -45,10 +45,6 @@ function s.rfilter(c,e,tp)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetLabel()==1 then
-		local tc=Duel.GetFirstTarget()
-		if tc:IsRelateToChain() and tc:IsAttackPos() then
-			Duel.ChangePosition(tc,POS_FACEUP_DEFENSE)
-		end
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SET)
 		local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.setfilter),tp,LOCATION_DECK+LOCATION_GRAVE,0,1,1,nil)
 		local tc=g:GetFirst()
