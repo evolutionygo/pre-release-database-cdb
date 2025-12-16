@@ -21,7 +21,7 @@ function s.initial_effect(c)
 	e1:SetTarget(s.thtg)
 	e1:SetOperation(s.thop)
 	c:RegisterEffect(e1)
-	--to hand
+	--destroy
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,0))
 	e3:SetCategory(CATEGORY_DESTROY+CATEGORY_REMOVE+CATEGORY_GRAVE_ACTION)
@@ -39,25 +39,26 @@ function s.initial_effect(c)
 	e4:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
 	e4:SetRange(LOCATION_MZONE)
 	e4:SetCode(EFFECT_IMMUNE_EFFECT)
-	e4:SetCondition(s.eqcon)
+	e4:SetCondition(s.efcon)
 	e4:SetValue(s.efilter)
 	c:RegisterEffect(e4)
 end
 function s.thfilter(c)
 	return c:IsFaceupEx() and c:IsSetCard(0x45) and c:IsAbleToHand()
 end
-function s.mvtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE+LOCATION_REMOVED) and s.thfilter(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(s.thfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0+0,1,nil) end
+	if chk==0 then return Duel.IsExistingTarget(s.thfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
-	local g=Duel.SelectTarget(tp,s.thfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0+0,1,1,nil)
+	local g=Duel.SelectTarget(tp,s.thfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,e:GetHandler(),1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,1,0,0)
 end
-function s.mvop(e,tp,eg,ep,ev,re,r,rp)
+function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
 	if c:IsRelateToChain() and Duel.Destroy(c,REASON_EFFECT)~=0
-		and tc:IsRelateToChain() then
+		and tc:IsRelateToChain() and aux.NecroValleyFilter()(tc) then
 		Duel.SendtoHand(tc,nil,REASON_EFFECT)
 	end
 end
@@ -91,9 +92,9 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 end
-function s.eqcon(e)
+function s.efcon(e)
 	return e:GetHandler():GetSequence()>4
 end
-function s.eqlimit(e,c)
-	return e:GetOwner()==c
+function s.efilter(e,te)
+	return te:IsActiveType(TYPE_MONSTER) and te:GetOwner()~=e:GetOwner()
 end
