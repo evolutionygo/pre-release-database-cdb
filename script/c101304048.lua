@@ -41,7 +41,7 @@ function s.checkop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.ovfilter(c)
-	return c:IsFaceup() and c:IsType(TYPE_XYZ) and c:GetFlagEffect(id+o)>0
+	return c:IsFaceup() and c:IsType(TYPE_XYZ) and c:GetFlagEffect(id+o)==0
 end
 function s.xyzop(e,tp,chk)
 	if chk==0 then return Duel.GetFlagEffect(tp,id)==0 end
