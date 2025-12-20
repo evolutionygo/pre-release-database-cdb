@@ -48,35 +48,15 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		local g2=Duel.GetMatchingGroup(Card.IsType,p2,0,LOCATION_DECK,nil,TYPE_MONSTER)
 		local b1=#g1>0 and Duel.Remove(g1,POS_FACEDOWN,REASON_EFFECT,p1)>0
 		local b2=#g2>0 and Duel.Remove(g2,POS_FACEDOWN,REASON_EFFECT,p2)>0
-		if b1 or b2 then
-			local tc1=nil
-			local tc2=nil
-			if Duel.GetLocationCount(p1,LOCATION_MZONE)>0
-				and Duel.IsExistingMatchingCard(aux.NecroValleyFilter(s.spfilter1),p1,LOCATION_GRAVE,0,1,nil,e,p1)
-				and Duel.SelectYesNo(p1,aux.Stringid(id,2)) then
-				Duel.Hint(HINT_SELECTMSG,p1,HINTMSG_SPSUMMON)
-				local sg1=Duel.SelectMatchingCard(p1,aux.NecroValleyFilter(s.spfilter1),p1,LOCATION_GRAVE,0,1,1,nil,e,p1)
-				Duel.HintSelection(sg1)
-				tc1=sg1:GetFirst()
-			end
-			if Duel.GetLocationCount(p2,LOCATION_MZONE)>0
-				and Duel.IsExistingMatchingCard(aux.NecroValleyFilter(s.spfilter1),p2,LOCATION_GRAVE,0,1,nil,e,p2)
-				and Duel.SelectYesNo(p2,aux.Stringid(id,2)) then
-				Duel.Hint(HINT_SELECTMSG,p2,HINTMSG_SPSUMMON)
-				local sg2=Duel.SelectMatchingCard(p2,aux.NecroValleyFilter(s.spfilter1),p2,LOCATION_GRAVE,0,1,1,nil,e,p2)
-				Duel.HintSelection(sg2)
-				tc2=sg2:GetFirst()
-			end
-			if tc1~=nil or tc2~=nil then
-				Duel.BreakEffect()
-				if tc1 then
-					Duel.SpecialSummonStep(tc1,0,p1,p1,false,false,POS_FACEUP)
-				end
-				if tc2 then
-					Duel.SpecialSummonStep(tc2,0,p2,p2,false,false,POS_FACEUP)
-				end
-				Duel.SpecialSummonComplete()
-			end
+		if (b1 or b2) and Duel.GetLocationCount(p1,LOCATION_MZONE)>0
+			and Duel.IsExistingMatchingCard(aux.NecroValleyFilter(s.spfilter1),p1,LOCATION_GRAVE,0,1,nil,e,p1)
+			and Duel.SelectYesNo(p1,aux.Stringid(id,2)) then
+			Duel.Hint(HINT_SELECTMSG,p1,HINTMSG_SPSUMMON)
+			local sg1=Duel.SelectMatchingCard(p1,aux.NecroValleyFilter(s.spfilter1),p1,LOCATION_GRAVE,0,1,1,nil,e,p1)
+			Duel.HintSelection(sg1)
+			local sc=sg1:GetFirst()
+			Duel.BreakEffect()
+			Duel.SpecialSummon(sc,0,p1,p1,false,false,POS_FACEUP)
 		end
 	end
 end
