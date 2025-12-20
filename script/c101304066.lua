@@ -3,6 +3,7 @@ local s,id,o=GetID()
 function s.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_POSITION)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
@@ -30,7 +31,7 @@ end
 function s.filter2(c,tc,e,tp)
 	return c:IsType(TYPE_MONSTER) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_ATTACK+POS_FACEDOWN_DEFENSE)
 		and c:IsSetCard(0x10c0,0xbf)
-		and c:GetAttribute()==tc:GetAttribute()
+		and c:IsAttribute(tc:GetAttribute())
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsFaceup() and chkc:IsLocation(LOCATION_MZONE) and s.filter1(chkc,e,tp) end
@@ -50,7 +51,6 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		and tc:IsFaceup() and tc:IsCanTurnSet()
 		and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 		Duel.BreakEffect()
-		Duel.HintSelection(tc)
 		Duel.ChangePosition(tc,POS_FACEDOWN_DEFENSE)
 	end
 end
@@ -66,7 +66,7 @@ function s.postg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function s.posop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
+	if tc:IsRelateToChain() then
 		Duel.ChangePosition(tc,POS_FACEUP_DEFENSE,POS_FACEUP_DEFENSE,POS_FACEUP_ATTACK,POS_FACEUP_ATTACK)
 	end
 end

@@ -20,14 +20,14 @@ function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.filter(c,e,tp)
 	return c:IsFaceup() and c:IsType(TYPE_EFFECT)
-		and c:GetOriginalLevel()>0
+		and c:GetLevel()>0
 		and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp,c)
 end
 function s.spfilter(c,e,tp,tc)
 	return c:IsAttribute(tc:GetAttribute())
 		and c:IsRace(tc:GetRace())
-		and c:GetOriginalLevel()>0
-		and c:GetOriginalLevel()~=tc:GetOriginalLevel()
+		and c:GetLevel()>0
+		and c:GetLevel()~=tc:GetLevel()
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and Duel.GetLocationCountFromEx(tp,tp,nil,c)>0
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
@@ -57,7 +57,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToChain() and tc:IsFaceup() then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-		local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_DECK+LOCATION_EXTRA,0,1,1,nil,e,tp,tc)
+		local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_EXTRA,0,1,1,nil,e,tp,tc)
 		local fc=g:GetFirst()
 		if tc and Duel.SpecialSummonStep(fc,0,tp,tp,false,false,POS_FACEUP)~=0 then
 			local e1=Effect.CreateEffect(c)
