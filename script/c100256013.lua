@@ -105,8 +105,9 @@ function s.thcon2(e,tp,eg,ep,ev,re,r,rp)
 	return bit.band(r,REASON_EFFECT+REASON_BATTLE)~=0 and e:GetHandler():IsPreviousLocation(LOCATION_MZONE)
 end
 function s.thtg2(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsAbleToHand() end
-	if e:GetHandler():IsReason(REASON_BATTLE) or rp==1-tp then
+	local c=e:GetHandler()
+	if chk==0 then return c:IsAbleToHand() end
+	if rp==1-tp and c:IsPreviousControler(tp) then
 		e:SetCategory(CATEGORY_TOHAND+CATEGORY_SPECIAL_SUMMON)
 		e:SetLabel(1)
 	else
