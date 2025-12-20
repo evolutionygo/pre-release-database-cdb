@@ -27,7 +27,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 	--Special Summon (deck)
 	local e4=Effect.CreateEffect(c)
-	e4:SetDescription(aux.Stringid(id,3))
+	e4:SetDescription(aux.Stringid(id,2))
 	e4:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e4:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
@@ -39,7 +39,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 function s.thfilter(c)
-	return (c:IsSetCard(0xc0) and c:IsType(TYPE_SPELL) or c:IsCode(38057522)) and c:IsAbleToHand()
+	return (c:IsSetCard(0xc0) and c:IsType(TYPE_SPELL+TYPE_TRAP) or c:IsCode(38057522)) and c:IsAbleToHand()
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil) end
@@ -54,17 +54,27 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.artg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
+	local c=e:GetHandler()
+	if chk==0 then return ((RACE_ALL&~c:GetRace())~=0 or (ATTRIBUTE_ALL&~c:GetAttribute())~=0) end
+	local race,att
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RACE)
-	local rac=Duel.AnnounceRace(tp,1,RACE_ALL)
+	if ATTRIBUTE_ALL&~c:GetAttribute()==0 then
+		race=Duel.AnnounceRace(tp,1,RACE_ALL&~c:GetRace())
+	else
+		race=Duel.AnnounceRace(tp,1,RACE_ALL)
+	end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATTRIBUTE)
-	local att=Duel.AnnounceAttribute(tp,1,ATTRIBUTE_ALL)
-	e:SetLabel(rac,att)
+	if RACE_ALL&~c:GetRace()==0 or race==c:GetRace() then
+		att=Duel.AnnounceAttribute(tp,1,ATTRIBUTE_ALL&~c:GetAttribute())
+	else
+		att=Duel.AnnounceAttribute(tp,1,ATTRIBUTE_ALL)
+	end
+	e:SetLabel(race,att)
 end
 function s.arop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local rac,att=e:GetLabel()
-	if c:IsRelateToEffect(e) and c:IsFaceup() then
+	if c:IsRelateToChain() and c:IsFaceup() then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_CHANGE_ATTRIBUTE)

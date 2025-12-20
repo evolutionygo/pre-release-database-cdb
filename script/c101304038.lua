@@ -57,6 +57,9 @@ function s.initial_effect(c)
 	c:RegisterEffect(e6)
 end
 s.material_type=TYPE_SYNCHRO
+function s.synlimit(e,se,sp,st)
+	return st&SUMMON_TYPE_SYNCHRO==SUMMON_TYPE_SYNCHRO and not se
+end
 function s.mfilter(e,c)
 	return c:IsSynchroType(TYPE_TUNER) or not c:IsSynchroType(TYPE_TUNER) and c:IsSynchroType(TYPE_SYNCHRO)
 end
@@ -86,16 +89,19 @@ function s.spfilter(c,e,tp)
 	return c:IsCode(97489701) and c:IsType(TYPE_SYNCHRO)
 		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_SYNCHRO,tp,false,false) and Duel.GetLocationCountFromEx(tp,tp,nil,c)>0
 end
+function s.rmfilter(c,tp)
+	return c:GetPreviousControler()==tp
+end
 function s.reop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local sg=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD+LOCATION_GRAVE,nil)
 	if c:IsRelateToChain() and c:IsAbleToRemove() then sg:AddCard(c) end
 	if Duel.Remove(sg,POS_FACEUP,REASON_EFFECT)~=0 then
 		local og=Duel.GetOperatedGroup()
-		if res and og:IsContains(c)
+		if og:IsContains(c) and og:IsExists(s.rmfilter,1,nil,1-tp)
 			and aux.MustMaterialCheck(nil,tp,EFFECT_MUST_BE_SMATERIAL)
 			and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp)
-			and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
+			and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
 			Duel.BreakEffect()
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 			local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_EXTRA,0,1,1,nil,e,tp)
