@@ -71,7 +71,7 @@ end
 function s.effop(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if e:GetLabel()==1 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_COUNTER)
-		local g=Duel.SelectMatchingCard(tp,Card.IsCanAddCounter,tp,0,LOCATION_MZONE,1,1,nil,0x1041,1)
+		local g=Duel.SelectMatchingCard(tp,Card.IsCanAddCounter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil,0x1041,1)
 		local tc=g:GetFirst()
 		if tc then
 			Duel.HintSelection(g)
