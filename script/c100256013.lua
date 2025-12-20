@@ -41,6 +41,17 @@ function s.initial_effect(c)
 	e4:SetTarget(s.thtg2)
 	e4:SetOperation(s.thop2)
 	c:RegisterEffect(e4)
+	if not s.global_check then
+		s.global_check=true
+		local ge1=Effect.CreateEffect(c)
+		ge1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		ge1:SetCode(EVENT_SPSUMMON_SUCCESS_G_P)
+		ge1:SetOperation(s.checkop)
+		Duel.RegisterEffect(ge1,0)
+	end
+end
+function s.checkop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.RegisterFlagEffect(rp,id,RESET_PHASE+PHASE_END,0,1)
 end
 function s.thfilter(c)
 	return c:IsAttackBelow(1500)
