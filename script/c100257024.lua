@@ -18,12 +18,13 @@ function s.initial_effect(c)
 	e2:SetCategory(CATEGORY_DAMAGE)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_BE_BATTLE_TARGET)
-	e2:SetTargetCard(s.damtg2)
+	e2:SetCountLimit(1)
+	e2:SetTarget(s.damtg2)
 	e2:SetOperation(s.damop2)
 	c:RegisterEffect(e2)
 end
 function s.costfilter(c)
-	return c:IsFacedown() and c:IsAbleToGraveAsCost()
+	return c:IsFacedown() and c:IsAbleToGraveAsCost() and c:GetSequence()<5
 end
 function s.damcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.costfilter,tp,LOCATION_SZONE,0,1,nil) end
@@ -52,20 +53,23 @@ function s.damop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RegisterEffect(e1,tp)
 end
 function s.damcon(e,re,val,r,rp,rc)
-	if not re or not re:IsActiveType(TYPE_MONSTER) or bit.band(r,REASON_EFFECT)==0 then return 0 end
-	if re:GetHandler():IsRace(RACE_FIEND) then return val else return 0 end
+	if bit.band(r,REASON_EFFECT)~=0 and re and re:IsActiveType(TYPE_MONSTER) then
+		if re:GetHandler():IsRace(RACE_FIEND) then return val else return 0 end
+	else
+		return val
+	end
 end
 function s.filter(c)
 	return c:IsPosition(POS_ATTACK)
 end
-function s.damtg(e,tp,eg,ep,ev,re,r,rp,chk)
+function s.damtg2(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.filter,tp,0,LOCATION_MZONE,1,nil) end
 	local ct=Duel.GetMatchingGroupCount(s.filter,tp,0,LOCATION_MZONE,nil)
 	Duel.SetTargetPlayer(1-tp)
 	Duel.SetTargetParam(ct*500)
 	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,ct*500)
 end
-function s.damop(e,tp,eg,ep,ev,re,r,rp)
+function s.damop2(e,tp,eg,ep,ev,re,r,rp)
 	local ct=Duel.GetMatchingGroupCount(s.filter,tp,0,LOCATION_MZONE,nil)
 	local p=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER)
 	if Duel.Damage(p,ct*500,REASON_EFFECT)~=0 then

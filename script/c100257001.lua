@@ -59,10 +59,11 @@ function s.cfilter(c,tp)
 	return c:IsAttribute(ATTRIBUTE_WATER) and c:IsPreviousControler(tp)
 end
 function s.spcon2(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(s.cfilter,1,nil,tp)
- and not c:IsPublic()
+	local c=e:GetHandler()
+	return eg:IsExists(s.cfilter,1,nil,tp) and not c:IsPublic()
 end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	local c=e:GetHandler()
 	if chk==0 then return not c:IsPublic() end
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -78,7 +79,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.descon(e,tp,eg,ep,ev,re,r,rp)
-	return c:IsSummonLocation(LOCATION_HAND+LOCATION_DECK)
+	return e:GetHandler():IsSummonLocation(LOCATION_HAND+LOCATION_DECK)
 end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(aux.TRUE,tp,0,LOCATION_MZONE,1,nil) end

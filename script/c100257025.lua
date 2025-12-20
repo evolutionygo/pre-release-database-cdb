@@ -13,6 +13,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 	--effect
 	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetType(EFFECT_TYPE_QUICK_O)
 	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetRange(LOCATION_GRAVE)
@@ -42,10 +43,9 @@ end
 function s.effcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetMatchingGroupCount(aux.TRUE,tp,LOCATION_HAND,0,nil)==0
 end
-function s.effpop(e,tp,eg,ep,ev,re,r,rp)
+function s.effop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local b1=Duel.IsExistingMatchingCard(aux.TRUE,tp,LOCATION_DECK,0,1,nil)
-		and Duel.IsExistingMatchingCard(aux.TRUE,tp,0,LOCATION_DECK,1,nil)
 	local b2=true
 	local op=0
 	if b1 or b2 then
@@ -56,10 +56,7 @@ function s.effpop(e,tp,eg,ep,ev,re,r,rp)
 	if op==1 then
 		Duel.ConfirmDecktop(tp,1)
 		local g1=Duel.GetDecktopGroup(tp,1)
-		Duel.ConfirmDecktop(1-tp,1)
-		local g2=Duel.GetDecktopGroup(1-tp,1)
 		local res1=g1:GetFirst():IsType(TYPE_MONSTER)
-		local res2=g2:GetFirst():IsType(TYPE_MONSTER)
 		if res1 then
 			local e1=Effect.CreateEffect(c)
 			e1:SetType(EFFECT_TYPE_FIELD)
@@ -70,21 +67,8 @@ function s.effpop(e,tp,eg,ep,ev,re,r,rp)
 			e1:SetReset(RESET_PHASE+PHASE_END)
 			Duel.RegisterEffect(e1,tp)
 		else
-			Duel.Damage(tp,4000,REASON_EFFECT,true)
+			Duel.Damage(tp,4000,REASON_EFFECT)
 		end
-		if res2 then
-			local e1=Effect.CreateEffect(c)
-			e1:SetType(EFFECT_TYPE_FIELD)
-			e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-			e1:SetCode(EFFECT_REFLECT_DAMAGE)
-			e1:SetTargetRange(0,1)
-			e1:SetValue(s.val)
-			e1:SetReset(RESET_PHASE+PHASE_END)
-			Duel.RegisterEffect(e1,tp)
-		else
-			Duel.Damage(1-tp,4000,REASON_EFFECT,true)
-		end
-		Duel.RDComplete()
 	elseif op==2 then
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_FIELD)
