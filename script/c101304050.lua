@@ -108,6 +108,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		e4:SetDescription(aux.Stringid(id,1))
 		e4:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_CLIENT_HINT)
 		tc:RegisterEffect(e4)
+		tc=g:GetNext()
 	end
 	Duel.SpecialSummonComplete()
 end
