@@ -38,7 +38,6 @@ function s.initial_effect(c)
 	e4:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e4:SetRange(LOCATION_MZONE)
 	e4:SetCountLimit(2,id+o)
-	e4:SetCost(s.descost)
 	e4:SetTarget(s.destg)
 	e4:SetOperation(s.desop)
 	c:RegisterEffect(e4)
@@ -68,7 +67,10 @@ function s.ptg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.pop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsRelateToChain() and Duel.SendtoDeck(c,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)>0 and Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK+LOCATION_EXTRA,0,1,nil) and Duel.SelectYesNo(tp,aux.Stringid(id,3)) then
+	if c:IsRelateToChain() and Duel.SendtoDeck(c,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)>0
+		and c:IsLocation(LOCATION_EXTRA)
+		and Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK+LOCATION_EXTRA,0,1,nil)
+		and Duel.SelectYesNo(tp,aux.Stringid(id,3)) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 		local g=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_DECK+LOCATION_EXTRA,0,1,1,nil)
 		if #g>0 then
@@ -80,23 +82,35 @@ end
 function s.atktg(e,c)
 	return not (c:IsType(TYPE_PENDULUM) and c:GetLevel()==0)
 end
-function s.descost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.CheckReleaseGroup(tp,Card.IsType,1,nil,TYPE_MONSTER) end
-	local g=Duel.SelectReleaseGroup(tp,Card.IsType,1,1,nil,TYPE_MONSTER)
-	Duel.Release(g,REASON_COST)
+function s.desfilter(c,rc)
+	return c:GetEquipTarget()~=rc and c~=rc
+end
+function s.costfilter(c,tp)
+	return Duel.IsExistingTarget(s.desfilter,tp,0,LOCATION_ONFIELD,1,c,c)
 end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() and chkc:IsControler(1-tp) end
-	if chk==0 then return Duel.IsExistingTarget(nil,tp,0,LOCATION_ONFIELD,1,nil) end
+	if chk==0 then
+		if e:IsCostChecked() then
+			return Duel.CheckReleaseGroup(tp,s.costfilter,1,nil,tp)
+		else
+			return Duel.IsExistingTarget(nil,tp,0,LOCATION_ONFIELD,1,nil)
+		end
+	end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 	local g=Duel.SelectTarget(tp,nil,tp,0,LOCATION_ONFIELD,1,1,nil)
+	Duel.SetTargetPlayer(1-tp)
+	Duel.SetTargetParam(1600)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,1600)
 end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToChain() and Duel.Destroy(tc,REASON_EFFECT)>0 then
-		Duel.Damage(1-tp,1600,REASON_EFFECT)
+		local p,dam=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
+		if dam>0 then
+			Duel.Damage(p,dam,REASON_EFFECT)
+		end
 	end
 end
 function s.pztg(e,tp,eg,ep,ev,re,r,rp,chk)
