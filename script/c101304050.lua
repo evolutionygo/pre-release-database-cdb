@@ -84,7 +84,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	if ft<=0 then return end
 	local sg=Duel.GetTargetsRelateToChain()
 	if sg:GetCount()<2 or Duel.IsPlayerAffectedByEffect(tp,59822133)
-		or sg:GetCount()>ft  then return end
+		or sg:GetCount()>ft then return end
 	local tc=sg:GetFirst()
 	while tc do
 		Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP)
