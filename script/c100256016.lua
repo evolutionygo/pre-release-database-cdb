@@ -22,7 +22,7 @@ function s.initial_effect(c)
 	e2:SetCondition(s.atkcon)
 	e2:SetValue(aux.tgoval)
 	c:RegisterEffect(e2)
-	--equip
+	--tograve
 	local e3=Effect.CreateEffect(c)
 	e3:SetCategory(CATEGORY_TOGRAVE)
 	e3:SetType(EFFECT_TYPE_QUICK_O)
@@ -42,7 +42,7 @@ function s.atkfilter(c)
 	return c:IsFaceupEx() and c:IsType(TYPE_LINK)
 end
 function s.atkval(e,c)
-	return Duel.GetMatchingGroupCount(s.atkfilter,e:GetHandlerPlayer(),LOCATION_MZONE+LOCATION_GRAVE,LOCATION_MZONE+LOCATION_GRAVE,nil)*500
+	return Duel.GetMatchingGroupCount(s.atkfilter,e:GetHandlerPlayer(),LOCATION_MZONE+LOCATION_GRAVE,LOCATION_MZONE+LOCATION_GRAVE,e:GetHandler())*500
 end
 function s.cfilter(c,g)
 	return g:IsContains(c) and not c:IsStatus(STATUS_BATTLE_DESTROYED)
@@ -73,6 +73,7 @@ function s.tgop(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCode(EFFECT_EXTRA_ATTACK_MONSTER)
-	e1:SetValue(2)
+	e1:SetValue(1)
+	e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
 	c:RegisterEffect(e1)
 end

@@ -26,6 +26,7 @@ function s.initial_effect(c)
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_SINGLE)
 	e3:SetCode(EFFECT_CHANGE_INVOLVING_BATTLE_DAMAGE)
+	e3:SetCondition(s.atkcon)
 	e3:SetValue(aux.ChangeBattleDamage(1,DOUBLE_DAMAGE))
 	c:RegisterEffect(e3)
 	--to hand
@@ -87,9 +88,7 @@ function s.atkval(e,c)
 	if not (l and r) then return 0 end
 	local ls,rs=l:GetCurrentScale(),r:GetCurrentScale()
 	if ls==rs then return 0 end
-	local atk=ls-rs
-	if rs>ls then atk=rs-ls end
-	return atk*300
+	return math.abs(rs-ls)*300
 end
 function s.thcon2(e,tp,eg,ep,ev,re,r,rp)
 	return bit.band(r,REASON_EFFECT+REASON_BATTLE)~=0 and e:GetHandler():IsPreviousLocation(LOCATION_MZONE)
@@ -97,8 +96,10 @@ end
 function s.thtg2(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToHand() end
 	if e:GetHandler():IsReason(REASON_BATTLE) or rp==1-tp then
+		e:SetCategory(CATEGORY_TOHAND+CATEGORY_SPECIAL_SUMMON)
 		e:SetLabel(1)
 	else
+		e:SetCategory(CATEGORY_TOHAND)
 		e:SetLabel(0)
 	end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,e:GetHandler(),1,0,0)
@@ -108,8 +109,9 @@ function s.thop2(e,tp,eg,ep,ev,re,r,rp)
 	if c:IsRelateToChain() then
 		Duel.SendtoHand(c,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,c)
-		if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
-		if e:GetLabel()==1 and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+		if e:GetLabel()==1
+			and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+			and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 			and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 			Duel.BreakEffect()
 			Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
