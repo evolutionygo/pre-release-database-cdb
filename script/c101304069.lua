@@ -27,7 +27,7 @@ function s.spfilter(c,e,tp,tc)
 	return c:IsAttribute(tc:GetAttribute())
 		and c:IsRace(tc:GetRace())
 		and c:GetLevel()>0
-		and c:GetLevel()~=tc:GetLevel()
+		and not c:IsLevel(tc:GetLevel())
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and Duel.GetLocationCountFromEx(tp,tp,nil,c)>0
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
