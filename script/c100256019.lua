@@ -45,7 +45,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.Destroy(g,REASON_EFFECT)>0 then
 		Duel.BreakEffect()
 		local g1=Duel.GetMatchingGroup(Card.IsType,p1,LOCATION_DECK,0,nil,TYPE_MONSTER)
-		local g2=Duel.GetMatchingGroup(Card.IsType,p2,0,LOCATION_DECK,nil,TYPE_MONSTER)
+		local g2=Duel.GetMatchingGroup(Card.IsType,p2,LOCATION_DECK,0,nil,TYPE_MONSTER)
 		local b1=#g1>0 and Duel.Remove(g1,POS_FACEDOWN,REASON_EFFECT,p1)>0
 		local b2=#g2>0 and Duel.Remove(g2,POS_FACEDOWN,REASON_EFFECT,p2)>0
 		if (b1 or b2) and Duel.GetLocationCount(p1,LOCATION_MZONE)>0
