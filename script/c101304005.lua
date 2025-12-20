@@ -1,4 +1,4 @@
---爆裂音速战士
+--バスターソニック・ウォリアー
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddCodeList(c,60800381,80280737)
@@ -15,7 +15,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 	--to hand
 	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(id,0))
+	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_SUMMON_SUCCESS)
@@ -29,7 +29,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 	--addattack
 	local e4=Effect.CreateEffect(c)
-	e4:SetDescription(aux.Stringid(93490856,1))
+	e4:SetDescription(aux.Stringid(id,2))
 	e4:SetCategory(CATEGORY_TOGRAVE)
 	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e4:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_PLAYER_TARGET)
@@ -40,14 +40,10 @@ function s.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 function s.cfilter(c)
-	return c:IsFaceup()
-		and (c:IsCode(60800381)
-			or aux.IsCodeListed(c,60800381)
-			or c:IsCode(80280737)
-			or aux.IsCodeListed(c,80280737))
+	return c:IsFaceup() and (aux.IsCodeOrListed(c,60800381) or aux.IsCodeOrListed(c,80280737))
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_MZONE,0,1,nil)
+	return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_ONFIELD,0,1,nil)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
@@ -56,12 +52,12 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) then
+	if c:IsRelateToChain() then
 		Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
 	end
 end
 function s.filter(c)
-	return ((c:IsType(TYPE_MONSTER) and c:IsSetCard(0x1017)) or c:IsCode(80280737))and c:IsAbleToHand()
+	return (c:IsType(TYPE_MONSTER) and c:IsSetCard(0x1017) or c:IsCode(80280737)) and c:IsAbleToHand()
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_DECK,0,1,nil) end

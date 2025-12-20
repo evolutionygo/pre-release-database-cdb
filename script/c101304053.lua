@@ -1,8 +1,8 @@
---废品信号
+--ジャンク・シグナル
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddCodeList(c,60800381,44508094)
-	--spsummon from hand、deck、grave
+	--spsummon
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCountLimit(1,id+EFFECT_COUNT_CODE_OATH)

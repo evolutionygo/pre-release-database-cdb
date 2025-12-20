@@ -1,10 +1,10 @@
---星尘龙-牺牲者圣域
+--スターダスト・ドラゴン－ヴィクテム・サンクチュアリ
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--synchro summon
 	aux.AddSynchroProcedure(c,nil,aux.NonTuner(nil),1)
 	c:EnableReviveLimit()
-	--negative
+	--negate
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_NEGATE+CATEGORY_DESTROY)
@@ -13,8 +13,8 @@ function s.initial_effect(c)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCountLimit(1,id)
 	e1:SetCondition(s.negcon)
-	e1:SetTarget(s.negtg)
 	e1:SetCost(s.cost)
+	e1:SetTarget(s.negtg)
 	e1:SetOperation(s.negop)
 	c:RegisterEffect(e1)
 	--special summon
@@ -30,7 +30,6 @@ function s.initial_effect(c)
 	e2:SetTarget(s.sstg)
 	e2:SetOperation(s.ssop)
 	c:RegisterEffect(e2)
-	--检测本回合自己怪兽是否解放过
 	if not s.global_check then
 		s.global_check=true
 		local ge1=Effect.CreateEffect(c)
@@ -40,15 +39,31 @@ function s.initial_effect(c)
 		Duel.RegisterEffect(ge1,0)
 	end
 end
---牺牲者圣域！（拉里！！！）
-function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsReleasable() end
-	Duel.Release(e:GetHandler(),REASON_COST)
-end
 function s.negcon(e,tp,eg,ep,ev,re,r,rp)
 	if not Duel.IsChainDisablable(ev) then return false end
 	local te,p=Duel.GetChainInfo(ev-1,CHAININFO_TRIGGERING_EFFECT,CHAININFO_TRIGGERING_PLAYER)
 	return te and p==tp and rp==1-tp
+end
+function s.excostfilter(c,tp)
+	return c:IsAbleToRemoveAsCost() and c:IsHasEffect(84012625,tp)
+end
+function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
+	local g=Duel.GetMatchingGroup(s.excostfilter,tp,LOCATION_GRAVE,0,nil,tp)
+	if e:GetHandler():IsReleasable() then g:AddCard(e:GetHandler()) end
+	if chk==0 then return #g>0 end
+	local tc
+	if #g>1 then
+		Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(84012625,0))
+		tc=g:Select(tp,1,1,nil):GetFirst()
+	else
+		tc=g:GetFirst()
+	end
+	local te=tc:IsHasEffect(84012625,tp)
+	if te then
+		Duel.Remove(tc,POS_FACEUP,REASON_COST+REASON_REPLACE)
+	else
+		Duel.Release(tc,REASON_COST)
+	end
 end
 function s.negtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetFlagEffect(tp,id+o)==0 end
@@ -59,18 +74,24 @@ function s.negtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.RegisterFlagEffect(tp,id+o,RESET_CHAIN,0,1)
 end
 function s.negop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToEffect(re) then
+	if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToChain(ev) then
 		Duel.Destroy(eg,REASON_EFFECT)
 	end
 end
---检测本回合自己怪兽是否解放过的重置
-function s.checkop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1)
-	Duel.RegisterFlagEffect(1-tp,id,RESET_PHASE+PHASE_END,0,1)
+--check release
+function s.chkfilter(c,p)
+	return c:GetPreviousControler()==p and (c:IsPreviousLocation(LOCATION_MZONE) or c:IsType(TYPE_MONSTER))
 end
---特召星尘
+function s.checkop(e,tp,eg,ep,ev,re,r,rp)
+	for p=0,1 do
+		if eg:IsExists(s.chkfilter,1,nil,p) then
+			Duel.RegisterFlagEffect(p,id,RESET_PHASE+PHASE_END,0,1)
+		end
+	end
+end
+--special summon
 function s.sscon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetFlagEffect(tp,id)>=1
+	return Duel.GetFlagEffect(tp,id)>0
 end
 function s.ssfilter(c,e,tp)
 	return c:IsSetCard(0xa3) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsType(TYPE_SYNCHRO)
@@ -83,7 +104,7 @@ function s.sstg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.RegisterFlagEffect(tp,id+o,RESET_CHAIN,0,1)
 end
 function s.ssop(e,tp,eg,ep,ev,re,r,rp)
-	local tg=Duel.GetFirstMatchingCard(s.spfilter2,tp,LOCATION_EXTRA,0,nil,e,tp)
+	local tg=Duel.GetFirstMatchingCard(s.ssfilter,tp,LOCATION_EXTRA,0,nil,e,tp)
 	if tg then
 		Duel.SpecialSummon(tg,0,tp,tp,false,false,POS_FACEUP)
 	end
