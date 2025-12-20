@@ -50,8 +50,8 @@ function s.effop(e,tp,eg,ep,ev,re,r,rp)
 	local op=0
 	if b1 or b2 then
 		op=aux.SelectFromOptions(1-tp,
-			{b1,aux.Stringid(id,1),1},
-			{b2,aux.Stringid(id,2),2})
+			{b1,aux.Stringid(id,2),1},
+			{b2,aux.Stringid(id,3),2})
 	end
 	if op==1 then
 		Duel.ConfirmDecktop(tp,1)
