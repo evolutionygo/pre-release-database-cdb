@@ -92,7 +92,7 @@ function s.actlimit(e,re,tp)
 	return re:IsActiveType(TYPE_MONSTER) and re:GetHandler():IsLocation(LOCATION_MZONE)
 end
 function s.atkcon(e)
-	return e:GetHandler():IsSummonType(TYPE_PENDULUM)
+	return e:GetHandler():IsSummonType(SUMMON_TYPE_PENDULUM)
 end
 function s.atkval(e,c)
 	local l,r=Duel.GetFieldCard(e:GetHandlerPlayer(),LOCATION_PZONE,0),Duel.GetFieldCard(e:GetHandlerPlayer(),LOCATION_PZONE,1)
