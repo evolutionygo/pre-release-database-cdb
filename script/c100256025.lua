@@ -38,6 +38,7 @@ function s.initial_effect(c)
 	e4:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e4:SetRange(LOCATION_MZONE)
 	e4:SetCountLimit(2,id+o)
+	e4:SetCost(s.descost)
 	e4:SetTarget(s.destg)
 	e4:SetOperation(s.desop)
 	c:RegisterEffect(e4)
@@ -89,15 +90,14 @@ end
 function s.costfilter(c,tp)
 	return Duel.IsExistingTarget(s.desfilter,tp,0,LOCATION_ONFIELD,1,c,c)
 end
+function s.descost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.CheckReleaseGroup(tp,s.costfilter,1,nil,tp) end
+	local g=Duel.SelectReleaseGroup(tp,s.cfilter,1,1,nil,tp)
+	Duel.Release(g,REASON_COST)
+end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() and chkc:IsControler(1-tp) end
-	if chk==0 then
-		if e:IsCostChecked() then
-			return Duel.CheckReleaseGroup(tp,s.costfilter,1,nil,tp)
-		else
-			return Duel.IsExistingTarget(nil,tp,0,LOCATION_ONFIELD,1,nil)
-		end
-	end
+	if chk==0 then return Duel.IsExistingTarget(nil,tp,0,LOCATION_ONFIELD,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 	local g=Duel.SelectTarget(tp,nil,tp,0,LOCATION_ONFIELD,1,1,nil)
 	Duel.SetTargetPlayer(1-tp)

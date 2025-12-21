@@ -25,12 +25,6 @@ function s.initial_effect(c)
 	e2:SetOperation(s.indop)
 	c:RegisterEffect(e2)
 	--atk
-	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
-	e3:SetCode(EVENT_ATTACK_ANNOUNCE)
-	e3:SetRange(LOCATION_MZONE)
-	e3:SetOperation(s.acop)
-	c:RegisterEffect(e3)
 	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(id,1))
 	e4:SetCategory(CATEGORY_ATKCHANGE)
@@ -40,6 +34,20 @@ function s.initial_effect(c)
 	e4:SetTarget(s.atktg)
 	e4:SetOperation(s.atkop)
 	c:RegisterEffect(e4)
+	if not s.global_check then
+		s.global_check=true
+		local ge1=Effect.CreateEffect(c)
+		ge1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		ge1:SetCode(EVENT_ATTACK_ANNOUNCE)
+		ge1:SetOperation(s.checkop)
+		Duel.RegisterEffect(ge1,0)
+	end
+end
+function s.checkop(e,tp,eg,ep,ev,re,r,rp)
+	local tc=eg:GetFirst()
+	if tc:IsSetCard(0x49) then
+		Duel.RegisterFlagEffect(0,id,RESET_PHASE+PHASE_END,0,1)
+	end
 end
 function s.indes(e,c)
 	return not c:IsSetCard(0x48)
@@ -70,11 +78,8 @@ end
 function s.valcon(e,re,r,rp)
 	return bit.band(r,REASON_BATTLE+REASON_EFFECT)~=0
 end
-function s.acop(e,tp,eg,ep,ev,re,r,rp)
-	e:GetHandler():RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,1)
-end
 function s.atkcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():GetFlagEffect(id)==1
+	return Duel.GetFlagEffect(0,id)==2
 end
 function s.atktg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end

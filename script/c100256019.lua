@@ -91,6 +91,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 	if tc1 then
 		if Duel.SpecialSummonStep(tc1,0,p1,p1,true,false,POS_FACEUP) then
+			tc1:RegisterFlagEffect(0,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id,3))
 			local e1=Effect.CreateEffect(c)
 			e1:SetType(EFFECT_TYPE_SINGLE)
 			e1:SetCode(EFFECT_LEAVE_FIELD_REDIRECT)
@@ -102,6 +103,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 	if tc2 then
 		if Duel.SpecialSummonStep(tc2,0,p2,p2,true,false,POS_FACEUP) then
+			tc2:RegisterFlagEffect(0,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id,3))
 			local e1=Effect.CreateEffect(c)
 			e1:SetType(EFFECT_TYPE_SINGLE)
 			e1:SetCode(EFFECT_LEAVE_FIELD_REDIRECT)

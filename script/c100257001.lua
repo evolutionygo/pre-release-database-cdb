@@ -21,6 +21,7 @@ function s.initial_effect(c)
 	e2:SetCode(EVENT_BATTLE_DESTROYED)
 	e2:SetRange(LOCATION_HAND)
 	e2:SetCountLimit(1,id)
+	e2:SetCondition(s.spcon2)
 	e2:SetCost(s.spcost)
 	e2:SetTarget(s.sptg)
 	e2:SetOperation(s.spop)
@@ -53,6 +54,12 @@ end
 function s.spcon1(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	return c:IsPreviousLocation(LOCATION_DECK)
+end
+function s.cfilter(c,tp)
+	return c:IsPreviousControler(tp)
+end
+function s.spcon2(e,tp,eg,ep,ev,re,r,rp)
+	return eg:IsExists(s.cfilter,1,nil,tp)
 end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()

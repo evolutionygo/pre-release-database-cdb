@@ -79,7 +79,6 @@ function s.negop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Destroy(eg,REASON_EFFECT)
 	end
 end
---check release
 function s.chkfilter(c,p)
 	return c:GetPreviousControler()==p and (c:IsPreviousLocation(LOCATION_MZONE) or c:IsType(TYPE_MONSTER))
 end
@@ -90,7 +89,6 @@ function s.checkop(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 end
---special summon
 function s.sscon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetFlagEffect(tp,id)>0
 end
@@ -105,8 +103,9 @@ function s.sstg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.RegisterFlagEffect(tp,id+o,RESET_CHAIN,0,1)
 end
 function s.ssop(e,tp,eg,ep,ev,re,r,rp)
-	local tg=Duel.GetFirstMatchingCard(s.ssfilter,tp,LOCATION_EXTRA,0,nil,e,tp)
-	if tg then
-		Duel.SpecialSummon(tg,0,tp,tp,false,false,POS_FACEUP)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	local g=Duel.SelectMatchingCard(tp,s.ssfilter,tp,LOCATION_EXTRA,0,1,1,nil,e,tp)
+	if g:GetCount()>0 then
+		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 	end
 end
