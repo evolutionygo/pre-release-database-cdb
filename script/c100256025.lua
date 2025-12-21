@@ -116,7 +116,7 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.pztg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return (Duel.CheckLocation(tp,LOCATION_PZONE,0) or Duel.CheckLocation(tp,LOCATION_PZONE,1))
-		and c:IsType(TYPE_PENDULUM) end
+		and e:GetHandler():IsType(TYPE_PENDULUM) end
 end
 function s.pzop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
