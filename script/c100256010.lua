@@ -28,8 +28,9 @@ function s.initial_effect(c)
 	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(id,1))
 	e4:SetCategory(CATEGORY_ATKCHANGE)
-	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e4:SetCode(EVENT_ATTACK_ANNOUNCE)
+	e4:SetRange(LOCATION_MZONE)
 	e4:SetCondition(s.atkcon)
 	e4:SetTarget(s.atktg)
 	e4:SetOperation(s.atkop)
@@ -44,7 +45,8 @@ function s.initial_effect(c)
 	end
 end
 function s.checkop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.RegisterFlagEffect(0,id,RESET_PHASE+PHASE_END,0,1)
+	Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1)
+	Duel.RegisterFlagEffect(1-tp,id,RESET_PHASE+PHASE_END,0,1)
 end
 function s.indes(e,c)
 	return not c:IsSetCard(0x48)
@@ -76,7 +78,7 @@ function s.valcon(e,re,r,rp)
 	return bit.band(r,REASON_BATTLE+REASON_EFFECT)~=0
 end
 function s.atkcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetFlagEffect(0,id)==2
+	return Duel.GetFlagEffect(tp,id)==1
 end
 function s.atktg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
