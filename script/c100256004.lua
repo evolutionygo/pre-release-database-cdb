@@ -52,8 +52,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.SendtoDeck(dg,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)~=0
 		and dg:IsExists(Card.IsLocation,1,nil,LOCATION_DECK+LOCATION_EXTRA) then
 		Duel.BreakEffect()
-		if Duel.IsPlayerCanDraw(tp,2) then
-			Duel.Draw(tp,2,REASON_EFFECT)
+		if Duel.Draw(tp,2,REASON_EFFECT)>0 then
 			local c=e:GetHandler()
 			local e1=Effect.CreateEffect(c)
 			e1:SetType(EFFECT_TYPE_SINGLE)
