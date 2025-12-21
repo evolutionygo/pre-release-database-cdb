@@ -72,7 +72,7 @@ end
 function s.valcheck(e,c)
 	local g=c:GetMaterial()
 	local flag=0
-	if not g:IsExists(aux.NOT(Card.IsFusionAttribute),1,nil,ATTRIBUTE_LIGHT) then
+	if g:GetCount()>0 and not g:IsExists(aux.NOT(Card.IsFusionAttribute),1,nil,ATTRIBUTE_LIGHT) then
 		flag=1
 	end
 	e:GetLabelObject():SetLabel(flag)
