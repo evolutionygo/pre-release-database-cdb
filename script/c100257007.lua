@@ -95,7 +95,8 @@ function s.negop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
 	local g=Duel.SelectMatchingCard(tp,s.disfilter,tp,LOCATION_MZONE,0,1,1,aux.ExceptThisCard(e))
 	Duel.HintSelection(g)
-	if Duel.SendtoDeck(g,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)~=0 then
+	if Duel.SendtoDeck(g,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)~=0
+		and g:IsExists(Card.IsLocation,1,nil,LOCATION_EXTRA) then
 		Duel.NegateActivation(ev)
 	end
 end
