@@ -44,6 +44,7 @@ function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,2)
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
 	local g=Duel.GetMatchingGroup(s.tdfilter,tp,LOCATION_GRAVE,0,nil)
 	if g:GetCount()<5 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
@@ -52,8 +53,9 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.SendtoDeck(dg,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)~=0
 		and dg:IsExists(Card.IsLocation,1,nil,LOCATION_DECK+LOCATION_EXTRA) then
 		Duel.BreakEffect()
-		if Duel.Draw(tp,2,REASON_EFFECT)>0 then
-			local c=e:GetHandler()
+		if Duel.Draw(tp,2,REASON_EFFECT)>0
+			and c:IsRelateToChain()
+			and c:IsFaceup() then
 			local e1=Effect.CreateEffect(c)
 			e1:SetType(EFFECT_TYPE_SINGLE)
 			e1:SetCode(EFFECT_UPDATE_ATTACK)
