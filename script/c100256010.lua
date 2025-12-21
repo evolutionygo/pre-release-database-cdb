@@ -44,10 +44,7 @@ function s.initial_effect(c)
 	end
 end
 function s.checkop(e,tp,eg,ep,ev,re,r,rp)
-	local tc=eg:GetFirst()
-	if tc:IsSetCard(0x49) then
-		Duel.RegisterFlagEffect(0,id,RESET_PHASE+PHASE_END,0,1)
-	end
+	Duel.RegisterFlagEffect(0,id,RESET_PHASE+PHASE_END,0,1)
 end
 function s.indes(e,c)
 	return not c:IsSetCard(0x48)
