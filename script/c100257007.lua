@@ -1,4 +1,4 @@
---赤き竜 ケッツアーコアトル
+--赤き竜 ケッツァーコアトル
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--Synchro summon

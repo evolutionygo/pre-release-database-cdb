@@ -1,4 +1,4 @@
---終擊竜－サイバー・エンド・ドラゴン
+--終撃竜－サイバー・エンド・ドラゴン
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddCodeList(c,23171610)

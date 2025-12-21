@@ -1,4 +1,4 @@
---超銀河眼の光子龍一フォトン·ハウリング
+--超銀河眼の光子龍－フォトン・ハウリング
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--xyz summon
