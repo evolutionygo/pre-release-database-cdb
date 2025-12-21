@@ -85,8 +85,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local sg=Duel.GetTargetsRelateToChain()
 	if sg:GetCount()<2 or Duel.IsPlayerAffectedByEffect(tp,59822133)
 		or sg:GetCount()>ft then return end
-	local tc=sg:GetFirst()
-	while tc do
+	for tc in aux.Next(sg) do
 		Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP)
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
@@ -108,7 +107,6 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		e4:SetDescription(aux.Stringid(id,1))
 		e4:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_CLIENT_HINT)
 		tc:RegisterEffect(e4)
-		tc=g:GetNext()
 	end
 	Duel.SpecialSummonComplete()
 end
