@@ -41,7 +41,7 @@ function s.filter(c,mc,e,tp)
 	return c:IsSetCard(0x55)
 		and (Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 			and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE)
-			or (mc:IsType(TYPE_XYZ) and c:IsCanOverlay()))
+			or (mc and mc:IsType(TYPE_XYZ) and c:IsCanOverlay()))
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_DECK,0,1,nil,e:GetHandler(),e,tp) end
@@ -49,7 +49,7 @@ end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,2))
-	local g=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_DECK,0,1,1,nil,c,e,tp)
+	local g=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_DECK,0,1,1,nil,aux.ExceptThisCard(e),e,tp)
 	local tc=g:GetFirst()
 	if tc then
 		local ovchk=c:IsRelateToChain() and c:IsType(TYPE_XYZ) and tc:IsCanOverlay()
