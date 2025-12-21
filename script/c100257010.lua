@@ -68,7 +68,7 @@ end
 function s.rsfilter(c,ec,tp,chk)
 	local ng=Group.FromCards(c)
 	if ec then ng:AddCard(ec) end
-	return c:IsReleasableByEffect()
+	return c:IsReleasableByEffect() and c:IsFaceup() and c:IsType(TYPE_XYZ)
 		and (not chk or Duel.IsExistingMatchingCard(aux.NegateAnyFilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,ng))
 end
 function s.distg(e,tp,eg,ep,ev,re,r,rp,chk)
