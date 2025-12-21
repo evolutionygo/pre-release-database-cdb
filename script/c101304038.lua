@@ -94,11 +94,13 @@ function s.rmfilter(c,tp)
 end
 function s.reop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
+	local ckg=Duel.GetFieldGroup(tp,0,LOCATION_GRAVE)
+	if aux.NecroValleyNegateCheck(ckg) then return end
 	local sg=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD+LOCATION_GRAVE,nil)
 	if c:IsRelateToChain() and c:IsAbleToRemove() then sg:AddCard(c) end
 	if Duel.Remove(sg,POS_FACEUP,REASON_EFFECT)~=0 then
 		local og=Duel.GetOperatedGroup()
-		if og:IsContains(c) and og:IsExists(s.rmfilter,1,nil,1-tp)
+		if og:IsContains(c)
 			and aux.MustMaterialCheck(nil,tp,EFFECT_MUST_BE_SMATERIAL)
 			and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp)
 			and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
