@@ -50,7 +50,7 @@ end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.GetMatchingGroup(s.excostfilter,tp,LOCATION_GRAVE,0,nil,tp)
 	local c=e:GetHandler()
-	if c:IsReleasable() then g:AddCard(c) end
+	if c:IsReleasable() and c:IsSetCard(0xa3) then g:AddCard(c) end
 	if chk==0 then return #g>0 end
 	local tc
 	if #g>1 then
