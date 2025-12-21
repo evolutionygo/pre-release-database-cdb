@@ -52,7 +52,7 @@ function s.initial_effect(c)
 end
 function s.spcon1(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	return c:IsPreviousLocation(LOCATION_DECK) and c:IsPreviousControler(tp)
+	return c:IsPreviousLocation(LOCATION_DECK)
 end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
