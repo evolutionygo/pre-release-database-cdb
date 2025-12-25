@@ -58,6 +58,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local race,att=e:GetLabel()
 	local ec=Duel.GetFirstTarget()
 	if ec:IsRelateToChain() and ec:IsFaceup() and ec:IsType(TYPE_MONSTER) then
+		local cres=ec:GetRace()~=race or ec:GetAttribute()~=att
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_CHANGE_RACE)
@@ -71,7 +72,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		e2:SetReset(RESET_EVENT+RESETS_STANDARD)
 		ec:RegisterEffect(e2)
 		Duel.AdjustAll()
-		if ec:IsControler(1-tp) then return false end
+		if ec:IsControler(1-tp) or not cres then return false end
 		local chkf=tp
 		local mg1=Duel.GetFusionMaterial(tp):Filter(s.filter1,nil,e)
 		local res=Duel.IsExistingMatchingCard(s.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,mg1,ec,nil,chkf)
@@ -121,13 +122,12 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.cfilter(c,tp,chk)
 	return c:IsType(TYPE_FUSION) and c:IsReleasableByEffect() and (not chk
-		or (Duel.GetMZoneCount(tp,c)>1
+		or (Duel.GetMZoneCount(tp,c)>1 and not Duel.IsPlayerAffectedByEffect(tp,59822133)
 			and Duel.IsPlayerCanSpecialSummonMonster(tp,id+o,0,TYPES_TOKEN_MONSTER,0,0,c:GetLevel(),RACE_SPELLCASTER,ATTRIBUTE_DARK)))
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local rg=Duel.GetReleaseGroup(tp,false,REASON_EFFECT)
-	if chk==0 then return rg:IsExists(s.cfilter,1,nil,tp,true)
-		and not Duel.IsPlayerAffectedByEffect(tp,59822133) end
+	if chk==0 then return rg:IsExists(s.cfilter,1,nil,tp,true) end
 	Duel.SetOperationInfo(0,CATEGORY_RELEASE,nil,1,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,2,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,2,0,0)
