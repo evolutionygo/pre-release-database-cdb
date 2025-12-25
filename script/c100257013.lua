@@ -32,7 +32,7 @@ function s.ffilter(c)
 	return c:IsFusionAttribute(ATTRIBUTE_DARK) and c:IsOnField()
 end
 function s.nefilter(c)
-	return aux.NegateMonsterFilter(c) or not c:IsAttack(0) or not c:IsAttribute(ATTRIBUTE_DARK)
+	return (aux.NegateMonsterFilter(c) or not c:IsAttack(0) or not c:IsAttribute(ATTRIBUTE_DARK)) and c:IsFaceup()
 end
 function s.distg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and s.nefilter(chkc) and chkc~=e:GetHandler() end
