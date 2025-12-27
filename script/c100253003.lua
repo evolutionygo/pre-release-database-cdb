@@ -1,4 +1,4 @@
---恐依のペアルックマ!!
+--恐依のペアルックマ！！
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--Activate

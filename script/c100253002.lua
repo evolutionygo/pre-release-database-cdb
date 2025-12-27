@@ -68,10 +68,10 @@ function s.confirm_decktop_s(tp,count)
 end
 function s.eqop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)<1 then return end
+	local mg=Duel.GetMatchingGroup(Card.IsType,tp,LOCATION_DECK,0,nil,TYPE_MONSTER)
+	if mg:GetCount()==0 or Duel.GetLocationCount(tp,LOCATION_SZONE)==0 then return end
 	local dcount=Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)
 	local seq=-1
-	local mg=Duel.GetMatchingGroup(Card.IsType,tp,LOCATION_DECK,0,nil,TYPE_MONSTER)
 	local tc=mg:GetFirst()
 	local qc=nil
 	while tc do
@@ -82,8 +82,6 @@ function s.eqop(e,tp,eg,ep,ev,re,r,rp)
 		tc=mg:GetNext()
 	end
 	if seq==-1 then
-		s.confirm_decktop_s(tp,dcount)
-		Duel.ShuffleDeck(tp)
 		return
 	end
 	s.confirm_decktop_s(tp,dcount-seq)
