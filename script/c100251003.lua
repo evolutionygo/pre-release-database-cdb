@@ -50,9 +50,10 @@ function s.deop(e,tp,eg,ep,ev,re,r,rp)
 	local sg=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 	if sg:GetCount()>0 then
 		local cg=sg:Filter(s.lvcalfilter,nil)
-		Duel.Destroy(sg,REASON_EFFECT)
-		local ct=(Duel.GetOperatedGroup()&cg):GetSum(Card.GetOriginalLevel)
-		Duel.Damage(1-tp,ct*200,REASON_EFFECT)
+		if Duel.Destroy(sg,REASON_EFFECT)>0 then
+			local ct=(Duel.GetOperatedGroup()&cg):GetSum(Card.GetOriginalLevel)
+			Duel.Damage(1-tp,ct*200,REASON_EFFECT)
+		end
 	end
 end
 function s.spfilter(c,e,tp)
