@@ -69,16 +69,18 @@ function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.GetMatchingGroup(Card.IsType,tp,LOCATION_MZONE,LOCATION_MZONE,nil,TYPE_TOKEN)
 	g:AddCard(c)
 	if chk==0 then return g:GetCount()>0 and Duel.GetMZoneCount(tp,g)>0
-		and Duel.IsPlayerCanSpecialSummonMonster(tp,id+o*2,0,TYPES_TOKEN_MONSTER,0,0,7,RACE_FAIRY,ATTRIBUTE_WATER) end
+		and Duel.IsPlayerCanSpecialSummonMonster(tp,id+o*2,0,TYPES_TOKEN_MONSTER,-2,-2,7,RACE_FAIRY,ATTRIBUTE_WATER) end
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,g:GetCount(),0,0)
 end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local g=Duel.GetMatchingGroup(Card.IsType,tp,LOCATION_MZONE,LOCATION_MZONE,aux.ExceptThisCard(e),TYPE_TOKEN)
+	if g:GetCount()==0 then return end
 	g:AddCard(c)
 	if Duel.Destroy(g,REASON_EFFECT)~=0 then
 		local og=Duel.GetOperatedGroup()
-		if not og:IsContains(c) or og:GetCount()<2 then return end
+		if not og:IsContains(c) or og:GetCount()<2
+			or not Duel.IsPlayerCanSpecialSummonMonster(tp,id+o*2,0,TYPES_TOKEN_MONSTER,-2,-2,7,RACE_FAIRY,ATTRIBUTE_WATER) then return end
 		local atk=og:GetCount()-1
 		local token=Duel.CreateToken(tp,id+o*2)
 		local e1=Effect.CreateEffect(c)
