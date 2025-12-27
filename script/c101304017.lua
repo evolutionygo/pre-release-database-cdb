@@ -44,9 +44,6 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 		Duel.GetControl(c,1-tp)
 	end
 end
-function s.ptfilter(e,c)
-	return c:IsSetCard(0x1b7)
-end
 function s.sspfilter(c,tp,e)
 	return Duel.IsExistingMatchingCard(Card.IsFacedown,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil)
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP)
@@ -62,7 +59,7 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if not c:IsRelateToEffect(e) or (not s.sspfilter(c,tp,e) and not s.ospfilter(c,tp,e)) then return end
+	if not c:IsRelateToChain() or (not s.sspfilter(c,tp,e) and not s.ospfilter(c,tp,e)) then return end
 	local b1=s.sspfilter(c,tp,e) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 	local b2=s.ospfilter(c,tp,e) and Duel.GetLocationCount(1-tp,LOCATION_MZONE)>0
 	local toplayer=aux.SelectFromOptions(tp,
