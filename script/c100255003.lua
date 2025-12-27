@@ -64,7 +64,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	if not c:IsLocation(LOCATION_SZONE) then return end
 	if not c:IsRelateToChain() or c:IsStatus(STATUS_LEAVE_CONFIRMED) then return end
 	local tc=Duel.GetFirstTarget()
-	if c:IsRelateToChain() and tc:IsFaceup() then
+	if tc:IsRelateToChain() and tc:IsFaceup() then
 		Duel.Equip(tp,c,tc)
 		local e1=Effect.CreateEffect(c)
 		e1:SetDescription(aux.Stringid(id,2))
@@ -95,8 +95,7 @@ function s.descon(e,tp,eg,ep,ev,re,r,rp)
 	return (Duel.GetCurrentPhase()>=PHASE_BATTLE_START and Duel.GetCurrentPhase()<=PHASE_BATTLE)
 		and not c:IsStatus(STATUS_CHAINING)
 end
-function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return false end
+function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler():GetEquipTarget()
 	local bc=c:GetBattleTarget()
 	if chk==0 then return bc and bc:IsRelateToBattle() and e:GetHandler():GetFlagEffect(id)==0 end
