@@ -50,10 +50,10 @@ function s.initial_effect(c)
 end
 function s.ntcon(e,c,minc)
 	if c==nil then return true end
-	return minc==0 and Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
+	return minc==0 and Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0 and e:GetHandler():IsSummonType(SUMMON_TYPE_LINK)
 end
 function s.nttg(e,c)
-	return c:IsLevelAbove(5) and e:GetHandler():IsSummonType(SUMMON_TYPE_LINK)
+	return c:IsLevelAbove(5)
 end
 function s.ntefilter(c)
 	return c:GetFlagEffect(id)==0 and c:IsHasEffect(id) and c:IsSummonType(SUMMON_TYPE_LINK)
