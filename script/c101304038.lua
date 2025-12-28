@@ -65,7 +65,7 @@ function s.mfilter(e,c)
 end
 function s.mgcheck(c,mg)
 	local rg=mg-c
-	if not c:IsSynchroType(TYPE_TUNER) and c:IsSynchroType(TYPE_SYNCHRO) then
+	if c:IsNotTuner(c) and c:IsSynchroType(TYPE_SYNCHRO) then
 		return rg:FilterCount(Card.IsSynchroType,nil,TYPE_TUNER)==4
 	else
 		return false
