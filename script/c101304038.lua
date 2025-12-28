@@ -3,7 +3,7 @@ local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddCodeList(c,97489701)
 	--material
-	aux.AddSynchroMixProcedure(c,aux.NonTuner(Card.IsSynchroType,TYPE_SYNCHRO),nil,nil,s.mfilter,4,99,s.syncheck)
+	aux.AddSynchroMixProcedure(c,aux.NonTuner(Card.IsSynchroType,TYPE_SYNCHRO),nil,nil,s.mfilter,4,99,s.syncheck(c))
 	c:EnableReviveLimit()
 	--cannot special summon
 	local e1=Effect.CreateEffect(c)
@@ -63,17 +63,18 @@ end
 function s.mfilter(e,c)
 	return c:IsSynchroType(TYPE_TUNER) or not c:IsSynchroType(TYPE_TUNER) and c:IsSynchroType(TYPE_SYNCHRO)
 end
-function s.mgcheck(c,mg)
+function s.mgcheck(c,mg,syncard)
 	local rg=mg-c
-	if c:IsNotTuner(c) and c:IsSynchroType(TYPE_SYNCHRO) then
-		-- TODO need syncard as params
+	if c:IsNotTuner(syncard) and c:IsSynchroType(TYPE_SYNCHRO) then
 		return rg:FilterCount(Card.IsTuner,nil,c)==4
 	else
 		return false
 	end
 end
-function s.syncheck(g)
-	return g:IsExists(s.mgcheck,1,nil,g)
+function s.syncheck(syncard)
+	return	function(g)
+				return g:IsExists(s.mgcheck,1,nil,g,syncard)
+			end
 end
 function s.atkval(e,c)
 	return Duel.GetMatchingGroupCount(Card.IsType,c:GetControler(),LOCATION_GRAVE,0,nil,TYPE_TUNER)*500
