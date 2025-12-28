@@ -41,16 +41,33 @@ function s.initial_effect(c)
 	e3:SetTarget(s.drtg)
 	e3:SetOperation(s.drop)
 	c:RegisterEffect(e3)
+	local e4=Effect.CreateEffect(c)
+	e4:SetType(EFFECT_TYPE_SINGLE)
+	e4:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e4:SetCode(id)
+	e4:SetRange(LOCATION_MZONE)
+	c:RegisterEffect(e4)
 end
 function s.ntcon(e,c,minc)
 	if c==nil then return true end
-	return minc==0 and Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0 and e:GetHandler():IsSummonType(SUMMON_TYPE_LINK)
+	return minc==0 and Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
 end
 function s.nttg(e,c)
-	return c:IsLevelAbove(5)
+	return c:IsLevelAbove(5) and e:GetHandler():IsSummonType(SUMMON_TYPE_LINK)
+end
+function s.ntefilter(c)
+	return c:GetFlagEffect(id)==0 and c:IsHasEffect(id) and c:IsSummonType(SUMMON_TYPE_LINK)
 end
 function s.ntop(e,tp,eg,ep,ev,re,r,rp,c)
-	e:GetHandler():RegisterFlagEffect(0,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id,3))
+	local tg=Duel.GetMatchingGroup(s.ntefilter,tp,LOCATION_MZONE,0,nil)
+	if tg:GetCount()>1 then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RESOLVECARD)
+		local g=tg:Select(tp,1,1,nil)
+		Duel.HintSelection(g)
+		g:GetFirst():RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id,3))
+	elseif tg:GetCount()==1 then
+		tg:GetFirst():RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id,3))
+	end
 end
 function s.sumfilter(c)
 	return c:IsLevelAbove(5) and c:IsAttribute(ATTRIBUTE_DARK) and c:IsSummonable(true,nil)
