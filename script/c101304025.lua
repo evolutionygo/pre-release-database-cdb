@@ -12,7 +12,7 @@ function s.initial_effect(c)
 	e1:SetCost(s.spcost)
 	e1:SetTarget(s.sptg)
 	e1:SetOperation(s.spop)
-	c:RegisterEffect(e1) 
+	c:RegisterEffect(e1)
 	--negate
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
@@ -23,7 +23,7 @@ function s.initial_effect(c)
 	e2:SetCountLimit(1,id+o)
 	e2:SetTarget(s.negtg)
 	e2:SetOperation(s.negop)
-	c:RegisterEffect(e2)  
+	c:RegisterEffect(e2)
 	--set
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,2))
@@ -34,7 +34,7 @@ function s.initial_effect(c)
 	e3:SetCondition(s.setcon)
 	e3:SetTarget(s.settg)
 	e3:SetOperation(s.setop)
-	c:RegisterEffect(e3) 
+	c:RegisterEffect(e3)
 end
 function s.costfilter(c,tp)
 	return c:IsAttribute(ATTRIBUTE_FIRE) and c:IsFaceupEx() and c:IsAbleToRemoveAsCost() and Duel.GetMZoneCount(tp,c)>0
@@ -46,8 +46,7 @@ function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
+	if chk==0 then return e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
@@ -93,17 +92,16 @@ end
 function s.setcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsLocation(LOCATION_GRAVE) and r==REASON_LINK
 end
-function s.setfilter(c,tid)
-	return c:GetTurnID()==tid and (c:IsType(TYPE_QUICKPLAY) or c:GetType()==TYPE_TRAP) and c:IsSSetable()
+function s.setfilter(c)
+	return c:GetTurnID()==Duel.GetTurnCount() and (c:IsType(TYPE_QUICKPLAY) or c:GetType()==TYPE_TRAP) and c:IsSSetable()
+		and not c:IsReason(REASON_RETURN)
 end
 function s.settg(e,tp,eg,ep,ev,re,r,rp,chk)
-	local tid=Duel.GetTurnCount()
-	if chk==0 then return Duel.IsExistingMatchingCard(s.setfilter,tp,LOCATION_GRAVE,0,1,nil,tid) end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.setfilter,tp,LOCATION_GRAVE,0,1,nil) end
 end
 function s.setop(e,tp,eg,ep,ev,re,r,rp)
-	local tid=Duel.GetTurnCount()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SET)
-	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.setfilter),tp,LOCATION_GRAVE,0,1,1,nil,tid)
+	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.setfilter),tp,LOCATION_GRAVE,0,1,1,nil)
 	if g:GetCount()>0 then
 		Duel.SSet(tp,g:GetFirst())
 	end
