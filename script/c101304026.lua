@@ -76,6 +76,7 @@ function s.tgop(e,tp,eg,ep,ev,re,r,rp)
     if tc and Duel.SendtoGrave(tc,REASON_EFFECT)~=0 and tc:IsLocation(LOCATION_GRAVE) then
         local lv=tc:GetLevel()
         if lv>0 and c:IsFaceup() and c:IsRelateToChain() then
+            Duel.BreakEffect()
             local e1=Effect.CreateEffect(c)
             e1:SetType(EFFECT_TYPE_SINGLE)
             e1:SetCode(EFFECT_UPDATE_ATTACK)
