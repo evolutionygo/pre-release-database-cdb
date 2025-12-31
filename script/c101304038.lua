@@ -3,7 +3,7 @@ local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddCodeList(c,97489701)
 	--material
-	aux.AddSynchroMixProcedure(c,aux.NonTuner(Card.IsSynchroType,TYPE_SYNCHRO),nil,nil,s.mfilter,4,99,s.syncheck(c))
+	aux.AddSynchroMixProcedure(c,aux.NonTuner(Card.IsSynchroType,TYPE_SYNCHRO),nil,nil,s.mfilter,4,99,s.syncheck)
 	c:EnableReviveLimit()
 	--cannot special summon
 	local e1=Effect.CreateEffect(c)
@@ -71,10 +71,8 @@ function s.mgcheck(c,mg,syncard)
 		return false
 	end
 end
-function s.syncheck(syncard)
-	return	function(g)
-				return g:IsExists(s.mgcheck,1,nil,g,syncard)
-			end
+function s.syncheck(g,syncard)
+	return g:IsExists(s.mgcheck,1,nil,g,syncard)
 end
 function s.atkval(e,c)
 	return Duel.GetMatchingGroupCount(Card.IsType,c:GetControler(),LOCATION_GRAVE,0,nil,TYPE_TUNER)*500
