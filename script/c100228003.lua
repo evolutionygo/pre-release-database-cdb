@@ -1,7 +1,7 @@
 --エンディミオンの侍女ヴェール
 local s,id,o=GetID()
 function s.initial_effect(c)
-	aux.AddCodeList(c,28553439,100200282)
+	aux.AddCodeList(c,28553439,96228804)
 	--spsummon
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
@@ -68,7 +68,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.atkfilter(c)
-	return c:IsFaceupEx() and c:IsCode(100200282)
+	return c:IsFaceupEx() and c:IsCode(96228804)
 end
 function s.atkcon(e)
 	local c=e:GetHandler()
