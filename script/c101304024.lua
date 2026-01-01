@@ -1,4 +1,4 @@
---調和の天救竜
+--調和ノ天救竜
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--sp summon
@@ -25,14 +25,14 @@ function s.tgfilter(c)
 	return c:IsAbleToGrave()
 end
 function s.scheck(g)
-	return g:GetCount()<4 or g:IsExists(Card.IsAbleToGrave,1,nil)
+	return g:GetCount()<3 or g:IsExists(Card.IsAbleToGrave,1,nil)
 end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return not e:GetHandler():IsPublic()
 		and Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_EXTRA,0,1,nil) end
 	local g=Duel.GetMatchingGroup(s.cfilter,tp,LOCATION_EXTRA,0,nil)
-	local ct=5
-	if Duel.IsExistingMatchingCard(aux.TRUE,tp,0,LOCATION_MZONE,1,nil) then ct=6 end
+	local ct=4
+	if Duel.IsExistingMatchingCard(aux.TRUE,tp,0,LOCATION_MZONE,1,nil) then ct=5 end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONFIRM)
 	local sg=g:SelectSubGroup(tp,s.scheck,false,1,ct)
 	Duel.ConfirmCards(1-tp,sg)
@@ -47,12 +47,15 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
-	if e:GetLabel()>3 then
-		Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_EXTRA)
-	end
 	if e:GetLabel()>5 then
+		e:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_DESTROY+CATEGORY_TOGRAVE)
 		local g=Duel.GetMatchingGroup(aux.TRUE,tp,0,LOCATION_MZONE,nil)
 		Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
+	elseif e:GetLabel()>3 then
+		e:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_TOGRAVE)
+		Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_EXTRA)
+	else
+		e:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	end
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
@@ -65,7 +68,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
 		local tg=g:Filter(Card.IsRelateToChain,nil)
 		if tg:GetCount()>0 then
-			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
 			local og=tg:FilterSelect(tp,Card.IsAbleToGrave,1,1,nil)
 			if og:GetCount()>0 then
 				Duel.SendtoGrave(og,REASON_EFFECT)
