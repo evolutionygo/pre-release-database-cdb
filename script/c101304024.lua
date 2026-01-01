@@ -102,4 +102,3 @@ function s.aclimit(e,re,tp)
 	local rc=re:GetHandler()
 	return re:IsActiveType(TYPE_MONSTER) and rc:IsSummonLocation(LOCATION_EXTRA) and not rc:IsType(TYPE_SYNCHRO)
 end
-
