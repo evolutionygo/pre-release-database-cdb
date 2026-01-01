@@ -19,7 +19,7 @@ function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return rp==1-tp and re:IsActiveType(TYPE_MONSTER) and re:GetActivateLocation()==LOCATION_MZONE
 end
 function s.cfilter(c)
-	return c:IsType(TYPE_SYNCHRO) and not c:IsPublic()
+	return c:IsAllTypes(TYPE_SYNCHRO+TYPE_MONSTER)
 end
 function s.tgfilter(c)
 	return c:IsAbleToGrave()
