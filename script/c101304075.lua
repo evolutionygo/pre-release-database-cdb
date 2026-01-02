@@ -35,23 +35,23 @@ end
 function s.cfilter(c,tp)
 	return c:IsSetCard(0x1d3) or c:GetOwner()==1-tp
 		and Duel.GetMZoneCount(tp,c,tp,LOCATION_REASON_CONTROL)>0
-		and Duel.IsExistingMatchingCard(s.tgfilter,tp,0,LOCATION_MZONE,1,c)
+		and Duel.IsExistingMatchingCard(s.tgfilter,tp,0,LOCATION_MZONE,1,c,true)
 end
 function s.ctcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.CheckReleaseGroup(tp,s.cfilter,1,nil,tp) end
 	local g=Duel.SelectReleaseGroup(tp,s.cfilter,1,1,nil,tp)
 	Duel.Release(g,REASON_COST)
 end
-function s.tgfilter(c)
-	return c:IsControlerCanBeChanged()
+function s.tgfilter(c,ignore)
+	return c:IsControlerCanBeChanged(ignore)
 end
 function s.cttg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.tgfilter,tp,0,LOCATION_MZONE,1,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.tgfilter,tp,0,LOCATION_MZONE,1,nil,true) end
 	Duel.SetOperationInfo(0,CATEGORY_CONTROL,nil,1,1-tp,LOCATION_MZONE)
 end
 function s.ctop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONTROL)
-	local g=Duel.SelectMatchingCard(tp,s.tgfilter,tp,0,LOCATION_MZONE,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,s.tgfilter,tp,0,LOCATION_MZONE,1,1,nil,false)
 	local tc=g:GetFirst()
 	if tc then
 		Duel.HintSelection(g)
