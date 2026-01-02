@@ -33,7 +33,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function s.cfilter(c,tp)
-	return c:IsSetCard(0x1d3) or c:GetOwner()==1-tp
+	return (c:IsSetCard(0x1d3) or c:GetOwner()==1-tp)
 		and Duel.GetMZoneCount(tp,c,tp,LOCATION_REASON_CONTROL)>0
 		and Duel.IsExistingMatchingCard(s.tgfilter,tp,0,LOCATION_MZONE,1,c,true)
 end
