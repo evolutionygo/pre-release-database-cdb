@@ -28,6 +28,8 @@ end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(s.chkfilter,tp,LOCATION_DECK,0,nil)
 	local sg=g:SelectSubGroup(tp,s.fslect,false,3,3,e,tp)
+	if not sg then return end
+	Duel.ConfirmCards(1-tp,sg)
 	local tc1=sg:RandomSelect(1-tp,1):GetFirst()
 	local tg=sg-tc1
 	Duel.ConfirmCards(tp,tg)
