@@ -9,10 +9,10 @@ function s.initial_effect(c)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetTarget(s.target)
 	e1:SetOperation(s.activate)
-	c:RegisterEffect(e1)	
+	c:RegisterEffect(e1)
 end
 function s.chkfilter(c)
-	return (c:IsType(TYPE_MONSTER) or c:IsType(TYPE_TRAP)) and c:IsAbleToRemove()
+	return c:IsType(TYPE_MONSTER+TYPE_TRAP) and c:IsAbleToRemove()
 end
 function s.chkfilter2(c,e,tp)
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
@@ -27,6 +27,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(s.chkfilter,tp,LOCATION_DECK,0,nil)
+	if not g:CheckSubGroup(s.fslect,3,3,e,tp) then return end
 	local sg=g:SelectSubGroup(tp,s.fslect,false,3,3,e,tp)
 	if not sg then return end
 	Duel.ConfirmCards(1-tp,sg)
@@ -38,30 +39,31 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc3=fg:GetFirst()
 	if Duel.Remove(tc2,POS_FACEUP,REASON_EFFECT)~=0 then
 		local op=aux.SelectFromOptions(1-tp,
-			{true,aux.Stringid(id,1)},
-			{true,aux.Stringid(id,2)})
+			{true,aux.Stringid(id,1),1},
+			{true,aux.Stringid(id,2),2})
 		if op==1 then
 			Duel.ConfirmCards(tp,tc1)
 			Duel.ConfirmCards(1-tp,tc1)
 			if tc1:IsType(TYPE_MONSTER) then
 				local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
-				if tc1:IsAbleToHand() and (not tc1:IsCanBeSpecialSummoned(e,0,tp,false,false) or ft<=0 or Duel.SelectOption(tp,1190,1152)==0) then
+				local spchk=tc1:IsCanBeSpecialSummoned(e,0,tp,false,false) and ft>0
+				if tc1:IsAbleToHand() and (not spchk or Duel.SelectOption(tp,1190,1152)==0) then
 					Duel.SendtoHand(tc1,nil,REASON_EFFECT)
 					Duel.ConfirmCards(1-tp,tc1)
-				else
+				elseif spchk then
 					Duel.SpecialSummon(tc1,0,tp,tp,false,false,POS_FACEUP)
-				end				
+				end
 			else
 				Duel.Remove(tc1,POS_FACEUP,REASON_EFFECT)
 			end
-		else
+		elseif op==2 then
 			Duel.ConfirmCards(tp,tc3)
 			Duel.ConfirmCards(1-tp,tc3)
 			if tc3:IsType(TYPE_MONSTER) then
 				if tc3:IsAbleToHand() then
 					Duel.SendtoHand(tc3,nil,REASON_EFFECT)
 					Duel.ConfirmCards(1-tp,tc3)
-				end				
+				end
 			else
 				Duel.Remove(tc3,POS_FACEUP,REASON_EFFECT)
 			end
