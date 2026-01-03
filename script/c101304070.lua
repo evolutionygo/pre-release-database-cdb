@@ -63,6 +63,8 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 				if tc3:IsAbleToHand() then
 					Duel.SendtoHand(tc3,nil,REASON_EFFECT)
 					Duel.ConfirmCards(1-tp,tc3)
+				else
+					Duel.SendtoGrave(tc3,REASON_RULE)
 				end
 			else
 				Duel.Remove(tc3,POS_FACEUP,REASON_EFFECT)
