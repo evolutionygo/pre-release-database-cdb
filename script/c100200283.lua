@@ -16,7 +16,8 @@ function s.dfilter(c)
 	return c:GetTextAttack()>=0 and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.dfilter,tp,LOCATION_DECK,0,1,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.dfilter,tp,LOCATION_DECK,0,1,nil)
+			and Duel.IsExistingMatchingCard(nil,tp,0,LOCATION_DECK,1,nil) end
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	if not (Duel.IsExistingMatchingCard(s.dfilter,tp,LOCATION_DECK,0,1,nil)
