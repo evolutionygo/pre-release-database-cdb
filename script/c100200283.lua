@@ -1,8 +1,9 @@
---
+--亜空間バトル
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH+CATEGORY_DESTROY+CATEGORY_DAMAGE)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
@@ -28,7 +29,8 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		if ct~=3 then Duel.BreakEffect() end
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONFIRM)
 		local g1=Duel.SelectMatchingCard(tp,s.dfilter,tp,LOCATION_DECK,0,1,1,nil)
-		local g2=Duel.SelectMatchingCard(1-tp,s.dfilter,tp,0,LOCATION_DECK,1,1,nil)
+		Duel.Hint(HINT_SELECTMSG,1-tp,HINTMSG_CONFIRM)
+		local g2=Duel.SelectMatchingCard(1-tp,s.dfilter,1-tp,LOCATION_DECK,0,1,1,nil)
 		Duel.ConfirmCards(1-tp,g1)
 		Duel.ConfirmCards(tp,g2)
 		local tc1=g1:GetFirst()
