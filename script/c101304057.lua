@@ -59,6 +59,7 @@ function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONFIRM)
 	local fc=exg:Select(tp,1,1,nil):GetFirst()
 	e:SetLabelObject(fc)
+	Duel.ConfirmCards(1-tp,fc)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,1,tp,LOCATION_HAND)
 end

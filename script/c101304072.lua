@@ -53,7 +53,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	if tc then
 		Duel.HintSelection(dg)
 		if Duel.Remove(tc,0,REASON_EFFECT+REASON_TEMPORARY)~=0 then
-			c:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,1)
+			tc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,1)
 			local e1=Effect.CreateEffect(c)
 			e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 			e1:SetCode(EVENT_PHASE+PHASE_END)
