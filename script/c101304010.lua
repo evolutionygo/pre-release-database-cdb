@@ -1,4 +1,4 @@
---
+--混絶獄神ヴィードリウム
 local s,id,o=GetID()
 function s.initial_effect(c)
 	c:EnableReviveLimit()
@@ -175,5 +175,5 @@ function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Remove(g,POS_FACEDOWN,REASON_EFFECT)
 end
 function s.efilter(e,te)
-	return not te:GetOwner():IsSetCard(0x1ce) and te:IsActiveType(TYPE_MONSTER)
+	return not te:GetHandler():IsSetCard(0x1ce) and te:IsActiveType(TYPE_MONSTER)
 end

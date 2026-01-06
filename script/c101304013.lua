@@ -1,4 +1,4 @@
---
+--獄神影精－ジュノルド
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddCodeList(c,5914858)

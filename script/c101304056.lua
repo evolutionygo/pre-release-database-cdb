@@ -1,4 +1,4 @@
---
+--絶解なる獄神門－テルミナス
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--Activate
