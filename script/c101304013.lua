@@ -17,7 +17,7 @@ function s.initial_effect(c)
 	e1:SetTarget(s.drtg)
 	e1:SetOperation(s.drop)
 	c:RegisterEffect(e1)
-	--Fusion Summon
+	--synchro summon
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_DESTROY)
@@ -57,12 +57,16 @@ function s.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.drop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if not c:IsRelateToChain() or Duel.Destroy(c,REASON_EFFECT)==0 then return end 
+	if not c:IsRelateToChain() or Duel.Destroy(c,REASON_EFFECT)==0 then return end
 	local p=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER)
 	if Duel.Draw(p,2,REASON_EFFECT)==2 then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DISCARD)
+		local dg=Duel.SelectMatchingCard(tp,Card.IsDiscardable,tp,LOCATION_HAND,0,1,1,nil,REASON_EFFECT)
 		Duel.ShuffleHand(tp)
-		Duel.BreakEffect()
-		Duel.DiscardHand(tp,nil,1,1,REASON_EFFECT+REASON_DISCARD)
+		if dg:GetCount()>0 then
+			Duel.BreakEffect()
+			Duel.SendtoGrave(dg,REASON_EFFECT+REASON_DISCARD)
+		end
 	end
 end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -84,7 +88,7 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if not c:IsRelateToChain() or Duel.Destroy(c,REASON_EFFECT)==0 then return end 
+	if not c:IsRelateToChain() or Duel.Destroy(c,REASON_EFFECT)==0 then return end
 	if not aux.MustMaterialCheck(nil,tp,EFFECT_MUST_BE_SMATERIAL) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_EXTRA,0,1,1,nil,e,tp,nil)
@@ -100,7 +104,7 @@ function s.thcon(e,tp,eg,ep,ev,re,r,rp)
 		and c:IsFaceup()
 end
 function s.thfilter(c)
-	return not c:IsCode(id) and c:IsSetCard(0x1ce,0x1d8) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
+	return not c:IsCode(id) and c:IsSetCard(0x1ce,0x1d8) and c:IsAbleToHand()
 		and c:IsFaceupEx()
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)

@@ -9,7 +9,7 @@ function s.initial_effect(c)
 	e1:SetCountLimit(1)
 	e1:SetValue(s.valcon)
 	c:RegisterEffect(e1)
-	--Draw
+	--special summon
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,0))
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_DESTROY)
@@ -55,7 +55,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.eqfilter2(c)
-	return c:IsFaceup()
+	return c:IsFaceup() and not c:IsType(TYPE_LINK)
 end
 function s.lv_or_rk(c)
 	if c:IsLevelAbove(1) then
@@ -67,22 +67,25 @@ function s.lv_or_rk(c)
 	end
 end
 function s.eqtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	local c=e:GetHandler()
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and s.eqfilter2(chkc) end
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0
-		and Duel.IsExistingTarget(s.eqfilter2,tp,LOCATION_MZONE,0,1,nil) end
+		and Duel.IsExistingTarget(s.eqfilter2,tp,LOCATION_MZONE,0,1,nil)
+		and c:CheckUniqueOnField(tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EQUIP)
 	local tc=Duel.SelectTarget(tp,s.eqfilter2,tp,LOCATION_MZONE,0,1,1,nil):GetFirst()
-	Duel.SetOperationInfo(0,CATEGORY_EQUIP,e:GetHandler(),1,0,0)
-	Duel.SetOperationInfo(0,CATEGORY_LEAVE_GRAVE,e:GetHandler(),1,0,0)
-	if s.lv_or_rk(tc)>0 then
-		Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,tp,s.lv_or_rk(tc)*100)
+	Duel.SetOperationInfo(0,CATEGORY_EQUIP,c,1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_LEAVE_GRAVE,c,1,0,0)
+	local lr=s.lv_or_rk(tc)
+	if lr>0 then
+		Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,tp,lr*100)
 	end
 end
 function s.eqop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if tc and c:IsRelateToChain() and tc:IsRelateToChain() and tc:IsFaceup()
-		and tc:IsControler(tp) and c:CheckUniqueOnField(tp)
+	if tc and c:IsRelateToChain() and tc:IsRelateToChain() and tc:IsFaceup() and tc:IsType(TYPE_MONSTER)
+		and aux.NecroValleyFilter()(c) and c:CheckUniqueOnField(tp)
 		and Duel.Equip(tp,c,tc) and s.lv_or_rk(tc)>0 then
 		Duel.BreakEffect()
 		Duel.Damage(tp,s.lv_or_rk(tc)*100,REASON_EFFECT)

@@ -66,16 +66,16 @@ function s.rmcon(e,tp,eg,ep,ev,re,r,rp)
 	if not (ac and ac:IsFaceup() and ac:IsSetCard(0x1ce)) then return false end
 	local bc=ac:GetBattleTarget()
 	e:SetLabelObject(bc)
-	return bc and bc:IsControler(1-tp) and bc:IsRelateToBattle()
+	return bc and bc:IsControler(1-tp) and bc:IsRelateToBattle() and bc:IsAbleToRemove(tp,POS_FACEDOWN)
 end
 function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local bc=e:GetLabelObject()
-	if chk==0 then return bc:IsAbleToRemove(tp,POS_FACEDOWN) end
-	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,bc,1,0,0)
+	if chk==0 then return true end
+	Duel.SetOperationInfo(0,CATEGORY_REMOVE,bc,1,0,0)
 end
 function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 	local bc=e:GetLabelObject()
-	if bc and bc:IsControler(1-tp) and bc:IsRelateToBattle() then
+	if bc and bc:IsControler(1-tp) and bc:IsType(TYPE_MONSTER) and bc:IsRelateToBattle() then
 		Duel.Remove(bc,POS_FACEDOWN,REASON_EFFECT)
 	end
 end

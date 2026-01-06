@@ -1,10 +1,10 @@
---終刻竜機XIII-グラフレイオ
+--終刻竜機ⅩⅢ－グラフレイオ
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--xyz summon
 	aux.AddXyzProcedure(c,nil,5,3,s.ovfilter,aux.Stringid(id,0),3,s.xyzop)
 	c:EnableReviveLimit()
-	--to hand
+	--search
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,1))
 	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH+CATEGORY_DESTROY)

@@ -13,7 +13,6 @@ function s.initial_effect(c)
 	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND+CATEGORY_REMOVE)
 	e2:SetType(EFFECT_TYPE_IGNITION)
-	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e2:SetRange(LOCATION_FZONE)
 	e2:SetCountLimit(1,id)
 	e2:SetTarget(s.thtg)
@@ -60,7 +59,6 @@ function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local fc=exg:Select(tp,1,1,nil):GetFirst()
 	e:SetLabel(fc:GetCode())
 	Duel.ConfirmCards(1-tp,fc)
-	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,1,tp,LOCATION_HAND)
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
@@ -68,17 +66,18 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local rg=Duel.SelectMatchingCard(tp,s.rmfilter,tp,LOCATION_HAND,0,1,1,nil,tp)
 	local rc=rg:GetFirst()
-	if rc and Duel.Remove(rc,POS_FACEDOWN,REASON_EFFECT) then
-		Duel.BreakEffect()
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+	if rc and Duel.Remove(rc,POS_FACEDOWN,REASON_EFFECT)>0 and rc:IsLocation(LOCATION_REMOVED) then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_OPERATECARD)
 		local g=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp,cid)
 		local tc=g:GetFirst()
 		local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 		if tc then
-			if tc:IsAbleToHand() and (not tc:IsCanBeSpecialSummoned(e,0,tp,false,false) or ft<=0 or Duel.SelectOption(tp,1190,1152)==0) then
+			Duel.BreakEffect()
+			local spchk=tc:IsCanBeSpecialSummoned(e,0,tp,false,false) and ft>0
+			if tc:IsAbleToHand() and (not spchk or Duel.SelectOption(tp,1190,1152)==0) then
 				Duel.SendtoHand(tc,nil,REASON_EFFECT)
 				Duel.ConfirmCards(1-tp,tc)
-			else
+			elseif spchk then
 				Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
 			end
 		end

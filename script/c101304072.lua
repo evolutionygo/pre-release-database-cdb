@@ -1,8 +1,9 @@
---アルトメギア・インパスト －奪還－
+--アルトメギア・インパスト－奪還－
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_NEGATE+CATEGORY_DESTROY+CATEGORY_REMOVE+CATEGORY_TOHAND)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_CHAINING)
@@ -35,9 +36,9 @@ function s.rmsfilter(c)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.rmsfilter,tp,LOCATION_MZONE,0,1,nil) end
-	Duel.SetOperationInfo(0,CATEGORY_NEGATE,eg,1,0,0)
 	local g=Duel.GetMatchingGroup(s.rmsfilter,tp,LOCATION_MZONE,0,nil)
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_NEGATE,eg,1,0,0)
 	if re:GetHandler():IsDestructable() and re:GetHandler():IsRelateToEffect(re) then
 		Duel.SetOperationInfo(0,CATEGORY_DESTROY,eg,1,0,0)
 	end
@@ -53,7 +54,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	if tc then
 		Duel.HintSelection(dg)
 		if Duel.Remove(tc,0,REASON_EFFECT+REASON_TEMPORARY)~=0 then
-			tc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,1)
+			tc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id,3))
 			local e1=Effect.CreateEffect(c)
 			e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 			e1:SetCode(EVENT_PHASE+PHASE_END)
@@ -64,15 +65,12 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			e1:SetOperation(s.retop)
 			Duel.RegisterEffect(e1,tp)
 			if Duel.NegateActivation(ev)
-				and re:GetHandler():IsRelateToEffect(re) and Duel.Destroy(eg,REASON_EFFECT)~=0 then
+				and re:GetHandler():IsRelateToChain(ev) and Duel.Destroy(eg,REASON_EFFECT)~=0 then
 				local g=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,0,nil)
-				if Duel.IsExistingMatchingCard(s.thfilter,tp,0,LOCATION_ONFIELD,1,nil)
-					and g:GetClassCount(Card.GetRace)>2
-					and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
-					local tg=Duel.GetMatchingGroup(s.thfilter,tp,0,LOCATION_ONFIELD,nil)
-					if tg:GetCount()>0 then
-						Duel.SendtoHand(tg,nil,REASON_EFFECT)
-					end
+				local rg=Duel.GetMatchingGroup(s.thfilter,tp,0,LOCATION_ONFIELD,nil)
+				if rg:GetCount()>0 and g:GetClassCount(Card.GetRace)>2 and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
+					Duel.BreakEffect()
+					Duel.SendtoHand(rg,nil,REASON_EFFECT)
 				end
 			end
 		end
