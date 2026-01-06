@@ -14,7 +14,7 @@ function s.initial_effect(c)
 	e1:SetTarget(s.destg)
 	e1:SetOperation(s.desop)
 	c:RegisterEffect(e1)
-	--Fusion Summon
+	--xyz Summon
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_DESTROY)
@@ -45,26 +45,28 @@ end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then return Duel.IsExistingMatchingCard(s.desfilter,tp,LOCATION_HAND+LOCATION_MZONE,0,1,c) end
-	local g=Duel.GetMatchingGroup(nil,tp,LOCATION_MZONE,0,nil)
+	local g=Duel.GetMatchingGroup(s.desfilter,tp,LOCATION_HAND+LOCATION_MZONE,0,c)
 	g:AddCard(c)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,2,0,0)
 end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if not c:IsRelateToChain() then return end 
+	if not c:IsRelateToChain() then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g=Duel.SelectMatchingCard(tp,s.desfilter,tp,LOCATION_MZONE,0,1,1,c)
+	local g=Duel.SelectMatchingCard(tp,s.desfilter,tp,LOCATION_HAND+LOCATION_MZONE,0,1,1,c)
 	if #g>0 then
-		Duel.HintSelection(g)
+		if g:IsExists(Card.IsLocation,1,nil,LOCATION_MZONE) then
+			Duel.HintSelection(g)
+		end
 		g:AddCard(c)
 		if Duel.Destroy(g,REASON_EFFECT)==2
 			and Duel.IsExistingMatchingCard(aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil)
 			and Duel.SelectYesNo(tp,aux.Stringid(id,3)) then
 			Duel.BreakEffect()
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-			local g=Duel.SelectMatchingCard(tp,aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
-			Duel.HintSelection(g)
-			Duel.Destroy(g,REASON_EFFECT)
+			local dg=Duel.SelectMatchingCard(tp,aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
+			Duel.HintSelection(dg)
+			Duel.Destroy(dg,REASON_EFFECT)
 		end
 	end
 end
@@ -90,7 +92,7 @@ function s.matfilter(c)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if not c:IsRelateToChain() or Duel.Destroy(c,REASON_EFFECT)==0 then return end 
+	if not c:IsRelateToChain() or Duel.Destroy(c,REASON_EFFECT)==0 then return end
 	if not aux.MustMaterialCheck(nil,tp,EFFECT_MUST_BE_XMATERIAL) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_EXTRA,0,1,1,nil,e,tp,nil)

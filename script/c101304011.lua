@@ -12,7 +12,7 @@ function s.initial_effect(c)
 	e1:SetCondition(s.negcon)
 	e1:SetOperation(s.negop)
 	c:RegisterEffect(e1)
-	--Fusion Summon
+	--fusion Summon
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_FUSION_SUMMON+CATEGORY_DESTROY)
@@ -46,7 +46,7 @@ function s.negcon(e,tp,eg,ep,ev,re,r,rp)
 		and Duel.IsChainDisablable(ev) and not Duel.IsChainDisabled(ev)
 end
 function s.negop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetFlagEffect(tp,id)==0 and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
+	if Duel.GetFlagEffect(tp,id)==0 and Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
 		Duel.Hint(HINT_CARD,0,id)
 		Duel.RegisterFlagEffect(tp,id,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,1)
 		if Duel.NegateEffect(ev) then
@@ -75,7 +75,7 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if not c:IsRelateToChain() or Duel.Destroy(c,REASON_EFFECT)==0 then return end 
+	if not c:IsRelateToChain() or Duel.Destroy(c,REASON_EFFECT)==0 then return end
 	if not aux.MustMaterialCheck(nil,tp,EFFECT_MUST_BE_FMATERIAL) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_EXTRA,0,1,1,nil,e,tp,nil)
@@ -92,7 +92,7 @@ function s.spcon2(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.spfilter2(c,e,tp)
 	return not c:IsCode(id)
-		and c:IsSetCard(0x1ce) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+		and c:IsSetCard(0x1cd,0x1ce) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 		and (c:IsLocation(LOCATION_DECK) and Duel.GetMZoneCount(tp)>0
 			or c:IsLocation(LOCATION_EXTRA) and c:IsFaceup() and Duel.GetLocationCountFromEx(tp,tp,nil,c)>0)
 end

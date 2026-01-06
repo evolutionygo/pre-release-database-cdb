@@ -12,10 +12,9 @@ function s.initial_effect(c)
 	c:RegisterEffect(e0)
 	--special summon
 	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(id,2))
+	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_DESTROY+CATEGORY_ATKCHANGE)
 	e1:SetType(EFFECT_TYPE_IGNITION)
-	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetRange(LOCATION_PZONE)
 	e1:SetCountLimit(1,id)
 	e1:SetTarget(s.sptg)
@@ -72,8 +71,8 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local op=0
 	if b1 or b2 then
 		op=aux.SelectFromOptions(tp,
-			{b1,aux.Stringid(id,0),1},
-			{b2,aux.Stringid(id,1),2})
+			{b1,aux.Stringid(id,1),1},
+			{b2,aux.Stringid(id,2),2})
 	end
 	e:SetLabel(op)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,e:GetHandler(),1,0,0)
@@ -81,16 +80,18 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 		if e:IsCostChecked() then
 			e:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_DESTROY)
 		end
+		Duel.SetOperationInfo(0,CATEGORY_DESTROY,e:GetHandler(),1,0,0)
 		Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE+LOCATION_HAND)
 	elseif op==2 then
 		if e:IsCostChecked() then
-			e:SetCategory(CATEGORY_DESTROY)
+			e:SetCategory(CATEGORY_DESTROY+CATEGORY_ATKCHANGE)
 		end
+		Duel.SetOperationInfo(0,CATEGORY_DESTROY,e:GetHandler(),1,0,0)
 	end
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsRelateToChain() and Duel.Destroy(c,REASON_EFFECT)==0 then
+	if c:IsRelateToChain() and Duel.Destroy(c,REASON_EFFECT)>0 then
 		if e:GetLabel()==1 then
 			if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
@@ -104,6 +105,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_FIELD)
 		e1:SetCode(EFFECT_UPDATE_ATTACK)
+		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 		e1:SetTargetRange(LOCATION_MZONE,0)
 		e1:SetTarget(s.atktg)
 		e1:SetValue(5000)
@@ -127,13 +129,13 @@ end
 function s.spcon2(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
-	local g=Duel.GetMatchingGroup(s.spfilter2,tp,LOCATION_MZONE+LOCATION_GRAVE,0,nil)
+	local g=Duel.GetMatchingGroup(s.spfilter2,tp,LOCATION_MZONE+LOCATION_GRAVE,0,c)
 	return g:CheckSubGroup(s.gcheck,3,3,c,tp)
 end
 function s.sptg2(e,tp,eg,ep,ev,re,r,rp,chk,c)
-	local g=Duel.GetMatchingGroup(s.spfilter2,tp,LOCATION_MZONE+LOCATION_GRAVE,0,nil)
+	local g=Duel.GetMatchingGroup(s.spfilter2,tp,LOCATION_MZONE+LOCATION_GRAVE,0,c)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-	local sg=g:SelectSubGroup(tp,s.gcheck,false,3,3,c,tp)
+	local sg=g:SelectSubGroup(tp,s.gcheck,true,3,3,c,tp)
 	if sg then
 		sg:KeepAlive()
 		e:SetLabelObject(sg)
@@ -142,6 +144,7 @@ function s.sptg2(e,tp,eg,ep,ev,re,r,rp,chk,c)
 end
 function s.spop2(e,tp,eg,ep,ev,re,r,rp,c)
 	local g=e:GetLabelObject()
+	Duel.HintSelection(g)
 	Duel.SendtoDeck(g,nil,SEQ_DECKSHUFFLE,REASON_SPSUMMON)
 	g:DeleteGroup()
 end
