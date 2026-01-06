@@ -78,3 +78,9 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 end
+function s.retcon(e,tp,eg,ep,ev,re,r,rp)
+	return e:GetLabelObject():GetFlagEffect(id)~=0
+end
+function s.retop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.ReturnToField(e:GetLabelObject())
+end

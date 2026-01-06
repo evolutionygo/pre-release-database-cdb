@@ -43,7 +43,7 @@ function s.initial_effect(c)
 	e3:SetTarget(s.thtg)
 	e3:SetOperation(s.thop)
 	c:RegisterEffect(e3)
-	--negate
+	--remove
 	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(id,4))
 	e4:SetCategory(CATEGORY_REMOVE)
@@ -90,15 +90,17 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if not c:IsRelateToChain() or Duel.Destroy(c,REASON_EFFECT)==0 then return end 
-	if e:GetLabel()==1 then
-		if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-		local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.spfilter),tp,LOCATION_GRAVE+LOCATION_HAND,0,1,1,nil,e,tp)
-		if g:GetCount()>0 then
-			Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
+	if c:IsRelateToChain() and Duel.Destroy(c,REASON_EFFECT)==0 then
+		if e:GetLabel()==1 then
+			if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+			local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.spfilter),tp,LOCATION_GRAVE+LOCATION_HAND,0,1,1,nil,e,tp)
+			if g:GetCount()>0 then
+				Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
+			end
 		end
-	elseif e:GetLabel()==2 then
+	end
+	if e:GetLabel()==2 then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_FIELD)
 		e1:SetCode(EFFECT_UPDATE_ATTACK)
