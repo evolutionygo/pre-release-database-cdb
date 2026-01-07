@@ -37,9 +37,8 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function s.negcon(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	if ev<1 then return false end
-	local te,p=Duel.GetChainInfo(ev-1,CHAININFO_TRIGGERING_EFFECT,CHAININFO_TRIGGERING_PLAYER)
+	if ev<2 then return false end
+	local te=Duel.GetChainInfo(ev-1,CHAININFO_TRIGGERING_EFFECT)
 	return rp==1-tp and te and te:GetHandler():IsSetCard(0x1cd,0x1ce) and te:IsActiveType(TYPE_MONSTER)
 		and re:IsActiveType(TYPE_MONSTER)
 		and Duel.GetFlagEffect(tp,id)==0
