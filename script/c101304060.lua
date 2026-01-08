@@ -19,6 +19,7 @@ function s.initial_effect(c)
 	--draw
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,1))
+	-- TODO CATEGORY_SSET
 	e3:SetCategory(CATEGORY_DRAW)
 	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
@@ -44,19 +45,19 @@ function s.initial_effect(c)
 		Duel.RegisterEffect(ge2,0)
 	end
 end
-function s.spfilter(c,e,tp,cost)
+function s.spfilter(c,e,tp)
 	return c:IsSetCard(0x2dc) and c:IsType(TYPE_MONSTER)
 		and c:IsCanBeSpecialSummoned(e,0,tp,true,false,POS_FACEUP)
 		and (c:IsLocation(LOCATION_DECK) and Duel.GetMZoneCount(tp)>0
 			or c:IsLocation(LOCATION_EXTRA) and Duel.GetLocationCountFromEx(tp,tp,nil,c)>0)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_DECK+LOCATION_EXTRA,0,1,nil,e,tp,e:IsCostChecked()) end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_DECK+LOCATION_EXTRA,0,1,nil,e,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK+LOCATION_EXTRA)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_DECK+LOCATION_EXTRA,0,1,1,nil,e,tp,false)
+	local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_DECK+LOCATION_EXTRA,0,1,1,nil,e,tp)
 	if g:GetCount()>0 then
 		Duel.SpecialSummon(g,0,tp,tp,true,false,POS_FACEUP)
 	end
@@ -84,7 +85,7 @@ function s.clearop(e,tp,eg,ep,ev,re,r,rp)
 	s[0]=0
 end
 function s.drcon(e,tp,eg,ep,ev,re,r,rp)
-	return bit.band(s[0],TYPE_RITUAL+TYPE_FUSION+TYPE_SYNCHRO+TYPE_XYZ+TYPE_PENDULUM+TYPE_LINK)~=0
+	return bit.band(s[0],TYPE_RITUAL+TYPE_FUSION+TYPE_SYNCHRO+TYPE_XYZ+TYPE_PENDULUM+TYPE_LINK)>0
 end
 function s.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local ct=0
@@ -110,10 +111,10 @@ function s.drop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.Draw(tp,ct,REASON_EFFECT)~=0 then
 		local g=Duel.GetMatchingGroup(Card.IsSSetable,tp,LOCATION_HAND,0,nil)
 		if g:GetCount()>0 and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
-			Duel.ShuffleHand(tp)
 			Duel.BreakEffect()
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SET)
 			local sg=g:Select(tp,1,1,nil)
+			Duel.ShuffleHand(tp)
 			Duel.SSet(tp,sg,tp,false)
 		end
 	end

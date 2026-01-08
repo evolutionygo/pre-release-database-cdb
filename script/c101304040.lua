@@ -31,7 +31,7 @@ end
 function s.chainlm(e,rp,tp)
 	return tp==rp
 end
-function s.sucfilter(c)
+function s.sucfilter(c,tp)
 	return c:IsSummonType(SUMMON_TYPE_ADVANCE) and c:IsControler(tp)
 end
 function s.sucop(e,tp,eg,ep,ev,re,r,rp)
@@ -77,7 +77,7 @@ function s.tdtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 			{b1,aux.Stringid(id,1),1},
 			{b2,aux.Stringid(id,2),2})
 	end
-	e:SetLabel(op,ct)
+	e:SetLabel(op)
 	if op==1 then
 		if e:IsCostChecked() then
 			e:SetCategory(CATEGORY_TODECK)

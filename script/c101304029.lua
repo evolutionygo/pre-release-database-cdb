@@ -16,6 +16,7 @@ function s.initial_effect(c)
 	--to deck
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
+	--TODO CATEGORY_MSET
 	e2:SetCategory(CATEGORY_TODECK+CATEGORY_POSITION)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_RELEASE)
@@ -28,7 +29,7 @@ function s.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return not e:GetHandler():IsPublic() end
 end
 function s.thfilter(c)
-	return c:IsSetCard(0x2dc) and not (c:IsType(TYPE_RITUAL) and c:IsType(TYPE_MONSTER)) and c:IsAbleToHand()
+	return c:IsSetCard(0x2dc) and not (c:IsAllTypes(TYPE_RITUAL+TYPE_MONSTER)) and c:IsAbleToHand()
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil) end
@@ -41,13 +42,19 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	if g:GetCount()>0 then
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,g)
-		Duel.ShuffleHand(tp)
-		Duel.BreakEffect()
-		Duel.DiscardHand(tp,nil,1,1,REASON_EFFECT+REASON_DISCARD)
+		if g:IsExists(Card.IsLocation,1,nil,LOCATION_HAND) then
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DISCARD)
+			local dg=Duel.SelectMatchingCard(tp,Card.IsDiscardable,tp,LOCATION_HAND,0,1,1,nil,REASON_EFFECT)
+			Duel.ShuffleHand(tp)
+			if dg:GetCount()>0 then
+				Duel.BreakEffect()
+				Duel.SendtoGrave(dg,REASON_EFFECT+REASON_DISCARD)
+			end
+		end
 	end
 end
 function s.tdfilter(c)
-	return c:IsFaceupEx() and c:IsType(TYPE_RITUAL) and c:IsType(TYPE_MONSTER) and c:IsAbleToDeck()
+	return c:IsFaceupEx() and c:IsAllTypes(TYPE_RITUAL+TYPE_MONSTER) and c:IsAbleToDeck()
 end
 function s.posfilter(c)
 	return c:IsFaceup() and c:IsType(TYPE_EFFECT) and c:IsCanTurnSet()
@@ -61,10 +68,10 @@ function s.tdtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local op=0
 	if b1 or b2 then
 		op=aux.SelectFromOptions(tp,
-			{b1,aux.Stringid(id,1),1},
-			{b2,aux.Stringid(id,2),2})
+			{b1,aux.Stringid(id,2),1},
+			{b2,aux.Stringid(id,3),2})
 	end
-	e:SetLabel(op,ct)
+	e:SetLabel(op)
 	if op==1 then
 		if e:IsCostChecked() then
 			e:SetCategory(CATEGORY_TODECK)
@@ -82,7 +89,6 @@ function s.tdtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 end
 function s.tdop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
 	if e:GetLabel()==1 then
 		local g=Duel.GetMatchingGroup(s.tdfilter,tp,LOCATION_GRAVE+LOCATION_MZONE,LOCATION_GRAVE+LOCATION_MZONE,nil)
 		if aux.NecroValleyNegateCheck(g) then return end

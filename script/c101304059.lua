@@ -28,6 +28,9 @@ function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.SelectReleaseGroupEx(tp,aux.TRUE,1,1,REASON_COST,true,nil,tp)
 	Duel.Release(g,REASON_COST)
 end
+function s.thfilter(c)
+	return s.thfilter1(c) or s.thfilter2(c)
+end
 function s.thfilter1(c)
 	return not c:IsCode(id) and c:IsSetCard(0x2dc) and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToHand()
 end
@@ -35,21 +38,20 @@ function s.thfilter2(c)
 	return c:IsCode(101304015) and c:IsAbleToHand()
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter1,tp,LOCATION_DECK,0,1,nil)
-		and Duel.IsExistingMatchingCard(s.thfilter2,tp,LOCATION_DECK,0,1,nil) end
+	if chk==0 then
+		local g=Duel.GetMatchingGroup(s.thfilter,tp,LOCATION_DECK,0,nil)
+		return g:CheckSubGroup(aux.gffcheck,2,2,s.thfilter1,nil,s.thfilter2,nil)
+	end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,2,tp,LOCATION_DECK)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
-	local g1=Duel.GetMatchingGroup(s.thfilter1,tp,LOCATION_DECK,0,nil)
-	local g2=Duel.GetMatchingGroup(s.thfilter2,tp,LOCATION_DECK,0,nil)
-	if g1:GetCount()>0 and g2:GetCount()>0 then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-		local sg1=g1:Select(tp,1,1,nil)
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-		local sg2=g2:Select(tp,1,1,nil)
-		sg1:Merge(sg2)
-		Duel.SendtoHand(sg1,nil,REASON_EFFECT)
-		Duel.ConfirmCards(1-tp,sg1)
+	local g=Duel.GetMatchingGroup(s.thfilter,tp,LOCATION_DECK,0,nil)
+	if not g:CheckSubGroup(aux.gffcheck,2,2,s.thfilter1,nil,s.thfilter2,nil) then return end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+	local tg1=g:SelectSubGroup(tp,aux.gffcheck,false,2,2,s.thfilter1,nil,s.thfilter2,nil)
+	if tg1:GetCount()==2 then
+		Duel.SendtoHand(tg1,nil,REASON_EFFECT)
+		Duel.ConfirmCards(1-tp,tg1)
 	end
 end
 function s.filter(c,e,tp,chk)

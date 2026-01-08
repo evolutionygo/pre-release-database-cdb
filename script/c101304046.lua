@@ -16,6 +16,7 @@ function s.initial_effect(c)
 	--to deck
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,0))
+	-- TODO CATEGORY_SSET
 	e2:SetCategory(CATEGORY_TODECK)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_RELEASE)
@@ -33,8 +34,7 @@ end
 function s.tdtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local b1=Duel.IsExistingMatchingCard(s.tdfilter,tp,LOCATION_GRAVE+LOCATION_MZONE,LOCATION_GRAVE+LOCATION_MZONE,1,nil)
 		and (not e:IsCostChecked() or Duel.GetFlagEffect(tp,id)==0)
-	local b2=Duel.GetLocationCount(tp,LOCATION_SZONE)>0
-		and Duel.IsExistingMatchingCard(s.setfilter,tp,LOCATION_DECK,0,1,nil)
+	local b2=Duel.IsExistingMatchingCard(s.setfilter,tp,LOCATION_DECK,0,1,nil)
 		and (not e:IsCostChecked() or Duel.GetFlagEffect(tp,id+o)==0)
 	if chk==0 then return b1 or b2 end
 	local op=0
@@ -43,7 +43,7 @@ function s.tdtg(e,tp,eg,ep,ev,re,r,rp,chk)
 			{b1,aux.Stringid(id,1),1},
 			{b2,aux.Stringid(id,2),2})
 	end
-	e:SetLabel(op,ct)
+	e:SetLabel(op)
 	if op==1 then
 		if e:IsCostChecked() then
 			e:SetCategory(CATEGORY_TODECK)
@@ -65,7 +65,6 @@ function s.tdop(e,tp,eg,ep,ev,re,r,rp)
 		if aux.NecroValleyNegateCheck(g) then return end
 		Duel.SendtoDeck(g,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)
 	elseif e:GetLabel()==2 then
-		if Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 then return end
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SET)
 		local g=Duel.SelectMatchingCard(tp,s.setfilter,tp,LOCATION_DECK,0,1,1,nil)
 		local tc=g:GetFirst()

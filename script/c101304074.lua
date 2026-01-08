@@ -21,7 +21,7 @@ function s.initial_effect(c)
 	local custom_code=aux.RegisterMergedDelayedEvent_ToSingleCard(c,id,EVENT_SUMMON_SUCCESS)
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,1))
-	e3:SetCategory(CATEGORY_DESTROY+CATEGORY_DAMAGE)
+	e3:SetCategory(CATEGORY_DESTROY)
 	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e3:SetCode(custom_code)
 	e3:SetRange(LOCATION_SZONE)
@@ -62,7 +62,7 @@ function s.drop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.cfilter(c,tp,e)
-	return c:IsControler(tp) and c:IsSummonType(SUMMON_TYPE_ADVANCE)
+	return c:IsSummonPlayer(tp) and c:IsSummonType(SUMMON_TYPE_ADVANCE)
 end
 function s.descon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.cfilter,1,nil,tp)
@@ -84,8 +84,7 @@ function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,g:GetCount(),0,0)
 end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
-	local sg=g:Filter(Card.IsRelateToChain,nil)
+	local sg=Duel.GetTargetsRelateToChain():Filter(Card.IsOnField,nil)
 	Duel.Destroy(sg,REASON_EFFECT)
 end
 function s.stcon(e,tp,eg,ep,ev,re,r,rp)

@@ -23,18 +23,18 @@ function s.initial_effect(c)
 	e2:SetOperation(s.drop)
 	c:RegisterEffect(e2)
 	--summon
-	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(id,0))
-	e1:SetCategory(CATEGORY_SUMMON)
-	e1:SetType(EFFECT_TYPE_QUICK_O)
-	e1:SetCode(EVENT_FREE_CHAIN)
-	e1:SetRange(LOCATION_MZONE)
-	e1:SetHintTiming(0,TIMING_MAIN_END)
-	e1:SetCountLimit(1)
-	e1:SetCondition(s.sumcon)
-	e1:SetTarget(s.sumtg)
-	e1:SetOperation(s.sumop)
-	c:RegisterEffect(e1)
+	local e3=Effect.CreateEffect(c)
+	e3:SetDescription(aux.Stringid(id,2))
+	e3:SetCategory(CATEGORY_SUMMON)
+	e3:SetType(EFFECT_TYPE_QUICK_O)
+	e3:SetCode(EVENT_FREE_CHAIN)
+	e3:SetRange(LOCATION_MZONE)
+	e3:SetHintTiming(0,TIMING_MAIN_END)
+	e3:SetCountLimit(1)
+	e3:SetCondition(s.sumcon)
+	e3:SetTarget(s.sumtg)
+	e3:SetOperation(s.sumop)
+	c:RegisterEffect(e3)
 end
 function s.otfilter(c,tp)
 	return c:IsType(TYPE_RITUAL+TYPE_FUSION+TYPE_SYNCHRO+TYPE_XYZ+TYPE_PENDULUM+TYPE_LINK) and (c:IsControler(tp) or c:IsFaceup())
@@ -65,8 +65,8 @@ function s.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local op=0
 	if b1 or b2 then
 		op=aux.SelectFromOptions(tp,
-			{b1,aux.Stringid(id,1),1},
-			{b2,aux.Stringid(id,2),2})
+			{b1,aux.Stringid(id,3),1},
+			{b2,aux.Stringid(id,4),2})
 	end
 	e:SetLabel(op,ct)
 	if op==1 then
@@ -93,27 +93,28 @@ function s.drop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DISABLE)
 		local g=Duel.SelectMatchingCard(tp,aux.NegateAnyFilter,tp,0,LOCATION_ONFIELD,ct,ct,nil)
 		if g:GetCount()>0 then
+			Duel.HintSelection(g)
 			for tc in aux.Next(g) do
 				Duel.NegateRelatedChain(tc,RESET_TURN_SET)
 				local e1=Effect.CreateEffect(c)
 				e1:SetType(EFFECT_TYPE_SINGLE)
 				e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 				e1:SetCode(EFFECT_DISABLE)
-				e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+				e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 				tc:RegisterEffect(e1)
 				local e2=Effect.CreateEffect(c)
 				e2:SetType(EFFECT_TYPE_SINGLE)
 				e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 				e2:SetCode(EFFECT_DISABLE_EFFECT)
 				e2:SetValue(RESET_TURN_SET)
-				e2:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+				e2:SetReset(RESET_EVENT+RESETS_STANDARD)
 				tc:RegisterEffect(e2)
 				if tc:IsType(TYPE_TRAPMONSTER) then
 					local e3=Effect.CreateEffect(c)
 					e3:SetType(EFFECT_TYPE_SINGLE)
 					e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 					e3:SetCode(EFFECT_DISABLE_TRAPMONSTER)
-					e3:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+					e3:SetReset(RESET_EVENT+RESETS_STANDARD)
 					tc:RegisterEffect(e3)
 				end
 			end
@@ -124,7 +125,7 @@ function s.sumcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetTurnPlayer()==1-tp and Duel.IsMainPhase()
 end
 function s.sumfilter(c)
-	return c:IsSummonable(true,nil,1) or c:IsMSetable(true,nil,1)
+	return c:IsSummonable(true,nil,1)
 end
 function s.sumtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.sumfilter,tp,LOCATION_HAND,0,1,nil) end
@@ -135,12 +136,6 @@ function s.sumop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.SelectMatchingCard(tp,s.sumfilter,tp,LOCATION_HAND,0,1,1,nil)
 	local tc=g:GetFirst()
 	if tc then
-		local s1=tc:IsSummonable(true,nil,1)
-		local s2=tc:IsMSetable(true,nil,1)
-		if (s1 and s2 and Duel.SelectPosition(tp,tc,POS_FACEUP_ATTACK+POS_FACEDOWN_DEFENSE)==POS_FACEUP_ATTACK) or not s2 then
-			Duel.Summon(tp,tc,true,nil,1)
-		else
-			Duel.MSet(tp,tc,true,nil,1)
-		end
+		Duel.Summon(tp,tc,true,nil,1)
 	end
 end
