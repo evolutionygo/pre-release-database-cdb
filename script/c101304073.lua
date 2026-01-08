@@ -76,8 +76,12 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		local eft=Duel.GetLocationCountFromEx(tp,tp,nil,TYPE_PENDULUM)
 		if ft>0 then
 			if ft>=2 then ft=2 end
-			if Duel.IsPlayerAffectedByEffect(tp,59822133) then ft=1 end
-			local g=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_DECK+LOCATION_EXTRA,0,nil,e,tp)
+			if Duel.IsPlayerAffectedByEffect(tp,59822133) and ft>1 then ft=1 end
+			local ect=(c29724053 and Duel.IsPlayerAffectedByEffect(tp,29724053) and c29724053[tp]) or ft
+			local loc=LOCATION_DECK
+			if ect>0 then loc=loc+LOCATION_EXTRA end
+			if ect<eft then eft=ect end
+			local g=Duel.GetMatchingGroup(s.spfilter,tp,loc,0,nil,e,tp)
 			if g:GetCount()>0 then
 				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 				local sg=g:SelectSubGroup(tp,s.gcheck,false,1,ft,tp,eft)

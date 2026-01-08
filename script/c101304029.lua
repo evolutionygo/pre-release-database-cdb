@@ -81,7 +81,7 @@ function s.tdtg(e,tp,eg,ep,ev,re,r,rp,chk)
 		Duel.SetOperationInfo(0,CATEGORY_TODECK,g,g:GetCount(),0,LOCATION_GRAVE+LOCATION_MZONE)
 	elseif op==2 then
 		if e:IsCostChecked() then
-			e:SetCategory(CATEGORY_DISABLE)
+			e:SetCategory(CATEGORY_POSITION)
 			Duel.RegisterFlagEffect(tp,id+o,RESET_PHASE+PHASE_END,0,1)
 		end
 		local g=Duel.GetMatchingGroup(s.posfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
