@@ -75,7 +75,9 @@ function s.aclimit(e,re,tp)
 end
 function s.checkop(e,tp,eg,ep,ev,re,r,rp)
 	for tc in aux.Next(eg) do
-		s[0]=bit.bor(s[0],tc:GetType())
+		if tc:IsType(TYPE_MONSTER) then
+			s[0]=bit.bor(s[0],tc:GetType())
+		end
 	end
 end
 function s.clearop(e,tp,eg,ep,ev,re,r,rp)
