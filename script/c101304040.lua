@@ -62,7 +62,7 @@ function s.tdfilter(c)
 	return c:IsFaceupEx() and c:IsType(TYPE_SYNCHRO) and c:IsAbleToDeck()
 end
 function s.thfilter(c)
-	return c:IsSetCard(0x2dc) and c:IsAbleToHand()
+	return not c:IsCode(id) and c:IsSetCard(0x2dc) and c:IsAbleToHand()
 end
 function s.tdtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and s.thfilter(chkc) end
