@@ -74,7 +74,7 @@ function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local sg=eg:Filter(s.cfilter,1,nil,tp)
 	local ct=0
 	for tc in aux.Next(sg) do
-		local mt=e:GetHandler():GetMaterial():FilterCount(Card.IsType,nil,TYPE_MONSTER)
+		local mt=tc:GetMaterial():FilterCount(Card.IsType,nil,TYPE_MONSTER)
 		if mt>ct then ct=mt end
 	end
 	if chkc then return chkc:IsOnField() and s.desfilter(chkc) and e:GetHandler()~=chkc end
