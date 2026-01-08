@@ -82,14 +82,14 @@ function s.clearop(e,tp,eg,ep,ev,re,r,rp)
 	s[0]=0
 end
 function s.drcon(e,tp,eg,ep,ev,re,r,rp)
-	return s[tp]>0
+	return bit.band(s[0],TYPE_RITUAL+TYPE_FUSION+TYPE_SYNCHRO+TYPE_XYZ+TYPE_PENDULUM+TYPE_LINK)~=0
 end
 function s.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local ct=0
 	local type={TYPE_RITUAL,TYPE_FUSION,TYPE_SYNCHRO,TYPE_XYZ,TYPE_PENDULUM,TYPE_LINK}
 	for i=1,#type do
 		local value=type[i]
-		if bit.band(s[tp],value)~=0 then
+		if bit.band(s[0],value)~=0 then
 			ct=ct+1
 		end
 	end
@@ -101,7 +101,7 @@ function s.drop(e,tp,eg,ep,ev,re,r,rp)
 	local type={TYPE_RITUAL,TYPE_FUSION,TYPE_SYNCHRO,TYPE_XYZ,TYPE_PENDULUM,TYPE_LINK}
 	for i=1,#type do
 		local value=type[i]
-		if bit.band(s[tp],value)~=0 then
+		if bit.band(s[0],value)~=0 then
 			ct=ct+1
 		end
 	end
