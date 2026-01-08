@@ -61,7 +61,7 @@ function s.drop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Draw(tp,1,REASON_EFFECT)
 	end
 end
-function s.cfilter(c,tp,e)
+function s.cfilter(c,tp)
 	return c:IsSummonPlayer(tp) and c:IsSummonType(SUMMON_TYPE_ADVANCE)
 end
 function s.descon(e,tp,eg,ep,ev,re,r,rp)
