@@ -35,8 +35,11 @@ function s.sucfilter(c,tp)
 	return c:IsSummonType(SUMMON_TYPE_ADVANCE) and c:IsControler(tp)
 end
 function s.sucop(e,tp,eg,ep,ev,re,r,rp)
-	if eg:IsExists(s.sucfilter,1,nil,tp) and Duel.GetCurrentChain()==1 then
-		e:GetHandler():RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,0,1)
+	if not eg:IsExists(s.sucfilter,1,nil,tp) then return end
+	if Duel.GetCurrentChain()==0 then
+		Duel.SetChainLimitTillChainEnd(s.chainlm)
+	elseif Duel.GetCurrentChain()==1 then
+		Duel.RegisterFlagEffect(tp,id+o,RESET_EVENT+RESETS_STANDARD,0,1)
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 		e1:SetCode(EVENT_CHAINING)
@@ -49,14 +52,14 @@ function s.sucop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.resetop(e,tp,eg,ep,ev,re,r,rp)
-	e:GetHandler():ResetFlagEffect(id)
+	Duel.ResetFlagEffect(tp,id+o)
 	e:Reset()
 end
 function s.cedop(e,tp,eg,ep,ev,re,r,rp)
-	if e:GetHandler():GetFlagEffect(id)~=0 then
+	if Duel.GetFlagEffect(tp,id+o)~=0 then
 		Duel.SetChainLimitTillChainEnd(s.chainlm)
 	end
-	e:GetHandler():ResetFlagEffect(id)
+	Duel.ResetFlagEffect(tp,id+o)
 end
 function s.tdfilter(c)
 	return c:IsFaceupEx() and c:IsType(TYPE_SYNCHRO) and c:IsAbleToDeck()
