@@ -55,7 +55,7 @@ end
 function s.tdtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local b1=Duel.IsExistingMatchingCard(s.tdfilter,tp,LOCATION_GRAVE+LOCATION_MZONE,LOCATION_GRAVE+LOCATION_MZONE,1,nil)
 		and (not e:IsCostChecked() or Duel.GetFlagEffect(tp,id)==0)
-	local b2=Duel.IsExistingMatchingCard(s.posfilter,tp,0,LOCATION_MZONE,1,nil)
+	local b2=Duel.IsExistingMatchingCard(s.posfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil)
 		and (not e:IsCostChecked() or Duel.GetFlagEffect(tp,id+o)==0)
 	if chk==0 then return b1 or b2 end
 	local op=0
@@ -77,7 +77,7 @@ function s.tdtg(e,tp,eg,ep,ev,re,r,rp,chk)
 			e:SetCategory(CATEGORY_DISABLE)
 			Duel.RegisterFlagEffect(tp,id+o,RESET_PHASE+PHASE_END,0,1)
 		end
-		local g=Duel.GetMatchingGroup(s.posfilter,tp,0,LOCATION_MZONE,nil)
+		local g=Duel.GetMatchingGroup(s.posfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 		Duel.SetOperationInfo(0,CATEGORY_POSITION,g,1,0,0)
 	end
 end

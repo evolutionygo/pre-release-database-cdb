@@ -37,7 +37,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function s.otfilter(c,tp)
-	return c:IsType(TYPE_RITUAL+TYPE_FUSION+TYPE_SYNCHRO+TYPE_XYZ+TYPE_PENDULUM+TYPE_LINK)
+	return c:IsType(TYPE_RITUAL+TYPE_FUSION+TYPE_SYNCHRO+TYPE_XYZ+TYPE_PENDULUM+TYPE_LINK) and (c:IsControler(tp) or c:IsFaceup())
 end
 function s.otcon(e,c,minc)
 	if c==nil then return true end
