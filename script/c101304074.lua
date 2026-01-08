@@ -71,7 +71,7 @@ function s.desfilter(c)
 	return c:IsType(TYPE_SPELL+TYPE_TRAP)
 end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	local sg=eg:Filter(s.cfilter,1,nil,tp)
+	local sg=eg:Filter(s.cfilter,nil,tp)
 	local ct=0
 	for tc in aux.Next(sg) do
 		local mt=tc:GetMaterial():FilterCount(Card.IsType,nil,TYPE_MONSTER)
