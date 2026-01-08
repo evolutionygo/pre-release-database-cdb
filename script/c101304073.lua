@@ -113,7 +113,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetTargetRange(1,0)
 		e1:SetValue(s.aclimit)
 		e1:SetReset(RESET_PHASE+PHASE_END)
-		Duel.RegisterEffect(e1,tp)
+		Duel.RegisterEffect(e1,tp,2)
 	end
 end
 function s.aclimit(e,re,tp)
