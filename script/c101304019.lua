@@ -74,7 +74,7 @@ function s.initial_effect(c)
 		end
 		local SST_IsCanBeSpecialSummoned=Card.IsCanBeSpecialSummoned
 		function Card.IsCanBeSpecialSummoned(card,e,sum,tp,bool1,bool2,pos,sp,zone)
-			if pos and pos&POS_FACEDOWN==POS_FACEDOWN then
+			if pos and pos&POS_FACEDOWN~=0 then
 				Duel.RegisterFlagEffect(0,id,RESET_CHAIN,0,1)
 			end
 			if not zone then
