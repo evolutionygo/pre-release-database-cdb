@@ -218,7 +218,10 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.thcon2(e,tp,eg,ep,ev,re,r,rp)
 	local ex=Duel.GetOperationInfo(ev,0x100000000)
-	return ep~=tp and ex and e:GetHandler():IsFacedown()
+	return ep~=tp and (ex
+		or CATEGORY_MSET and re:IsHasCategory(CATEGORY_MSET)
+		or CATEGORY_SSET and re:IsHasCategory(CATEGORY_SSET))
+		and e:GetHandler():IsFacedown()
 end
 function s.thcost2(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
