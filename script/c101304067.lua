@@ -3,7 +3,7 @@ local s,id,o=GetID()
 function s.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
-	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_SSET)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_END_PHASE)
@@ -31,7 +31,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:SetLabel(op)
 	if op==1 then
 		if e:IsCostChecked() then
-			e:SetCategory(0)
+			e:SetCategory(CATEGORY_SSET)
 		end
 	elseif op==2 then
 		if e:IsCostChecked() then

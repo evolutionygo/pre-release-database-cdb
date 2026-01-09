@@ -65,7 +65,7 @@ function s.efftg(e,tp,eg,ep,ev,re,r,rp,chk)
 		local g=Duel.GetMatchingGroup(Card.IsCanAddCounter,tp,LOCATION_MZONE,LOCATION_MZONE,nil,0x1041,1)
 		Duel.SetOperationInfo(0,CATEGORY_COUNTER,g,1,0,0)
 	elseif op==2 then
-		e:SetCategory(0)
+		e:SetCategory(CATEGORY_SSET)
 	end
 end
 function s.effop(e,tp,eg,ep,ev,re,r,rp,chk,chkc)

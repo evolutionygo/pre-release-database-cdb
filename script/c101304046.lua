@@ -16,8 +16,7 @@ function s.initial_effect(c)
 	--to deck
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,0))
-	-- TODO CATEGORY_SSET
-	e2:SetCategory(CATEGORY_TODECK)
+	e2:SetCategory(CATEGORY_TODECK+CATEGORY_SSET)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_RELEASE)
 	e2:SetProperty(EFFECT_FLAG_DELAY)
@@ -53,7 +52,7 @@ function s.tdtg(e,tp,eg,ep,ev,re,r,rp,chk)
 		Duel.SetOperationInfo(0,CATEGORY_TODECK,g,g:GetCount(),0,LOCATION_GRAVE+LOCATION_MZONE)
 	elseif op==2 then
 		if e:IsCostChecked() then
-			e:SetCategory(0)
+			e:SetCategory(CATEGORY_SSET)
 			Duel.RegisterFlagEffect(tp,id+o,RESET_PHASE+PHASE_END,0,1)
 		end
 	end

@@ -1,4 +1,4 @@
---糾罪巧-再巧
+--糾罪巧－再巧
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddCodeList(c,17621695)
@@ -15,7 +15,7 @@ function s.initial_effect(c)
 	--positon
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
-	e2:SetCategory(CATEGORY_POSITION)
+	e2:SetCategory(CATEGORY_POSITION+CATEGORY_MSET)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e2:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_ACTIVATE_CONDITION)
 	e2:SetCode(EVENT_CHAINING)
