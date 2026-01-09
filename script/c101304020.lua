@@ -196,5 +196,5 @@ function s.chainop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.chainlm(e,rp,tp)
-	return tp==rp or not e:IsActiveType(TYPE_MONSTER)
+	return tp==rp
 end
