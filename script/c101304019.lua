@@ -75,6 +75,7 @@ function s.initial_effect(c)
 		local SST_IsCanBeSpecialSummoned=Card.IsCanBeSpecialSummoned
 		function Card.IsCanBeSpecialSummoned(card,e,sum,tp,bool1,bool2,pos,sp,zone)
 			if pos and pos&POS_FACEDOWN~=0 then
+				e:GetHandler():RegisterFlagEffect(id,RESET_CHAIN,0,1)
 				Duel.RegisterFlagEffect(0,id,RESET_CHAIN,0,1)
 			end
 			if not zone then
@@ -219,6 +220,7 @@ end
 function s.thcon2(e,tp,eg,ep,ev,re,r,rp)
 	local ex=Duel.GetOperationInfo(ev,0x100000000)
 	return ep~=tp and (ex
+		or re:GetHandler():GetFlagEffect(id)>0
 		or CATEGORY_MSET and re:IsHasCategory(CATEGORY_MSET)
 		or CATEGORY_SSET and re:IsHasCategory(CATEGORY_SSET))
 		and e:GetHandler():IsFacedown()
