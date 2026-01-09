@@ -179,7 +179,7 @@ function s.negop(e,tp,eg,ep,ev,re,r,rp)
 		local te,tgp=Duel.GetChainInfo(i,CHAININFO_TRIGGERING_EFFECT,CHAININFO_TRIGGERING_PLAYER)
 		if tgp~=tp and (te:IsActiveType(TYPE_MONSTER) or te:IsHasType(EFFECT_TYPE_ACTIVATE)) and Duel.NegateActivation(i) then
 			local tc=te:GetHandler()
-			if tc:IsRelateToEffect(e) and tc:IsRelateToEffect(te) then
+			if tc:IsRelateToEffect(e) and tc:IsRelateToChain(i) then
 				dg:AddCard(tc)
 			end
 		end
@@ -187,7 +187,9 @@ function s.negop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Destroy(dg,REASON_EFFECT)
 end
 function s.flipop(e,tp,eg,ep,ev,re,r,rp)
-	e:GetHandler():RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id,3))
+	local c=e:GetHandler()
+	c:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id,3))
+	c:SetStatus(STATUS_EFFECT_ENABLED,true)
 end
 function s.chainop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
