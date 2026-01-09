@@ -196,5 +196,5 @@ function s.chainop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.chainlm(e,rp,tp)
-	return tp==1-rp
+	return tp==rp
 end
