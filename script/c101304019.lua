@@ -1,6 +1,6 @@
 --糾罪巧γ'-「exapatisIA」
-CATEGORY_MSET		        =0x100000000	--包含盖放怪兽的效果
-CATEGORY_SSET			    =0x200000000	--包含盖放魔陷的效果
+CATEGORY_MSET			   =0x100000000	--包含盖放怪兽的效果
+CATEGORY_SSET			   =0x200000000	--包含盖放魔陷的效果
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--pendulum summon
@@ -121,8 +121,8 @@ function s.adjustop(e,tp,eg,ep,ev,re,r,rp)
 				if Effect_e:GetType()&(EFFECT_TYPE_IGNITION+EFFECT_TYPE_TRIGGER_F+EFFECT_TYPE_TRIGGER_O+EFFECT_TYPE_QUICK_F+EFFECT_TYPE_QUICK_O)~=0 then
 					local tg=Effect_e:GetTarget()
 					if tg then
-						tg(e,tp,Group.CreateGroup(),ep,ev,re,r,rp,0)
-						tg(e,1-tp,Group.CreateGroup(),ep,ev,re,r,rp,0)
+						tg(e,tp,Group.CreateGroup(),tp,ev,e,r,tp,0)
+						tg(e,1-tp,Group.CreateGroup(),tp,ev,e,r,tp,0)
 						if Duel.GetFlagEffect(0,id)~=0 then
 							Effect_e:SetTarget(s.sttg(tg))
 						end
