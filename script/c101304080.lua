@@ -1,7 +1,7 @@
 --動点するP
 local s,id,o=GetID()
 function s.initial_effect(c)
-	c:EnableCounterPermit(0x4d)
+	c:EnableCounterPermit(0x73)
 	--Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
@@ -33,11 +33,11 @@ function s.initial_effect(c)
 end
 function s.cttg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
-	Duel.SetOperationInfo(0,CATEGORY_COUNTER,nil,1,0,0x4d)
+	Duel.SetOperationInfo(0,CATEGORY_COUNTER,nil,1,0,0x73)
 end
 function s.ctop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	c:AddCounter(0x4d,1)
+	c:AddCounter(0x73,1)
 end
 function s.cfilter(c)
 	local seq=c:GetSequence()
@@ -49,7 +49,7 @@ end
 function s.seqtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and s.cfilter(chkc) end
-	if chk==0 then return c:GetCounter(0x4d)>0 and Duel.IsExistingTarget(s.cfilter,tp,LOCATION_MZONE,0,1,e:GetHandler()) end
+	if chk==0 then return c:GetCounter(0x73)>0 and Duel.IsExistingTarget(s.cfilter,tp,LOCATION_MZONE,0,1,e:GetHandler()) end
 	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,1))
 	Duel.SelectTarget(tp,s.cfilter,tp,LOCATION_MZONE,0,1,1,e:GetHandler())
 end
@@ -70,8 +70,8 @@ function s.seqop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
 	if not tc:IsRelateToChain() then return end
-	if c:GetCounter(0x4d)==0 then return end
-	local ct=c:GetCounter(0x4d)
+	if c:GetCounter(0x73)==0 then return end
+	local ct=c:GetCounter(0x73)
 	while ct>0 do
 		local seq=tc:GetSequence()
 		if seq>4 then return end
