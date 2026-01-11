@@ -1,4 +1,5 @@
 --道化の一座 フレア
+CATEGORY_MSET			   =0x100000000	--包含盖放怪兽的效果
 local s,id,o=GetID()
 function s.initial_effect(c)
 	c:EnableReviveLimit()

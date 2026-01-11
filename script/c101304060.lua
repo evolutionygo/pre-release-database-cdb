@@ -1,4 +1,5 @@
 --道化の一座『開演』
+CATEGORY_SSET			   =0x200000000	--包含盖放魔陷的效果
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--activate
@@ -19,8 +20,7 @@ function s.initial_effect(c)
 	--draw
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,1))
-	-- TODO CATEGORY_SSET
-	e3:SetCategory(CATEGORY_DRAW)
+	e3:SetCategory(CATEGORY_DRAW+CATEGORY_SSET)
 	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 	e3:SetCode(EVENT_PHASE+PHASE_END)

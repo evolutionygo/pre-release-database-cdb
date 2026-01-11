@@ -57,17 +57,19 @@ end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if e:GetLabel()==1 then
-		local e1=Effect.CreateEffect(c)
-		e1:SetType(EFFECT_TYPE_FIELD)
-		e1:SetCode(EFFECT_PIERCE)
-		e1:SetTargetRange(LOCATION_MZONE,0)
-		e1:SetTarget(s.atkfilter)
-		e1:SetReset(RESET_PHASE+PHASE_END)
-		Duel.RegisterEffect(e1,tp)
-		Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1)
+		if Duel.GetFlagEffect(tp,id)==0 then
+			local e1=Effect.CreateEffect(c)
+			e1:SetType(EFFECT_TYPE_FIELD)
+			e1:SetCode(EFFECT_PIERCE)
+			e1:SetTargetRange(LOCATION_MZONE,0)
+			e1:SetTarget(s.atkfilter)
+			e1:SetReset(RESET_PHASE+PHASE_END)
+			Duel.RegisterEffect(e1,tp)
+			Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1)
+		end
 	elseif e:GetLabel()==2 then
 		local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
-		local tg=g:Filter(Card.IsRelateToChain,nil)
+		local tg=g:Filter(Card.IsRelateToChain,nil):Filter(Card.IsOnField,nil)
 		if tg:GetCount()>0 then
 			Duel.Destroy(tg,REASON_EFFECT)
 		end
@@ -77,21 +79,24 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 		local tc=g:GetFirst()
 		if tc then
-			if tc:IsAbleToHand() and (not tc:IsCanBeSpecialSummoned(e,0,tp,false,false) or ft<=0 or Duel.SelectOption(tp,1190,1152)==0) then
+			local spchk=ft>0 and tc:IsCanBeSpecialSummoned(e,0,tp,false,false)
+			if tc:IsAbleToHand() and (not spchk or Duel.SelectOption(tp,1190,1152)==0) then
 				Duel.SendtoHand(tc,nil,REASON_EFFECT)
 				Duel.ConfirmCards(1-tp,tc)
-			else
+			elseif spchk then
 				Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
 			end
 		end
 	elseif e:GetLabel()==4 then
-		local e2=Effect.CreateEffect(e:GetHandler())
-		e2:SetType(EFFECT_TYPE_FIELD)
-		e2:SetCode(EFFECT_DIRECT_ATTACK)
-		e2:SetTargetRange(LOCATION_MZONE,0)
-		e2:SetTarget(s.atkfilter)
-		e2:SetReset(RESET_PHASE+PHASE_END)
-		Duel.RegisterEffect(e2,tp)
-		Duel.RegisterFlagEffect(tp,id+o,RESET_PHASE+PHASE_END,0,1)
+		if Duel.GetFlagEffect(tp,id+o)==0 then
+			local e2=Effect.CreateEffect(e:GetHandler())
+			e2:SetType(EFFECT_TYPE_FIELD)
+			e2:SetCode(EFFECT_DIRECT_ATTACK)
+			e2:SetTargetRange(LOCATION_MZONE,0)
+			e2:SetTarget(s.atkfilter)
+			e2:SetReset(RESET_PHASE+PHASE_END)
+			Duel.RegisterEffect(e2,tp)
+			Duel.RegisterFlagEffect(tp,id+o,RESET_PHASE+PHASE_END,0,1)
+		end
 	end
 end

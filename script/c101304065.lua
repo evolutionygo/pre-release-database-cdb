@@ -1,4 +1,5 @@
 --糾罪巧－再巧
+CATEGORY_MSET			   =0x100000000	--包含盖放怪兽的效果
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddCodeList(c,17621695)
