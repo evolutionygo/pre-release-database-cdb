@@ -4,7 +4,7 @@ function s.initial_effect(c)
 	--activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
-	e1:SetCategory(CATEGORY_DESTROY+CATEGORY_SPECIAL_SUMMON+CATEGORY_TOHAND)
+	e1:SetCategory(CATEGORY_DESTROY+CATEGORY_SPECIAL_SUMMON+CATEGORY_TOHAND+CATEGORY_GRAVE_SPSUMMON+CATEGORY_GRAVE_ACTION)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
@@ -29,14 +29,11 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local b3=Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp)
 	local b4=Duel.GetFlagEffect(tp,id+o)==0 and Duel.IsAbleToEnterBP()
 	if chk==0 then return b1 or b2 or b3 or b4 end
-	local op=0
-	if b1 or b2 then
-		op=aux.SelectFromOptions(tp,
+	local op=aux.SelectFromOptions(tp,
 			{b1,aux.Stringid(id,1),1},
 			{b2,aux.Stringid(id,2),2},
-			{b2,aux.Stringid(id,3),3},
-			{b2,aux.Stringid(id,4),4})
-	end
+			{b3,aux.Stringid(id,3),3},
+			{b4,aux.Stringid(id,4),4})
 	e:SetLabel(op)
 	e:SetCategory(0)
 	e:SetProperty(0)
@@ -46,11 +43,11 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 			e:SetProperty(EFFECT_FLAG_CARD_TARGET)
 		end
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-		local g=Duel.SelectTarget(tp,aux.TRUE,tp,0,LOCATION_ONFIELD,1,ct,nil,TYPE_SPELL+TYPE_TRAP)
+		local g=Duel.SelectTarget(tp,aux.TRUE,tp,0,LOCATION_ONFIELD,1,ct,nil)
 		Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,g:GetCount(),0,0)
 	elseif op==3 then
 		if e:IsCostChecked() then
-			e:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_TOHAND)
+			e:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_TOHAND+CATEGORY_GRAVE_SPSUMMON+CATEGORY_GRAVE_ACTION)
 		end
 	end
 end
