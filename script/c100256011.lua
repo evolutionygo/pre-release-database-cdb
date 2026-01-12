@@ -65,7 +65,6 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		if Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)==2
 			and g:IsExists(Card.IsLocation,2,nil,LOCATION_MZONE)
 			and g:IsExists(Card.IsFaceup,2,nil) then
-			Duel.AdjustAll()
 			local e1=nil
 			local e2=nil
 			if c:IsLevelAbove(1) then
@@ -86,6 +85,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 				e2:SetReset(RESET_EVENT+RESETS_STANDARD)
 				c:RegisterEffect(e2,true)
 			end
+			Duel.AdjustAll()
 			local xyzg=Duel.GetMatchingGroup(s.xyzfiltr,tp,LOCATION_EXTRA,0,nil,g)
 			if xyzg:GetCount()>0 then
 				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
