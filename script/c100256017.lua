@@ -1,4 +1,4 @@
---サイバース•コード•マジシャン
+--サイバース・コード・マジシャン
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddCodeList(c,34767865)
@@ -36,21 +36,32 @@ function s.matval(e,lc,mg,c,tp)
 	return true,not mg or mg:IsExists(s.mfilter,1,nil,tp) and not mg:IsExists(s.exmfilter,1,nil)
 end
 function s.tgcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():IsPreviousLocation(LOCATION_HAND+LOCATION_ONFIELD)
+	local c=e:GetHandler()
+	e:SetLabel(0)
+	if c:IsLocation(LOCATION_GRAVE) and c:IsPreviousLocation(LOCATION_ONFIELD+LOCATION_HAND) then
+		if c:IsPreviousLocation(LOCATION_MZONE) and c:IsSummonType(SUMMON_TYPE_RITUAL) then
+			e:SetLabel(1)
+			c:RegisterFlagEffect(0,RESET_CHAIN,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id,2))
+		end
+		return true
+	else
+		return false
+	end
 end
-function s.tgfilter(c,e,tp,el)
+function s.tgfilter(c,e,tp,label)
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	return c:IsRace(RACE_CYBERSE) and (c:IsAbleToGrave()
-		or el==100 and ft>0 and c:IsCanBeSpecialSummoned(e,0,tp,false,false))
+		or label>0 and ft>0 and c:IsCanBeSpecialSummoned(e,0,tp,false,false))
 end
 function s.tgtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-	if c:IsPreviousLocation(LOCATION_MZONE) and c:IsSummonType(SUMMON_TYPE_RITUAL) then
-		e:SetLabel(100)
+	local label=e:GetLabel()
+	if label>0 then
+		e:SetCategory(CATEGORY_TOGRAVE+CATEGORY_SPECIAL_SUMMON)
 	else
-		e:SetLabel(0)
+		e:SetCategory(CATEGORY_TOGRAVE)
 	end
-	if chk==0 then return Duel.IsExistingMatchingCard(s.tgfilter,tp,LOCATION_DECK,0,1,nil,e,tp,e:GetLabel()) end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.tgfilter,tp,LOCATION_DECK,0,1,nil,e,tp,label) end
 	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_DECK)
 end
 function s.tgop(e,tp,eg,ep,ev,re,r,rp)
@@ -59,9 +70,10 @@ function s.tgop(e,tp,eg,ep,ev,re,r,rp)
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	local tc=g:GetFirst()
 	if tc then
-		if tc:IsAbleToGrave() and (not tc:IsCanBeSpecialSummoned(e,0,tp,false,false) or ft<=0 or Duel.SelectOption(tp,1191,1152)==0) then
+		local spchk=e:GetLabel()>0 and ft>0 and tc:IsCanBeSpecialSummoned(e,0,tp,false,false)
+		if tc:IsAbleToGrave() and (not spchk or Duel.SelectOption(tp,1191,1152)==0) then
 			Duel.SendtoGrave(tc,REASON_EFFECT)
-		else
+		elseif spchk then
 			Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
 		end
 	end

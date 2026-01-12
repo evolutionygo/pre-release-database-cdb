@@ -1,4 +1,4 @@
---星読みの魔術師ーホロスコープ•マジシャン
+--星読みの魔術師－ホロスコープ・マジシャン
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--pendulum summon
