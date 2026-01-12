@@ -1,4 +1,4 @@
---増殖するクリボー!
+--増殖するクリボー！
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddCodeList(c,46986414)
@@ -81,18 +81,19 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_OPERATECARD)
 	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.thfilter),tp,LOCATION_DECK+LOCATION_GRAVE,0,1,1,nil,e,tp)
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
-	local tc=g:GetFirst()
-	if tc then
+	local oc=g:GetFirst()
+	if oc then
 		local res=true
-		if tc:IsAbleToHand() and (not tc:IsCanBeSpecialSummoned(e,0,tp,false,false) or ft<=0 or Duel.SelectOption(tp,1190,1152)==0) then
-			Duel.SendtoHand(tc,nil,REASON_EFFECT)
-			Duel.ConfirmCards(1-tp,tc)
-			res=tc:IsLocation(LOCATION_HAND)
+		if oc:IsAbleToHand() and (not oc:IsCanBeSpecialSummoned(e,0,tp,false,false) or ft<=0 or Duel.SelectOption(tp,1190,1152)==0) then
+			Duel.SendtoHand(oc,nil,REASON_EFFECT)
+			Duel.ConfirmCards(1-tp,oc)
+			res=oc:IsLocation(LOCATION_HAND)
 		else
-			res=Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)>0
+			res=Duel.SpecialSummon(oc,0,tp,tp,false,false,POS_FACEUP)>0
 		end
 		local tc=Duel.GetFirstTarget()
-		if tc and res and tc:IsRelateToChain() and tc:IsControler(1-tp) and tc:IsFaceup() and not tc:IsImmuneToEffect(e) then
+		if tc and res and tc:IsRelateToChain() and tc:IsControler(1-tp) and tc:IsFaceup() and Duel.SelectYesNo(tp,aux.Stringid(id,2))
+			and not tc:IsImmuneToEffect(e) then
 			Duel.BreakEffect()
 			local e1=Effect.CreateEffect(e:GetHandler())
 			e1:SetType(EFFECT_TYPE_SINGLE)

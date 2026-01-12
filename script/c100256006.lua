@@ -1,4 +1,4 @@
---ハネクリボー•サバティエルLV10
+--ハネクリボー・サバティエル LV10
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--search
@@ -18,7 +18,7 @@ function s.initial_effect(c)
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_DAMAGE)
 	e2:SetType(EFFECT_TYPE_QUICK_O)
 	e2:SetCode(EVENT_FREE_CHAIN)
-	e2:SetHintTiming(0,TIMING_DRAW_PHASE+TIMING_STANDBY_PHASE+TIMING_MAIN_END+TIMING_BATTLE_START+TIMING_ATTACK+TIMING_BATTLE_END+TIMING_END_PHASE)
+	e2:SetHintTiming(0,TIMING_DRAW_PHASE+TIMING_MAIN_END+TIMING_BATTLE_START+TIMING_ATTACK+TIMING_BATTLE_END+TIMING_END_PHASE)
 	e2:SetRange(LOCATION_HAND)
 	e2:SetCountLimit(1,id+o)
 	e2:SetCondition(s.spcon)

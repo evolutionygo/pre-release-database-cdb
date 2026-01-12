@@ -1,4 +1,4 @@
---スタージャンク•シンクロン
+--スタージャンク・シンクロン
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddCodeList(c,60800381)
@@ -75,8 +75,8 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 				tc:RegisterEffect(e2)
 			end
 		end
-		Duel.SpecialSummonComplete()
 	end
+	Duel.SpecialSummonComplete()
 end
 function s.splimit(e,c)
 	return not c:IsType(TYPE_SYNCHRO) and c:IsLocation(LOCATION_EXTRA)
