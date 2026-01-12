@@ -67,7 +67,7 @@ function s.negop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.cfilter2(c)
-	return c:IsType(TYPE_MONSTER) and (c:IsSetCard(0x99,0x99)
+	return c:IsType(TYPE_MONSTER) and (c:IsSetCard(0x99,0x9f)
 		or c:IsSetCard(0x98) and c:IsType(TYPE_PENDULUM)) and c:IsDiscardable()
 end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
