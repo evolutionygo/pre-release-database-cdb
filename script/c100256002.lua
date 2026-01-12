@@ -83,14 +83,16 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	local tc=g:GetFirst()
 	if tc then
+		local res=true
 		if tc:IsAbleToHand() and (not tc:IsCanBeSpecialSummoned(e,0,tp,false,false) or ft<=0 or Duel.SelectOption(tp,1190,1152)==0) then
 			Duel.SendtoHand(tc,nil,REASON_EFFECT)
 			Duel.ConfirmCards(1-tp,tc)
+			res=tc:IsLocation(LOCATION_HAND)
 		else
-			Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
+			res=Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)>0
 		end
 		local tc=Duel.GetFirstTarget()
-		if tc and tc:IsRelateToChain() and tc:IsControler(1-tp) and tc:IsFaceup() and not tc:IsImmuneToEffect(e) then
+		if tc and res and tc:IsRelateToChain() and tc:IsControler(1-tp) and tc:IsFaceup() and not tc:IsImmuneToEffect(e) then
 			Duel.BreakEffect()
 			local e1=Effect.CreateEffect(e:GetHandler())
 			e1:SetType(EFFECT_TYPE_SINGLE)
