@@ -60,8 +60,7 @@ function s.tgop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=g:GetFirst()
 	if tc then
 		if tc:IsAbleToGrave() and (not tc:IsCanBeSpecialSummoned(e,0,tp,false,false) or ft<=0 or Duel.SelectOption(tp,1191,1152)==0) then
-			Duel.SendtoHand(tc,nil,REASON_EFFECT)
-			Duel.ConfirmCards(1-tp,tc)
+			Duel.SendtoGrave(tc,REASON_EFFECT)
 		else
 			Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
 		end

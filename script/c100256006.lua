@@ -62,9 +62,6 @@ end
 function s.splimit(e,c)
 	return not c:IsSetCard(0x8) and c:IsLocation(LOCATION_EXTRA)
 end
-function s.cfilter(c)
-	return c:IsRace(RACE_FIEND) and c:IsFaceup()
-end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetTurnPlayer()==1-tp and Duel.GetLP(tp)<=1000
 end

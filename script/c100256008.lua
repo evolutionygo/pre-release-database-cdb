@@ -57,11 +57,11 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToChain() and not aux.NecroValleyFilter()(tc) then return false end
 	if c:IsRelateToChain()
-		and Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)~=0
+		and Duel.SpecialSummonStep(c,0,tp,tp,false,false,POS_FACEUP)
 		and tc:IsRelateToChain()
 		and tc:IsCanBeSpecialSummoned(e,0,tp,false,false)
 		and not Duel.IsPlayerAffectedByEffect(tp,59822133) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then
-		if Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)~=0 then
+		if Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP) then
 			local e1=Effect.CreateEffect(c)
 			e1:SetType(EFFECT_TYPE_SINGLE)
 			e1:SetCode(EFFECT_DISABLE)
@@ -85,7 +85,7 @@ function s.immop(e,tp,eg,ep,ev,re,r,rp)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
-	e1:SetValue(1)
+	e1:SetValue(aux.indoval)
 	e1:SetTargetRange(LOCATION_ONFIELD,0)
 	e1:SetTarget(aux.TargetBoolFunction(Card.IsCode,60800381))
 	e1:SetReset(RESET_PHASE+PHASE_END)
