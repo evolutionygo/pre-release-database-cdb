@@ -41,7 +41,7 @@ function s.tgcon(e,tp,eg,ep,ev,re,r,rp)
 	if c:IsLocation(LOCATION_GRAVE) and c:IsPreviousLocation(LOCATION_ONFIELD+LOCATION_HAND) then
 		if c:IsPreviousLocation(LOCATION_MZONE) and c:IsSummonType(SUMMON_TYPE_RITUAL) then
 			e:SetLabel(1)
-			c:RegisterFlagEffect(0,RESET_CHAIN,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id,2))
+			c:RegisterFlagEffect(0,RESET_EVENT+RESETS_STANDARD+RESET_CHAIN,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id,2))
 		end
 		return true
 	else
@@ -54,15 +54,14 @@ function s.tgfilter(c,e,tp,label)
 		or label>0 and ft>0 and c:IsCanBeSpecialSummoned(e,0,tp,false,false))
 end
 function s.tgtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	local c=e:GetHandler()
 	local label=e:GetLabel()
+	if chk==0 then return Duel.IsExistingMatchingCard(s.tgfilter,tp,LOCATION_DECK,0,1,nil,e,tp,label) end
 	if label>0 then
 		e:SetCategory(CATEGORY_TOGRAVE+CATEGORY_SPECIAL_SUMMON)
 	else
 		e:SetCategory(CATEGORY_TOGRAVE)
+		Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_DECK)
 	end
-	if chk==0 then return Duel.IsExistingMatchingCard(s.tgfilter,tp,LOCATION_DECK,0,1,nil,e,tp,label) end
-	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_DECK)
 end
 function s.tgop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
