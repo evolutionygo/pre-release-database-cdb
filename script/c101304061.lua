@@ -41,28 +41,42 @@ function s.filter(c)
 		or c:IsType(TYPE_LINK))
 		and c:IsLocation(LOCATION_EXTRA)
 end
-function s.gcheck(g,tp,eft)
-	return g:FilterCount(s.filter,nil)<=eft
+function s.filter2(c)
+	return c:IsLocation(LOCATION_EXTRA)
+end
+function s.filter3(c)
+	return not c:IsLocation(LOCATION_EXTRA)
+end
+function s.gcheck(g,tp,ft,eft,ect)
+	return g:FilterCount(s.filter,nil)<=eft and g:FilterCount(s.filter2,nil)<=ect
+		and g:FilterCount(s.filter3,nil)<=ect
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	local eft=Duel.GetLocationCountFromEx(tp,tp,nil,TYPE_PENDULUM)
 	if ft>0 then
 		if ft>=2 then ft=2 end
-		if Duel.IsPlayerAffectedByEffect(tp,59822133) and ft>1 then ft=1 end
+		local ct=2
+		if Duel.IsPlayerAffectedByEffect(tp,59822133) then ct=1 end
 		local ect=(c29724053 and Duel.IsPlayerAffectedByEffect(tp,29724053) and c29724053[tp]) or ft
 		local loc=LOCATION_DECK
 		if ect>0 then loc=loc+LOCATION_EXTRA end
-		if ect<eft then eft=ect end
 		local g=Duel.GetMatchingGroup(s.spfilter,tp,loc,0,nil,e,tp)
 		if g:GetCount()>0 then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-			local sg=g:SelectSubGroup(tp,s.gcheck,false,1,ft,tp,eft)
+			local sg=g:SelectSubGroup(tp,s.gcheck,false,1,ct,tp,ft,eft,ect)
 			if sg:GetCount()>0 then
 				local exg=sg:Filter(s.filter,nil)
 				sg:Sub(exg)
 				if exg:GetCount()>0 then
 					for tc in aux.Next(exg) do
+						Duel.SpecialSummonStep(tc,0,tp,tp,true,false,POS_FACEUP)
+					end
+				end
+				local exg2=sg:Filter(s.filter2,nil)
+				sg:Sub(exg2)
+				if exg2:GetCount()>0 then
+					for tc in aux.Next(exg2) do
 						Duel.SpecialSummonStep(tc,0,tp,tp,true,false,POS_FACEUP)
 					end
 				end
