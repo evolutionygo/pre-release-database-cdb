@@ -70,16 +70,12 @@ end
 function s.filter2(c)
 	return c:IsLocation(LOCATION_EXTRA)
 end
-function s.filter3(c)
-	return not c:IsLocation(LOCATION_EXTRA)
-end
-function s.gcheck(g,tp,ft,eft,ect)
+function s.gcheck(g,tp,eft,ect)
 	return g:FilterCount(s.filter,nil)<=eft and g:FilterCount(s.filter2,nil)<=ect
-		and g:FilterCount(s.filter3,nil)<=ect
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetLabel()==1 then
-		local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+		local ft=Duel.GetUsableMZoneCount(tp)
 		local eft=Duel.GetLocationCountFromEx(tp,tp,nil,TYPE_PENDULUM)
 		if ft>0 then
 			if ft>=2 then ft=2 end
@@ -91,7 +87,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			local g=Duel.GetMatchingGroup(s.spfilter,tp,loc,0,nil,e,tp)
 			if g:GetCount()>0 then
 				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-				local sg=g:SelectSubGroup(tp,s.gcheck,false,1,ct,tp,ft,eft,ect)
+				local sg=g:SelectSubGroup(tp,s.gcheck,false,1,ct,tp,eft,ect)
 				if sg:GetCount()>0 then
 					local exg=sg:Filter(s.filter,nil)
 					sg:Sub(exg)
