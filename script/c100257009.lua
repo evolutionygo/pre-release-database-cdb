@@ -51,7 +51,7 @@ function s.filter(c)
 	return c:IsFaceup() and c:IsType(TYPE_EFFECT)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) and s.filter(chkc) end
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and s.filter(chkc) and chkc:IsControler(1-tp) end
 	if chk==0 then return e:IsCostChecked() and Duel.IsExistingTarget(s.filter,tp,0,LOCATION_MZONE,1,nil) end
 	local ct,atk=e:GetLabel()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
