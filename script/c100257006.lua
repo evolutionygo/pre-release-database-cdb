@@ -1,9 +1,10 @@
---未来融合-フューチャー・フュージョン・ノヴァ
+--未来融合－フューチャー・フュージョン・ノヴァ
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddCodeList(c,70095154)
 	--Activate
 	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_FUSION_SUMMON+CATEGORY_DECKDES)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
@@ -58,13 +59,14 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		local mf=ce:GetValue()
 		sg2=Duel.GetMatchingGroup(s.filter2,tp,LOCATION_EXTRA,0,nil,e,tp,mg3,mf,chkf)
 	end
+	local fid=0
 	if sg1:GetCount()>0 or (sg2~=nil and sg2:GetCount()>0) then
 		local sg=sg1:Clone()
 		if sg2 then sg:Merge(sg2) end
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local tg=sg:Select(tp,1,1,nil)
 		local tc=tg:GetFirst()
-		if sg1:IsContains(tc) and (sg2==nil or not sg2:IsContains(tc) or not Duel.SelectYesNo(tp,ce:GetDescription())) then
+		if sg1:IsContains(tc) and (sg2==nil or not sg2:IsContains(tc) or ce and not Duel.SelectYesNo(tp,ce:GetDescription())) then
 			aux.FCheckAdditional=s.fcheck
 			local mat1=Duel.SelectFusionMaterial(tp,tc,mg1,nil,chkf)
 			aux.FCheckAdditional=nil
@@ -72,50 +74,48 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			Duel.SendtoGrave(mat1,REASON_EFFECT+REASON_MATERIAL+REASON_FUSION)
 			Duel.BreakEffect()
 			Duel.SpecialSummon(tc,SUMMON_TYPE_FUSION,tp,tp,false,false,POS_FACEUP)
-		else
+		elseif ce then
 			local mat2=Duel.SelectFusionMaterial(tp,tc,mg3,nil,chkf)
 			local fop=ce:GetOperation()
 			fop(ce,e,tp,tc,mat2)
 		end
+		c:SetCardTarget(tc)
 		tc:CompleteProcedure()
-		local fid=e:GetHandler():GetFieldID()
+		fid=c:GetFieldID()
 		tc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,1,fid)
-		if e:IsHasType(EFFECT_TYPE_ACTIVATE) then
-			local e1=Effect.CreateEffect(c)
-			e1:SetType(EFFECT_TYPE_FIELD)
-			e1:SetCode(EFFECT_CANNOT_ATTACK)
-			e1:SetProperty(EFFECT_FLAG_OATH)
-			e1:SetTargetRange(LOCATION_MZONE,0)
-			e1:SetTarget(s.ftarget)
-			e1:SetLabel(fid)
-			e1:SetReset(RESET_PHASE+PHASE_END)
-			Duel.RegisterEffect(e1,tp)
-		end
 		if c:IsOnField() and e:IsHasType(EFFECT_TYPE_ACTIVATE) and c:IsRelateToChain() then
+			local e1=Effect.CreateEffect(c)
+			e1:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_SINGLE)
+			e1:SetCode(EVENT_LEAVE_FIELD)
+			e1:SetOperation(s.desop)
+			e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+			c:RegisterEffect(e1)
 			local e2=Effect.CreateEffect(c)
-			e2:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_SINGLE)
+			e2:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
+			e2:SetRange(LOCATION_SZONE)
 			e2:SetCode(EVENT_LEAVE_FIELD)
-			e2:SetOperation(s.desop)
+			e2:SetCondition(s.descon2)
+			e2:SetOperation(s.desop2)
 			e2:SetReset(RESET_EVENT+RESETS_STANDARD)
 			c:RegisterEffect(e2)
-			local e3=Effect.CreateEffect(c)
-			e3:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
-			e3:SetRange(LOCATION_SZONE)
-			e3:SetCode(EVENT_LEAVE_FIELD)
-			e3:SetCondition(s.descon2)
-			e3:SetOperation(s.desop2)
-			e3:SetReset(RESET_EVENT+RESETS_STANDARD)
-			c:RegisterEffect(e3)
 			c:SetCardTarget(tc)
 		end
 	end
 	if e:IsHasType(EFFECT_TYPE_ACTIVATE) then
+		local e3=Effect.CreateEffect(c)
+		e3:SetType(EFFECT_TYPE_FIELD)
+		e3:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+		e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+		e3:SetTargetRange(1,0)
+		e3:SetTarget(s.splimit)
+		e3:SetReset(RESET_PHASE+PHASE_END)
+		Duel.RegisterEffect(e3,tp)
 		local e4=Effect.CreateEffect(c)
 		e4:SetType(EFFECT_TYPE_FIELD)
-		e4:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
-		e4:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-		e4:SetTargetRange(1,0)
-		e4:SetTarget(s.splimit)
+		e4:SetCode(EFFECT_CANNOT_ATTACK)
+		e4:SetTargetRange(LOCATION_MZONE,0)
+		e4:SetTarget(s.ftarget)
+		e4:SetLabel(fid)
 		e4:SetReset(RESET_PHASE+PHASE_END)
 		Duel.RegisterEffect(e4,tp)
 	end

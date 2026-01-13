@@ -49,8 +49,8 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.cfilter(c,tp)
-	return c:GetOwner()==tp and c:IsSetCard(0xdd) and c:IsType(TYPE_RITUAL)
-		or c:IsCode(89631139)
+	return (c:IsSetCard(0xdd) and c:IsType(TYPE_RITUAL) or c:IsCode(89631139))
+		and c:GetOwner()==tp
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.cfilter,1,nil,tp) and not eg:IsContains(e:GetHandler())

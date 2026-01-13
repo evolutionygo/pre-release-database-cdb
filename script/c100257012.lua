@@ -1,4 +1,4 @@
---GDロボ・オービタル7
+--GDロボ・オービタル 7
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--search
@@ -37,27 +37,27 @@ end
 function s.filter(c,f)
 	return f(c)
 end
-function s.Group(g)
+function s.gcheck(g)
 	return g:CheckSubGroup(aux.gfcheck,2,2,Card.IsSetCard,0x7b,0x55)
 		and g:CheckSubGroup(aux.gfcheck,2,2,s.filter,Card.IsAbleToHand,Card.IsAbleToGrave)
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.GetMatchingGroup(s.thfilter,tp,LOCATION_DECK,0,nil)
-	if chk==0 then return g:CheckSubGroup(s.Group,2,2) end
+	if chk==0 then return g:CheckSubGroup(s.gcheck,2,2) end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_DECK)
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(s.thfilter,tp,LOCATION_DECK,0,nil)
-	if g:CheckSubGroup(s.Group,2,2) then
+	if g:CheckSubGroup(s.gcheck,2,2) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_OPERATECARD)
-		local sg=g:SelectSubGroup(tp,s.Group,false,2,2)
+		local sg=g:SelectSubGroup(tp,s.gcheck,false,2,2)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 		local tc=sg:FilterSelect(tp,Card.IsAbleToHand,1,1,nil):GetFirst()
 		Duel.SendtoHand(tc,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,tc)
 		sg:RemoveCard(tc)
-		Duel.SendtoGrave(sg,nil,REASON_EFFECT)
+		Duel.SendtoGrave(sg,REASON_EFFECT)
 	end
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_FIELD)
