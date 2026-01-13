@@ -72,7 +72,7 @@ function s.splimit(e,c,sump,sumtype,sumpos,targetp,se)
 	return not c:IsAttribute(ATTRIBUTE_LIGHT)
 end
 function s.cfilter(c,tp)
-	return c:IsSetCard(0x107b) and c:IsControler(tp)
+	return c:IsSetCard(0x107b) and c:IsControler(tp) and c:IsFaceup()
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.cfilter,1,nil,tp)
