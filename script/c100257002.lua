@@ -56,7 +56,7 @@ function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.cfilter,1,nil,tp) and not eg:IsContains(e:GetHandler())
 end
 function s.tgfilter(c,e)
-	return c:IsLocation(LOCATION_GRAVE) and c:IsCanBeEffectTarget(e) and not c:IsAttack(0)
+	return c:IsLocation(LOCATION_GRAVE) and c:IsCanBeEffectTarget(e)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()
@@ -84,7 +84,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 			e1:SetType(EFFECT_TYPE_SINGLE)
 			e1:SetCode(EFFECT_SET_ATTACK_FINAL)
 			e1:SetValue(tc:GetAttack())
-			e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+			e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_DISABLE)
 			c:RegisterEffect(e1)
 		end
 		local e2=Effect.CreateEffect(c)

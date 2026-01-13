@@ -52,7 +52,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local ct,atk=e:GetLabel()
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
-	local tg=g:Filter(Card.IsRelateToChain,nil)
+	local tg=g:Filter(Card.IsRelateToChain,nil):Filter(Card.IsType,nil,TYPE_MONSTER)
 	local fid=c:GetFieldID()
 	if tg:GetCount()>0 then
 		local e1=Effect.CreateEffect(c)
