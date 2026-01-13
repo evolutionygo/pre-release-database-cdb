@@ -92,8 +92,8 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 			res=Duel.SpecialSummon(oc,0,tp,tp,false,false,POS_FACEUP)>0
 		end
 		local tc=Duel.GetFirstTarget()
-		if tc and res and tc:IsRelateToChain() and tc:IsControler(1-tp) and tc:IsFaceup() and Duel.SelectYesNo(tp,aux.Stringid(id,2))
-			and not tc:IsImmuneToEffect(e) then
+		if tc and res and tc:IsRelateToChain() and tc:IsControler(1-tp) and tc:IsFaceup() and tc:GetAttack()>0
+			and Duel.SelectYesNo(tp,aux.Stringid(id,2)) and not tc:IsImmuneToEffect(e) then
 			Duel.BreakEffect()
 			local e1=Effect.CreateEffect(e:GetHandler())
 			e1:SetType(EFFECT_TYPE_SINGLE)
