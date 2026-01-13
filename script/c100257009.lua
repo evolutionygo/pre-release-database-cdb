@@ -32,15 +32,16 @@ function s.initial_effect(c)
 	e2:SetCost(s.accost)
 	c:RegisterEffect(e2)
 end
-function s.cfilter(c)
+function s.cfilter(c,ct)
 	return c:IsType(TYPE_MONSTER) and not c:IsPublic()
+		and (ct>1 or not c:IsType(TYPE_TUNER))
 end
 function s.gcheck(g,ct)
 	return g:FilterCount(Card.IsType,nil,TYPE_TUNER)<ct
 end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_HAND,0,1,nil) end
 	local ct=Duel.GetTargetCount(s.filter,tp,0,LOCATION_MZONE,nil)
+	if chk==0 then return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_HAND,0,1,nil,ct) end
 	local g=Duel.GetMatchingGroup(s.cfilter,tp,LOCATION_HAND,0,1,nil)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONFIRM)
 	local sg=g:SelectSubGroup(tp,s.gcheck,false,1,g:GetCount(),ct)
