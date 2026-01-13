@@ -30,7 +30,7 @@ function s.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsReleasable() end
 	Duel.Release(e:GetHandler(),REASON_COST)
 end
-function s.thfilter(c,tp)
+function s.thfilter(c)
 	return c:IsSetCard(0x7b,0x55) and c:IsType(TYPE_MONSTER)
 		and (c:IsAbleToGrave() or c:IsAbleToHand())
 end
@@ -50,7 +50,7 @@ end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(s.thfilter,tp,LOCATION_DECK,0,nil)
 	if g:CheckSubGroup(s.Group,2,2) then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_OPERATECARD)
 		local sg=g:SelectSubGroup(tp,s.Group,false,2,2)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 		local tc=sg:FilterSelect(tp,Card.IsAbleToHand,1,1,nil):GetFirst()
@@ -72,7 +72,7 @@ function s.splimit(e,c,sump,sumtype,sumpos,targetp,se)
 	return not c:IsAttribute(ATTRIBUTE_LIGHT)
 end
 function s.cfilter(c,tp)
-	return c:IsSetCard(0x107b)
+	return c:IsSetCard(0x107b) and c:IsControler(tp)
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.cfilter,1,nil,tp)

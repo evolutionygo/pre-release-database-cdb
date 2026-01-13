@@ -1,6 +1,7 @@
 --レッド・デーモンズ・チェーン
 local s,id,o=GetID()
 function s.initial_effect(c)
+	AddCodeList(c,70902743)
 	--Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_DISABLE)
