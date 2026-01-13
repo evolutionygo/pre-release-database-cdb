@@ -29,7 +29,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function s.desfilter(c)
-	return c:IsFaceup() and c:IsType(TYPE_EFFECT) and not c:IsAttack(0)
+	return c:IsFaceup() and c:IsType(TYPE_EFFECT) and c:GetTextAttack()>0
 end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.GetMatchingGroup(s.desfilter,tp,0,LOCATION_MZONE,nil)
@@ -44,13 +44,13 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.HintSelection(g)
 		if Duel.Destroy(g,REASON_EFFECT)~=0 then
 			local rc=g:GetFirst()
-			if rc:GetBaseAttack()>=0
+			if rc:GetTextAttack()>=0
 				and c:IsRelateToChain() and c:IsFaceup() then
 				local e1=Effect.CreateEffect(c)
 				e1:SetType(EFFECT_TYPE_SINGLE)
 				e1:SetCode(EFFECT_UPDATE_ATTACK)
 				e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_DISABLE)
-				e1:SetValue(rc:GetBaseAttack())
+				e1:SetValue(rc:GetTextAttack())
 				c:RegisterEffect(e1)
 			end
 		end
