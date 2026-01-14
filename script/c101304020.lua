@@ -178,7 +178,7 @@ function s.negop(e,tp,eg,ep,ev,re,r,rp)
 	local dg=Group.CreateGroup()
 	for i=1,ev do
 		local te,tgp=Duel.GetChainInfo(i,CHAININFO_TRIGGERING_EFFECT,CHAININFO_TRIGGERING_PLAYER)
-		if tgp~=tp and (te:IsActiveType(TYPE_MONSTER) or te:IsHasType(EFFECT_TYPE_ACTIVATE)) and Duel.NegateActivation(i) then
+		if tgp~=tp and Duel.NegateActivation(i) then
 			local tc=te:GetHandler()
 			if tc:IsRelateToEffect(e) and tc:IsRelateToChain(i) then
 				dg:AddCard(tc)
