@@ -1,4 +1,5 @@
 --WAKE CUP！ クロ
+CATEGORY_MSET			   =0x100000000	--包含盖放怪兽的效果
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--to hand
@@ -15,7 +16,7 @@ function s.initial_effect(c)
 	--flip
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
-	e2:SetCategory(CATEGORY_POSITION)
+	e2:SetCategory(CATEGORY_POSITION+CATEGORY_MSET)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_FLIP+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCountLimit(1,id+o)
@@ -29,6 +30,7 @@ function s.initial_effect(c)
 	e3:SetType(EFFECT_TYPE_QUICK_O)
 	e3:SetCode(EVENT_FREE_CHAIN)
 	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e3:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_END_PHASE)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetCountLimit(1,id+o*2)
 	e3:SetTarget(s.postg2)
@@ -52,9 +54,15 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	if g:GetCount()>0 then
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,g)
-		Duel.ShuffleHand(tp)
-		Duel.BreakEffect()
-		Duel.DiscardHand(tp,nil,1,1,REASON_EFFECT+REASON_DISCARD)
+		if g:IsExists(Card.IsLocation,1,nil,LOCATION_HAND) then
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DISCARD)
+			local dg=Duel.SelectMatchingCard(tp,Card.IsDiscardable,tp,LOCATION_HAND,0,1,1,nil,REASON_EFFECT)
+			Duel.ShuffleHand(tp)
+			if dg:GetCount()>0 then
+				Duel.BreakEffect()
+				Duel.SendtoGrave(dg,REASON_EFFECT+REASON_DISCARD)
+			end
+		end
 	end
 end
 function s.setfilter(c)
