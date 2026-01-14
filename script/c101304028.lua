@@ -17,7 +17,7 @@ function s.initial_effect(c)
 	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetCategory(CATEGORY_POSITION)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_FLIP)
+	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_FLIP+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCountLimit(1,id+o)
 	e2:SetTarget(s.postg)
 	e2:SetOperation(s.posop)
@@ -39,7 +39,7 @@ function s.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return not e:GetHandler():IsPublic() end
 end
 function s.thfilter(c)
-	return c:IsType(TYPE_FLIP) and c:IsAttribute(ATTRIBUTE_WIND) and c:IsAbleToHand()
+	return not c:IsCode(id) and c:IsType(TYPE_FLIP) and c:IsAttribute(ATTRIBUTE_WIND) and c:IsAbleToHand()
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil) end
@@ -82,7 +82,7 @@ function s.postg2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function s.posop2(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToChain() and c:IsType(TYPE_MONSTER) and tc:IsFacedown() then
-		Duel.ChangePosition(tc,POS_FACEUP_ATTACK)
+	if tc:IsRelateToChain() and tc:IsType(TYPE_MONSTER) and tc:IsFacedown() then
+		Duel.ChangePosition(tc,POS_FACEUP_DEFENSE)
 	end
 end
