@@ -24,7 +24,7 @@ function s.initial_effect(c)
 	e2:SetTarget(s.tgtg)
 	e2:SetOperation(s.tgop)
 	c:RegisterEffect(e2)
-	--return
+	--spsummon
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,1))
 	e3:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_TOGRAVE)
@@ -42,7 +42,7 @@ function s.etg(e,c)
 	return c:IsFaceup() and c:IsSetCard(0x2db) and c:GetOriginalAttribute()&ATTRIBUTE_LIGHT~=0
 end
 function s.efilter(e,re)
-	return re:GetOwnerPlayer()~=e:GetOwnerPlayer() and re:IsActivated()
+	return e:GetHandlerPlayer()~=re:GetOwnerPlayer() and re:IsActivated()
 end
 function s.tgcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
