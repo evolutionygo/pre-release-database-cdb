@@ -55,99 +55,10 @@ function s.initial_effect(c)
 	e4:SetTarget(s.destg)
 	e4:SetOperation(s.desop)
 	c:RegisterEffect(e4)
-	--set effect
-	local e5=Effect.CreateEffect(c)
-	e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e5:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
-	e5:SetCode(EVENT_ADJUST)
-	e5:SetRange(0xff)
-	e5:SetOperation(s.adjustop)
-	c:RegisterEffect(e5)
-	if not s.global_check then
-		s.global_check=true
-		local SST_IsSSetable=Card.IsSSetable
-		function Card.IsSSetable(card,bool)
-			Duel.RegisterFlagEffect(0,id,RESET_CHAIN,0,1)
-			if not bool then
-				return SST_IsSSetable(card,false)
-			else
-				return SST_IsSSetable(card,bool)
-			end
-		end
-		local SST_IsCanBeSpecialSummoned=Card.IsCanBeSpecialSummoned
-		function Card.IsCanBeSpecialSummoned(card,e,sum,tp,bool1,bool2,pos,sp,zone)
-			if pos and pos&POS_FACEDOWN~=0 then
-				e:GetHandler():RegisterFlagEffect(id,RESET_CHAIN,0,1)
-				Duel.RegisterFlagEffect(0,id,RESET_CHAIN,0,1)
-			end
-			if not zone then
-				if not sp then
-					if not pos then
-						return SST_IsCanBeSpecialSummoned(card,e,sum,tp,bool1,bool2)
-					else
-						return SST_IsCanBeSpecialSummoned(card,e,sum,tp,bool1,bool2,pos)
-					end
-				else
-					return SST_IsCanBeSpecialSummoned(card,e,sum,tp,bool1,bool2,pos,sp)
-				end
-			else
-				return SST_IsCanBeSpecialSummoned(card,e,sum,tp,bool1,bool2,pos,sp,zone)
-			end
-		end
-	end
 	Duel.AddCustomActivityCounter(id,ACTIVITY_SPSUMMON,s.counterfilter)
 end
 function s.counterfilter(c)
 	return c:IsFacedown()
-end
-function s.sttg(tg)
-	return function(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-		if chk==0 then
-			return tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-		end
-		if chk~=0 then
-			tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-			Duel.SetOperationInfo(0,0x100000000,eg,1,0,0)
-		end
-	end
-end
-function s.adjustop(e,tp,eg,ep,ev,re,r,rp)
-	if not s.globle_check then
-		s.globle_check=true
-		local g=Duel.GetMatchingGroup(aux.TRUE,0,0xff,0xff,nil)
-		dual_RegisterEffect=Card.RegisterEffect
-		Card.RegisterEffect=function(Card_c,Effect_e,bool)
-			if Effect_e and Effect_e:GetType() then
-				if Effect_e:GetType()&(EFFECT_TYPE_IGNITION+EFFECT_TYPE_TRIGGER_F+EFFECT_TYPE_TRIGGER_O+EFFECT_TYPE_QUICK_F+EFFECT_TYPE_QUICK_O)~=0 then
-					local tg=Effect_e:GetTarget()
-					if tg then
-						tg(e,tp,Group.CreateGroup(),tp,ev,e,r,tp,0)
-						tg(e,1-tp,Group.CreateGroup(),tp,ev,e,r,tp,0)
-						if Duel.GetFlagEffect(0,id)~=0 then
-							Effect_e:SetTarget(s.sttg(tg))
-						end
-						Duel.ResetFlagEffect(0,id)
-					end
-				end
-			end
-			if bool then
-				dual_RegisterEffect(Card_c,Effect_e,bool)
-			else
-				dual_RegisterEffect(Card_c,Effect_e,false)
-			end
-		end
-		for tc in aux.Next(g) do
-			if tc.initial_effect then
-				local dual_initial_effect=s.initial_effect
-				s.initial_effect=function() end
-				tc:ReplaceEffect(id,0)
-				s.initial_effect=dual_initial_effect
-				tc.initial_effect(tc)
-			end
-		end
-		Card.RegisterEffect=dual_RegisterEffect
-	end
-	e:Reset()
 end
 function s.ctop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -220,12 +131,8 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.thcon2(e,tp,eg,ep,ev,re,r,rp)
-	local ex=Duel.GetOperationInfo(ev,0x100000000)
-	return ep~=tp and (ex
-		or re:GetHandler():GetFlagEffect(id)>0
-		or CATEGORY_MSET and re:IsHasCategory(CATEGORY_MSET)
-		or CATEGORY_SSET and re:IsHasCategory(CATEGORY_SSET))
-		and e:GetHandler():IsFacedown()
+	return ep~=tp and e:GetHandler():IsFacedown()
+		and (CATEGORY_MSET and re:IsHasCategory(CATEGORY_MSET) or CATEGORY_SSET and re:IsHasCategory(CATEGORY_SSET))
 end
 function s.thcost2(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
