@@ -93,6 +93,11 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 end
+function s.aclimit(e,re,tp)
+	local c=re:GetHandler()
+	local tc=e:GetLabelObject()
+	return c:IsOriginalCodeRule(tc:GetOriginalCodeRule())
+end
 function s.accon(e)
 	return e:GetHandler():IsStatus(STATUS_SET_TURN) and e:GetHandler():IsLocation(LOCATION_ONFIELD)
 end
