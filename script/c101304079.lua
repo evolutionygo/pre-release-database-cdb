@@ -67,7 +67,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 end
 function s.rmfilter(c,tp,tc)
-	return c:IsAbleToRemove(tp) and c:IsOriginalCodeRule(tc:GetOriginalCode())
+	return c:IsAbleToRemove(tp) and c:IsOriginalCodeRule(tc:GetOriginalCodeRule())
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetLabel()==1 then
