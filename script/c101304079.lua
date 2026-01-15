@@ -3,6 +3,7 @@ local s,id,o=GetID()
 function s.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_NEGATE+CATEGORY_DESTROY)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_CHAINING)
@@ -47,7 +48,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local b2=Duel.IsPlayerCanRemove(tp)
 	Duel.SetOperationInfo(0,CATEGORY_NEGATE,eg,1,0,0)
 	local op=0
-	if not e:IsCostChecked() then 
+	if not e:IsCostChecked() then
 		op=aux.SelectFromOptions(tp,
 			{b1,aux.Stringid(id,1),1},
 			{b2,aux.Stringid(id,2),2})
@@ -70,7 +71,7 @@ function s.rmfilter(c,tp,tc)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetLabel()==1 then
-		if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToEffect(re)
+		if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToChain(ev)
 			and Duel.Destroy(eg,REASON_EFFECT)~=0 then
 			local e1=Effect.CreateEffect(e:GetHandler())
 			e1:SetType(EFFECT_TYPE_FIELD)
@@ -83,7 +84,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			Duel.RegisterEffect(e1,tp)
 		end
 	elseif e:GetLabel()==2 then
-		if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToEffect(re)
+		if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToChain(ev)
 			and Duel.Remove(eg,POS_FACEUP,REASON_EFFECT)~=0 then
 			local g=Duel.GetMatchingGroup(s.rmfilter,tp,0,LOCATION_HAND+LOCATION_DECK,nil,1-tp,re:GetHandler())
 			if g:GetCount()>0 then
@@ -106,7 +107,7 @@ function s.cfilter(c)
 end
 function s.accost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_SZONE,0,1,e:GetHandler()) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEDOWN)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONFIRM)
 	local g=Duel.SelectMatchingCard(tp,s.cfilter,tp,LOCATION_SZONE,0,1,1,e:GetHandler())
 	Duel.ConfirmCards(1-tp,g)
 end
