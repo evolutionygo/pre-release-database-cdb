@@ -32,6 +32,7 @@ function s.initial_effect(c)
 	e3:SetTarget(s.eftg)
 	e3:SetOperation(s.efop)
 	c:RegisterEffect(e3)
+	s.killer_tune_be_material_effect=e3
 end
 function s.tfilter(e,c)
 	return c:IsSynchroType(TYPE_TUNER)
@@ -55,7 +56,7 @@ function s.sumfilter(c)
 	return c:IsType(TYPE_TUNER) and c:IsSummonable(true,nil)
 end
 function s.sumtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.sumfilter,tp,LOCATION_HAND,0,1,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.sumfilter,tp,LOCATION_HAND+LOCATION_MZONE,0,1,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_SUMMON,nil,1,0,0)
 end
 function s.sumop(e,tp,eg,ep,ev,re,r,rp)
@@ -83,7 +84,7 @@ function s.eftg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if op==1 then
 		e:SetCategory(CATEGORY_TODECK)
 		Duel.SetOperationInfo(0,CATEGORY_TODECK,nil,1,1-tp,LOCATION_GRAVE)
-	else
+	elseif op==2 then
 		e:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
 	end
 end
@@ -91,11 +92,12 @@ function s.efop(e,tp,eg,ep,ev,re,r,rp)
 	local op=e:GetLabel()
 	if op==1 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-		local g=Duel.SelectMatchingCard(tp,Card.IsAbleToDeck,tp,0,LOCATION_GRAVE,1,1,nil)
+		local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(Card.IsAbleToDeck),tp,0,LOCATION_GRAVE,1,1,nil)
 		if #g>0 then
+			Duel.HintSelection(g)
 			Duel.SendtoDeck(g,nil,SEQ_DECKBOTTOM,REASON_EFFECT)
 		end
-	else
+	elseif op==2 then
 		local g=Duel.GetFieldGroup(tp,0,LOCATION_HAND)
 		if #g>0 then
 			Duel.ConfirmCards(tp,g)

@@ -1,4 +1,4 @@
---10星
+--キラーチューンB2B
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--Synchro Summon
@@ -41,8 +41,9 @@ function s.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return rp==1-tp and re:IsActiveType(TYPE_MONSTER)
 end
 function s.filter(c,e,tp)
+	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	return c:IsType(TYPE_TUNER) and not c:IsLevel(10) and c:IsFaceupEx()
-		and (c:IsAbleToHand() or c:IsCanBeSpecialSummoned(e,0,tp,false,false))
+		and (c:IsAbleToHand() or ft>0 and c:IsCanBeSpecialSummoned(e,0,tp,false,false))
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE+LOCATION_REMOVED) and chkc:IsControler(tp) and s.filter(chkc,e,tp) end
@@ -64,12 +65,13 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 		if op==1 then
 			res=Duel.SendtoHand(tc,nil,REASON_EFFECT)>0
 			Duel.ConfirmCards(1-tp,tc)
-		else
+		elseif op==2 then
 			res=Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)>0
 		end
 		if res then
 			local g=Duel.GetMatchingGroup(Card.IsSynchroSummonable,tp,LOCATION_EXTRA,0,nil,nil)
 			if g:GetCount()>0 and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
+				Duel.BreakEffect()
 				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 				local sg=g:Select(tp,1,1,nil)
 				Duel.SynchroSummon(tp,sg:GetFirst(),nil)
