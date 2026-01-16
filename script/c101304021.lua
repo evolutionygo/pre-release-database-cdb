@@ -82,10 +82,14 @@ function s.eftg(e,tp,eg,ep,ev,re,r,rp,chk)
 		{b2,aux.Stringid(id,3)})
 	e:SetLabel(op)
 	if op==1 then
-		e:SetCategory(CATEGORY_TODECK)
+		if e:IsCostChecked() then
+			e:SetCategory(CATEGORY_TODECK)
+		end
 		Duel.SetOperationInfo(0,CATEGORY_TODECK,nil,1,1-tp,LOCATION_GRAVE)
 	elseif op==2 then
-		e:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
+		if e:IsCostChecked() then
+			e:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
+		end
 	end
 end
 function s.efop(e,tp,eg,ep,ev,re,r,rp)
