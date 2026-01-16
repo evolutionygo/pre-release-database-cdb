@@ -45,7 +45,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		if tg then tg(e,tp,eg,ep,ev,re,r,rp,1) end
 	end
 	Duel.ClearOperationInfo(0)
-	e:SetCategory(0)
+	e:SetCategory(CATEGORY_TOHAND)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,1,0,0)
 end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
