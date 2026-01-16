@@ -78,8 +78,8 @@ function s.eftg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local b2=Duel.GetFieldGroupCount(tp,0,LOCATION_HAND)>0
 	if chk==0 then return b1 or b2 end
 	local op=aux.SelectFromOptions(tp,
-		{b1,aux.Stringid(id,2)},
-		{b2,aux.Stringid(id,3)})
+		{b1,aux.Stringid(id,2),1},
+		{b2,aux.Stringid(id,3),2})
 	e:SetLabel(op)
 	if op==1 then
 		if e:IsCostChecked() then
