@@ -80,8 +80,9 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 			{b2,1152})
 		local res=false
 		if op==1 then
-			res=Duel.SendtoHand(tc,nil,REASON_EFFECT)>0
+			Duel.SendtoHand(tc,nil,REASON_EFFECT)
 			Duel.ConfirmCards(1-tp,tc)
+			res=tc:IsLocation(LOCATION_HAND)
 		elseif op==2 then
 			res=Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)>0
 		end
