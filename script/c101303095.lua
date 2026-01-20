@@ -51,7 +51,7 @@ function s.descon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetTurnPlayer()==1-tp
 end
 function s.thfilter(c,e,tp)
-	return c:IsSetCard(0x2dd) and c:IsType(TYPE_MONSTER) or c:IsRace(RACE_DINOSAUR)
+	return (c:IsSetCard(0x2dd) and c:IsType(TYPE_MONSTER) or c:IsRace(RACE_DINOSAUR))
 		and c:IsAbleToHand() or (Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and c:IsCanBeSpecialSummoned(e,0,tp,false,false))
 end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
@@ -78,6 +78,7 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	if seq>-1 then
 		Duel.ConfirmDecktop(tp,dct-seq)
 		Duel.DisableShuffleCheck()
+		Duel.SetLP(tp,Duel.GetLP(tp)-(dct-seq)*1000)
 		local spchk=Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and hc:IsCanBeSpecialSummoned(e,0,tp,false,false)
 		if hc:IsAbleToHand() or spchk then
 			if hc:IsAbleToHand() and (not spchk or Duel.SelectOption(tp,1190,1152)==0) then
