@@ -13,7 +13,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function s.dfilter(c)
-	return c:GetTextAttack()>=0 and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
+	return c:GetTextAttack()>=0 and c:IsType(TYPE_MONSTER)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.dfilter,tp,LOCATION_DECK,0,1,nil)
@@ -50,13 +50,21 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		e2:SetLabel(tc2:GetCode())
 		Duel.RegisterEffect(e2,tp)
 		if tc1:GetAttack()>tc2:GetAttack() then
-			Duel.SendtoHand(tc1,nil,REASON_EFFECT)
-			Duel.ConfirmCards(1-tp,tc1)
+			if tc1:IsAbleToHand() then
+				Duel.SendtoHand(tc1,nil,REASON_EFFECT)
+				Duel.ConfirmCards(1-tp,tc1)
+			else
+				Duel.SendtoGrave(tc1,REASON_RULE)
+			end
 			Duel.Destroy(tc2,REASON_EFFECT)
 			Duel.Damage(1-tp,500,REASON_EFFECT)
 		elseif tc1:GetAttack()<tc2:GetAttack() then
-			Duel.SendtoHand(tc2,nil,REASON_EFFECT)
-			Duel.ConfirmCards(tp,tc2)
+			if tc2:IsAbleToHand() then
+				Duel.SendtoHand(tc2,nil,REASON_EFFECT)
+				Duel.ConfirmCards(tp,tc2)
+			else
+				Duel.SendtoGrave(tc2,REASON_RULE)
+			end
 			Duel.Destroy(tc1,REASON_EFFECT)
 			Duel.Damage(tp,500,REASON_EFFECT)
 		end
