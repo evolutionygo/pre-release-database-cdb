@@ -73,7 +73,7 @@ function s.tfilter(c)
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()
-	if chkc then return s.tfilter(chkc) and chkc:IsOnField() end
+	if chkc then return s.tfilter(chkc) and chkc:IsOnField() and chkc:IsControler(tp) end
 	if chk==0 then return c:IsAbleToHand()
 		and Duel.IsExistingTarget(s.tfilter,tp,LOCATION_ONFIELD,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
