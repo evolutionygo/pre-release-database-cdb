@@ -52,7 +52,7 @@ function s.descon(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.thfilter(c,e,tp)
 	return (c:IsSetCard(0x2dd) and c:IsType(TYPE_MONSTER) or c:IsRace(RACE_DINOSAUR))
-		and c:IsAbleToHand() or (Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and c:IsCanBeSpecialSummoned(e,0,tp,false,false))
+		and (c:IsAbleToHand() or Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and c:IsCanBeSpecialSummoned(e,0,tp,false,false))
 end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() and chkc:IsControler(1-tp) end
