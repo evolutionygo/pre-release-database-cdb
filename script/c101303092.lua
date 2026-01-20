@@ -37,16 +37,15 @@ function s.tdtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end
 	if chk==0 then return Duel.IsExistingTarget(Card.IsAbleToDeck,tp,LOCATION_GRAVE,0,1,nil)
 		and Duel.IsExistingTarget(Card.IsAbleToDeck,tp,0,LOCATION_GRAVE,1,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
 	local g1=Duel.SelectTarget(tp,Card.IsAbleToDeck,tp,LOCATION_GRAVE,0,1,1,nil)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
 	local g2=Duel.SelectTarget(tp,Card.IsAbleToDeck,tp,0,LOCATION_GRAVE,1,1,nil)
 	g1:Merge(g2)
 	Duel.SetOperationInfo(0,CATEGORY_TODECK,g1,g1:GetCount(),0,0)
 end
 function s.tdop(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
-	local tg=g:Filter(aux.NecroValleyFilter(Card.IsRelateToChain),nil)
+	local tg=Duel.GetTargetsRelateToChain():Filter(aux.NecroValleyFilter(),nil)
 	if tg:GetCount()>0 then
 		for tc in aux.Next(tg) do
 			if tc:IsExtraDeckMonster()
@@ -58,14 +57,14 @@ function s.tdop(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 end
-function s.cfilter(c,sp)
-	return c:IsControler(tp)
+function s.cfilter(c,p)
+	return c:IsControler(p)
 end
 function s.fspcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.cfilter,1,nil,1-tp)
 end
 function s.spfilter1(c,e)
-	return (c:IsLocation(LOCATION_MZONE) or c:IsFaceupEx() and c:GetOriginalType()&TYPE_MONSTER~=0)
+	return (c:IsOnField() or c:IsFaceupEx() and c:GetOriginalType()&TYPE_MONSTER~=0)
 		and c:IsCanBeFusionMaterial() and c:IsAbleToDeck() and not c:IsImmuneToEffect(e)
 end
 function s.spfilter2(c,e,tp,m,f,chkf)
@@ -91,8 +90,11 @@ function s.fsptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 	Duel.SetOperationInfo(0,CATEGORY_TODECK,nil,1,tp,LOCATION_MZONE+LOCATION_HAND+LOCATION_REMOVED)
 end
+function s.cffilter(c)
+	return c:IsLocation(LOCATION_MZONE) and c:IsFacedown() or c:IsLocation(LOCATION_HAND)
+end
 function s.hfilter(c)
-	return c:IsLocation(LOCATION_REMOVED) or (c:IsLocation(LOCATION_MZONE) and c:IsFaceup())
+	return c:IsLocation(LOCATION_GRAVE+LOCATION_REMOVED) or (c:IsLocation(LOCATION_MZONE) and c:IsFaceup())
 end
 function s.fspop(e,tp,eg,ep,ev,re,r,rp)
 	local chkf=tp
@@ -116,6 +118,10 @@ function s.fspop(e,tp,eg,ep,ev,re,r,rp)
 		if sg1:IsContains(tc) and (sg2==nil or not sg2:IsContains(tc) or ce and not Duel.SelectYesNo(tp,ce:GetDescription())) then
 			local mat1=Duel.SelectFusionMaterial(tp,tc,mg1,nil,chkf)
 			tc:SetMaterial(mat1)
+			if mat1:IsExists(s.cffilter,1,nil) then
+				local cg=mat1:Filter(s.cffilter,nil)
+				Duel.ConfirmCards(1-tp,cg)
+			end
 			if mat1:IsExists(s.hfilter,1,nil) then
 				local cg=mat1:Filter(s.hfilter,nil)
 				Duel.HintSelection(cg)

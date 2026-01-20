@@ -19,13 +19,13 @@ function s.initial_effect(c)
 	--destroy
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,1))
-	e3:SetCategory(CATEGORY_TOHAND+CATEGORY_SPECIAL_SUMMON+CATEGORY_DECKDES+CATEGORY_DESTROY)
+	e3:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND+CATEGORY_SPECIAL_SUMMON+CATEGORY_DECKDES+CATEGORY_DESTROY)
 	e3:SetType(EFFECT_TYPE_QUICK_O)
 	e3:SetCode(EVENT_FREE_CHAIN)
 	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_MAIN_END+TIMING_END_PHASE)
-	e3:SetCountLimit(1,id+o)
+	e3:SetCountLimit(1,id)
 	e3:SetCondition(s.descon)
 	e3:SetTarget(s.destg)
 	e3:SetOperation(s.desop)
@@ -48,53 +48,53 @@ function s.recop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Recover(tp,200,REASON_EFFECT)
 end
 function s.descon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():GetSequence()<5 and Duel.GetTurnPlayer()==1-tp
+	return Duel.GetTurnPlayer()==1-tp
 end
-function s.thfilter(c)
+function s.thfilter(c,e,tp)
 	return c:IsSetCard(0x2dd) and c:IsType(TYPE_MONSTER) or c:IsRace(RACE_DINOSAUR)
+		and c:IsAbleToHand() or (Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and c:IsCanBeSpecialSummoned(e,0,tp,false,false))
 end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() and chkc:IsControler(1-tp) end
 	if chk==0 then return Duel.IsExistingTarget(nil,tp,0,LOCATION_ONFIELD,1,nil)
-		and Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil) end
+		and Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil,e,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 	local g=Duel.SelectTarget(tp,nil,tp,0,LOCATION_ONFIELD,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
 end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	local g=Duel.GetMatchingGroup(s.thfilter,tp,LOCATION_DECK,0,nil)
+	local g=Duel.GetMatchingGroup(s.thfilter,tp,LOCATION_DECK,0,nil,e,tp)
 	local dct=Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)
 	local seq=-1
 	local hc
-	for tc in aux.Next(g) do
-		local sq=tc:GetSequence()
+	for dc in aux.Next(g) do
+		local sq=dc:GetSequence()
 		if sq>seq then
 			seq=sq
-			hc=tc
+			hc=dc
 		end
 	end
-	Duel.BreakEffect()
 	if seq>-1 then
 		Duel.ConfirmDecktop(tp,dct-seq)
 		Duel.DisableShuffleCheck()
-		if hc:IsAbleToHand() or (Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and hc:IsCanBeSpecialSummoned(e,0,tp,false,false)) then
-			if hc:IsAbleToHand() and (not hc:IsCanBeSpecialSummoned(e,0,tp,false,false) or ft<=0 or Duel.SelectOption(tp,1190,1152)==0) then
+		local spchk=Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and hc:IsCanBeSpecialSummoned(e,0,tp,false,false)
+		if hc:IsAbleToHand() or spchk then
+			if hc:IsAbleToHand() and (not spchk or Duel.SelectOption(tp,1190,1152)==0) then
 				Duel.SendtoHand(hc,nil,REASON_EFFECT)
 				Duel.ConfirmCards(1-tp,hc)
-			else
+			elseif spchk then
 				Duel.SpecialSummon(hc,0,tp,tp,false,false,POS_FACEUP)
 			end
 		else
 			Duel.SendtoGrave(hc,REASON_RULE)
 		end
-	else
-		Duel.ConfirmDecktop(tp,dct)
-	end
-	if dct-seq>1 then
 		Duel.ShuffleDeck(tp)
-		if tc:IsRelateToChain() then
+		if tc:IsRelateToChain() and tc:IsOnField() then
+			Duel.BreakEffect()
 			Duel.Destroy(tc,REASON_EFFECT)
 		end
+	else
+		Duel.ConfirmDecktop(tp,dct)
 	end
 end

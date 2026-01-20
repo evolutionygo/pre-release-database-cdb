@@ -24,7 +24,7 @@ function s.initial_effect(c)
 	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetCountLimit(1,id)
-	e3:SetCode(s.spcost)
+	e3:SetCost(s.spcost)
 	e3:SetTarget(s.sptg)
 	e3:SetOperation(s.spop)
 	c:RegisterEffect(e3)
@@ -56,13 +56,14 @@ function s.recop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Recover(tp,200,REASON_EFFECT)
 end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():GetAttackAnnouncedCount()==0 end
-	local e1=Effect.CreateEffect(e:GetHandler())
+	local c=e:GetHandler()
+	if chk==0 then return c:GetAttackAnnouncedCount()==0 end
+	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_OATH)
 	e1:SetCode(EFFECT_CANNOT_ATTACK)
 	e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
-	e:GetHandler():RegisterEffect(e1,true)
+	c:RegisterEffect(e1,true)
 end
 function s.spfilter(c,e,tp)
 	return c:IsFaceupEx() and (c:IsSetCard(0x2dd) or c:IsRace(RACE_DINOSAUR)) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
@@ -88,7 +89,7 @@ function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=e:GetHandler():GetBattleTarget()
-	if tc:IsRelateToBattle() and tc:IsControler(1-tp) then
+	if tc:IsRelateToBattle() and tc:IsControler(1-tp) and tc:IsType(TYPE_MONSTER) then
 		Duel.Destroy(tc,REASON_EFFECT)
 	end
 end

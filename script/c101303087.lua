@@ -24,13 +24,14 @@ function s.initial_effect(c)
 	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e2:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_END_PHASE)
 	e2:SetCountLimit(1,id+o)
 	e2:SetTarget(s.thtg)
 	e2:SetOperation(s.thop)
 	c:RegisterEffect(e2)
 end
 function s.matfilter1(c)
-	return c:IsAttribute(ATTRIBUTE_EARTH) and c:IsLevelAbove(5)
+	return c:IsFusionAttribute(ATTRIBUTE_EARTH) and c:IsLevelAbove(5)
 end
 function s.matfilter2(c)
 	return c:IsRace(RACE_ROCK)
@@ -43,12 +44,12 @@ function s.spfilter(c,e,tp)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,nil,e,tp) 
+		and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,nil,e,tp)
 		and Duel.GetFlagEffect(tp,id+o)==0 end
 	Duel.RegisterFlagEffect(tp,id,RESET_CHAIN,0,1)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND+LOCATION_GRAVE)
 end
-function s.sptg(e,tp,eg,ep,ev,re,r,rp)
+function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.spfilter),tp,LOCATION_HAND+LOCATION_GRAVE,0,1,1,nil,e,tp)
@@ -63,8 +64,8 @@ function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end
 	if chk==0 then return Duel.IsExistingTarget(s.thfilter,tp,LOCATION_MZONE,0,1,nil)
 		and Duel.IsExistingTarget(Card.IsAbleToHand,tp,0,LOCATION_ONFIELD,1,nil)
-		and Duel.GetFlagEffect(tp,id+o)==0 end
-	Duel.RegisterFlagEffect(tp,id,RESET_CHAIN,0,1)
+		and Duel.GetFlagEffect(tp,id)==0 end
+	Duel.RegisterFlagEffect(tp,id+o,RESET_CHAIN,0,1)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
 	local g1=Duel.SelectTarget(tp,s.thfilter,tp,LOCATION_MZONE,0,1,1,nil)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
@@ -73,8 +74,7 @@ function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g1,2,0,0)
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
-	local tg=g:Filter(Card.IsRelateToChain,nil)
+	local tg=Duel.GetTargetsRelateToChain():Filter(Card.IsOnField,nil)
 	if tg:GetCount()>0 then
 		Duel.SendtoHand(tg,nil,REASON_EFFECT)
 	end

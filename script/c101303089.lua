@@ -27,9 +27,10 @@ function s.initial_effect(c)
 	local e3=e2:Clone()
 	e3:SetType(EFFECT_TYPE_QUICK_O)
 	e3:SetCode(EVENT_FREE_CHAIN)
+	e3:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_END_PHASE)
 	e3:SetCondition(s.rmcon2)
 	c:RegisterEffect(e3)
-	--specail summon
+	--special summon
 	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(id,2))
 	e4:SetCategory(CATEGORY_SPECIAL_SUMMON)
