@@ -50,21 +50,21 @@ end
 function s.descon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetTurnPlayer()==1-tp
 end
-function s.thfilter(c,e,tp)
+function s.thfilter(c,e,tp,chk)
 	return (c:IsSetCard(0x2dd) and c:IsType(TYPE_MONSTER) or c:IsRace(RACE_DINOSAUR))
-		and (c:IsAbleToHand() or Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and c:IsCanBeSpecialSummoned(e,0,tp,false,false))
+		and (not chk or c:IsAbleToHand() or Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and c:IsCanBeSpecialSummoned(e,0,tp,false,false))
 end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() and chkc:IsControler(1-tp) end
 	if chk==0 then return Duel.IsExistingTarget(nil,tp,0,LOCATION_ONFIELD,1,nil)
-		and Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil,e,tp) end
+		and Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil,e,tp,true) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 	local g=Duel.SelectTarget(tp,nil,tp,0,LOCATION_ONFIELD,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
 end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	local g=Duel.GetMatchingGroup(s.thfilter,tp,LOCATION_DECK,0,nil,e,tp)
+	local g=Duel.GetMatchingGroup(s.thfilter,tp,LOCATION_DECK,0,nil,e,tp,false)
 	local dct=Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)
 	local seq=-1
 	local hc
@@ -78,15 +78,13 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	if seq>-1 then
 		Duel.ConfirmDecktop(tp,dct-seq)
 		Duel.DisableShuffleCheck()
-		Duel.SetLP(tp,Duel.GetLP(tp)-(dct-seq)*1000)
+		Duel.SetLP(tp,Duel.GetLP(tp)-(dct-seq)*400)
 		local spchk=Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and hc:IsCanBeSpecialSummoned(e,0,tp,false,false)
-		if hc:IsAbleToHand() or spchk then
-			if hc:IsAbleToHand() and (not spchk or Duel.SelectOption(tp,1190,1152)==0) then
-				Duel.SendtoHand(hc,nil,REASON_EFFECT)
-				Duel.ConfirmCards(1-tp,hc)
-			elseif spchk then
-				Duel.SpecialSummon(hc,0,tp,tp,false,false,POS_FACEUP)
-			end
+		if hc:IsAbleToHand() and (not spchk or Duel.SelectOption(tp,1190,1152)==0) then
+			Duel.SendtoHand(hc,nil,REASON_EFFECT)
+			Duel.ConfirmCards(1-tp,hc)
+		elseif spchk then
+			Duel.SpecialSummon(hc,0,tp,tp,false,false,POS_FACEUP)
 		else
 			Duel.SendtoGrave(hc,REASON_RULE)
 		end
