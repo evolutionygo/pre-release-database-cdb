@@ -1,7 +1,7 @@
 --GMX Chairman Kimridge
 local s,id,o=GetID()
 function s.initial_effect(c)
-	aux.AddCodeList(c,101303191)
+	aux.AddCodeList(c,101303096)
 	--search
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
@@ -30,7 +30,7 @@ function s.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return not e:GetHandler():IsPublic() end
 end
 function s.thfilter(c)
-	return c:IsCode(101303191) and c:IsAbleToHand()
+	return c:IsCode(101303096) and c:IsAbleToHand()
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
