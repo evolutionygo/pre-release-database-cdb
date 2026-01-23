@@ -2,7 +2,7 @@
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--xyz summon
-	aux.AddXyzProcedure(c,nil,10,2)
+	aux.AddXyzProcedure(c,nil,10,2,nil,nil,99)
 	c:EnableReviveLimit()
 	--material
 	local e1=Effect.CreateEffect(c)
