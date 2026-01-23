@@ -32,6 +32,7 @@ end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local g1=Duel.GetMatchingGroup(s.cfilter1,tp,LOCATION_DECK,0,nil,tp)
 	local dcount=Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)
+	if dcount==0 then return end
 	local seq1=-1
 	local spcard1=nil
 	for tc in aux.Next(g1) do
