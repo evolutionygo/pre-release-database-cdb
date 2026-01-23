@@ -58,7 +58,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	if seq2<seq1 then seq1=seq2 end
 	Duel.ConfirmDecktop(tp,dcount-seq1)
 	Duel.SetLP(tp,Duel.GetLP(tp)-(dcount-seq1)*400)
-	local mg=Duel.GetDecktopGroup(tp,dcount-seq1)
+	local mg=Duel.GetDecktopGroup(tp,dcount-seq1):Filter(Card.IsType,nil,TYPE_MONSTER)
 	local chkf=tp
 	local sg1=Duel.GetMatchingGroup(s.filter2,tp,LOCATION_EXTRA,0,nil,e,tp,mg,nil,chkf)
 	local mg2=nil
