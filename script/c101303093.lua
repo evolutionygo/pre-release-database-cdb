@@ -20,7 +20,7 @@ function s.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCountLimit(1,id+o)
-	e1:SetTarget(s.fsptg)
+	e2:SetTarget(s.fsptg)
 	e2:SetOperation(s.fspop)
 	c:RegisterEffect(e2)
 	--
