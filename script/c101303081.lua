@@ -50,7 +50,7 @@ function s.lvtg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.lvop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=e:GetLabelObject()
-	if tc:IsRelateToBattle() and tc:IsFaceup() and tc:IsControler(tp) then
+	if tc:IsRelateToBattle() and tc:IsType(TYPE_MONSTER) and tc:IsFaceup() and tc:IsControler(tp) then
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_UPDATE_LEVEL)

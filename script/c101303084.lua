@@ -77,7 +77,7 @@ function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
 end
 function s.rmop(e,tp,eg,ep,ev,re,r,rp)
-	if e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_EFFECT) and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
+	if e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_EFFECT) and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 		e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_EFFECT)
 	else
 		Duel.Damage(tp,3000,REASON_EFFECT)

@@ -14,10 +14,10 @@ function s.initial_effect(c)
 end
 function s.cfilter1(c,tp)
 	return c:IsSetCard(0x2dd) and c:IsType(TYPE_MONSTER)
-		and Duel.IsExistingMatchingCard(s.cfilter2,tp,LOCATION_DECK,0,1,c,tp)
+		and Duel.IsExistingMatchingCard(s.cfilter2,tp,LOCATION_DECK,0,1,c)
 end
 function s.cfilter2(c)
-	return c:IsRace(RACE_DINOSAUR)
+	return not c:IsSetCard(0x2dd) and c:IsRace(RACE_DINOSAUR)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
