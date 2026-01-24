@@ -14,19 +14,19 @@ function s.initial_effect(c)
 	e1:SetCountLimit(1,id)
 	e1:SetTarget(s.tgtg)
 	e1:SetOperation(s.tgop)
-	c:RegisterEffect(e1)   
+	c:RegisterEffect(e1)
 	--Destroy
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetCategory(CATEGORY_DESTROY)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DELAY)
-	e2:SetCode(EVENT_TO_GRAVE)
+	e2:SetCode(EVENT_DESTROYED)
 	e2:SetCondition(s.descon)
 	e2:SetCost(s.descost)
 	e2:SetTarget(s.destg)
 	e2:SetOperation(s.desop)
-	c:RegisterEffect(e2) 
+	c:RegisterEffect(e2)
 end
 function s.tgfilter(c,e,tp,check)
 	return c:IsType(TYPE_MONSTER) and c:IsType(TYPE_TUNER) and c:IsRace(RACE_MACHINE)
@@ -34,7 +34,7 @@ function s.tgfilter(c,e,tp,check)
 end
 function s.cfilter(c)
 	local lv=c:GetOriginalLevel()
-	return c:IsFaceup() and not c:IsLevel(lv)
+	return c:IsFaceup() and not c:IsLevel(lv) and c:IsLevelAbove(1)
 end
 function s.tgtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
@@ -53,26 +53,25 @@ function s.tgop(e,tp,eg,ep,ev,re,r,rp)
 		if check and tc:IsCanBeSpecialSummoned(e,0,tp,false,false)
 			and (not tc:IsAbleToGrave() or Duel.SelectOption(tp,1191,1152)==1) then
 			Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
-		else
+		elseif tc:IsAbleToGrave() then
 			Duel.SendtoGrave(tc,REASON_EFFECT)
 		end
 	end
 end
 function s.descon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	return c:IsReason(REASON_DESTROY) and c:IsReason(REASON_EFFECT) and c:IsPreviousLocation(LOCATION_MZONE)
-		and c:IsSummonType(SUMMON_TYPE_SYNCHRO)
+	return c:IsReason(REASON_EFFECT) and c:IsPreviousLocation(LOCATION_MZONE) and c:IsSummonType(SUMMON_TYPE_SYNCHRO)
 end
 function s.costfilter(c)
 	return c:IsType(TYPE_TUNER) and c:IsAbleToRemoveAsCost()
 end
 function s.descost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.costfilter,tp,LOCATION_GRAVE,0,1,nil) end
-	local rt=Duel.GetTargetCount(nil,tp,0,LOCATION_ONFIELD,nil)
+	local rt=Duel.GetTargetCount(nil,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local g=Duel.SelectMatchingCard(tp,s.costfilter,tp,LOCATION_GRAVE,0,1,rt,nil)
-	local cg=Duel.Remove(g,POS_FACEUP,REASON_COST)
-	e:SetLabel(cg)
+	local ct=Duel.Remove(g,POS_FACEUP,REASON_COST)
+	e:SetLabel(ct)
 end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() end
@@ -83,9 +82,8 @@ function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,ct,0,0)
 end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
-	local tg=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
-	local rg=tg:Filter(Card.IsRelateToChain,nil)
-	if #rg>0 then
-		Duel.Destroy(rg,REASON_EFFECT)
+	local tg=Duel.GetTargetsRelateToChain():Filter(Card.IsOnField,nil)
+	if #tg>0 then
+		Duel.Destroy(tg,REASON_EFFECT)
 	end
 end

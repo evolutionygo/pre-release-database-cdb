@@ -1,7 +1,7 @@
 --Shipping Archifiend
 local s,id,o=GetID()
 function s.initial_effect(c)
-	--race&ATTRIBUTE
+	--change race/attribute
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetType(EFFECT_TYPE_IGNITION)
@@ -10,8 +10,8 @@ function s.initial_effect(c)
 	e1:SetCountLimit(1,id)
 	e1:SetTarget(s.artg)
 	e1:SetOperation(s.arop)
-	c:RegisterEffect(e1)	
-	--special summon
+	c:RegisterEffect(e1)
+	--tohand
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetCategory(CATEGORY_TOHAND)
@@ -25,69 +25,67 @@ function s.initial_effect(c)
 	e2:SetOperation(s.thop)
 	c:RegisterEffect(e2)
 end
-function s.arfilter(c)
-	return c:IsFaceup()
+function s.arfilter(c,e)
+	return c:IsFaceup() and c:IsCanBeEffectTarget(e)
 end
 function s.gcheck(g)
 	local att=0
 	local race=0
 	for tc in aux.Next(g) do
-		local c_att=tc:GetAttribute()
-		local c_race=tc:GetRace()
-		att=bit.bor(att,c_att)
-		race=bit.bor(race,c_race)
+		att=bit.band(att,tc:GetAttribute())
+		race=bit.band(race,tc:GetRace())
 	end
 	return att~=ATTRIBUTE_ALL or race~=RACE_ALL
 end
 function s.artg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	local tg=Duel.GetMatchingGroup(s.arfilter,tp,LOCATION_MZONE,0,nil,e)
+	local tg=Duel.GetMatchingGroup(s.arfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil,e)
 	if chkc then return chkc:IsOnField() and chkc:IsControler(tp) and s.thfilter(chkc) end
 	if chk==0 then return tg:CheckSubGroup(s.gcheck,1,99) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
 	local g=tg:SelectSubGroup(tp,s.gcheck,false,1,99)
 	local att=0
 	local race=0
 	for tc in aux.Next(g) do
-		local c_att=tc:GetAttribute()
-		local c_race=tc:GetRace()
-		att=bit.bor(att,c_att)
-		race=bit.bor(race,c_race)
+		att=bit.band(att,tc:GetAttribute())
+		race=bit.band(race,tc:GetRace())
 	end
 	local b1=att~=ATTRIBUTE_ALL
 	local b2=race~=RACE_ALL
 	local op=aux.SelectFromOptions(tp,
 			{b1,aux.Stringid(id,2),1},
 			{b2,aux.Stringid(id,3),2})
+	local annouce=0
 	if op==1 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATTRIBUTE)
-		ar=Duel.AnnounceAttribute(tp,1,ATTRIBUTE_ALL-att)
-	else
+		annouce=Duel.AnnounceAttribute(tp,1,ATTRIBUTE_ALL-att)
+	elseif op==2 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RACE)
-		ar=Duel.AnnounceRace(tp,1,RACE_ALL-race)
+		annouce=Duel.AnnounceRace(tp,1,RACE_ALL-race)
 	end
-	e:SetLabel(op,ar)
+	e:SetLabel(op,annouce)
 	Duel.SetTargetCard(g)
 end
 function s.arop(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
-	local tg=g:Filter(Card.IsRelateToChain,nil):Filter(Card.IsFaceup,nil)
+	local tg=Duel.GetTargetsRelateToChain():Filter(Card.IsFaceup,nil)
 	local c=e:GetHandler()
-	local op,ar=e:GetLabel()
+	local op,val=e:GetLabel()
 	if op==1 then
 		for tc in aux.Next(tg) do
 			local e1=Effect.CreateEffect(c)
 			e1:SetType(EFFECT_TYPE_SINGLE)
+			e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 			e1:SetCode(EFFECT_CHANGE_ATTRIBUTE)
-			e1:SetValue(ar)
+			e1:SetValue(val)
 			e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
 			tc:RegisterEffect(e1)
 		end
-	else
+	elseif op==2 then
 		for tc in aux.Next(tg) do
 			local e1=Effect.CreateEffect(c)
 			e1:SetType(EFFECT_TYPE_SINGLE)
+			e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 			e1:SetCode(EFFECT_CHANGE_RACE)
-			e1:SetValue(ar)
+			e1:SetValue(val)
 			e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
 			tc:RegisterEffect(e1)
 		end
@@ -100,7 +98,7 @@ function s.thfilter(c,e)
 	return c:IsType(TYPE_MONSTER) and c:IsAbleToHand() and c:IsCanBeEffectTarget(e)
 end
 function s.fselect(g)
-	return g:GetClassCount(Card.GetAttribute) == 1 and g:GetClassCount(Card.GetRace) == 1 and g:GetClassCount(Card.GetControler) == 2
+	return aux.SameValueCheck(g,Card.GetAttribute) and aux.SameValueCheck(g,Card.GetRace) and g:GetClassCount(Card.GetControler)==2
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()
@@ -113,7 +111,7 @@ function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,g:GetCount(),0,0)
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToChain,nil)
+	local g=Duel.GetTargetsRelateToChain()
 	if g:GetCount()>0 then
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 	end
