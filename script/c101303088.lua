@@ -29,8 +29,8 @@ function s.arfilter(c,e)
 	return c:IsFaceup() and c:IsCanBeEffectTarget(e)
 end
 function s.gcheck(g)
-	local att=0
-	local race=0
+	local att=ATTRIBUTE_ALL
+	local race=ATTRIBUTE_ALL
 	for tc in aux.Next(g) do
 		att=bit.band(att,tc:GetAttribute())
 		race=bit.band(race,tc:GetRace())
@@ -43,8 +43,8 @@ function s.artg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return tg:CheckSubGroup(s.gcheck,1,99) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
 	local g=tg:SelectSubGroup(tp,s.gcheck,false,1,99)
-	local att=0
-	local race=0
+	local att=ATTRIBUTE_ALL
+	local race=ATTRIBUTE_ALL
 	for tc in aux.Next(g) do
 		att=bit.band(att,tc:GetAttribute())
 		race=bit.band(race,tc:GetRace())
@@ -95,7 +95,7 @@ function s.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(Card.IsControler,1,nil,1-tp)
 end
 function s.thfilter(c,e)
-	return c:IsType(TYPE_MONSTER) and c:IsAbleToHand() and c:IsCanBeEffectTarget(e)
+	return c:IsType(TYPE_MONSTER) and c:IsFaceup() and c:IsAbleToHand() and c:IsCanBeEffectTarget(e)
 end
 function s.fselect(g)
 	return aux.SameValueCheck(g,Card.GetAttribute) and aux.SameValueCheck(g,Card.GetRace) and g:GetClassCount(Card.GetControler)==2
