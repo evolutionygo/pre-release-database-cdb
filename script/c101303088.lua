@@ -48,7 +48,7 @@ function s.artg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local tg=Duel.GetMatchingGroup(s.arfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil,e)
 	if chkc then
 		local op,val=e:GetLabel()
-		return chkc:IsType(TYPE_MONSTER) and chkc:IsFaceup() and chkc:IsControler(tp) and s.chkcfilter(chkc,op,val)
+		return chkc:IsType(TYPE_MONSTER) and chkc:IsFaceup() and s.chkcfilter(chkc,op,val)
 	end
 	if chk==0 then return tg:CheckSubGroup(s.gcheck,1,99) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
