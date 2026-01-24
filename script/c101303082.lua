@@ -1,6 +1,9 @@
 --Jade Dragon Mech
 local s,id,o=GetID()
 function s.initial_effect(c)
+	--Synchro summon
+	aux.AddSynchroProcedure(c,nil,aux.NonTuner(nil),1)
+	c:EnableReviveLimit()
 	--tograve
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
@@ -72,16 +75,16 @@ function s.descost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:SetLabel(cg)
 end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsOnField() and chkc:IsControler(1-tp) end
-	if chk==0 then return Duel.IsExistingTarget(nil,tp,0,LOCATION_ONFIELD,1,nil) end
+	if chkc then return chkc:IsOnField() end
+	if chk==0 then return Duel.IsExistingTarget(nil,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) end
 	local ct=e:GetLabel()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g=Duel.SelectTarget(tp,nil,tp,0,LOCATION_ONFIELD,ct,ct,nil)
+	local g=Duel.SelectTarget(tp,nil,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,ct,ct,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,ct,0,0)
 end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local tg=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
-	local rg=tg:Filter(Card.IsRelateToEffect,nil,e)
+	local rg=tg:Filter(Card.IsRelateToChain,nil)
 	if #rg>0 then
 		Duel.Destroy(rg,REASON_EFFECT)
 	end
