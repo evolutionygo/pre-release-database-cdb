@@ -8,8 +8,8 @@ function s.initial_effect(c)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetCountLimit(1,id)
-	e1:SetTarget(s.lvtg)
-	e1:SetOperation(s.lvop)
+	e1:SetTarget(s.artg)
+	e1:SetOperation(s.arop)
 	c:RegisterEffect(e1)	
 	--special summon
 	local e2=Effect.CreateEffect(c)
@@ -25,67 +25,71 @@ function s.initial_effect(c)
 	e2:SetOperation(s.thop)
 	c:RegisterEffect(e2)
 end
-function s.lvfilter(c)
+function s.arfilter(c)
 	return c:IsFaceup()
 end
-function s.racefilter(g)
-	local rac=g:GetFirst():GetRace()
-	if g:GetCount()<2 then return RACE_ALL&~rac end
-	local tc=g:GetNext()
-	while tc do
-		if not tc:IsRace(rac) then return RACE_ALL end
-		tc=g:GetNext()
+function s.gcheck(g)
+	local att=0
+	local race=0
+	for tc in aux.Next(g) do
+		local c_att=tc:GetAttribute()
+		local c_race=tc:GetRace()
+		att=bit.bor(att,c_att)
+		race=bit.bor(race,c_race)
 	end
-	return RACE_ALL&~rac
+	return att~=ATTRIBUTE_ALL or race~=RACE_ALL
 end
-function s.attfilter(g)
-	local att=g:GetFirst():GetAttribute()
-	if g:GetCount()<2 then return ATTRIBUTE_ALL&~att end
-	local tc=g:GetNext()
-	while tc do
-		if not tc:IsAttribute(att) then return ATTRIBUTE_ALL end
-		tc=g:GetNext()
+function s.artg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	local tg=Duel.GetMatchingGroup(s.arfilter,tp,LOCATION_MZONE,0,nil,e)
+	if chkc then return chkc:IsOnField() and chkc:IsControler(tp) and s.thfilter(chkc) end
+	if chk==0 then return tg:CheckSubGroup(s.gcheck,1,99) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
+	local g=tg:SelectSubGroup(tp,s.gcheck,false,1,99)
+	local att=0
+	local race=0
+	for tc in aux.Next(g) do
+		local c_att=tc:GetAttribute()
+		local c_race=tc:GetRace()
+		att=bit.bor(att,c_att)
+		race=bit.bor(race,c_race)
 	end
-	return ATTRIBUTE_ALL&~att
-end
-function s.lvtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) and s.lvfilter(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(s.lvfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-	tg=Duel.SelectTarget(tp,s.lvfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,12,nil)
-	local att=s.attfilter(tg)
-	local race=s.racefilter(tg)
-	local op=0
-	op=Duel.SelectOption(tp,aux.Stringid(id,2),aux.Stringid(id,3))
-	if op==0 then
-		local race=Duel.AnnounceRace(tp,1,race)
-		e:SetLabel(op,race)
+	local b1=att~=ATTRIBUTE_ALL
+	local b2=race~=RACE_ALL
+	local op=aux.SelectFromOptions(tp,
+			{b1,aux.Stringid(id,2),1},
+			{b2,aux.Stringid(id,3),2})
+	if op==1 then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATTRIBUTE)
+		ar=Duel.AnnounceAttribute(tp,1,ATTRIBUTE_ALL-att)
 	else
-		local rc=Duel.AnnounceAttribute(tp,1,att)
-		e:SetLabel(op,rc)
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RACE)
+		ar=Duel.AnnounceRace(tp,1,RACE_ALL-race)
 	end
+	e:SetLabel(op,ar)
+	Duel.SetTargetCard(g)
 end
-function s.lvop(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e):Filter(Card.IsFaceup,nil)
-	local tc=g:GetFirst()
-	local op,rt=e:GetLabel()
-	while tc do
-		if op==0 then
-			local e1=Effect.CreateEffect(e:GetHandler())
-			e1:SetType(EFFECT_TYPE_SINGLE)
-			e1:SetCode(EFFECT_CHANGE_RACE)
-			e1:SetValue(rt)
-			e1:SetReset(RESET_EVENT+RESETS_STANDARD)
-			tc:RegisterEffect(e1)
-			tc=g:GetNext()
-		else
-			local e1=Effect.CreateEffect(e:GetHandler())
+function s.arop(e,tp,eg,ep,ev,re,r,rp)
+	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
+	local tg=g:Filter(Card.IsRelateToChain,nil):Filter(Card.IsFaceup,nil)
+	local c=e:GetHandler()
+	local op,ar=e:GetLabel()
+	if op==1 then
+		for tc in aux.Next(tg) do
+			local e1=Effect.CreateEffect(c)
 			e1:SetType(EFFECT_TYPE_SINGLE)
 			e1:SetCode(EFFECT_CHANGE_ATTRIBUTE)
-			e1:SetValue(rt)
-			e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+			e1:SetValue(ar)
+			e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
 			tc:RegisterEffect(e1)
-			tc=g:GetNext()
+		end
+	else
+		for tc in aux.Next(tg) do
+			local e1=Effect.CreateEffect(c)
+			e1:SetType(EFFECT_TYPE_SINGLE)
+			e1:SetCode(EFFECT_CHANGE_RACE)
+			e1:SetValue(ar)
+			e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+			tc:RegisterEffect(e1)
 		end
 	end
 end
