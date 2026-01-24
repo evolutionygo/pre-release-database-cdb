@@ -37,9 +37,19 @@ function s.gcheck(g)
 	end
 	return att~=ATTRIBUTE_ALL or race~=RACE_ALL
 end
+function s.chkcfilter(c,op,val)
+	if op==1 then
+		return not c:IsAttribute(val)
+	else
+		return not c:IsRace(val)
+	end
+end
 function s.artg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local tg=Duel.GetMatchingGroup(s.arfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil,e)
-	if chkc then return chkc:IsOnField() and chkc:IsControler(tp) and s.thfilter(chkc) end
+	if chkc then
+		local op,val=e:GetLabel()
+		return chkc:IsOnField() and chkc:IsControler(tp) and s.chkcfilter(chkc,op,val)
+	end
 	if chk==0 then return tg:CheckSubGroup(s.gcheck,1,99) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
 	local g=tg:SelectSubGroup(tp,s.gcheck,false,1,99)
@@ -54,15 +64,15 @@ function s.artg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local op=aux.SelectFromOptions(tp,
 			{b1,aux.Stringid(id,2),1},
 			{b2,aux.Stringid(id,3),2})
-	local annouce=0
+	local var=0
 	if op==1 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATTRIBUTE)
-		annouce=Duel.AnnounceAttribute(tp,1,ATTRIBUTE_ALL-att)
+		var=Duel.AnnounceAttribute(tp,1,ATTRIBUTE_ALL-att)
 	elseif op==2 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RACE)
-		annouce=Duel.AnnounceRace(tp,1,RACE_ALL-race)
+		var=Duel.AnnounceRace(tp,1,RACE_ALL-race)
 	end
-	e:SetLabel(op,annouce)
+	e:SetLabel(op,var)
 	Duel.SetTargetCard(g)
 end
 function s.arop(e,tp,eg,ep,ev,re,r,rp)
@@ -101,7 +111,6 @@ function s.fselect(g)
 	return aux.SameValueCheck(g,Card.GetAttribute) and aux.SameValueCheck(g,Card.GetRace) and g:GetClassCount(Card.GetControler)==2
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	local c=e:GetHandler()
 	local g=Duel.GetMatchingGroup(s.thfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil,e)
 	if chkc then return false end
 	if chk==0 then return g:CheckSubGroup(s.fselect,2,2) end
