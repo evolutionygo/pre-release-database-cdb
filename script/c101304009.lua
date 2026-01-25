@@ -20,7 +20,7 @@ function s.initial_effect(c)
 	--effect
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,1))
-	e3:SetCategory(CATEGORY_COUNTER)
+	e3:SetCategory(CATEGORY_COUNTER+CATEGORY_SSET)
 	e3:SetType(EFFECT_TYPE_IGNITION)
 	e3:SetRange(LOCATION_GRAVE)
 	e3:SetCountLimit(1,id+o)
@@ -51,8 +51,9 @@ function s.setfilter(c)
 	return c:IsFaceupEx() and c:IsCode(24094653) and c:IsSSetable()
 end
 function s.efftg(e,tp,eg,ep,ev,re,r,rp,chk)
+	local c=e:GetHandler()
 	local b1=Duel.IsExistingMatchingCard(Card.IsCanAddCounter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil,0x1041,1)
-	local b2=Duel.IsExistingMatchingCard(s.setfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil)
+	local b2=Duel.IsExistingMatchingCard(s.setfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,c)
 	if chk==0 then return b1 or b2 end
 	local op=0
 	if b1 or b2 then
@@ -91,6 +92,7 @@ function s.effop(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SET)
 		local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.setfilter),tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,1,nil)
 		if #g>0 then
+			Duel.HintSelection(g)
 			Duel.SSet(tp,g)
 		end
 	end
