@@ -1,7 +1,7 @@
 --妖精伝姫を紡ぐ者
 local s,id,o=GetID()
 function s.initial_effect(c)
-	aux.AddCodeList(c,101304116)
+	aux.AddCodeList(c,19144623)
 	--fusion material
 	c:EnableReviveLimit()
 	aux.AddFusionProcFun2(c,aux.FilterBoolFunction(Card.IsFusionSetCard,0x2db),aux.FilterBoolFunction(Card.IsRace,RACE_SPELLCASTER),true)
@@ -36,7 +36,7 @@ function s.initial_effect(c)
 	e4:SetCode(EFFECT_CHANGE_RACE)
 	e4:SetRange(LOCATION_MZONE)
 	e4:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
-	e4:SetTarget(aux.TargetBoolFunction(Card.IsCode,101304116))
+	e4:SetTarget(aux.TargetBoolFunction(Card.IsCode,19144623))
 	e4:SetValue(RACE_SPELLCASTER)
 	c:RegisterEffect(e4)
 end
@@ -64,7 +64,7 @@ function s.discon(e,tp,eg,ep,ev,re,r,rp)
 	return not eg:IsContains(e:GetHandler()) and eg:IsExists(s.cfilter,1,nil,tp)
 end
 function s.disfilter(c)
-	return c:IsFaceup() and c:IsType(TYPE_EFFECT) and (aux.NegateEffectMonsterFilter(c) or not c:IsCode(101304116))
+	return c:IsFaceup() and c:IsType(TYPE_EFFECT) and (aux.NegateEffectMonsterFilter(c) or not c:IsCode(19144623))
 end
 function s.distg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(1-tp) and chkc:IsLocation(LOCATION_MZONE) and s.disfilter(chkc) end
@@ -76,7 +76,7 @@ function s.disop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
 	if tc:IsFaceup() and tc:IsRelateToChain()
-		and (tc:IsCanBeDisabledByEffect(e) or not tc:IsCode(101304116)) then
+		and (tc:IsCanBeDisabledByEffect(e) or not tc:IsCode(19144623)) then
 		Duel.NegateRelatedChain(tc,RESET_TURN_SET)
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
@@ -96,7 +96,7 @@ function s.disop(e,tp,eg,ep,ev,re,r,rp)
 		e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 		e3:SetCode(EFFECT_CHANGE_CODE)
 		e3:SetReset(RESET_EVENT+RESETS_STANDARD)
-		e3:SetValue(101304116)
+		e3:SetValue(19144623)
 		tc:RegisterEffect(e3)
 	end
 end

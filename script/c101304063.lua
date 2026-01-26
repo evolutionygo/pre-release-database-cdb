@@ -1,7 +1,7 @@
 --妖精伝姫の舞踏会
 local s,id,o=GetID()
 function s.initial_effect(c)
-	aux.AddCodeList(c,91957038,101304116)
+	aux.AddCodeList(c,91957038,19144623)
 	--Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
@@ -48,7 +48,7 @@ function s.discon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(Card.IsSummonPlayer,1,nil,1-tp)
 end
 function s.disfilter(c)
-	return c:IsFaceup() and c:IsType(TYPE_EFFECT) and (aux.NegateEffectMonsterFilter(c) or not c:IsCode(101304116))
+	return c:IsFaceup() and c:IsType(TYPE_EFFECT) and (aux.NegateEffectMonsterFilter(c) or not c:IsCode(19144623))
 end
 function s.mfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0x2db)
@@ -64,7 +64,7 @@ function s.disop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
 	if tc:IsFaceup() and tc:IsRelateToChain() and tc:IsType(TYPE_MONSTER)
-		and (tc:IsCanBeDisabledByEffect(e) or not tc:IsCode(101304116)) then
+		and (tc:IsCanBeDisabledByEffect(e) or not tc:IsCode(19144623)) then
 		Duel.NegateRelatedChain(tc,RESET_TURN_SET)
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
@@ -84,7 +84,7 @@ function s.disop(e,tp,eg,ep,ev,re,r,rp)
 		e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 		e3:SetCode(EFFECT_CHANGE_CODE)
 		e3:SetReset(RESET_EVENT+RESETS_STANDARD)
-		e3:SetValue(101304116)
+		e3:SetValue(19144623)
 		tc:RegisterEffect(e3)
 	end
 end

@@ -132,7 +132,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.thcon2(e,tp,eg,ep,ev,re,r,rp)
 	return ep~=tp and e:GetHandler():IsFacedown()
-		and (CATEGORY_MSET and re:IsHasCategory(CATEGORY_MSET) or CATEGORY_SSET and re:IsHasCategory(CATEGORY_SSET))
+		and (re:IsHasCategory(CATEGORY_MSET) or re:IsHasCategory(CATEGORY_SSET))
 end
 function s.thcost2(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
@@ -163,20 +163,20 @@ function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g=Duel.SelectMatchingCard(tp,Card.IsType,tp,0,LOCATION_ONFIELD,1,1,nil,TYPE_SPELL+TYPE_TRAP)
-	if g:GetCount()>0 then
-		Duel.HintSelection(g)
-		if Duel.Destroy(g,REASON_EFFECT)~=0 then
+	local dg=Duel.SelectMatchingCard(tp,Card.IsType,tp,0,LOCATION_ONFIELD,1,1,nil,TYPE_SPELL+TYPE_TRAP)
+	if dg:GetCount()>0 then
+		Duel.HintSelection(dg)
+		if Duel.Destroy(dg,REASON_EFFECT)~=0 then
 			if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-			local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_HAND,0,1,1,nil,e,tp)
+			local sg=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_HAND,0,1,1,nil,e,tp)
 			Duel.ShuffleHand(tp)
-			if g:GetCount()>0 then
-				local sc=g:GetFirst()
+			if sg:GetCount()>0 then
+				local sc=sg:GetFirst()
 				local hint=sc:IsPublic()
-				Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEDOWN_DEFENSE)
+				Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEDOWN_DEFENSE)
 				if hint then
-					Duel.ConfirmCards(1-tp,g)
+					Duel.ConfirmCards(1-tp,sg)
 				end
 			end
 		end

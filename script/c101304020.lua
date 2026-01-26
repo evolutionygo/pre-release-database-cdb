@@ -145,7 +145,7 @@ function s.negcon(e,tp,eg,ep,ev,re,r,rp)
 	if c:IsStatus(STATUS_BATTLE_DESTROYED) or rp~=1-tp then return false end
 	if not c:IsFacedown() then return false end
 	for i=1,ev do
-		local te,tgp=Duel.GetChainInfo(i,CHAININFO_TRIGGERING_EFFECT,CHAININFO_TRIGGERING_PLAYER)
+		local tgp=Duel.GetChainInfo(i,CHAININFO_TRIGGERING_PLAYER)
 		if tgp~=tp and Duel.IsChainNegatable(i) then
 			return Duel.GetCurrentChain()>2
 		end

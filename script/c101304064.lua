@@ -1,7 +1,7 @@
 --テールズオブ妖精伝姫
 local s,id,o=GetID()
 function s.initial_effect(c)
-	aux.AddCodeList(c,101304116)
+	aux.AddCodeList(c,19144623)
 	aux.AddEquipSpellEffect(c,true,true,Card.IsFaceup,nil)
 	--Atk up
 	local e1=Effect.CreateEffect(c)
@@ -31,7 +31,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function s.filter0(c)
-	return c:IsFaceup() and c:IsCode(101304116) and c:IsCanBeFusionMaterial()
+	return c:IsFaceup() and c:IsCode(19144623) and c:IsCanBeFusionMaterial()
 end
 function s.filter1(c,e)
 	return c and not c:IsImmuneToEffect(e)

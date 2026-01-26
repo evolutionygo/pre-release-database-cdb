@@ -1,7 +1,7 @@
 --妖精伝姫を語る者
 local s,id,o=GetID()
 function s.initial_effect(c)
-	aux.AddCodeList(c,101304116)
+	aux.AddCodeList(c,19144623)
 	--fusion material
 	c:EnableReviveLimit()
 	aux.AddFusionProcFun2(c,s.mfilter,aux.FilterBoolFunction(Card.IsRace,RACE_SPELLCASTER),true)
@@ -70,7 +70,7 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.valcheck(e,c)
 	local g=c:GetMaterial()
-	if g:IsExists(Card.IsFusionCode,1,nil,101304116) then
+	if g:IsExists(Card.IsFusionCode,1,nil,19144623) then
 		e:GetLabelObject():SetLabel(1)
 	else
 		e:GetLabelObject():SetLabel(0)

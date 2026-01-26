@@ -1,7 +1,7 @@
 --妖精伝姫－マチリル
 local s,id,o=GetID()
 function s.initial_effect(c)
-	aux.AddCodeList(c,91957038,id+o)
+	aux.AddCodeList(c,91957038,19144623)
 	--special suoomn
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
@@ -51,7 +51,7 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsRelateToChain() then
+	if c:IsRelateToChain() and aux.NecroValleyFilter()(c) then
 		Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
 	end
 	local e1=Effect.CreateEffect(e:GetHandler())
@@ -86,7 +86,7 @@ function s.codecost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.PayLPCost(tp,500)
 end
 function s.codefilter(c)
-	return c:IsFaceup() and c:IsType(TYPE_EFFECT) and not c:IsCode(id+o)
+	return c:IsFaceup() and c:IsType(TYPE_EFFECT) and not c:IsCode(19144623)
 end
 function s.codetg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.GetMatchingGroup(s.codefilter,tp,0,LOCATION_MZONE,nil)
@@ -96,15 +96,15 @@ function s.codeop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
 	local g=Duel.SelectMatchingCard(tp,s.codefilter,tp,0,LOCATION_MZONE,1,1,nil)
-	Duel.HintSelection(g)
 	local tc=g:GetFirst()
 	if tc then
+		Duel.HintSelection(g)
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_CHANGE_CODE)
 		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
-		e1:SetValue(id+o)
+		e1:SetValue(19144623)
 		tc:RegisterEffect(e1)
 	end
 end
