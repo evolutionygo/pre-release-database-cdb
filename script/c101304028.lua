@@ -90,7 +90,7 @@ function s.postg2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function s.posop2(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToChain() and tc:IsType(TYPE_MONSTER) and tc:IsFacedown() then
+	if tc:IsRelateToChain() and tc:IsType(TYPE_MONSTER) and not tc:IsPosition(POS_FACEUP_DEFENSE) then
 		Duel.ChangePosition(tc,POS_FACEUP_DEFENSE)
 	end
 end
