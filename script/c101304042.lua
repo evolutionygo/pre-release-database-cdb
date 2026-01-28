@@ -85,6 +85,8 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 			res=tc:IsLocation(LOCATION_HAND)
 		elseif op==2 then
 			res=Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)>0
+		elseif tc:IsCanBeSpecialSummoned(e,0,tp,false,false) then
+			Duel.SendtoGrave(tc,REASON_RULE)
 		end
 		if res then
 			local g=Duel.GetMatchingGroup(Card.IsSynchroSummonable,tp,LOCATION_EXTRA,0,nil,nil)
