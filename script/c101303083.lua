@@ -42,8 +42,8 @@ function s.lvfilter2(c)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local tg=Duel.GetMatchingGroup(s.lvfilter,tp,0,LOCATION_MZONE,nil)
-	for tc in aux.Next(tg) do
+	local og=Duel.GetMatchingGroup(s.lvfilter,tp,0,LOCATION_MZONE,nil)
+	for tc in aux.Next(og) do
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_UPDATE_LEVEL)
@@ -51,8 +51,9 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 		tc:RegisterEffect(e1)
 	end
-	local tg=Duel.GetMatchingGroup(s.lvfilter2,tp,LOCATION_MZONE,0,nil)
-	for tc in aux.Next(tg) do
+	if og:GetCount()>0 then Duel.BreakEffect() end
+	local sg=Duel.GetMatchingGroup(s.lvfilter2,tp,LOCATION_MZONE,0,nil)
+	for tc in aux.Next(sg) do
 		local e2=Effect.CreateEffect(c)
 		e2:SetType(EFFECT_TYPE_SINGLE)
 		e2:SetCode(EFFECT_UPDATE_LEVEL)

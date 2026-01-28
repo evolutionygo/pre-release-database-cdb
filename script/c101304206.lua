@@ -72,7 +72,7 @@ function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=e:GetHandler():GetBattleTarget()
-	if tc:IsRelateToBattle() then
+	if tc and tc:IsRelateToBattle() then
 		Duel.Destroy(tc,REASON_EFFECT)
 	end
 end

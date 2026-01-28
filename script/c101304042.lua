@@ -76,8 +76,8 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 		local b1=tc:IsAbleToHand()
 		local b2=tc:IsCanBeSpecialSummoned(e,0,tp,false,false) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		local op=aux.SelectFromOptions(tp,
-			{b1,1190},
-			{b2,1152})
+			{b1,1190,1},
+			{b2,1152,2})
 		local res=false
 		if op==1 then
 			Duel.SendtoHand(tc,nil,REASON_EFFECT)

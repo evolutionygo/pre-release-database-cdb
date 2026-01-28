@@ -66,7 +66,7 @@ end
 function s.mgcheck(c,mg,syncard)
 	local rg=mg-c
 	if c:IsNotTuner(syncard) and c:IsSynchroType(TYPE_SYNCHRO) then
-		return rg:FilterCount(Card.IsTuner,nil,c)==4
+		return rg:FilterCount(Card.IsTuner,nil,syncard)==4
 	else
 		return false
 	end
@@ -79,8 +79,7 @@ function s.atkval(e,c)
 end
 function s.retg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD+LOCATION_GRAVE,1,nil)
-		and c:IsAbleToRemove() end
+	if chk==0 then return c:IsAbleToRemove() end
 	local sg=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD+LOCATION_GRAVE,nil)
 	sg:AddCard(c)
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,sg,sg:GetCount(),0,0)
@@ -100,7 +99,7 @@ function s.reop(e,tp,eg,ep,ev,re,r,rp)
 	if c:IsRelateToChain() and c:IsAbleToRemove() then sg:AddCard(c) end
 	if Duel.Remove(sg,POS_FACEUP,REASON_EFFECT)~=0 then
 		local og=Duel.GetOperatedGroup()
-		if og:IsContains(c)
+		if og:GetCount()>0
 			and aux.MustMaterialCheck(nil,tp,EFFECT_MUST_BE_SMATERIAL)
 			and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp)
 			and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
