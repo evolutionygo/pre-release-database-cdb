@@ -73,6 +73,7 @@ function s.lvcon(e)
 end
 function s.disfilter(c,tp,e)
 	return c:IsFaceup() and c:IsLocation(LOCATION_MZONE) and c:IsSummonPlayer(1-tp) and c:IsCanBeEffectTarget(e)
+		and c:GetAttack()>0
 end
 function s.discon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(aux.AND(Card.IsSummonPlayer,Card.IsFaceup),1,nil,1-tp)
@@ -95,12 +96,13 @@ end
 function s.disop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	local c=e:GetHandler()
-	if tc:IsRelateToChain() and tc:IsType(TYPE_MONSTER) and c:IsRelateToChain() and c:IsFaceup() then
+	local atk=tc:GetAttack()
+	if tc:IsRelateToChain() and tc:IsType(TYPE_MONSTER) and c:IsRelateToChain() and c:IsFaceup() and atk>0 then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_UPDATE_ATTACK)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END+RESET_DISABLE)
-		e1:SetValue(tc:GetAttack())
+		e1:SetValue(atk)
 		c:RegisterEffect(e1)
 		if not c:IsHasEffect(EFFECT_REVERSE_UPDATE) then
 			Duel.NegateRelatedChain(tc,RESET_TURN_SET)
