@@ -20,7 +20,7 @@ function s.xyzfiltr(c,g)
 		and c:IsXyzSummonable(g,2,2)
 end
 function s.spfilter(c,e,tp,ec)
-	if not (not c:IsCode(id) and c:IsSetCard(0x8f,0x54,0x59,0x82) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)) then return false end
+	if not (not c:IsCode(id) and c:IsSetCard(0x8f,0x54,0x59,0x82) and c:IsLevelAbove(1) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)) then return false end
 	local e1=nil
 	local e2=nil
 	if ec:IsLevelAbove(1) then
