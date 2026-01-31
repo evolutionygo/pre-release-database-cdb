@@ -100,7 +100,7 @@ function s.postg(e,tp,eg,ep,ev,re,r,rp,chk)
 		and Duel.IsExistingMatchingCard(s.posfilter,tp,LOCATION_MZONE,0,1,nil) end
 	local g=Duel.GetMatchingGroup(s.posfilter,tp,LOCATION_MZONE,0,nil)
 	Duel.SetOperationInfo(0,CATEGORY_POSITION,g,1,0,0)
-	Duel.SetOperationInfo(0,0x100000000,eg,1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_MSET,eg,1,0,0)
 end
 function s.posop(e,tp,eg,ep,ev,re,r,rp)
 	local ct=Duel.GetMatchingGroupCount(s.cfilter,tp,LOCATION_PZONE,0,nil)

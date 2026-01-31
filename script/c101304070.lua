@@ -38,6 +38,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local fg=tg-tc2
 	local tc3=fg:GetFirst()
 	if Duel.Remove(tc2,POS_FACEUP,REASON_EFFECT)~=0 then
+		Duel.BreakEffect()
 		local op=aux.SelectFromOptions(1-tp,
 			{true,aux.Stringid(id,1),1},
 			{true,aux.Stringid(id,2),2})
