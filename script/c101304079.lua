@@ -61,7 +61,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 			Duel.SetOperationInfo(0,CATEGORY_DESTROY,eg,1,0,0)
 		end
 	else
-		if re:GetHandler():IsDestructable() and re:GetHandler():IsAbleToRemove() then
+		if re:GetHandler():IsAbleToRemove() and re:GetHandler():IsRelateToEffect(re) then
 			Duel.SetOperationInfo(0,CATEGORY_REMOVE,eg,1,0,0)
 		end
 	end

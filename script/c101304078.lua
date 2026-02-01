@@ -51,7 +51,7 @@ function s.tgop(e,tp,eg,ep,ev,re,r,rp)
 	if c:IsRelateToChain() then
 		local ct=c:GetCounter(0x4c)
 		if ct>0 then
-		c:RemoveCounter(tp,0x4c,ct,REASON_EFFECT)
+			c:RemoveCounter(tp,0x4c,ct,REASON_EFFECT)
 			local g=Duel.GetMatchingGroup(Card.IsAbleToGrave,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 			Duel.SendtoGrave(g,REASON_EFFECT)
 		end
