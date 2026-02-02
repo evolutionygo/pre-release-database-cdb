@@ -23,7 +23,7 @@ function s.initial_effect(c)
 	e2:SetTarget(s.fsptg)
 	e2:SetOperation(s.fspop)
 	c:RegisterEffect(e2)
-	--
+	--gain atk
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,1))
 	e3:SetCategory(CATEGORY_ATKCHANGE)
