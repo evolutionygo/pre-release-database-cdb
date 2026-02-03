@@ -52,14 +52,14 @@ function s.sucop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.resetop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.ResetFlagEffect(tp,id+o)
+	Duel.ResetFlagEffect(tp,id+o*2)
 	e:Reset()
 end
 function s.cedop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetFlagEffect(tp,id+o)~=0 then
+	if Duel.GetFlagEffect(tp,id+o*2)~=0 then
 		Duel.SetChainLimitTillChainEnd(s.chainlm)
 	end
-	Duel.ResetFlagEffect(tp,id+o)
+	Duel.ResetFlagEffect(tp,id+o*2)
 end
 function s.tdfilter(c)
 	return c:IsFaceupEx() and c:IsType(TYPE_SYNCHRO) and c:IsAbleToDeck()
