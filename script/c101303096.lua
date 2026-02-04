@@ -17,7 +17,7 @@ function s.cfilter1(c,tp)
 		and Duel.IsExistingMatchingCard(s.cfilter2,tp,LOCATION_DECK,0,1,c)
 end
 function s.cfilter2(c)
-	return not c:IsSetCard(0x2dd) and c:IsRace(RACE_DINOSAUR)
+	return c:IsRace(RACE_DINOSAUR)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
@@ -45,7 +45,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local seq2=-1
 	local spcard2=nil
 	for tc in aux.Next(g2) do
-		if tc:GetSequence()>seq2 then
+		if tc:GetSequence()>seq2 and tc:GetSequence()~=seq1 then
 			seq2=tc:GetSequence()
 			spcard2=tc
 		end
