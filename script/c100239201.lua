@@ -126,9 +126,19 @@ function s.lkop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.LinkSummon(tp,tc,nil)
 	end
 end
+function s.exmatcheck(c,lc,tp)
+	if not c:IsControler(1-tp) then return false end
+	local le={c:IsHasEffect(EFFECT_EXTRA_LINK_MATERIAL,tp)}
+	for _,te in pairs(le) do
+		local f=te:GetValue()
+		local related,valid=f(te,lc,nil,c,tp)
+		if related and not te:GetHandler():IsCode(id) then return false end
+	end
+	return true
+end
 function s.matval(e,lc,mg,c,tp)
 	local ct=e:GetLabelObject()
 	local fid=e:GetLabel()
 	if ct:GetFlagEffectLabel(id)~=fid then return false,nil end
-	return true,not mg or mg:IsContains(ct)
+	return true,not mg or mg:IsContains(ct) and mg:IsContains(e:GetHandler()) and not mg:IsExists(s.exmatcheck,1,nil,lc,tp)
 end
