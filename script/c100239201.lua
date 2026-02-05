@@ -1,4 +1,4 @@
---
+--W：Pファンシーボール
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--link summon
@@ -98,6 +98,10 @@ function s.lktg(e,tp,eg,ep,ev,re,r,rp,chk)
 	c:ResetFlagEffect(id)
 	if chk==0 then return res end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,0,0)
+	Duel.SetChainLimit(s.chainlm)
+end
+function s.chainlm(e,rp,tp)
+	return not e:GetHandler():IsType(TYPE_MONSTER)
 end
 function s.lkop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
