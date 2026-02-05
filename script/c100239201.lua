@@ -116,7 +116,7 @@ function s.lkop(e,tp,eg,ep,ev,re,r,rp)
 		le:SetLabelObject(c)
 		le:SetTarget(s.mattg)
 		le:SetValue(s.matval)
-		le:SetReset(RESET_CHAIN)
+		le:SetReset(RESET_PHASE+PHASE_MAIN1+PHASE_MAIN2)
 		Duel.RegisterEffect(le,tp)
 	end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
