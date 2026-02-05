@@ -66,13 +66,12 @@ function s.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 end
 function s.disop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.NegateEffect(ev) and re:GetHandler():IsRelateToEffect(re) then
+	if Duel.NegateEffect(ev) and re:GetHandler():IsRelateToChain(ev) then
 		Duel.Remove(eg,POS_FACEUP,REASON_EFFECT)
 	end
 end
 function s.lkcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetTurnPlayer()~=tp
-		and (Duel.GetCurrentPhase()==PHASE_MAIN1 or Duel.GetCurrentPhase()==PHASE_MAIN2)
+	return Duel.GetTurnPlayer()~=tp and Duel.IsMainPhase()
 end
 function s.lkfilter(c)
 	return c:IsLinkSummonable(nil)
@@ -101,7 +100,7 @@ function s.lktg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetChainLimit(s.chainlm)
 end
 function s.chainlm(e,rp,tp)
-	return not e:GetHandler():IsType(TYPE_MONSTER)
+	return not e:GetHandler():IsAllTypes(TYPE_LINK+TYPE_MONSTER)
 end
 function s.lkop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
