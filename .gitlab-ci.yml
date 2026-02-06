@@ -36,6 +36,30 @@ merge_databases:
       - test-release.cdb
       - test-update.cdb
 
+prepare_jest_env:
+  stage: prepare
+  dependencies: []
+  tags:
+    - linux
+  script:
+    - mkdir ygopro
+    - git clone --depth=1 https://code.moenext.com/mycard/ygopro-scripts-888 ygopro/script
+    - wget https://code.moenext.com/mycard/ygopro-database/-/raw/master/locales/zh-CN/cards.cdb -O ygopro/test.cdb
+  artifacts:
+    paths:
+      - ygopro
+
+npm_ci:
+  stage: prepare
+  dependencies: []
+  tags:
+    - linux
+  script:
+    - npm ci
+  artifacts:
+    paths:
+      - node_modules
+
 add_script_diff:
   stage: prepare
   dependencies: []
@@ -115,25 +139,35 @@ json2:
     paths:
       - test-release-v2.json
 
-redtext:
+# redtext:
+#   stage: prepare2
+#   dependencies:
+#     - add_script_diff
+#   tags:
+#     - linux
+#   image: git-registry.moenext.com/nanahira/srvpro:lite
+#   script:
+#     - apt update && apt -y install sqlite3
+#     - mv /ygopro-server/ygopro .
+#     - mkdir dist
+#     - cd ygopro
+#     - rm -rf expansions
+#     - ln -s ../ ./expansions
+#     - ls -1 ../*.cdb | xargs -I '{}' sqlite3 '{}' "select id from datas where type != 0x11 and (type & 0x4000) = 0;" | xargs -I {} -P $(nproc) bash -c './ygopro {} 2>&1 | tee ../redtext-{}.txt'
+#     - cd ..
+#     - cat redtext-*.txt > redtext.txt
+#     # if there are any lines in redtext.txt fail the job
+#     - exit $(wc -l < redtext.txt)
+
+jest:
   stage: prepare2
   dependencies:
-    - add_script_diff
+    - prepare_jest_env
+    - npm_ci
   tags:
     - linux
-  image: git-registry.moenext.com/nanahira/srvpro:lite
   script:
-    - apt update && apt -y install sqlite3
-    - mv /ygopro-server/ygopro .
-    - mkdir dist
-    - cd ygopro
-    - rm -rf expansions
-    - ln -s ../ ./expansions
-    - ls -1 ../*.cdb | xargs -I '{}' sqlite3 '{}' "select id from datas where type != 0x11 and (type & 0x4000) = 0;" | xargs -I {} -P $(nproc) bash -c './ygopro {} 2>&1 | tee ../redtext-{}.txt'
-    - cd ..
-    - cat redtext-*.txt > redtext.txt
-    # if there are any lines in redtext.txt fail the job
-    - exit $(wc -l < redtext.txt)
+    - npm run test
 
 neos:
   stage: pack
