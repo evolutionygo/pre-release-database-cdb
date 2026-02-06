@@ -51,7 +51,7 @@
   },
   "dependencies": {
     "sql.js": "^1.13.0",
-    "ygopro-jstest": "^1.0.5",
+    "ygopro-jstest": "^1.0.6",
     "ygopro-msg-encode": "^1.1.5"
   }
 }
