@@ -3,7 +3,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { createTest } from "./utility/create-test";
 import { OcgcoreScriptConstants } from "ygopro-msg-encode";
-import { NoEffectAdvancor } from "ygopro-jstest";
+import { SlientAdvancor } from "ygopro-jstest";
 
 describe("No Red Text", () => {
   it("should not get redtext Lua errors", async () => {
@@ -30,7 +30,7 @@ describe("No Red Text", () => {
                 code: id,
                 location: OcgcoreScriptConstants.LOCATION_DECK,
               })
-              .advance(NoEffectAdvancor()),
+              .advance(SlientAdvancor()),
           );
         }
       }
