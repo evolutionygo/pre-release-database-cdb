@@ -1,4 +1,4 @@
---糾罪巧γ'-「exapatisIA」
+--糾罪巧γ’－「exapatisIA」
 CATEGORY_MSET			   =0x100000000	--包含盖放怪兽的效果
 CATEGORY_SSET			   =0x200000000	--包含盖放魔陷的效果
 local s,id,o=GetID()

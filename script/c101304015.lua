@@ -1,4 +1,4 @@
---道化の一座 ホワイトフェイス 
+--道化の一座 ホワイトフェイス
 local s,id,o=GetID()
 CATEGORY_MSET			   =0x100000000	--包含盖放怪兽的效果
 function s.initial_effect(c)
