@@ -89,3 +89,38 @@ https://cdn02.moecube.com:444/ygopro-super-pre/versions/master/test-release-v2.j
 - 通知相关人员进行整合到 8888 服务器。
 
 本方法测试的 BUG 进度在表格的「内核更新测试记录」标签页追踪。
+
+### 自动化测试
+
+进行测试之后，请把相关的 yrp 录像文件放置在 `tests/yrp` 目录内。日后系统自动化测试将会运行这些 yrp 回放文件，避免后续重复脚本故障。
+
+如果 yrp 是使用残局运行的，那么请把对应的残局文件放在 `tests/single` 目录内（请不要改残局名字）。
+
+#### 环境准备
+
+如果需要做 yrp 固化或者运行测试本身，那么需要在本目录内准备下列文件，并准备好 Node.js 环境，运行 `npm ci` 安装必要 js 依赖，确保测试框架正常运行。
+
+- `ygopro/cards.cdb`
+- `ygopro/script`
+
+不需要额外放入超先行卡数据或者 ypk。超先行卡数据会从根目录读取。
+
+#### yrp 固化
+
+默认情况下，测试 yrp 只测试「YRP 是否能正常运行」，不会测试「能否复现特定的游戏状态」。如果需要测试特定的游戏状态，请使用 `freezeyrp` 脚本把 yrp 固化。
+
+```bash
+npm run freezeyrp <name1> <name2> ...
+```
+
+例如
+
+```bash
+npm run freezeyrp sample
+```
+
+这会读取 `tests/yrp/sample.yrp` 文件，在项目内创建 `tests/yrp-info/sample.yaml` 文件，记录 `sample.yrp` 的游戏状态。之后每次运行测试时，系统会把 `sample.yrp` 固化成 `sample.yaml` 记录的状态，进行更为严格的检查。
+
+#### jstest api
+
+对于使用 jstest api 创建的 `spec.ts` 测试文件，请放在 `tests/specs` 目录内。系统会自动运行这些测试文件。

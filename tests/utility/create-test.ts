@@ -11,6 +11,7 @@ export const createTest = (
       ygoproPath: [
         ...(options.ygoproPath || []),
         process.cwd(),
+        path.resolve(process.cwd(), "tests"),
         path.resolve(process.cwd(), process.env.YGOPRO_PATH || "ygopro"),
       ],
     },
