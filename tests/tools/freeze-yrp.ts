@@ -11,18 +11,20 @@ async function main() {
     process.exit(1);
   }
   for (const yrpFilename of yrpFilenames) {
+    const yrpParts = yrpFilename.split("/").filter((part) => part.length > 0);
     const fullPath = path.resolve(
       process.cwd(),
       "tests",
       "yrp",
-      `${yrpFilename}.yrp`,
+      path.join(...yrpParts) + ".yrp",
     );
     const destPath = path.resolve(
       process.cwd(),
       "tests",
       "yrp-info",
-      `${yrpFilename}.yaml`,
+      path.join(...yrpParts) + ".yaml",
     );
+    await fs.promises.mkdir(path.dirname(destPath), { recursive: true });
     console.log(`Will save YRP info from ${fullPath} to ${destPath}`);
     await createTest({ yrp: fullPath }, async (test) => {
       const info = toYrpInfo(test);

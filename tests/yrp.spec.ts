@@ -7,22 +7,38 @@ import fs from "node:fs";
 
 describe("YRP", () => {
   const yrpDirPath = path.resolve(process.cwd(), "tests", "yrp");
-  const yrpDir = readdirSync(yrpDirPath);
-  for (const yrpFilename of yrpDir) {
-    if (!yrpFilename.endsWith(".yrp")) continue;
-    const testName = `YRP: ${yrpFilename}`;
+  const listYrpFiles = (dirPath: string, basePath: string): string[] => {
+    const entries = readdirSync(dirPath, { withFileTypes: true });
+    const results: string[] = [];
+    for (const entry of entries) {
+      const entryPath = path.join(dirPath, entry.name);
+      if (entry.isDirectory()) {
+        results.push(...listYrpFiles(entryPath, basePath));
+        continue;
+      }
+      if (entry.isFile() && entry.name.endsWith(".yrp")) {
+        results.push(path.relative(basePath, entryPath));
+      }
+    }
+    return results;
+  };
+
+  const yrpFiles = listYrpFiles(yrpDirPath, yrpDirPath).sort();
+  for (const yrpRelativePath of yrpFiles) {
+    const testName = `YRP: ${yrpRelativePath}`;
     it(testName, async () => {
-      const yrpPath = path.resolve(yrpDirPath, yrpFilename);
+      const yrpPath = path.resolve(yrpDirPath, yrpRelativePath);
       await createTest({ yrp: yrpPath }, async (test) => {
         const yrpInfoPath = path.resolve(
-          __dirname,
+          process.cwd(),
+          "tests",
           "yrp-info",
-          yrpFilename.slice(0, -4) + ".yaml",
+          yrpRelativePath.replace(/\.yrp$/i, ".yaml"),
         );
         const currentInfo = toYrpInfo(test);
         const hasYrpInfo = existsSync(yrpInfoPath);
         console.log(
-          `Testing YRP: ${yrpFilename}\nYRP info yaml: ${hasYrpInfo ? "available" : "none"}\n${currentInfo.snapshotText}`,
+          `Testing YRP: ${yrpRelativePath}\nYRP info yaml: ${hasYrpInfo ? "available" : "none"}\n${currentInfo.snapshotText}`,
         );
         if (hasYrpInfo) {
           // do further tests
