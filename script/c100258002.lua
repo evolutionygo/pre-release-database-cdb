@@ -40,14 +40,12 @@ end
 function s.hspfilter1(c,tp,fc,g)
 	return c:IsFusionSetCard(0x10f3)
 		and c:IsControler(tp) and c:IsCanBeFusionMaterial(fc,SUMMON_TYPE_SPECIAL)
-		and g:IsExists(s.hspfilter2,1,c,tp,fc,c)
+		and g:IsExists(s.hspfilter2,1,c,tp,fc)
 end
-function s.hspfilter2(c,tp,fc,sc)
-	local g=Group.FromCards(c,sc)
+function s.hspfilter2(c,tp,fc)
 	return c:IsFaceup() and c:GetCounter(0x1041)>0
 		and c:IsReleasable(REASON_MATERIAL|REASON_SPSUMMON)
 		and c:IsCanBeFusionMaterial(fc,SUMMON_TYPE_SPECIAL)
-		and Duel.GetLocationCountFromEx(tp,tp,g,fc)>0
 end
 function s.hspfilter(c,tp,fc)
 	return c:IsFaceup() and (c:IsFusionSetCard(0x10f3) or c:GetCounter(0x1041)>0)
@@ -55,16 +53,15 @@ function s.hspfilter(c,tp,fc)
 		and c:IsCanBeFusionMaterial(fc,SUMMON_TYPE_SPECIAL)
 end
 function s.fselect(g,tp,fc)
-	return g:IsExists(s.hspfilter1,1,nil,tp,fc,g) and aux.mzctcheckrel(g,tp,REASON_SPSUMMON)
+	return g:IsExists(s.hspfilter1,1,nil,tp,fc,g) and Duel.GetLocationCountFromEx(tp,tp,g,fc)>0
 end
 function s.hspcon(e,c)
 	if c==nil then return true end
-	local rg=Duel.GetMatchingGroup(s.hspfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil,tp,c)
-	return rg:CheckSubGroup(s.fselect,2,2,tp,c)
+	local rg=Duel.GetMatchingGroup(s.hspfilter,e:GetHandlerPlayer(),LOCATION_MZONE,LOCATION_MZONE,nil,e:GetHandlerPlayer(),c)
+	return rg:CheckSubGroup(s.fselect,2,2,e:GetHandlerPlayer(),c)
 end
 function s.hsptg(e,tp,eg,ep,ev,re,r,rp,chk,c)
 	local rg=Duel.GetMatchingGroup(s.hspfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil,tp,c)
-	local rg=Duel.GetReleaseGroup(tp,false,REASON_SPSUMMON)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
 	local sg=rg:SelectSubGroup(tp,s.fselect,true,2,2,tp,c)
 	if sg:GetCount()>0 then
