@@ -37,10 +37,10 @@ function s.initial_effect(c)
 	e3:SetOperation(s.desop)
 	c:RegisterEffect(e3)
 end
-function s.hspfilter1(c,tp,fc)
+function s.hspfilter1(c,tp,fc,g)
 	return c:IsFusionSetCard(0x10f3)
 		and c:IsControler(tp) and c:IsCanBeFusionMaterial(fc,SUMMON_TYPE_SPECIAL)
-		and Duel.IsExistingMatchingCard(s.hspfilter2,tp,LOCATION_MZONE,LOCATION_MZONE,1,c,tp,fc,c)
+		and g:IsExists(s.hspfilter2,1,c,tp,fc,c)
 end
 function s.hspfilter2(c,tp,fc,sc)
 	local g=Group.FromCards(c,sc)
@@ -49,26 +49,27 @@ function s.hspfilter2(c,tp,fc,sc)
 		and c:IsCanBeFusionMaterial(fc,SUMMON_TYPE_SPECIAL)
 		and Duel.GetLocationCountFromEx(tp,tp,g,fc)>0
 end
+function s.hspfilter(c,tp,fc)
+	return c:IsFaceup() and (c:IsFusionSetCard(0x10f3) or c:GetCounter(0x1041)>0)
+		and c:IsReleasable(REASON_MATERIAL|REASON_SPSUMMON)
+		and c:IsCanBeFusionMaterial(fc,SUMMON_TYPE_SPECIAL)
+end
+function s.fselect(g,tp,fc)
+	return g:IsExists(s.hspfilter1,1,nil,tp,fc,g) and aux.mzctcheckrel(g,tp,REASON_SPSUMMON)
+end
 function s.hspcon(e,c)
 	if c==nil then return true end
-	return Duel.CheckReleaseGroupEx(c:GetControler(),s.hspfilter1,1,REASON_SPSUMMON,false,nil,c:GetControler(),c)
+	local rg=Duel.GetMatchingGroup(s.hspfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil,tp,c)
+	return rg:CheckSubGroup(s.fselect,2,2,tp,c)
 end
 function s.hsptg(e,tp,eg,ep,ev,re,r,rp,chk,c)
-	local g1=Duel.GetReleaseGroup(tp,false,REASON_SPSUMMON):Filter(s.hspfilter1,nil,tp,c)
+	local rg=Duel.GetMatchingGroup(s.hspfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil,tp,c)
+	local rg=Duel.GetReleaseGroup(tp,false,REASON_SPSUMMON)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
-	local tc1=g1:SelectUnselect(nil,tp,false,true,1,1)
-	if tc1 then
-		local g2=Duel.GetMatchingGroup(s.hspfilter2,tp,LOCATION_MZONE,LOCATION_MZONE,tc1,tp,c,tc1)
-		local tc2=g2:SelectUnselect(nil,tp,false,true,1,1)
-		if tc2 then
-			local mg=Group.CreateGroup()
-			mg:AddCard(tc1)
-			mg:AddCard(tc2)
-			mg:KeepAlive()
-			e:SetLabelObject(mg)
-			return true
-		end
-		return false
+	local sg=rg:SelectSubGroup(tp,s.fselect,true,2,2,tp,c)
+	if sg:GetCount()>0 then
+		sg:KeepAlive()
+		e:SetLabelObject(mg)
 	else return false end
 end
 function s.hspop(e,tp,eg,ep,ev,re,r,rp,c)
