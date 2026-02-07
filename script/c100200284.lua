@@ -65,18 +65,19 @@ function s.tdcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetTurnPlayer()==1-tp
 end
 function s.tdfilter(c,tp)
-	return c:IsFaceup() and c:IsAttribute(ATTRIBUTE_WIND) and c:IsAbleToDeck()
-		and Duel.IsExistingTarget(Card.IsAbleToDeck,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,c)
+	return c:IsFaceup() and c:IsControler(tp) and c:IsLocation(LOCATION_MZONE) and c:IsAttribute(ATTRIBUTE_WIND)
+end
+function s.fselect(g,tp)
+	return g:IsExists(s.tdfilter,1,nil,tp)
 end
 function s.tdtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end
-	if chk==0 then return Duel.IsExistingTarget(s.tdfilter,tp,LOCATION_MZONE,0,1,nil) end
+	local rg=Duel.GetMatchingGroup(Card.IsAbleToDeck,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil,tp)
+	if chk==0 then return rg:CheckSubGroup(s.fselect,2,2,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-	local g1=Duel.SelectTarget(tp,s.tdfilter,tp,LOCATION_MZONE,0,1,1,nil)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-	local g2=Duel.SelectTarget(tp,Card.IsAbleToDeck,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,g1)
-	g1:Merge(g2)
-	Duel.SetOperationInfo(0,CATEGORY_TODECK,g1,2,0,0)
+	local sg=rg:SelectSubGroup(tp,s.fselect,false,2,2,tp,c)
+	Duel.SetTargetCard(sg)
+	Duel.SetOperationInfo(0,CATEGORY_TODECK,sg,2,0,0)
 end
 function s.tdop(e,tp,eg,ep,ev,re,r,rp)
 	local tg=Duel.GetTargetsRelateToChain()
