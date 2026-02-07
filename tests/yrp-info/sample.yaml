@@ -438,6 +438,16 @@ messages:
       sequence: 4
       position: 10
     reason: 64
+  - identifier: 31
+    msg: YGOProMsgConfirmCards
+    player: 0
+    skipPanel: 0
+    count: 1
+    cards:
+      - code: 56713174
+        controller: 1
+        location: 2
+        sequence: 4
   - identifier: 33
     msg: YGOProMsgShuffleHand
     player: 1
@@ -511,6 +521,16 @@ messages:
       sequence: 2
       position: 10
     reason: 64
+  - identifier: 31
+    msg: YGOProMsgConfirmCards
+    player: 1
+    skipPanel: 0
+    count: 1
+    cards:
+      - code: 99185129
+        controller: 0
+        location: 2
+        sequence: 2
   - identifier: 33
     msg: YGOProMsgShuffleHand
     player: 0
@@ -757,6 +777,16 @@ messages:
       sequence: 2
       position: 10
     reason: 64
+  - identifier: 31
+    msg: YGOProMsgConfirmCards
+    player: 1
+    skipPanel: 0
+    count: 1
+    cards:
+      - code: 99185129
+        controller: 0
+        location: 2
+        sequence: 2
   - identifier: 33
     msg: YGOProMsgShuffleHand
     player: 0
@@ -927,6 +957,16 @@ messages:
       sequence: 2
       position: 10
     reason: 64
+  - identifier: 31
+    msg: YGOProMsgConfirmCards
+    player: 1
+    skipPanel: 0
+    count: 1
+    cards:
+      - code: 14735698
+        controller: 0
+        location: 2
+        sequence: 2
   - identifier: 33
     msg: YGOProMsgShuffleHand
     player: 0
