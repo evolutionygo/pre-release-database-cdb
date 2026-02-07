@@ -1,4 +1,4 @@
---憑依共鳴-ウィン
+--憑依共鳴－ウィン
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--material
@@ -79,8 +79,7 @@ function s.tdtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_TODECK,g1,2,0,0)
 end
 function s.tdop(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
-	local tg=g:Filter(Card.IsRelateToChain,nil)
+	local tg=Duel.GetTargetsRelateToChain()
 	if tg:GetCount()>0 then
 		aux.PlaceCardsOnDeckBottom(tp,tg)
 	end
