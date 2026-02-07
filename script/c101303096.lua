@@ -20,9 +20,7 @@ function s.cfilter2(c)
 	return c:IsRace(RACE_DINOSAUR)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then
-		return Duel.IsExistingMatchingCard(s.cfilter1,tp,LOCATION_DECK,0,1,nil,tp) and Duel.IsPlayerCanDiscardDeck(tp,2)
-	end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.cfilter1,tp,LOCATION_DECK,0,1,nil,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,0,LOCATION_EXTRA)
 end
 function s.filter2(c,e,tp,m,f,chkf)
@@ -34,20 +32,16 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local dcount=Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)
 	if dcount==0 then return end
 	local seq1=-1
-	local spcard1=nil
 	for tc in aux.Next(g1) do
 		if tc:GetSequence()>seq1 then
 			seq1=tc:GetSequence()
-			spcard1=tc
 		end
 	end
 	local g2=Duel.GetMatchingGroup(s.cfilter2,tp,LOCATION_DECK,0,nil)
 	local seq2=-1
-	local spcard2=nil
 	for tc in aux.Next(g2) do
 		if tc:GetSequence()>seq2 and tc:GetSequence()~=seq1 then
 			seq2=tc:GetSequence()
-			spcard2=tc
 		end
 	end
 	if seq1==-1 or seq2==-1 then
