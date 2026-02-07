@@ -64,11 +64,11 @@ end
 function s.tdcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetTurnPlayer()==1-tp
 end
+function s.tdfilter(c,tp)
+	return c:IsFaceup() and c:IsControler(tp) and c:IsAttribute(ATTRIBUTE_WIND) and c:IsType(TYPE_MONSTER)
+end
 function s.gcheck(g,tp)
 	return g:IsExists(s.tdfilter,1,nil,tp)
-end
-function s.tdfilter(c,tp)
-	return c:IsFaceup() and c:IsAttribute(ATTRIBUTE_WIND) and c:IsType(TYPE_MONSTER)
 end
 function s.tdtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end
