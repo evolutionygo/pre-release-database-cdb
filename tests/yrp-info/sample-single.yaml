@@ -1,22 +1,22 @@
 messages:
   - identifier: 33
-    msg: YGOProMsgShuffleHand
+    msg: ShuffleHand
     player: 0
     count: 2
     cards:
       - 28985331
       - 10000000
   - identifier: 41
-    msg: YGOProMsgNewPhase
+    msg: NewPhase
     phase: 1
   - identifier: 41
-    msg: YGOProMsgNewPhase
+    msg: NewPhase
     phase: 2
   - identifier: 41
-    msg: YGOProMsgNewPhase
+    msg: NewPhase
     phase: 4
   - identifier: 11
-    msg: YGOProMsgSelectIdleCmd
+    msg: SelectIdleCmd
     player: 0
     summonableCount: 1
     summonableCards:

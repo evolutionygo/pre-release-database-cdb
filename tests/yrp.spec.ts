@@ -54,7 +54,9 @@ describe("YRP", () => {
           );
           const sortMesssages = (messages: MsgSnapshot[]) =>
             messages
-              .filter((m) => !m.msg.includes("Hint"))
+              .filter(
+                (m) => !m.msg.includes("Hint") && m.msg !== "ConfirmCards",
+              )
               .map((m) => {
                 // go through all properties and prune every desc
                 const pruneDesc = <T>(obj: T, visited = new Set<any>()): T => {

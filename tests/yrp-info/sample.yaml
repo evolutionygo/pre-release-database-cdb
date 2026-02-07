@@ -1,6 +1,6 @@
 messages:
   - identifier: 90
-    msg: YGOProMsgDraw
+    msg: Draw
     player: 0
     count: 5
     cards:
@@ -10,7 +10,7 @@ messages:
       - 96729612
       - 51452091
   - identifier: 90
-    msg: YGOProMsgDraw
+    msg: Draw
     player: 1
     count: 5
     cards:
@@ -20,18 +20,18 @@ messages:
       - 56713174
       - 29596581
   - identifier: 40
-    msg: YGOProMsgNewTurn
+    msg: NewTurn
     player: 0
   - identifier: 41
-    msg: YGOProMsgNewPhase
+    msg: NewPhase
     phase: 1
   - identifier: 2
-    msg: YGOProMsgHint
+    msg: Hint
     type: 1
     player: 1
     desc: 20
   - identifier: 16
-    msg: YGOProMsgSelectChain
+    msg: SelectChain
     player: 1
     count: 1
     specialCount: 0
@@ -47,15 +47,15 @@ messages:
         subsequence: 10
         desc: 907410784
   - identifier: 41
-    msg: YGOProMsgNewPhase
+    msg: NewPhase
     phase: 2
   - identifier: 2
-    msg: YGOProMsgHint
+    msg: Hint
     type: 1
     player: 1
     desc: 21
   - identifier: 16
-    msg: YGOProMsgSelectChain
+    msg: SelectChain
     player: 1
     count: 1
     specialCount: 0
@@ -71,10 +71,10 @@ messages:
         subsequence: 10
         desc: 907410784
   - identifier: 41
-    msg: YGOProMsgNewPhase
+    msg: NewPhase
     phase: 4
   - identifier: 11
-    msg: YGOProMsgSelectIdleCmd
+    msg: SelectIdleCmd
     player: 0
     summonableCount: 1
     summonableCards:
@@ -122,17 +122,17 @@ messages:
     canEp: 1
     canShuffle: 1
   - identifier: 2
-    msg: YGOProMsgHint
+    msg: Hint
     type: 3
     player: 0
     desc: 51452091
   - identifier: 18
-    msg: YGOProMsgSelectPlace
+    msg: SelectPlace
     player: 0
     count: 0
     flag: 4294959359
   - identifier: 50
-    msg: YGOProMsgMove
+    msg: Move
     code: 51452091
     previous:
       controller: 0
@@ -146,10 +146,10 @@ messages:
       position: 10
     reason: 33555456
   - identifier: 54
-    msg: YGOProMsgSet
+    msg: Set
     code: 51452091
   - identifier: 16
-    msg: YGOProMsgSelectChain
+    msg: SelectChain
     player: 0
     count: 0
     specialCount: 0
@@ -157,7 +157,7 @@ messages:
     hint1: 2162688
     chains: []
   - identifier: 16
-    msg: YGOProMsgSelectChain
+    msg: SelectChain
     player: 1
     count: 1
     specialCount: 0
@@ -173,7 +173,7 @@ messages:
         subsequence: 10
         desc: 907410784
   - identifier: 11
-    msg: YGOProMsgSelectIdleCmd
+    msg: SelectIdleCmd
     player: 0
     summonableCount: 1
     summonableCards:
@@ -217,17 +217,17 @@ messages:
     canEp: 1
     canShuffle: 1
   - identifier: 2
-    msg: YGOProMsgHint
+    msg: Hint
     type: 3
     player: 0
     desc: 51452091
   - identifier: 18
-    msg: YGOProMsgSelectPlace
+    msg: SelectPlace
     player: 0
     count: 0
     flag: 4294960383
   - identifier: 50
-    msg: YGOProMsgMove
+    msg: Move
     code: 51452091
     previous:
       controller: 0
@@ -241,10 +241,10 @@ messages:
       position: 10
     reason: 33555456
   - identifier: 54
-    msg: YGOProMsgSet
+    msg: Set
     code: 51452091
   - identifier: 16
-    msg: YGOProMsgSelectChain
+    msg: SelectChain
     player: 0
     count: 0
     specialCount: 0
@@ -252,7 +252,7 @@ messages:
     hint1: 0
     chains: []
   - identifier: 16
-    msg: YGOProMsgSelectChain
+    msg: SelectChain
     player: 1
     count: 1
     specialCount: 0
@@ -268,7 +268,7 @@ messages:
         subsequence: 10
         desc: 907410784
   - identifier: 11
-    msg: YGOProMsgSelectIdleCmd
+    msg: SelectIdleCmd
     player: 0
     summonableCount: 1
     summonableCards:
@@ -308,17 +308,17 @@ messages:
     canEp: 1
     canShuffle: 1
   - identifier: 2
-    msg: YGOProMsgHint
+    msg: Hint
     type: 3
     player: 0
     desc: 96729612
   - identifier: 18
-    msg: YGOProMsgSelectPlace
+    msg: SelectPlace
     player: 0
     count: 1
     flag: 4294960895
   - identifier: 50
-    msg: YGOProMsgMove
+    msg: Move
     code: 96729612
     previous:
       controller: 0
@@ -332,7 +332,7 @@ messages:
       position: 5
     reason: 33555456
   - identifier: 70
-    msg: YGOProMsgChaining
+    msg: Chaining
     code: 96729612
     controller: 0
     location: 8
@@ -342,10 +342,10 @@ messages:
     desc: 776
     chainPlayer: 0
   - identifier: 71
-    msg: YGOProMsgChained
+    msg: Chained
     chainCount: 1
   - identifier: 16
-    msg: YGOProMsgSelectChain
+    msg: SelectChain
     player: 1
     count: 1
     specialCount: 1
@@ -361,7 +361,7 @@ messages:
         subsequence: 10
         desc: 907410784
   - identifier: 70
-    msg: YGOProMsgChaining
+    msg: Chaining
     code: 56713174
     controller: 1
     location: 2
@@ -371,7 +371,7 @@ messages:
     desc: -44039422
     chainPlayer: 21
   - identifier: 50
-    msg: YGOProMsgMove
+    msg: Move
     code: 56713174
     previous:
       controller: 1
@@ -385,10 +385,10 @@ messages:
       position: 5
     reason: 16512
   - identifier: 71
-    msg: YGOProMsgChained
+    msg: Chained
     chainCount: 2
   - identifier: 16
-    msg: YGOProMsgSelectChain
+    msg: SelectChain
     player: 0
     count: 0
     specialCount: 0
@@ -396,7 +396,7 @@ messages:
     hint1: 0
     chains: []
   - identifier: 16
-    msg: YGOProMsgSelectChain
+    msg: SelectChain
     player: 1
     count: 0
     specialCount: 0
@@ -404,15 +404,15 @@ messages:
     hint1: 0
     chains: []
   - identifier: 72
-    msg: YGOProMsgChainSolving
+    msg: ChainSolving
     chainCount: 2
   - identifier: 2
-    msg: YGOProMsgHint
+    msg: Hint
     type: 3
     player: 1
     desc: 506
   - identifier: 15
-    msg: YGOProMsgSelectCard
+    msg: SelectCard
     player: 1
     cancelable: 0
     min: 1
@@ -425,7 +425,7 @@ messages:
         sequence: 0
         subsequence: 8
   - identifier: 50
-    msg: YGOProMsgMove
+    msg: Move
     code: 56713174
     previous:
       controller: 1
@@ -438,8 +438,18 @@ messages:
       sequence: 4
       position: 10
     reason: 64
+  - identifier: 31
+    msg: ConfirmCards
+    player: 0
+    skipPanel: 0
+    count: 1
+    cards:
+      - code: 56713174
+        controller: 1
+        location: 2
+        sequence: 4
   - identifier: 33
-    msg: YGOProMsgShuffleHand
+    msg: ShuffleHand
     player: 1
     count: 5
     cards:
@@ -449,18 +459,18 @@ messages:
       - 82946847
       - 82946847
   - identifier: 73
-    msg: YGOProMsgChainSolved
+    msg: ChainSolved
     chainCount: 2
   - identifier: 72
-    msg: YGOProMsgChainSolving
+    msg: ChainSolving
     chainCount: 1
   - identifier: 2
-    msg: YGOProMsgHint
+    msg: Hint
     type: 3
     player: 0
     desc: 506
   - identifier: 15
-    msg: YGOProMsgSelectCard
+    msg: SelectCard
     player: 0
     cancelable: 0
     min: 1
@@ -498,7 +508,7 @@ messages:
         sequence: 5
         subsequence: 8
   - identifier: 50
-    msg: YGOProMsgMove
+    msg: Move
     code: 99185129
     previous:
       controller: 0
@@ -511,8 +521,18 @@ messages:
       sequence: 2
       position: 10
     reason: 64
+  - identifier: 31
+    msg: ConfirmCards
+    player: 1
+    skipPanel: 0
+    count: 1
+    cards:
+      - code: 99185129
+        controller: 0
+        location: 2
+        sequence: 2
   - identifier: 33
-    msg: YGOProMsgShuffleHand
+    msg: ShuffleHand
     player: 0
     count: 3
     cards:
@@ -520,10 +540,10 @@ messages:
       - 99185129
       - 23401839
   - identifier: 73
-    msg: YGOProMsgChainSolved
+    msg: ChainSolved
     chainCount: 1
   - identifier: 50
-    msg: YGOProMsgMove
+    msg: Move
     code: 96729612
     previous:
       controller: 0
@@ -537,9 +557,9 @@ messages:
       position: 5
     reason: 1024
   - identifier: 74
-    msg: YGOProMsgChainEnd
+    msg: ChainEnd
   - identifier: 16
-    msg: YGOProMsgSelectChain
+    msg: SelectChain
     player: 0
     count: 0
     specialCount: 0
@@ -547,7 +567,7 @@ messages:
     hint1: 32768
     chains: []
   - identifier: 16
-    msg: YGOProMsgSelectChain
+    msg: SelectChain
     player: 1
     count: 0
     specialCount: 0
@@ -555,7 +575,7 @@ messages:
     hint1: 10518528
     chains: []
   - identifier: 11
-    msg: YGOProMsgSelectIdleCmd
+    msg: SelectIdleCmd
     player: 0
     summonableCount: 1
     summonableCards:
@@ -591,17 +611,17 @@ messages:
     canEp: 1
     canShuffle: 1
   - identifier: 2
-    msg: YGOProMsgHint
+    msg: Hint
     type: 3
     player: 0
     desc: 23401839
   - identifier: 18
-    msg: YGOProMsgSelectPlace
+    msg: SelectPlace
     player: 0
     count: 1
     flag: 4294967264
   - identifier: 50
-    msg: YGOProMsgMove
+    msg: Move
     code: 23401839
     previous:
       controller: 0
@@ -615,14 +635,14 @@ messages:
       position: 1
     reason: 33555456
   - identifier: 60
-    msg: YGOProMsgSummoning
+    msg: Summoning
     code: 23401839
     controller: 0
     location: 4
     sequence: 2
     position: 1
   - identifier: 16
-    msg: YGOProMsgSelectChain
+    msg: SelectChain
     player: 0
     count: 0
     specialCount: 0
@@ -630,7 +650,7 @@ messages:
     hint1: 0
     chains: []
   - identifier: 16
-    msg: YGOProMsgSelectChain
+    msg: SelectChain
     player: 1
     count: 0
     specialCount: 0
@@ -638,9 +658,9 @@ messages:
     hint1: 0
     chains: []
   - identifier: 61
-    msg: YGOProMsgSummoned
+    msg: Summoned
   - identifier: 12
-    msg: YGOProMsgSelectEffectYn
+    msg: SelectEffectYn
     player: 0
     code: 23401839
     controller: 0
@@ -649,7 +669,7 @@ messages:
     position: 1
     desc: 221
   - identifier: 70
-    msg: YGOProMsgChaining
+    msg: Chaining
     code: 23401839
     controller: 0
     location: 4
@@ -659,10 +679,10 @@ messages:
     desc: 1458569732
     chainPlayer: 81
   - identifier: 71
-    msg: YGOProMsgChained
+    msg: Chained
     chainCount: 1
   - identifier: 16
-    msg: YGOProMsgSelectChain
+    msg: SelectChain
     player: 1
     count: 0
     specialCount: 0
@@ -670,7 +690,7 @@ messages:
     hint1: 0
     chains: []
   - identifier: 16
-    msg: YGOProMsgSelectChain
+    msg: SelectChain
     player: 0
     count: 0
     specialCount: 0
@@ -678,15 +698,15 @@ messages:
     hint1: 0
     chains: []
   - identifier: 72
-    msg: YGOProMsgChainSolving
+    msg: ChainSolving
     chainCount: 1
   - identifier: 2
-    msg: YGOProMsgHint
+    msg: Hint
     type: 3
     player: 0
     desc: 506
   - identifier: 15
-    msg: YGOProMsgSelectCard
+    msg: SelectCard
     player: 0
     cancelable: 0
     min: 1
@@ -744,7 +764,7 @@ messages:
         sequence: 9
         subsequence: 8
   - identifier: 50
-    msg: YGOProMsgMove
+    msg: Move
     code: 99185129
     previous:
       controller: 0
@@ -757,8 +777,18 @@ messages:
       sequence: 2
       position: 10
     reason: 64
+  - identifier: 31
+    msg: ConfirmCards
+    player: 1
+    skipPanel: 0
+    count: 1
+    cards:
+      - code: 99185129
+        controller: 0
+        location: 2
+        sequence: 2
   - identifier: 33
-    msg: YGOProMsgShuffleHand
+    msg: ShuffleHand
     player: 0
     count: 3
     cards:
@@ -766,12 +796,12 @@ messages:
       - 99185129
       - 99185129
   - identifier: 73
-    msg: YGOProMsgChainSolved
+    msg: ChainSolved
     chainCount: 1
   - identifier: 74
-    msg: YGOProMsgChainEnd
+    msg: ChainEnd
   - identifier: 16
-    msg: YGOProMsgSelectChain
+    msg: SelectChain
     player: 0
     count: 0
     specialCount: 0
@@ -779,7 +809,7 @@ messages:
     hint1: 32768
     chains: []
   - identifier: 16
-    msg: YGOProMsgSelectChain
+    msg: SelectChain
     player: 1
     count: 0
     specialCount: 0
@@ -787,7 +817,7 @@ messages:
     hint1: 2129920
     chains: []
   - identifier: 11
-    msg: YGOProMsgSelectIdleCmd
+    msg: SelectIdleCmd
     player: 0
     summonableCount: 0
     summonableCards: []
@@ -820,7 +850,7 @@ messages:
     canEp: 1
     canShuffle: 1
   - identifier: 70
-    msg: YGOProMsgChaining
+    msg: Chaining
     code: 99185129
     controller: 0
     location: 2
@@ -830,7 +860,7 @@ messages:
     desc: 512754178
     chainPlayer: 151
   - identifier: 50
-    msg: YGOProMsgMove
+    msg: Move
     code: 99185129
     previous:
       controller: 0
@@ -844,10 +874,10 @@ messages:
       position: 5
     reason: 16512
   - identifier: 71
-    msg: YGOProMsgChained
+    msg: Chained
     chainCount: 1
   - identifier: 16
-    msg: YGOProMsgSelectChain
+    msg: SelectChain
     player: 1
     count: 0
     specialCount: 0
@@ -855,7 +885,7 @@ messages:
     hint1: 0
     chains: []
   - identifier: 16
-    msg: YGOProMsgSelectChain
+    msg: SelectChain
     player: 0
     count: 0
     specialCount: 0
@@ -863,15 +893,15 @@ messages:
     hint1: 0
     chains: []
   - identifier: 72
-    msg: YGOProMsgChainSolving
+    msg: ChainSolving
     chainCount: 1
   - identifier: 2
-    msg: YGOProMsgHint
+    msg: Hint
     type: 3
     player: 0
     desc: 506
   - identifier: 15
-    msg: YGOProMsgSelectCard
+    msg: SelectCard
     player: 0
     cancelable: 0
     min: 1
@@ -914,7 +944,7 @@ messages:
         sequence: 6
         subsequence: 8
   - identifier: 50
-    msg: YGOProMsgMove
+    msg: Move
     code: 14735698
     previous:
       controller: 0
@@ -927,8 +957,18 @@ messages:
       sequence: 2
       position: 10
     reason: 64
+  - identifier: 31
+    msg: ConfirmCards
+    player: 1
+    skipPanel: 0
+    count: 1
+    cards:
+      - code: 14735698
+        controller: 0
+        location: 2
+        sequence: 2
   - identifier: 33
-    msg: YGOProMsgShuffleHand
+    msg: ShuffleHand
     player: 0
     count: 3
     cards:
@@ -936,12 +976,12 @@ messages:
       - 14735698
       - 99185129
   - identifier: 73
-    msg: YGOProMsgChainSolved
+    msg: ChainSolved
     chainCount: 1
   - identifier: 74
-    msg: YGOProMsgChainEnd
+    msg: ChainEnd
   - identifier: 16
-    msg: YGOProMsgSelectChain
+    msg: SelectChain
     player: 0
     count: 0
     specialCount: 0
@@ -949,7 +989,7 @@ messages:
     hint1: 32768
     chains: []
   - identifier: 16
-    msg: YGOProMsgSelectChain
+    msg: SelectChain
     player: 1
     count: 0
     specialCount: 0
@@ -957,7 +997,7 @@ messages:
     hint1: 2129920
     chains: []
   - identifier: 11
-    msg: YGOProMsgSelectIdleCmd
+    msg: SelectIdleCmd
     player: 0
     summonableCount: 0
     summonableCards: []
@@ -984,17 +1024,17 @@ messages:
     canEp: 1
     canShuffle: 1
   - identifier: 2
-    msg: YGOProMsgHint
+    msg: Hint
     type: 3
     player: 0
     desc: 14735698
   - identifier: 18
-    msg: YGOProMsgSelectPlace
+    msg: SelectPlace
     player: 0
     count: 1
     flag: 4294960895
   - identifier: 50
-    msg: YGOProMsgMove
+    msg: Move
     code: 14735698
     previous:
       controller: 0
@@ -1008,7 +1048,7 @@ messages:
       position: 5
     reason: 64
   - identifier: 70
-    msg: YGOProMsgChaining
+    msg: Chaining
     code: 14735698
     controller: 0
     location: 8
@@ -1018,10 +1058,10 @@ messages:
     desc: 776
     chainPlayer: 0
   - identifier: 71
-    msg: YGOProMsgChained
+    msg: Chained
     chainCount: 1
   - identifier: 16
-    msg: YGOProMsgSelectChain
+    msg: SelectChain
     player: 1
     count: 0
     specialCount: 0
@@ -1029,7 +1069,7 @@ messages:
     hint1: 0
     chains: []
   - identifier: 16
-    msg: YGOProMsgSelectChain
+    msg: SelectChain
     player: 0
     count: 0
     specialCount: 0
@@ -1037,15 +1077,15 @@ messages:
     hint1: 0
     chains: []
   - identifier: 72
-    msg: YGOProMsgChainSolving
+    msg: ChainSolving
     chainCount: 1
   - identifier: 2
-    msg: YGOProMsgHint
+    msg: Hint
     type: 3
     player: 0
     desc: 509
   - identifier: 15
-    msg: YGOProMsgSelectCard
+    msg: SelectCard
     player: 0
     cancelable: 0
     min: 1
@@ -1063,12 +1103,12 @@ messages:
         sequence: 1
         subsequence: 10
   - identifier: 2
-    msg: YGOProMsgHint
+    msg: Hint
     type: 3
     player: 0
     desc: 500
   - identifier: 26
-    msg: YGOProMsgSelectUnselectCard
+    msg: SelectUnselectCard
     player: 0
     finishable: 0
     cancelable: 1
@@ -1089,7 +1129,7 @@ messages:
     unselectableCount: 0
     unselectableCards: []
   - identifier: 50
-    msg: YGOProMsgMove
+    msg: Move
     code: 99185129
     previous:
       controller: 0
@@ -1103,22 +1143,22 @@ messages:
       position: 5
     reason: 1048650
   - identifier: 2
-    msg: YGOProMsgHint
+    msg: Hint
     type: 3
     player: 0
     desc: 99185129
   - identifier: 18
-    msg: YGOProMsgSelectPlace
+    msg: SelectPlace
     player: 0
     count: 1
     flag: 4294967268
   - identifier: 19
-    msg: YGOProMsgSelectPosition
+    msg: SelectPosition
     player: 0
     code: 99185129
     positions: 5
   - identifier: 50
-    msg: YGOProMsgMove
+    msg: Move
     code: 99185129
     previous:
       controller: 0
@@ -1132,19 +1172,19 @@ messages:
       position: 1
     reason: 2048
   - identifier: 62
-    msg: YGOProMsgSpSummoning
+    msg: SpSummoning
     code: 99185129
     controller: 0
     location: 4
     sequence: 1
     position: 1
   - identifier: 63
-    msg: YGOProMsgSpSummoned
+    msg: SpSummoned
   - identifier: 73
-    msg: YGOProMsgChainSolved
+    msg: ChainSolved
     chainCount: 1
   - identifier: 50
-    msg: YGOProMsgMove
+    msg: Move
     code: 14735698
     previous:
       controller: 0
@@ -1158,9 +1198,9 @@ messages:
       position: 5
     reason: 1024
   - identifier: 74
-    msg: YGOProMsgChainEnd
+    msg: ChainEnd
   - identifier: 16
-    msg: YGOProMsgSelectChain
+    msg: SelectChain
     player: 0
     count: 0
     specialCount: 0
@@ -1168,7 +1208,7 @@ messages:
     hint1: 32768
     chains: []
   - identifier: 16
-    msg: YGOProMsgSelectChain
+    msg: SelectChain
     player: 1
     count: 0
     specialCount: 0
@@ -1176,7 +1216,7 @@ messages:
     hint1: 8421504
     chains: []
   - identifier: 11
-    msg: YGOProMsgSelectIdleCmd
+    msg: SelectIdleCmd
     player: 0
     summonableCount: 0
     summonableCards: []
@@ -1194,12 +1234,12 @@ messages:
     canEp: 1
     canShuffle: 0
   - identifier: 2
-    msg: YGOProMsgHint
+    msg: Hint
     type: 1
     player: 1
     desc: 23
   - identifier: 16
-    msg: YGOProMsgSelectChain
+    msg: SelectChain
     player: 1
     count: 0
     specialCount: 0
@@ -1207,22 +1247,22 @@ messages:
     hint1: 4
     chains: []
   - identifier: 41
-    msg: YGOProMsgNewPhase
+    msg: NewPhase
     phase: 512
   - identifier: 40
-    msg: YGOProMsgNewTurn
+    msg: NewTurn
     player: 1
   - identifier: 41
-    msg: YGOProMsgNewPhase
+    msg: NewPhase
     phase: 1
   - identifier: 90
-    msg: YGOProMsgDraw
+    msg: Draw
     player: 1
     count: 1
     cards:
       - 24224830
   - identifier: 16
-    msg: YGOProMsgSelectChain
+    msg: SelectChain
     player: 1
     count: 1
     specialCount: 0
@@ -1238,7 +1278,7 @@ messages:
         subsequence: 10
         desc: 0
   - identifier: 16
-    msg: YGOProMsgSelectChain
+    msg: SelectChain
     player: 0
     count: 2
     specialCount: 0
@@ -1262,7 +1302,7 @@ messages:
         subsequence: 10
         desc: 0
   - identifier: 53
-    msg: YGOProMsgPosChange
+    msg: PosChange
     card:
       controller: 187
       location: 24
@@ -1270,7 +1310,7 @@ messages:
     previousPosition: 3
     currentPosition: 0
   - identifier: 70
-    msg: YGOProMsgChaining
+    msg: Chaining
     code: 51452091
     controller: 0
     location: 8
@@ -1280,10 +1320,10 @@ messages:
     desc: 520
     chainPlayer: 0
   - identifier: 71
-    msg: YGOProMsgChained
+    msg: Chained
     chainCount: 1
   - identifier: 16
-    msg: YGOProMsgSelectChain
+    msg: SelectChain
     player: 1
     count: 1
     specialCount: 1
@@ -1299,7 +1339,7 @@ messages:
         subsequence: 10
         desc: 0
   - identifier: 16
-    msg: YGOProMsgSelectChain
+    msg: SelectChain
     player: 0
     count: 1
     specialCount: 1
@@ -1315,7 +1355,7 @@ messages:
         subsequence: 10
         desc: 0
   - identifier: 53
-    msg: YGOProMsgPosChange
+    msg: PosChange
     card:
       controller: 187
       location: 24
@@ -1323,7 +1363,7 @@ messages:
     previousPosition: 3
     currentPosition: 0
   - identifier: 70
-    msg: YGOProMsgChaining
+    msg: Chaining
     code: 51452091
     controller: 0
     location: 8
@@ -1333,10 +1373,10 @@ messages:
     desc: 264
     chainPlayer: 0
   - identifier: 71
-    msg: YGOProMsgChained
+    msg: Chained
     chainCount: 2
   - identifier: 16
-    msg: YGOProMsgSelectChain
+    msg: SelectChain
     player: 1
     count: 1
     specialCount: 1
@@ -1352,7 +1392,7 @@ messages:
         subsequence: 10
         desc: 0
   - identifier: 16
-    msg: YGOProMsgSelectChain
+    msg: SelectChain
     player: 0
     count: 0
     specialCount: 0
@@ -1360,24 +1400,24 @@ messages:
     hint1: 0
     chains: []
   - identifier: 72
-    msg: YGOProMsgChainSolving
+    msg: ChainSolving
     chainCount: 2
   - identifier: 73
-    msg: YGOProMsgChainSolved
+    msg: ChainSolved
     chainCount: 2
   - identifier: 72
-    msg: YGOProMsgChainSolving
+    msg: ChainSolving
     chainCount: 1
   - identifier: 76
-    msg: YGOProMsgChainDisabled
+    msg: ChainDisabled
     chainCount: 1
   - identifier: 73
-    msg: YGOProMsgChainSolved
+    msg: ChainSolved
     chainCount: 1
   - identifier: 74
-    msg: YGOProMsgChainEnd
+    msg: ChainEnd
   - identifier: 16
-    msg: YGOProMsgSelectChain
+    msg: SelectChain
     player: 1
     count: 1
     specialCount: 0
@@ -1393,7 +1433,7 @@ messages:
         subsequence: 10
         desc: 0
   - identifier: 16
-    msg: YGOProMsgSelectChain
+    msg: SelectChain
     player: 0
     count: 0
     specialCount: 0
@@ -1401,12 +1441,12 @@ messages:
     hint1: 32768
     chains: []
   - identifier: 2
-    msg: YGOProMsgHint
+    msg: Hint
     type: 1
     player: 1
     desc: 20
   - identifier: 16
-    msg: YGOProMsgSelectChain
+    msg: SelectChain
     player: 1
     count: 1
     specialCount: 0
@@ -1422,15 +1462,15 @@ messages:
         subsequence: 10
         desc: 0
   - identifier: 41
-    msg: YGOProMsgNewPhase
+    msg: NewPhase
     phase: 2
   - identifier: 2
-    msg: YGOProMsgHint
+    msg: Hint
     type: 1
     player: 1
     desc: 21
   - identifier: 16
-    msg: YGOProMsgSelectChain
+    msg: SelectChain
     player: 1
     count: 1
     specialCount: 0
@@ -1446,10 +1486,10 @@ messages:
         subsequence: 10
         desc: 0
   - identifier: 41
-    msg: YGOProMsgNewPhase
+    msg: NewPhase
     phase: 4
   - identifier: 11
-    msg: YGOProMsgSelectIdleCmd
+    msg: SelectIdleCmd
     player: 1
     summonableCount: 3
     summonableCards:
