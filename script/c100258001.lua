@@ -1,7 +1,7 @@
 --ブラック・ローズ・ドラゴン／バスター
 local s,id,o=GetID()
 function s.initial_effect(c)
-	aux.AddCodeList(c,73580471)
+	aux.AddCodeList(c,73580471,80280737)
 	c:EnableReviveLimit()
 	--Cannot special summon
 	local e1=Effect.CreateEffect(c)
