@@ -48,7 +48,7 @@ function s.hspfilter2(c,tp,fc)
 		and c:IsCanBeFusionMaterial(fc,SUMMON_TYPE_SPECIAL)
 end
 function s.hspfilter(c,tp,fc)
-	return c:IsFaceup() and (c:IsFusionSetCard(0x10f3) or c:GetCounter(0x1041)>0)
+	return (c:IsFaceup() or c:IsControler(tp)) and (c:IsFusionSetCard(0x10f3) or c:GetCounter(0x1041)>0)
 		and c:IsReleasable(REASON_MATERIAL|REASON_SPSUMMON)
 		and c:IsCanBeFusionMaterial(fc,SUMMON_TYPE_SPECIAL)
 end
@@ -67,6 +67,7 @@ function s.hsptg(e,tp,eg,ep,ev,re,r,rp,chk,c)
 	if sg:GetCount()>0 then
 		sg:KeepAlive()
 		e:SetLabelObject(sg)
+		return true
 	else return false end
 end
 function s.hspop(e,tp,eg,ep,ev,re,r,rp,c)
