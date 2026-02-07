@@ -66,7 +66,7 @@ function s.hsptg(e,tp,eg,ep,ev,re,r,rp,chk,c)
 	local sg=rg:SelectSubGroup(tp,s.fselect,true,2,2,tp,c)
 	if sg:GetCount()>0 then
 		sg:KeepAlive()
-		e:SetLabelObject(mg)
+		e:SetLabelObject(sg)
 	else return false end
 end
 function s.hspop(e,tp,eg,ep,ev,re,r,rp,c)
