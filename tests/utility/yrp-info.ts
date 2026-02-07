@@ -15,13 +15,14 @@ export interface YrpInfo {
 export const toYrpInfo = (test: YGOProTest): YrpInfo => {
   const snapshot = test.querySnapshot();
   const snapshotText = formatSnapshot(snapshot);
+  const stripMsgName = (msg: string) => msg.replace(/^YGOProMsg/, "");
   return {
     messages: test.allMessages.map((msg) => ({
       identifier: msg.identifier,
-      msg: msg.constructor.name,
+      msg: stripMsgName(msg.constructor.name),
       ...msg,
     })),
     snapshot,
     snapshotText,
   };
-}
+};
