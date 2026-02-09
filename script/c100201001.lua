@@ -82,7 +82,6 @@ end
 function s.lktg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	local fid=c:GetFieldID()
-	c:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,1,fid)
 	local le=Effect.CreateEffect(c)
 	le:SetType(EFFECT_TYPE_FIELD)
 	le:SetCode(EFFECT_EXTRA_LINK_MATERIAL)
@@ -106,7 +105,6 @@ function s.lkop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToChain() and c:IsControler(tp) and c:IsFaceup() then
 		local fid=c:GetFieldID()
-		c:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,1,fid)
 		local le=Effect.CreateEffect(c)
 		le:SetType(EFFECT_TYPE_FIELD)
 		le:SetCode(EFFECT_EXTRA_LINK_MATERIAL)
@@ -125,19 +123,36 @@ function s.lkop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.LinkSummon(tp,tc,nil)
 	end
 end
-function s.exmatcheck(c,lc,tp)
-	if not c:IsControler(1-tp) then return false end
-	local le={c:IsHasEffect(EFFECT_EXTRA_LINK_MATERIAL,tp)}
-	for _,te in pairs(le) do
-		local f=te:GetValue()
-		local related,valid=f(te,lc,nil,c,tp)
-		if related and not te:GetHandler():IsCode(id) then return false end
-	end
-	return true
-end
+
 function s.matval(e,lc,mg,c,tp)
-	local ct=e:GetLabelObject()
+	local wp=e:GetLabelObject()
 	local fid=e:GetLabel()
-	if ct:GetFlagEffectLabel(id)~=fid then return false,nil end
-	return true,not mg or mg:IsContains(ct) and mg:IsContains(e:GetHandler()) and not mg:IsExists(s.exmatcheck,1,nil,lc,tp)
+	if wp:GetFieldID()~=fid then return false,nil end
+
+	-- W：Pファンシーボール must be controlled by tp to provide its material effect
+	if wp:GetControler()~=tp then
+		return false,nil
+	end
+
+	-- W：Pファンシーボール only relates to opponent face-up Link<=2
+	if not s.wp_eligible_opp_link2(c,tp) then
+		return false,nil
+	end
+
+	-- W：Pファンシーボール must actually be used in the material group
+	if not mg or not mg:IsContains(wp) then
+		return true,false
+	end
+
+	-- Explicit: W：Pファンシーボール provides at most ONE opponent Link<=2.
+	-- If mg already contains another opponent Link<=2 (besides this candidate), W：Pファンシーボール will not provide it.
+	if mg:IsExists(s.wp_eligible_opp_link2,1,c,tp) then
+		return true,false
+	end
+
+	return true,true
+end
+
+function s.wp_eligible_opp_link2(c,tp)
+	return c:IsControler(1-tp) and c:IsFaceup() and c:IsLinkBelow(2)
 end
