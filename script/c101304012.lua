@@ -47,7 +47,11 @@ function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.desfilter,tp,LOCATION_HAND+LOCATION_MZONE,0,1,c) end
 	local g=Duel.GetMatchingGroup(s.desfilter,tp,LOCATION_HAND+LOCATION_MZONE,0,c)
 	g:AddCard(c)
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,2,0,0)
+	if Duel.IsExistingMatchingCard(aux.NOT(Card.IsPublic),tp,LOCATION_HAND,0,1,nil) then
+		Duel.SetOperationInfo(0,CATEGORY_DESTROY,c,1,0,0)
+	else
+		Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,2,0,0)
+	end
 end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
