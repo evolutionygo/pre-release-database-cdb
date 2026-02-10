@@ -106,5 +106,5 @@ function s.disop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.fuslimit(e,c,sumtype)
-    return sumtype==SUMMON_TYPE_FUSION
+	return sumtype==SUMMON_TYPE_FUSION
 end

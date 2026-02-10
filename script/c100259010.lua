@@ -52,19 +52,23 @@ function s.condition2(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,0,nil)
 	return g:IsExists(Card.IsRace,1,nil,RACE_ZOMBIE)
 end
-function s.tgfilter(c)
-	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsAbleToGrave()
+function s.tgfilter1(c,tp)
+	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsAbleToGrave() and c:IsControler(tp)
+end
+function s.tgfilter2(c,tp)
+	return c:IsFaceup() and c:IsAbleToGrave() and c:IsControler(1-tp)
+end
+function s.gcheck(g,tp)
+	return aux.gffcheck(g,s.tgfilter1,tp,s.tgfilter2,tp)
 end
 function s.tgtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end
-	if chk==0 then return Duel.IsExistingTarget(s.tgfilter,tp,LOCATION_MZONE,0,1,nil)
-		and Duel.IsExistingTarget(aux.AND(Card.IsAbleToGrave,Card.IsFaceup),tp,0,LOCATION_MZONE,1,nil) end
+	local g=Duel.GetMatchingGroup(aux.AND(Card.IsFaceup,Card.IsAbleToGrave,Card.IsCanBeEffectTarget),tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)
+	if chk==0 then return g:CheckSubGroup(s.gcheck,2,2,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local g1=Duel.SelectTarget(tp,s.tgfilter,tp,LOCATION_MZONE,0,1,1,nil)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local g2=Duel.SelectTarget(tp,aux.AND(Card.IsAbleToGrave,Card.IsFaceup),tp,0,LOCATION_ONFIELD,1,1,nil)
-	g1:Merge(g2)
-	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,g1,g1:GetCount(),0,0)
+	local tg=g:SelectSubGroup(tp,s.gcheck,false,2,2,tp)
+	Duel.SetTargetCard(tg)
+	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,tg,tg:GetCount(),0,0)
 end
 function s.tgop(e,tp,eg,ep,ev,re,r,rp)
 	local tg=Duel.GetTargetsRelateToChain()
