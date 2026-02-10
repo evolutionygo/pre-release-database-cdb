@@ -1,4 +1,4 @@
---A BF-叢雲のクサナギ
+--A BF－叢雲のクサナギ
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--synchro summon
@@ -34,9 +34,9 @@ s.treat_itself_tuner=true
 function s.valcheck(e,c)
 	local g=c:GetMaterial()
 	local atk=0
-	for tc in aux.Next(g) do
-		local catk=tc:GetBaseAttack()
-		atk=atk+catk
+	local sg=g:Filter(Card.IsType,nil,TYPE_SYNCHRO)
+	if sg:GetCount()>0 then
+		atk=sg:GetSum(Card.GetBaseAttack)
 	end
 	if g:IsExists(Card.IsSetCard,1,nil,0x33) then
 		e:GetLabelObject():SetLabel(1,atk)
@@ -60,6 +60,7 @@ function s.tnop(e,tp,eg,ep,ev,re,r,rp)
 		c:RegisterEffect(e1)
 	end
 	if atk~=0 then
+		Duel.Hint(HINT_CARD,0,id)
 		local e2=Effect.CreateEffect(c)
 		e2:SetType(EFFECT_TYPE_SINGLE)
 		e2:SetCode(EFFECT_UPDATE_ATTACK)

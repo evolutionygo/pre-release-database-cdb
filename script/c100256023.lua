@@ -8,20 +8,21 @@ function s.initial_effect(c)
 	e1:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND+CATEGORY_SPECIAL_SUMMON+CATEGORY_ATKCHANGE)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
+	e1:SetHintTiming(TIMING_DRAW_PHASE,TIMING_DRAW_PHASE+TIMINGS_CHECK_MONSTER+TIMING_MAIN_END)
 	e1:SetTarget(s.target)
 	e1:SetOperation(s.activate)
 	c:RegisterEffect(e1)
 	--act in hand
 	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(id,3))
+	e2:SetDescription(aux.Stringid(id,2))
 	e2:SetType(EFFECT_TYPE_SINGLE)
 	e2:SetCode(EFFECT_TRAP_ACT_IN_HAND)
 	e2:SetCost(s.cost)
 	c:RegisterEffect(e2)
 end
 function s.thfilter(c,tp)
-	return c:IsType(TYPE_FIELD) and c:IsCode(27564031)
-		and (c:IsAbleToHand() or (not c:IsForbidden() and c:CheckUniqueOnField(tp)))
+	return c:IsCode(27564031)
+		and (c:IsAbleToHand() or (c:IsType(TYPE_FIELD) and not c:IsForbidden() and c:CheckUniqueOnField(tp)))
 end
 function s.spfilter(c,e,tp)
 	return c:IsSetCard(0x23) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
@@ -47,6 +48,11 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 				Duel.ConfirmCards(1-tp,tc)
 			end
 		else
+			local fc=Duel.GetFieldCard(tp,LOCATION_SZONE,5)
+			if fc then
+				Duel.SendtoGrave(fc,REASON_RULE)
+				Duel.BreakEffect()
+			end
 			res=Duel.MoveToField(tc,tp,tp,LOCATION_FZONE,POS_FACEUP,true)
 		end
 		if res then
@@ -55,16 +61,15 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			if #g>0 then
 				Duel.BreakEffect()
 				if Duel.SpecialSummon(g,0,tp,tp,true,false,POS_FACEUP)~=0
-					and Duel.IsExistingMatchingCard(s.atkfilter,tp,0,LOCATION_MZONE,1,nil)
-					and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
+					and Duel.IsExistingMatchingCard(s.atkfilter,tp,0,LOCATION_MZONE,1,nil) then
 					local sg=Duel.GetMatchingGroup(Card.IsFaceup,tp,0,LOCATION_MZONE,nil)
-					for tc in aux.Next(sg) do
+					for mc in aux.Next(sg) do
 						local e1=Effect.CreateEffect(e:GetHandler())
 						e1:SetType(EFFECT_TYPE_SINGLE)
 						e1:SetCode(EFFECT_UPDATE_ATTACK)
 						e1:SetValue(-2500)
 						e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
-						tc:RegisterEffect(e1)
+						mc:RegisterEffect(e1)
 					end
 				end
 			end
