@@ -52,14 +52,11 @@ function s.condition2(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,0,nil)
 	return g:IsExists(Card.IsRace,1,nil,RACE_ZOMBIE)
 end
-function s.tgfilter1(c,tp)
-	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsAbleToGrave() and c:IsControler(tp)
-end
-function s.tgfilter2(c,tp)
-	return c:IsFaceup() and c:IsAbleToGrave() and c:IsControler(1-tp)
+function s.tgfilter(c,tp)
+	return c:IsFaceup() and c:IsAbleToGrave() and c:IsControler(tp)
 end
 function s.gcheck(g,tp)
-	return aux.gffcheck(g,s.tgfilter1,tp,s.tgfilter2,tp)
+	return aux.gffcheck(g,s.tgfilter,tp,s.tgfilter,1-tp)
 end
 function s.tgtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end
