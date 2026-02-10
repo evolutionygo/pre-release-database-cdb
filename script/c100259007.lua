@@ -16,7 +16,7 @@ function s.initial_effect(c)
 	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetCategory(CATEGORY_TOGRAVE)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
-	e2:SetProperty(EFFECT_FLAG_DELAY)
+	e2:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
 	e2:SetCode(EVENT_CHAINING)
 	e2:SetRange(LOCATION_FZONE)
 	e2:SetCountLimit(1)
@@ -48,7 +48,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.slim(e,c,sp,st,spos,tp,se)
-	return not c:IsLocation(LOCATION_GRAVE) or not c:IsRace(RACE_ZOMBIE)
+	return not c:IsLocation(LOCATION_GRAVE) and not c:IsRace(RACE_ZOMBIE)
 end
 function s.tgcon(e,tp,eg,ep,ev,re,r,rp)
 	return re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:GetHandler():IsCode(97077563) and rp==tp
