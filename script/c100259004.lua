@@ -4,19 +4,19 @@ function s.initial_effect(c)
 	aux.AddCodeList(c,97077563)
 	--destroy
 	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(36609518,0))
+	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_DESTROY)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e1:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_ACTIVATE_CONDITION)
-	e1:SetCountLimit(1,36609518)
+	e1:SetCountLimit(1,id)
 	e1:SetCondition(s.descon)
 	e1:SetTarget(s.destg)
 	e1:SetOperation(s.desop)
-	c:RegisterEffect(e1)	
+	c:RegisterEffect(e1)
 	--get effect
 	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(29601381,2))
+	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetType(EFFECT_TYPE_XMATERIAL)
 	e2:SetCode(EFFECT_UPDATE_ATTACK)
 	e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
@@ -26,7 +26,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function s.cfilter(c)
-	return c:IsFaceup() and ((c:IsRace(RACE_ZOMBIE) and not c:IsCode(id)) or c:IsCode(97077563))
+	return c:IsFaceup() and (c:IsRace(RACE_ZOMBIE) and not c:IsCode(id) or c:IsCode(97077563))
 end
 function s.descon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_MZONE,0,1,nil)
@@ -40,7 +40,7 @@ function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
+	if tc:IsRelateToChain() and tc:IsOnField() then
 		Duel.Destroy(tc,REASON_EFFECT)
 	end
 end

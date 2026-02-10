@@ -1,18 +1,19 @@
 --Pumpking the King of Grave Ghosts
+CATEGORY_SSET			   =0x200000000	--包含盖放魔陷的效果
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddCodeList(c,97077563)
 	--set
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
-	e1:SetCategory(CATEGORY_TODECK+CATEGORY_SSET)
+	e1:SetCategory(CATEGORY_TODECK+CATEGORY_SSET+CATEGORY_HANDES)
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetRange(LOCATION_HAND)
 	e1:SetCountLimit(1,id)
 	e1:SetCost(s.setcost)
 	e1:SetTarget(s.settg)
 	e1:SetOperation(s.setop)
-	c:RegisterEffect(e1)  
+	c:RegisterEffect(e1)
 	--special summon
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
@@ -23,7 +24,7 @@ function s.initial_effect(c)
 	e2:SetCountLimit(1,id+o)
 	e2:SetTarget(s.sptg)
 	e2:SetOperation(s.spop)
-	c:RegisterEffect(e2)  
+	c:RegisterEffect(e2)
 end
 function s.setcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return not e:GetHandler():IsPublic() end
@@ -32,18 +33,20 @@ function s.setfilter(c)
 	return c:IsCode(97077563) and c:IsSSetable()
 end
 function s.settg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0
-		and Duel.IsExistingMatchingCard(s.setfilter,tp,LOCATION_DECK,0,1,nil)
-		and Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,1,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.setfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil)
+		and Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,1,nil,REASON_DISCARD+REASON_EFFECT) end
 end
 function s.setop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SET)
-	local g=Duel.SelectMatchingCard(tp,s.setfilter,tp,LOCATION_DECK,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.setfilter),tp,LOCATION_DECK+LOCATION_GRAVE,0,1,1,nil)
 	local tc=g:GetFirst()
-	if tc and Duel.SSet(tp,tc)~=0 and c:IsRelateToEffect(e) then
-		Duel.DiscardHand(tp,Card.IsDiscardable,1,1,REASON_EFFECT)
+	if tc and Duel.SSet(tp,tc)~=0 then
+		local dg=Duel.SelectMatchingCard(tp,Card.IsDiscardable,tp,LOCATION_HAND,0,1,1,nil,REASON_DISCARD+REASON_EFFECT)
+		if dg:GetCount()>0 then
+			Duel.ShuffleHand(tp)
+			Duel.SendtoGrave(dg,REASON_EFFECT+REASON_DISCARD)
+		end
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetDescription(aux.Stringid(id,2))
 		e1:SetType(EFFECT_TYPE_SINGLE)
