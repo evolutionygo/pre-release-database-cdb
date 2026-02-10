@@ -26,10 +26,10 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function s.cfilter(c)
-	return c:IsFaceup() and (c:IsRace(RACE_ZOMBIE) and not c:IsCode(id) or c:IsCode(97077563))
+    return c:IsFaceup() and ((c:IsRace(RACE_ZOMBIE) and c:IsType(TYPE_MONSTER) and not c:IsCode(id)) or c:IsCode(97077563))
 end
 function s.descon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_MZONE,0,1,nil)
+    return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_ONFIELD,0,1,nil)
 end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() end
