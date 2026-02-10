@@ -1,0 +1,77 @@
+--Sin Paradigm Shift
+local s,id,o=GetID()
+function s.initial_effect(c)
+	aux.AddCodeList(c,27564031)
+	--activate
+	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(id,0))
+	e1:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND+CATEGORY_SPECIAL_SUMMON+CATEGORY_ATKCHANGE)
+	e1:SetType(EFFECT_TYPE_ACTIVATE)
+	e1:SetCode(EVENT_FREE_CHAIN)
+	e1:SetTarget(s.target)
+	e1:SetOperation(s.activate)
+	c:RegisterEffect(e1)
+	--act in hand
+	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(aux.Stringid(id,3))
+	e2:SetType(EFFECT_TYPE_SINGLE)
+	e2:SetCode(EFFECT_TRAP_ACT_IN_HAND)
+	e2:SetCost(s.cost)
+	c:RegisterEffect(e2)
+end
+function s.thfilter(c,tp)
+	return c:IsType(TYPE_FIELD) and c:IsCode(27564031)
+		and (c:IsAbleToHand() or (not c:IsForbidden() and c:CheckUniqueOnField(tp)))
+end
+function s.spfilter(c,e,tp)
+	return c:IsSetCard(0x23) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
+		and (c:IsLocation(LOCATION_DECK) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+			or c:IsLocation(LOCATION_EXTRA) and Duel.GetLocationCountFromEx(tp,tp,nil,c)>0)
+end
+function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil,tp)
+		and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_DECK+LOCATION_EXTRA,0,1,nil,e,tp) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK+LOCATION_EXTRA)
+end
+function s.atkfilter(c)
+	return c:IsFaceup() and c:IsAttackAbove(2500)
+end
+function s.activate(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_OPERATECARD)
+	local tc=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.thfilter),tp,LOCATION_DECK+LOCATION_GRAVE,0,1,1,nil,tp):GetFirst()
+	if tc then
+		local res=false
+		if tc:IsAbleToHand() and (tc:IsForbidden() or not tc:CheckUniqueOnField(tp) or Duel.SelectOption(tp,1190,aux.Stringid(id,1))==0) then
+			if Duel.SendtoHand(tc,nil,REASON_EFFECT)~=0 and tc:IsLocation(LOCATION_HAND) then
+				res=true
+				Duel.ConfirmCards(1-tp,tc)
+			end
+		else
+			res=Duel.MoveToField(tc,tp,tp,LOCATION_FZONE,POS_FACEUP,true)
+		end
+		if res then
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+			local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_DECK+LOCATION_EXTRA,0,1,1,nil,e,tp)
+			if #g>0 then
+				Duel.BreakEffect()
+				if Duel.SpecialSummon(g,0,tp,tp,true,false,POS_FACEUP)~=0
+					and Duel.IsExistingMatchingCard(s.atkfilter,tp,0,LOCATION_MZONE,1,nil)
+					and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
+					local sg=Duel.GetMatchingGroup(Card.IsFaceup,tp,0,LOCATION_MZONE,nil)
+					for tc in aux.Next(sg) do
+						local e1=Effect.CreateEffect(e:GetHandler())
+						e1:SetType(EFFECT_TYPE_SINGLE)
+						e1:SetCode(EFFECT_UPDATE_ATTACK)
+						e1:SetValue(-2500)
+						e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+						tc:RegisterEffect(e1)
+					end
+				end
+			end
+		end
+	end
+end
+function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	Duel.PayLPCost(tp,math.floor(Duel.GetLP(tp)/2))
+end
