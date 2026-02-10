@@ -12,6 +12,7 @@ function s.initial_effect(c)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCountLimit(1,id)
 	e1:SetCost(s.cost)
+	e1:SetCondition(s.con)
 	e1:SetTarget(s.target)
 	e1:SetOperation(s.operation)
 	c:RegisterEffect(e1)
@@ -36,11 +37,15 @@ end
 function s.filter(c)
 	return (c:IsPosition(POS_FACEUP_ATTACK) or c:IsLocation(LOCATION_GRAVE)) and c:IsCanOverlay()
 end
+function s.spcon(e,tp,eg,ep,ev,re,r,rp)
+	local ph=Duel.GetCurrentPhase()
+	return Duel.GetTurnPlayer()~=tp and (ph==PHASE_MAIN1 or ph==PHASE_MAIN2)
+end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(1-tp) and s.filter(chkc) end
 	if chk==0 then return Duel.IsExistingTarget(s.filter,tp,0,LOCATION_MZONE+LOCATION_GRAVE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
-	local g=Duel.SelectTarget(tp,s.filter,tp,0,LOCATION_MZONE,1,1,nil)
+	local g=Duel.SelectTarget(tp,s.filter,tp,0,LOCATION_MZONE+LOCATION_GRAVE,1,1,nil)
 	if g:IsExists(Card.IsLocation,1,nil,LOCATION_GRAVE) then
 		Duel.SetOperationInfo(0,CATEGORY_LEAVE_GRAVE,g,1,0,0)
 	end
