@@ -27,21 +27,23 @@ function s.cfilter(c)
 	return c:IsFaceup() and c:IsType(TYPE_EFFECT)
 end
 function s.efftg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and chkc:IsFaceup() end
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and s.cfilter(chkc) end
 	if chk==0 then return Duel.IsExistingTarget(s.cfilter,tp,LOCATION_MZONE,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
 	Duel.SelectTarget(tp,s.cfilter,tp,LOCATION_MZONE,0,1,1,nil)
 end
 function s.effop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToChain() and tc:IsFaceup() and tc:IsType(TYPE_EFFECT) then
-		tc:RegisterFlagEffect(0,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id,1))
+	if tc:IsRelateToChain() and tc:IsFaceup() and tc:IsType(TYPE_EFFECT)
+		and not tc:IsImmuneToEffect(e) then
+		tc:RegisterFlagEffect(0,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END+RESET_OPPO_TURN,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id,1))
 		local e2=Effect.CreateEffect(tc)
 		e2:SetDescription(aux.Stringid(id,2))
 		e2:SetCategory(CATEGORY_DESTROY)
 		e2:SetType(EFFECT_TYPE_QUICK_O)
 		e2:SetCode(EVENT_FREE_CHAIN)
 		e2:SetRange(LOCATION_MZONE)
+		e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 		e2:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_END_PHASE)
 		e2:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END+RESET_OPPO_TURN)
 		e2:SetCountLimit(1)
