@@ -57,7 +57,7 @@
     "koishipro-core.js": "^1.2.12",
     "sql.js": "^1.13.0",
     "ygopro-cdb-encode": "^1.0.1",
-    "ygopro-jstest": "^1.0.10",
-    "ygopro-msg-encode": "^1.1.7"
+    "ygopro-jstest": "^1.1.1",
+    "ygopro-msg-encode": "^1.1.8"
   }
 }
