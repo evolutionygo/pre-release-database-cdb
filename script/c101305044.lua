@@ -2,7 +2,7 @@
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddCodeList(c,101305044,101305027,101305028)
-	aux.AddRitualProcEqual2(c,s.rfilter,nil,aux.TURE)
+	aux.AddRitualProcGreater2(c,s.rfilter,nil,s.mfilter)
 	--salvage
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
@@ -16,6 +16,9 @@ function s.initial_effect(c)
 end
 function s.rfilter(c)
 	return c:IsCode(101305027,101305028)
+end
+function s.mfilter(c)
+	return c:IsAbleToRemove()
 end
 function s.thfilter(c)
 	return aux.IsCodeListed(c,101305044) and c:IsAbleToHand()
