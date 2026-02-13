@@ -5,11 +5,12 @@ function s.initial_effect(c)
 	--effect
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
+	e1:SetCategory(CATEGORY_SSET)
 	e1:SetType(EFFECT_TYPE_QUICK_O)
-	e1:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DAMAGE_STEP)
+	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetRange(LOCATION_HAND)
-	e1:SetHintTiming(TIMING_DAMAGE_STEP+TIMING_END_PHASE)
+	e1:SetHintTiming(TIMING_DRAW_PHASE,TIMING_DRAW_PHASE+TIMINGS_CHECK_MONSTER+TIMING_END_PHASE)
 	e1:SetCountLimit(1,id)
 	e1:SetCost(s.effcost)
 	e1:SetTarget(s.efftg)
@@ -30,9 +31,6 @@ end
 function s.tgfilter(c)
 	return (c:IsRace(RACE_SPELLCASTER) or c:IsType(TYPE_SPELL)) and c:IsAbleToGrave()
 end
-function s.spfilter(c,e,tp)
-	return c:IsSetCard(0x128,0x150) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
-end
 function s.setfilter(c)
 	return aux.IsCodeListed(c,101305044) and (c:IsType(TYPE_QUICKPLAY) or c:IsType(TYPE_TRAP)) and c:IsSSetable()
 end
@@ -48,9 +46,9 @@ function s.efftg(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 	e:SetLabel(op)
 	if op==1 then
-
+		e:SetCategory(0)
 	elseif op==2 then
-
+		e:SetCategory(CATEGORY_SSET)
 	end
 end
 function s.effop(e,tp,eg,ep,ev,re,r,rp)
@@ -77,10 +75,9 @@ function s.effop(e,tp,eg,ep,ev,re,r,rp)
 			e1:SetDescription(aux.Stringid(id,3))
 			e1:SetType(EFFECT_TYPE_SINGLE)
 			e1:SetProperty(EFFECT_FLAG_SET_AVAILABLE)
-			if dc:IsType(TYPE_QUICKPLAY) then
+			if tc:IsType(TYPE_QUICKPLAY) then
 				e1:SetCode(EFFECT_QP_ACT_IN_SET_TURN)
-			end
-			if dc:IsType(TYPE_TRAP) then
+			elseif tc:IsType(TYPE_TRAP) then
 				e1:SetCode(EFFECT_TRAP_ACT_IN_SET_TURN)
 			end
 			e1:SetReset(RESET_EVENT+RESETS_STANDARD)

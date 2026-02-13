@@ -32,19 +32,21 @@ function s.cfilter(c)
 	return aux.IsCodeListed(c,101305044)
 end
 function s.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(aux.TRUE,tp,LOCATION_HAND,1,nil)
-		and not Duel.IsExistingMatchingCard(Card.IsPublic,tp,LOCATION_HAND,0,1,nil) 
+	if chk==0 then return Duel.IsExistingMatchingCard(aux.TRUE,tp,LOCATION_HAND,0,1,nil)
+		and not Duel.IsExistingMatchingCard(Card.IsPublic,tp,LOCATION_HAND,0,1,nil)
 		and Duel.IsPlayerCanDraw(tp,3) end
 end
 function s.drop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.IsExistingMatchingCard(Card.IsPublic,tp,LOCATION_HAND,0,1,nil) then return end
-	local g=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_HAND,nil)
+	local g=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_HAND,0,nil)
 	if g:GetCount()==0 then return end
 	Duel.ConfirmCards(1-tp,g)
-	if g:IsExists(s.cfilter,1,nil) and Duel.Draw(tp,3,REASON_EFFECT)==3 then
+	if g:IsExists(s.cfilter,1,nil) and Duel.Draw(tp,3,REASON_EFFECT)>0 then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DISCARD)
+		local dg=Duel.SelectMatchingCard(tp,Card.IsDiscardable,tp,LOCATION_HAND,0,2,2,nil,REASON_EFFECT+REASON_DISCARD)
 		Duel.ShuffleHand(tp)
 		Duel.BreakEffect()
-		Duel.DiscardHand(tp,nil,2,2,REASON_EFFECT+REASON_DISCARD)
+		Duel.SendtoGrave(dg,REASON_EFFECT+REASON_DISCARD)
 	end
 end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -53,7 +55,8 @@ function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Release(c,REASON_COST)
 end
 function s.spfilter(c,e,tp)
-	return aux.IsCodeListed(c,101305044) and c:IsAllTypes(TYPE_MONSTER+TYPE_RITUAL) and c:IsCanBeSpecialSummoned(e,0,tp,false,true)
+	return aux.IsCodeListed(c,101305044) and c:IsAllTypes(TYPE_MONSTER+TYPE_RITUAL)
+		and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_HAND,0,1,nil,e,tp) end
@@ -64,6 +67,6 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_HAND,0,1,1,nil,e,tp)
 	if g:GetCount()>0 then
-		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
+		Duel.SpecialSummon(g,0,tp,tp,true,false,POS_FACEUP)
 	end
 end

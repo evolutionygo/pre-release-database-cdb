@@ -15,8 +15,9 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
+	if re:GetHandlerPlayer()~=1-tp then return false end
 	local rc=re:GetHandler()
-	return (rc:GetType()==TYPE_TRAP or rc:GetType()==TYPE_SPELL and re:IsHasType(EFFECT_TYPE_ACTIVATE)) or re:IsActiveType(TYPE_MONSTER)
+	return ((rc:GetType()==TYPE_TRAP or rc:GetType()==TYPE_SPELL) and re:IsHasType(EFFECT_TYPE_ACTIVATE)) or re:IsActiveType(TYPE_MONSTER)
 end
 function s.filter(c)
 	return aux.IsCodeListed(c,101305044) and c:GetSequence()<5 and c:IsCanTurnSet()
@@ -39,18 +40,19 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.IsPlayerAffectedByEffect(tp,59822133) then return end
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<3 then return end
 	local g=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_DECK,0,nil,e,tp)
-	if g:GetClassCount(Card.GetCode)<3 then return end
+	if not g:CheckSubGroup(aux.dncheck,3,3) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
 	local g2=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_MZONE,0,1,1,nil)
 	local tc=g2:GetFirst()
 	if not tc or tc:IsImmuneToEffect(e) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local sg=g:SelectSubGroup(tp,aux.dncheck,false,3,3)
+	if not sg or sg:GetCount()~=3 then return end
 	if tc:IsFaceup() then
 		Duel.ChangePosition(tc,POS_FACEDOWN_DEFENSE)
 		tc:ClearEffectRelation()
 	end
-	local tg=sg:GetFirst()
+	Duel.HintSelection(g2)
 	for sc in aux.Next(sg) do
 		Duel.SpecialSummonStep(sc,0,tp,tp,true,false,POS_FACEDOWN_DEFENSE)
 		local e1=Effect.CreateEffect(sc)
@@ -58,7 +60,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetCode(EFFECT_CHANGE_TYPE)
 		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 		e1:SetValue(TYPE_NORMAL+TYPE_MONSTER)
-		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD-RESET_TURN_SET)
 		sc:RegisterEffect(e1,true)
 		local e2=e1:Clone()
 		e2:SetCode(EFFECT_CHANGE_LEVEL)
@@ -77,16 +79,20 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		e5:SetValue(0)
 		sc:RegisterEffect(e5,true)
 		local e6=e1:Clone()
-		e6:SetCode(EFFECT_SET_BASE_ATTACK)
+		e6:SetCode(EFFECT_SET_BASE_DEFENSE)
 		e6:SetValue(0)
 		sc:RegisterEffect(e6,true)
+		local e7=e1:Clone()
+		e7:SetCode(EFFECT_CHANGE_CODE)
+		e7:SetValue(id)
+		sc:RegisterEffect(e7,true)
 	end
 	Duel.SpecialSummonComplete()
 	Duel.ConfirmCards(1-tp,sg)
 	sg:AddCard(tc)
 	Duel.ShuffleSetCard(sg)
-	local g=Group.CreateGroup()
-	Duel.ChangeTargetCard(ev,g)
+	local tg=Group.CreateGroup()
+	Duel.ChangeTargetCard(ev,tg)
 	Duel.ChangeChainOperation(ev,s.repop)
 end
 function s.repop(e,tp,eg,ep,ev,re,r,rp)
