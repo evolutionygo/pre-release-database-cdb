@@ -24,7 +24,7 @@ function s.filter(c)
 end
 function s.spfilter(c,e,tp)
 	return c:IsType(TYPE_SPELL+TYPE_TRAP)
-		and Duel.IsPlayerCanSpecialSummonMonster(tp,id,0,TYPES_NORMAL_TRAP_MONSTER,0,0,8,RACE_SPELLCASTER,ATTRIBUTE_DARK)
+		and Duel.IsPlayerCanSpecialSummonMonster(tp,id,0xcf,TYPES_NORMAL_TRAP_MONSTER,0,0,8,RACE_SPELLCASTER,ATTRIBUTE_DARK)
 		and c:IsCanBeSpecialSummoned(e,0,tp,true,true,POS_FACEDOWN_DEFENSE)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -54,7 +54,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 	Duel.HintSelection(g2)
 	for sc in aux.Next(sg) do
-		Duel.SpecialSummonStep(sc,0,tp,tp,true,false,POS_FACEDOWN_DEFENSE)
+		Duel.SpecialSummonStep(sc,0,tp,tp,true,true,POS_FACEDOWN_DEFENSE)
 		local e1=Effect.CreateEffect(sc)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_CHANGE_TYPE)
