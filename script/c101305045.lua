@@ -25,7 +25,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function s.cfilter(c,tp)
-	return c:IsAbleToHand() and c:IsControler(tp)
+	return c:IsAbleToHand() and c:IsOnField() and c:IsControler(tp)
 end
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
 	if re:GetHandlerPlayer()~=1-tp then return false end
