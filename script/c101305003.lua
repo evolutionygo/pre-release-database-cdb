@@ -1,7 +1,7 @@
 --エルフの聖賢者
 local s,id,o=GetID()
 function s.initial_effect(c)
-	aux.AddCodeList(c,101305003)
+	aux.AddCodeList(c,101305044)
 	--special summon
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
