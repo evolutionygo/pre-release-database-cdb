@@ -1,5 +1,4 @@
 --Pumpking the King of Grave Ghosts
-CATEGORY_SSET			   =0x200000000	--包含盖放魔陷的效果
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddCodeList(c,97077563)
