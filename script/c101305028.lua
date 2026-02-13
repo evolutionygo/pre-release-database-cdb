@@ -1,6 +1,7 @@
 --光と闇の戦士カオス・ソルジャー
 local s,id,o=GetID()
 function s.initial_effect(c)
+	c:EnableReviveLimit()
 	aux.AddCodeList(c,101305044)
 	--remove
 	local e1=Effect.CreateEffect(c)

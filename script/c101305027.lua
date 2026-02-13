@@ -1,6 +1,7 @@
 --黒き混沌の魔術師ブラック・カオス
 local s,id,o=GetID()
 function s.initial_effect(c)
+	c:EnableReviveLimit()
 	--to hand
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
