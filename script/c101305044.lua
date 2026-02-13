@@ -2,7 +2,8 @@
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddCodeList(c,101305044,101305027,101305028)
-	aux.AddRitualProcGreater2(c,s.rfilter,LOCATION_HAND+LOCATION_GRAVE,s.grfilter,nil,true)
+	local e1=aux.AddRitualProcGreater2(c,s.rfilter,nil,s.grfilter)
+	e1:SetDescription(aux.Stringid(id,0))
 	--salvage
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
@@ -19,9 +20,6 @@ function s.rfilter(c)
 end
 function s.grfilter(c)
 	return c:IsAbleToRemove() and c:IsType(TYPE_MONSTER)
-end
-function s.mfilter(c)
-	return c:IsAbleToRemove()
 end
 function s.thfilter(c)
 	return aux.IsCodeListed(c,101305044) and c:IsAbleToHand()
