@@ -77,10 +77,10 @@ function s.effop(e,tp,eg,ep,ev,re,r,rp)
 			e1:SetDescription(aux.Stringid(id,3))
 			e1:SetType(EFFECT_TYPE_SINGLE)
 			e1:SetProperty(EFFECT_FLAG_SET_AVAILABLE)
-			if dc:IsType(TYPE_QUICKPLAY) then
+			if tc:IsType(TYPE_QUICKPLAY) then
 				e1:SetCode(EFFECT_QP_ACT_IN_SET_TURN)
 			end
-			if dc:IsType(TYPE_TRAP) then
+			if tc:IsType(TYPE_TRAP) then
 				e1:SetCode(EFFECT_TRAP_ACT_IN_SET_TURN)
 			end
 			e1:SetReset(RESET_EVENT+RESETS_STANDARD)
