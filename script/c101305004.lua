@@ -77,7 +77,8 @@ function s.effop(e,tp,eg,ep,ev,re,r,rp)
 			e1:SetProperty(EFFECT_FLAG_SET_AVAILABLE)
 			if tc:IsType(TYPE_QUICKPLAY) then
 				e1:SetCode(EFFECT_QP_ACT_IN_SET_TURN)
-			elseif tc:IsType(TYPE_TRAP) then
+			end
+			if tc:IsType(TYPE_TRAP) then
 				e1:SetCode(EFFECT_TRAP_ACT_IN_SET_TURN)
 			end
 			e1:SetReset(RESET_EVENT+RESETS_STANDARD)
