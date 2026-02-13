@@ -20,6 +20,9 @@ end
 function s.grfilter(c)
 	return c:IsAbleToRemove() and c:IsType(TYPE_MONSTER)
 end
+function s.mfilter(c)
+	return c:IsAbleToRemove()
+end
 function s.thfilter(c)
 	return aux.IsCodeListed(c,101305044) and c:IsAbleToHand()
 end
