@@ -2,7 +2,7 @@
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddCodeList(c,101305044,101305027,101305028)
-	aux.AddRitualProcEqual2(c,s.rfilter,nil,aux.TURE,nil,true)
+	aux.AddRitualProcEqual2(c,s.rfilter,nil,aux.TURE)
 	--salvage
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
@@ -31,7 +31,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToChain() and aux.NecroValleyFilter()(c) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-		local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.thfilter),tp,LOCATION_GRAVE,0,1,1,nil)
+		local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.thfilter),tp,LOCATION_GRAVE,0,1,1,c)
 		if g:GetCount()>0 then
 			g:AddCard(c)
 			Duel.SendtoHand(g,nil,REASON_EFFECT)
