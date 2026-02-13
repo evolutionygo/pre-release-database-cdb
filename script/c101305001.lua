@@ -74,6 +74,9 @@ function s.sprop(e,tp,eg,ep,ev,re,r,rp,c)
 	if g:IsExists(Card.IsLocation,1,nil,LOCATION_HAND) then
 		Duel.ConfirmCards(1-tp,g:Filter(Card.IsLocation,nil,LOCATION_HAND))
 	end
+	if g:IsExists(Card.IsLocation,1,nil,LOCATION_GRAVE) then
+		Duel.HintSelection(g:Filter(Card.IsLocation,nil,LOCATION_GRAVE))
+	end
 	Duel.SendtoDeck(g,nil,SEQ_DECKSHUFFLE,REASON_SPSUMMON)
 	g:DeleteGroup()
 end
@@ -96,9 +99,8 @@ function s.tfop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.pfilter),tp,LOCATION_DECK+LOCATION_GRAVE,0,1,1,nil,tp):GetFirst()
 	if tc then Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true) end
 end
-
 function s.cfilter(c)
-	return c:IsType(TYPE_RITUAL) and c:IsType(TYPE_SPELL)
+	return c:IsAllTypes(TYPE_RITUAL+TYPE_SPELL)
 end
 function s.imcon(e)
 	return Duel.IsExistingMatchingCard(s.cfilter,e:GetHandlerPlayer(),LOCATION_GRAVE,0,1,nil)
@@ -112,8 +114,9 @@ function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,2,0,0)
 end
 function s.rmop(e,tp,eg,ep,ev,re,r,rp)
+	if not Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD,2,nil) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local sg=Duel.SelectMatchingCard(tp,Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD,2,1,nil)
+	local sg=Duel.SelectMatchingCard(tp,Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD,2,2,nil)
 	if #sg>0 then
 		Duel.HintSelection(sg)
 		Duel.Remove(sg,POS_FACEUP,REASON_EFFECT)

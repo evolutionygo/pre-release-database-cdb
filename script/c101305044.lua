@@ -2,7 +2,7 @@
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddCodeList(c,101305044,101305027,101305028)
-	aux.AddRitualProcGreater2(c,s.rfilter,nil,s.mfilter)
+	aux.AddRitualProcGreater2(c,s.rfilter,LOCATION_HAND+LOCATION_GRAVE,s.grfilter,nil,true)
 	--salvage
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
@@ -17,6 +17,9 @@ end
 function s.rfilter(c)
 	return c:IsCode(101305027,101305028)
 end
+function s.grfilter(c)
+	return c:IsAbleToRemove() and c:IsType(TYPE_MONSTER)
+end
 function s.mfilter(c)
 	return c:IsAbleToRemove()
 end
@@ -24,11 +27,10 @@ function s.thfilter(c)
 	return aux.IsCodeListed(c,101305044) and c:IsAbleToHand()
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsAbleToHand()
-		and Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_GRAVE,0,1,nil) end
+	local c=e:GetHandler()
+	if chk==0 then return c:IsAbleToHand()
+		and Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_GRAVE,0,1,c) end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,2,tp,LOCATION_GRAVE)
-end
-function s.thop(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -36,6 +38,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 		local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.thfilter),tp,LOCATION_GRAVE,0,1,1,c)
 		if g:GetCount()>0 then
+			Duel.HintSelection(g)
 			g:AddCard(c)
 			Duel.SendtoHand(g,nil,REASON_EFFECT)
 			Duel.ConfirmCards(1-tp,g)
