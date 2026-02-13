@@ -1,6 +1,7 @@
 --エルフの聖賢者
 local s,id,o=GetID()
 function s.initial_effect(c)
+	aux.EnableExtraDeckSummonCountLimit()
 	aux.AddCodeList(c,101305044)
 	--special summon
 	local e1=Effect.CreateEffect(c)
@@ -55,7 +56,7 @@ function s.drop(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 	local c=e:GetHandler()
-	local e1=Effect.CreateEffect(c)
+	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 	e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
@@ -63,13 +64,13 @@ function s.drop(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetTarget(s.splimit)
 	e1:SetReset(RESET_PHASE+PHASE_END)
 	Duel.RegisterEffect(e1,tp)
-	local e2=Effect.CreateEffect(c)
+	local e2=Effect.CreateEffect(e:GetHandler())
 	e2:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
 	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e2:SetOperation(s.checkop)
 	e2:SetReset(RESET_PHASE+PHASE_END)
 	Duel.RegisterEffect(e2,tp)
-	local e3=Effect.CreateEffect(c)
+	local e3=Effect.CreateEffect(e:GetHandler())
 	e3:SetType(EFFECT_TYPE_FIELD)
 	e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 	e3:SetCode(92345028)
@@ -80,14 +81,14 @@ end
 function s.splimit(e,c,sump,sumtype,sumpos,targetp,se)
 	return c:IsLocation(LOCATION_EXTRA) and aux.ExtraDeckSummonCountLimit[sump]<=0
 end
-function s.ctfilter(c,tp)
+function s.ckfilter(c,tp)
 	return c:IsSummonPlayer(tp) and c:IsPreviousLocation(LOCATION_EXTRA)
 end
 function s.checkop(e,tp,eg,ep,ev,re,r,rp)
-	if eg:IsExists(s.ctfilter,1,nil,tp) then
+	if eg:IsExists(s.ckfilter,1,nil,tp) then
 		aux.ExtraDeckSummonCountLimit[tp]=aux.ExtraDeckSummonCountLimit[tp]-1
 	end
-	if eg:IsExists(s.ctfilter,1,nil,1-tp) then
+	if eg:IsExists(s.ckfilter,1,nil,1-tp) then
 		aux.ExtraDeckSummonCountLimit[1-tp]=aux.ExtraDeckSummonCountLimit[1-tp]-1
 	end
 end
