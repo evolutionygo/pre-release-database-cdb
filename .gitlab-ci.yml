@@ -351,7 +351,7 @@ deploy_to_hanasame:
   variables:
     SERVER_HOST: hanasame.yuzurisa.com
     SERVER_USER: root
-    SERVER_PATH: /root/nginx/srvpro2/ygopro/expansions
+    SERVER_PATH: /root/nginx/srvpro2/expansions
 
 deploy_to_koishi_clear:
   extends: deploy_to_koishi
