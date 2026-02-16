@@ -346,6 +346,13 @@ deploy_to_koishi:
     SERVER_HOST: koishi.momobako.com
     SERVER_USER: nanahira
 
+deploy_to_hanasame:
+  extends: .deploy_to_server
+  variables:
+    SERVER_HOST: hanasame.yuzurisa.com
+    SERVER_USER: root
+    SERVER_PATH: /root/srvpro2/ygopro/expansions
+
 deploy_to_koishi_clear:
   extends: deploy_to_koishi
   dependencies:
