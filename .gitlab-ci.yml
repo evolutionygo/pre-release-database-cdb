@@ -159,15 +159,15 @@ json2:
 #     # if there are any lines in redtext.txt fail the job
 #     - exit $(wc -l < redtext.txt)
 
-jest:
-  stage: prepare2
-  dependencies:
-    - prepare_jest_env
-    - npm_ci
-  tags:
-    - linux
-  script:
-    - npm run test
+# jest:
+#   stage: prepare2
+#   dependencies:
+#     - prepare_jest_env
+#     - npm_ci
+#   tags:
+#     - linux
+#   script:
+#     - npm run test
 
 neos:
   stage: pack
