@@ -68,7 +68,7 @@ function s.pop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.desfilter(c,tp)
-	return c:IsPreviousControler(tp) and c:GetOriginalType()&TYPE_MONSTER~=0
+	return c:IsPreviousControler(tp) and (c:GetOriginalType()&TYPE_MONSTER~=0 or c:IsPreviousLocation(LOCATION_MZONE))
 		and c:IsPreviousPosition(POS_FACEUP) and c:IsReason(REASON_BATTLE+REASON_EFFECT)
 end
 function s.spcon1(e,tp,eg,ep,ev,re,r,rp)
@@ -129,7 +129,7 @@ function s.fsptg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.fspop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if not c:IsRelateToEffect(e) or not c:IsReleasable(REASON_EFFECT) then return end
+	if not c:IsRelateToChain() or not c:IsReleasable(REASON_EFFECT) then return end
 	Duel.Release(c,REASON_EFFECT)
 	local chkf=tp
 	local mg1=Duel.GetFusionMaterial(tp):Filter(s.filter0,nil,e)
