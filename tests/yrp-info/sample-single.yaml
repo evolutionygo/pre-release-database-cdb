@@ -1,14 +1,23 @@
 messages:
-  - identifier: 33
-    msg: ShuffleHand
+  - identifier: 5
+    msg: Win
+    player: 1
+    type: 2
+  - identifier: 5
+    msg: Win
     player: 0
-    count: 2
-    cards:
-      - 28985331
-      - 10000000
+    type: 2
+  - identifier: 40
+    msg: NewTurn
+    player: 0
   - identifier: 41
     msg: NewPhase
     phase: 1
+  - identifier: 2
+    msg: Hint
+    type: 1
+    player: 0
+    desc: 27
   - identifier: 41
     msg: NewPhase
     phase: 2
@@ -18,171 +27,23 @@ messages:
   - identifier: 11
     msg: SelectIdleCmd
     player: 0
-    summonableCount: 1
-    summonableCards:
-      - code: 28985331
-        controller: 0
-        location: 2
-        sequence: 0
+    summonableCount: 0
+    summonableCards: []
     spSummonableCount: 0
     spSummonableCards: []
     reposableCount: 0
     reposableCards: []
-    msetableCount: 1
-    msetableCards:
-      - code: 28985331
-        controller: 0
-        location: 2
-        sequence: 0
+    msetableCount: 0
+    msetableCards: []
     ssetableCount: 0
     ssetableCards: []
     activatableCount: 0
     activatableCards: []
-    canBp: 1
+    canBp: 0
     canEp: 1
-    canShuffle: 1
+    canShuffle: 0
 snapshot:
-  cards:
-    - flags: 15712255
-      controller: 0
-      location: 1
-      sequence: 0
-      empty: false
-      code: 5560911
-      position: 10
-      alias: 5560911
-      type: 4129
-      level: 7
-      rank: 0
-      attribute: 32
-      race: 8192
-      attack: 1000
-      defense: 3000
-      baseAttack: 1000
-      baseDefense: 3000
-      reason: 0
-      targetCards: []
-      overlayCards: []
-      counters: []
-      owner: 0
-      status: 0
-      lscale: 0
-      rscale: 0
-      link: 0
-      linkMarker: 0
-      name: 亡龙之战栗-死欲龙
-    - flags: 15712255
-      controller: 0
-      location: 2
-      sequence: 0
-      empty: false
-      code: 28985331
-      position: 10
-      alias: 28985331
-      type: 33
-      level: 4
-      rank: 0
-      attribute: 32
-      race: 1
-      attack: 1400
-      defense: 1200
-      baseAttack: 1400
-      baseDefense: 1200
-      reason: 0
-      targetCards: []
-      overlayCards: []
-      counters: []
-      owner: 0
-      status: 0
-      lscale: 0
-      rscale: 0
-      link: 0
-      linkMarker: 0
-      name: 终末之骑士
-    - flags: 15712255
-      controller: 0
-      location: 2
-      sequence: 1
-      empty: false
-      code: 10000000
-      position: 10
-      alias: 10000000
-      type: 33
-      level: 10
-      rank: 0
-      attribute: 64
-      race: 2097152
-      attack: 4000
-      defense: 4000
-      baseAttack: 4000
-      baseDefense: 4000
-      reason: 0
-      targetCards: []
-      overlayCards: []
-      counters: []
-      owner: 0
-      status: 0
-      lscale: 0
-      rscale: 0
-      link: 0
-      linkMarker: 0
-      name: 欧贝利斯克之巨神兵
-    - flags: 15712255
-      controller: 0
-      location: 64
-      sequence: 0
-      empty: false
-      code: 73580471
-      position: 10
-      alias: 73580471
-      type: 8225
-      level: 7
-      rank: 0
-      attribute: 4
-      race: 8192
-      attack: 2400
-      defense: 1800
-      baseAttack: 2400
-      baseDefense: 1800
-      reason: 0
-      targetCards: []
-      overlayCards: []
-      counters: []
-      owner: 0
-      status: 0
-      lscale: 0
-      rscale: 0
-      link: 0
-      linkMarker: 0
-      name: 黑蔷薇龙
-    - flags: 15712255
-      controller: 1
-      location: 2
-      sequence: 0
-      empty: false
-      code: 14558127
-      position: 10
-      alias: 14558127
-      type: 4129
-      level: 3
-      rank: 0
-      attribute: 4
-      race: 16
-      attack: 0
-      defense: 1800
-      baseAttack: 0
-      baseDefense: 1800
-      reason: 0
-      targetCards: []
-      overlayCards: []
-      counters: []
-      owner: 1
-      status: 0
-      lscale: 0
-      rscale: 0
-      link: 0
-      linkMarker: 0
-      name: 灰流丽
+  cards: []
   lp:
     - 8000
     - 8000
@@ -191,8 +52,5 @@ snapshotText: |-
   ********* Field Snapshot *********
   LP: P0 8000 | P1 8000
   ********* Player 0 *********
-     Hand: 终末之骑士
-           欧贝利斯克之巨神兵
   ********* Player 1 *********
-     Hand: 灰流丽
   ********* Finish *********

@@ -28,6 +28,11 @@ messages:
   - identifier: 2
     msg: Hint
     type: 1
+    player: 0
+    desc: 27
+  - identifier: 2
+    msg: Hint
+    type: 1
     player: 1
     desc: 20
   - identifier: 16
@@ -148,6 +153,10 @@ messages:
   - identifier: 54
     msg: Set
     code: 51452091
+    controller: 0
+    location: 8
+    sequence: 2
+    position: 10
   - identifier: 16
     msg: SelectChain
     player: 0
@@ -243,6 +252,10 @@ messages:
   - identifier: 54
     msg: Set
     code: 51452091
+    controller: 0
+    location: 8
+    sequence: 1
+    position: 10
   - identifier: 16
     msg: SelectChain
     player: 0
@@ -338,9 +351,12 @@ messages:
     location: 8
     sequence: 3
     subsequence: 5
-    chainCount: 0
-    desc: 776
-    chainPlayer: 0
+    chainCardLocation:
+      controller: 0
+      location: 8
+      sequence: 3
+    desc: 0
+    chainCount: 1
   - identifier: 71
     msg: Chained
     chainCount: 1
@@ -367,9 +383,12 @@ messages:
     location: 2
     sequence: 3
     subsequence: 10
-    chainCount: 1
-    desc: -44039422
-    chainPlayer: 21
+    chainCardLocation:
+      controller: 1
+      location: 2
+      sequence: 3
+    desc: 907410784
+    chainCount: 2
   - identifier: 50
     msg: Move
     code: 56713174
@@ -458,6 +477,9 @@ messages:
       - 56713174
       - 82946847
       - 82946847
+  - identifier: 32
+    msg: ShuffleDeck
+    player: 1
   - identifier: 73
     msg: ChainSolved
     chainCount: 2
@@ -539,6 +561,9 @@ messages:
       - 99185129
       - 99185129
       - 23401839
+  - identifier: 32
+    msg: ShuffleDeck
+    player: 0
   - identifier: 73
     msg: ChainSolved
     chainCount: 1
@@ -675,9 +700,12 @@ messages:
     location: 4
     sequence: 2
     subsequence: 1
-    chainCount: 0
-    desc: 1458569732
-    chainPlayer: 81
+    chainCardLocation:
+      controller: 0
+      location: 4
+      sequence: 2
+    desc: 374429424
+    chainCount: 1
   - identifier: 71
     msg: Chained
     chainCount: 1
@@ -795,6 +823,9 @@ messages:
       - 99185129
       - 99185129
       - 99185129
+  - identifier: 32
+    msg: ShuffleDeck
+    player: 0
   - identifier: 73
     msg: ChainSolved
     chainCount: 1
@@ -856,9 +887,12 @@ messages:
     location: 2
     sequence: 2
     subsequence: 10
-    chainCount: 0
-    desc: 512754178
-    chainPlayer: 151
+    chainCardLocation:
+      controller: 0
+      location: 2
+      sequence: 2
+    desc: 1586962064
+    chainCount: 1
   - identifier: 50
     msg: Move
     code: 99185129
@@ -975,6 +1009,9 @@ messages:
       - 99185129
       - 14735698
       - 99185129
+  - identifier: 32
+    msg: ShuffleDeck
+    player: 0
   - identifier: 73
     msg: ChainSolved
     chainCount: 1
@@ -1054,9 +1091,12 @@ messages:
     location: 8
     sequence: 3
     subsequence: 5
-    chainCount: 0
-    desc: 776
-    chainPlayer: 0
+    chainCardLocation:
+      controller: 0
+      location: 8
+      sequence: 3
+    desc: 0
+    chainCount: 1
   - identifier: 71
     msg: Chained
     chainCount: 1
@@ -1255,6 +1295,11 @@ messages:
   - identifier: 41
     msg: NewPhase
     phase: 1
+  - identifier: 2
+    msg: Hint
+    type: 1
+    player: 1
+    desc: 27
   - identifier: 90
     msg: Draw
     player: 1
@@ -1303,12 +1348,13 @@ messages:
         desc: 0
   - identifier: 53
     msg: PosChange
+    code: 51452091
     card:
-      controller: 187
-      location: 24
-      sequence: 17
-    previousPosition: 3
-    currentPosition: 0
+      controller: 0
+      location: 8
+      sequence: 2
+    previousPosition: 10
+    currentPosition: 5
   - identifier: 70
     msg: Chaining
     code: 51452091
@@ -1316,9 +1362,12 @@ messages:
     location: 8
     sequence: 2
     subsequence: 5
-    chainCount: 0
-    desc: 520
-    chainPlayer: 0
+    chainCardLocation:
+      controller: 0
+      location: 8
+      sequence: 2
+    desc: 0
+    chainCount: 1
   - identifier: 71
     msg: Chained
     chainCount: 1
@@ -1356,12 +1405,13 @@ messages:
         desc: 0
   - identifier: 53
     msg: PosChange
+    code: 51452091
     card:
-      controller: 187
-      location: 24
-      sequence: 17
-    previousPosition: 3
-    currentPosition: 0
+      controller: 0
+      location: 8
+      sequence: 1
+    previousPosition: 10
+    currentPosition: 5
   - identifier: 70
     msg: Chaining
     code: 51452091
@@ -1369,9 +1419,12 @@ messages:
     location: 8
     sequence: 1
     subsequence: 5
-    chainCount: 0
-    desc: 264
-    chainPlayer: 0
+    chainCardLocation:
+      controller: 0
+      location: 8
+      sequence: 1
+    desc: 0
+    chainCount: 2
   - identifier: 71
     msg: Chained
     chainCount: 2
@@ -1564,6 +1617,11 @@ snapshot:
       baseAttack: 1600
       baseDefense: 800
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -1592,6 +1650,11 @@ snapshot:
       baseAttack: 1400
       baseDefense: 1000
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -1620,6 +1683,11 @@ snapshot:
       baseAttack: 3300
       baseDefense: 2300
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -1648,6 +1716,11 @@ snapshot:
       baseAttack: 0
       baseDefense: 0
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -1676,6 +1749,11 @@ snapshot:
       baseAttack: 0
       baseDefense: 0
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -1704,6 +1782,11 @@ snapshot:
       baseAttack: 0
       baseDefense: 0
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -1732,6 +1815,11 @@ snapshot:
       baseAttack: 0
       baseDefense: 0
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -1760,6 +1848,11 @@ snapshot:
       baseAttack: 2500
       baseDefense: 1700
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -1788,6 +1881,11 @@ snapshot:
       baseAttack: 1400
       baseDefense: 1000
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -1816,6 +1914,11 @@ snapshot:
       baseAttack: 2300
       baseDefense: 1000
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -1844,6 +1947,11 @@ snapshot:
       baseAttack: 2700
       baseDefense: 2000
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -1872,6 +1980,11 @@ snapshot:
       baseAttack: 0
       baseDefense: 0
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -1900,6 +2013,11 @@ snapshot:
       baseAttack: 0
       baseDefense: 0
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -1928,6 +2046,11 @@ snapshot:
       baseAttack: 0
       baseDefense: 0
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -1956,6 +2079,11 @@ snapshot:
       baseAttack: 1600
       baseDefense: 800
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -1984,6 +2112,11 @@ snapshot:
       baseAttack: 1400
       baseDefense: 1000
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -2012,6 +2145,11 @@ snapshot:
       baseAttack: 0
       baseDefense: 0
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -2040,6 +2178,11 @@ snapshot:
       baseAttack: 0
       baseDefense: 0
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -2068,6 +2211,11 @@ snapshot:
       baseAttack: 3300
       baseDefense: 2300
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -2096,6 +2244,11 @@ snapshot:
       baseAttack: 300
       baseDefense: 1800
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -2124,6 +2277,11 @@ snapshot:
       baseAttack: 0
       baseDefense: 0
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -2152,6 +2310,11 @@ snapshot:
       baseAttack: 1400
       baseDefense: 1000
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -2180,6 +2343,11 @@ snapshot:
       baseAttack: 2500
       baseDefense: 1700
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -2208,6 +2376,11 @@ snapshot:
       baseAttack: 0
       baseDefense: 0
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -2236,6 +2409,11 @@ snapshot:
       baseAttack: 0
       baseDefense: 0
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -2264,6 +2442,11 @@ snapshot:
       baseAttack: 1600
       baseDefense: 800
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -2292,6 +2475,11 @@ snapshot:
       baseAttack: 2700
       baseDefense: 2000
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -2320,6 +2508,11 @@ snapshot:
       baseAttack: 2700
       baseDefense: 2000
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -2348,6 +2541,11 @@ snapshot:
       baseAttack: 0
       baseDefense: 0
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -2376,6 +2574,11 @@ snapshot:
       baseAttack: 0
       baseDefense: 0
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -2404,6 +2607,11 @@ snapshot:
       baseAttack: 1400
       baseDefense: 1000
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -2432,6 +2640,11 @@ snapshot:
       baseAttack: 2300
       baseDefense: 1400
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -2460,6 +2673,11 @@ snapshot:
       baseAttack: 1200
       baseDefense: 2300
       reason: 2048
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -2488,6 +2706,11 @@ snapshot:
       baseAttack: 1400
       baseDefense: 1000
       reason: 16
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -2516,6 +2739,11 @@ snapshot:
       baseAttack: 0
       baseDefense: 0
       reason: 33555456
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -2544,6 +2772,11 @@ snapshot:
       baseAttack: 0
       baseDefense: 0
       reason: 33555456
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -2572,6 +2805,11 @@ snapshot:
       baseAttack: 0
       baseDefense: 0
       reason: 1024
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -2600,6 +2838,11 @@ snapshot:
       baseAttack: 1200
       baseDefense: 2300
       reason: 16512
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -2628,6 +2871,11 @@ snapshot:
       baseAttack: 1200
       baseDefense: 2300
       reason: 1048650
+      reasonCard:
+        controller: 0
+        location: 4
+        sequence: 1
+        position: 1
       targetCards: []
       overlayCards: []
       counters: []
@@ -2656,6 +2904,11 @@ snapshot:
       baseAttack: 0
       baseDefense: 0
       reason: 1024
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -2684,6 +2937,11 @@ snapshot:
       baseAttack: 1900
       baseDefense: 0
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -2712,6 +2970,11 @@ snapshot:
       baseAttack: 600
       baseDefense: 1000
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -2740,6 +3003,11 @@ snapshot:
       baseAttack: 600
       baseDefense: 1000
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -2768,6 +3036,11 @@ snapshot:
       baseAttack: 600
       baseDefense: 1000
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -2796,6 +3069,11 @@ snapshot:
       baseAttack: 2400
       baseDefense: 1800
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -2824,6 +3102,11 @@ snapshot:
       baseAttack: 2400
       baseDefense: 500
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -2852,6 +3135,11 @@ snapshot:
       baseAttack: 2500
       baseDefense: 1800
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -2880,6 +3168,11 @@ snapshot:
       baseAttack: 2800
       baseDefense: 2200
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -2908,6 +3201,11 @@ snapshot:
       baseAttack: 2700
       baseDefense: 2000
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -2936,6 +3234,11 @@ snapshot:
       baseAttack: 3300
       baseDefense: 2500
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -2964,6 +3267,11 @@ snapshot:
       baseAttack: 3300
       baseDefense: 2500
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -2992,6 +3300,11 @@ snapshot:
       baseAttack: 3200
       baseDefense: 2800
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -3020,6 +3333,11 @@ snapshot:
       baseAttack: 3200
       baseDefense: 2800
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -3048,6 +3366,11 @@ snapshot:
       baseAttack: 4000
       baseDefense: 4000
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -3076,6 +3399,11 @@ snapshot:
       baseAttack: 4000
       baseDefense: 4000
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -3104,6 +3432,11 @@ snapshot:
       baseAttack: 1900
       baseDefense: 0
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -3132,6 +3465,11 @@ snapshot:
       baseAttack: 0
       baseDefense: 0
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -3160,6 +3498,11 @@ snapshot:
       baseAttack: 0
       baseDefense: 0
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -3188,6 +3531,11 @@ snapshot:
       baseAttack: 1400
       baseDefense: 1200
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -3216,6 +3564,11 @@ snapshot:
       baseAttack: 0
       baseDefense: 0
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -3244,6 +3597,11 @@ snapshot:
       baseAttack: 0
       baseDefense: 0
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -3272,6 +3630,11 @@ snapshot:
       baseAttack: 1800
       baseDefense: 500
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -3300,6 +3663,11 @@ snapshot:
       baseAttack: 500
       baseDefense: 500
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -3328,6 +3696,11 @@ snapshot:
       baseAttack: 900
       baseDefense: 1400
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -3356,6 +3729,11 @@ snapshot:
       baseAttack: 1800
       baseDefense: 1000
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -3384,6 +3762,11 @@ snapshot:
       baseAttack: 0
       baseDefense: 1800
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -3412,6 +3795,11 @@ snapshot:
       baseAttack: 2700
       baseDefense: 2100
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -3440,6 +3828,11 @@ snapshot:
       baseAttack: 2000
       baseDefense: 1200
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -3468,6 +3861,11 @@ snapshot:
       baseAttack: 900
       baseDefense: 1400
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -3496,6 +3894,11 @@ snapshot:
       baseAttack: 1900
       baseDefense: 500
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -3524,6 +3927,11 @@ snapshot:
       baseAttack: 2400
       baseDefense: 0
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -3552,6 +3960,11 @@ snapshot:
       baseAttack: 2100
       baseDefense: 0
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -3580,6 +3993,11 @@ snapshot:
       baseAttack: 0
       baseDefense: 0
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -3608,6 +4026,11 @@ snapshot:
       baseAttack: 500
       baseDefense: 200
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -3636,6 +4059,11 @@ snapshot:
       baseAttack: 0
       baseDefense: 1800
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -3664,6 +4092,11 @@ snapshot:
       baseAttack: 2600
       baseDefense: 0
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -3692,6 +4125,11 @@ snapshot:
       baseAttack: 0
       baseDefense: 1800
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -3720,6 +4158,11 @@ snapshot:
       baseAttack: 0
       baseDefense: 0
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -3748,6 +4191,11 @@ snapshot:
       baseAttack: 1800
       baseDefense: 2200
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -3776,6 +4224,11 @@ snapshot:
       baseAttack: 1800
       baseDefense: 500
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -3804,6 +4257,11 @@ snapshot:
       baseAttack: 1400
       baseDefense: 1200
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -3832,6 +4290,11 @@ snapshot:
       baseAttack: 1400
       baseDefense: 1000
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -3860,6 +4323,11 @@ snapshot:
       baseAttack: 200
       baseDefense: 200
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -3888,6 +4356,11 @@ snapshot:
       baseAttack: 500
       baseDefense: 200
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -3916,6 +4389,11 @@ snapshot:
       baseAttack: 0
       baseDefense: 0
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -3944,6 +4422,11 @@ snapshot:
       baseAttack: 1800
       baseDefense: 500
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -3972,6 +4455,11 @@ snapshot:
       baseAttack: 0
       baseDefense: 0
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -4000,6 +4488,11 @@ snapshot:
       baseAttack: 0
       baseDefense: 0
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -4028,6 +4521,11 @@ snapshot:
       baseAttack: 2000
       baseDefense: 200
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -4056,6 +4554,11 @@ snapshot:
       baseAttack: 0
       baseDefense: 0
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -4084,6 +4587,11 @@ snapshot:
       baseAttack: 1800
       baseDefense: 1000
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -4112,6 +4620,11 @@ snapshot:
       baseAttack: 500
       baseDefense: 0
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -4140,6 +4653,11 @@ snapshot:
       baseAttack: 0
       baseDefense: 0
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -4168,6 +4686,11 @@ snapshot:
       baseAttack: 3500
       baseDefense: 3200
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -4196,6 +4719,11 @@ snapshot:
       baseAttack: 0
       baseDefense: 0
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -4224,6 +4752,11 @@ snapshot:
       baseAttack: 500
       baseDefense: 500
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -4252,6 +4785,11 @@ snapshot:
       baseAttack: 1800
       baseDefense: 1000
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -4280,6 +4818,11 @@ snapshot:
       baseAttack: 0
       baseDefense: 0
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -4308,6 +4851,11 @@ snapshot:
       baseAttack: 0
       baseDefense: 0
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -4336,6 +4884,11 @@ snapshot:
       baseAttack: 1000
       baseDefense: 3000
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -4364,6 +4917,11 @@ snapshot:
       baseAttack: 500
       baseDefense: 500
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -4392,6 +4950,11 @@ snapshot:
       baseAttack: 2100
       baseDefense: 1400
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -4420,6 +4983,11 @@ snapshot:
       baseAttack: 900
       baseDefense: 1400
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -4448,6 +5016,11 @@ snapshot:
       baseAttack: 1400
       baseDefense: 1200
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -4476,6 +5049,11 @@ snapshot:
       baseAttack: 0
       baseDefense: 0
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -4504,6 +5082,11 @@ snapshot:
       baseAttack: 0
       baseDefense: 0
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -4532,6 +5115,11 @@ snapshot:
       baseAttack: 0
       baseDefense: 0
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -4560,6 +5148,11 @@ snapshot:
       baseAttack: 3500
       baseDefense: 3200
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -4588,6 +5181,11 @@ snapshot:
       baseAttack: 2400
       baseDefense: 0
       reason: 33555456
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -4616,6 +5214,11 @@ snapshot:
       baseAttack: 1600
       baseDefense: 0
       reason: 33555456
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -4644,6 +5247,11 @@ snapshot:
       baseAttack: 1600
       baseDefense: 1500
       reason: 64
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -4672,6 +5280,11 @@ snapshot:
       baseAttack: 500
       baseDefense: 500
       reason: 33555456
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -4700,6 +5313,11 @@ snapshot:
       baseAttack: 500
       baseDefense: 500
       reason: 33555456
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -4728,6 +5346,11 @@ snapshot:
       baseAttack: 0
       baseDefense: 0
       reason: 33555456
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -4756,6 +5379,11 @@ snapshot:
       baseAttack: 1600
       baseDefense: 1500
       reason: 16512
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -4784,6 +5412,11 @@ snapshot:
       baseAttack: 0
       baseDefense: 0
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -4812,6 +5445,11 @@ snapshot:
       baseAttack: 1600
       baseDefense: 0
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -4840,6 +5478,11 @@ snapshot:
       baseAttack: 2300
       baseDefense: 1700
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -4868,6 +5511,11 @@ snapshot:
       baseAttack: 600
       baseDefense: 1000
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -4896,6 +5544,11 @@ snapshot:
       baseAttack: 0
       baseDefense: 2800
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -4924,6 +5577,11 @@ snapshot:
       baseAttack: 2200
       baseDefense: 1700
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -4952,6 +5610,11 @@ snapshot:
       baseAttack: 2400
       baseDefense: 500
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -4980,6 +5643,11 @@ snapshot:
       baseAttack: 0
       baseDefense: 2000
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -5008,6 +5676,11 @@ snapshot:
       baseAttack: 2100
       baseDefense: 3000
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -5036,6 +5709,11 @@ snapshot:
       baseAttack: 2400
       baseDefense: 1800
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -5064,6 +5742,11 @@ snapshot:
       baseAttack: 2400
       baseDefense: 1800
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -5092,6 +5775,11 @@ snapshot:
       baseAttack: 2500
       baseDefense: 2000
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -5120,6 +5808,11 @@ snapshot:
       baseAttack: 2600
       baseDefense: 2100
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -5148,6 +5841,11 @@ snapshot:
       baseAttack: 3000
       baseDefense: 2500
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
@@ -5176,6 +5874,11 @@ snapshot:
       baseAttack: 2600
       baseDefense: 2400
       reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
       targetCards: []
       overlayCards: []
       counters: []
