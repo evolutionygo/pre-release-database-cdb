@@ -31,7 +31,8 @@ function s.initial_effect(c)
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,2))
 	e3:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_FUSION_SUMMON)
-	e3:SetType(EFFECT_TYPE_IGNITION)
+	e3:SetType(EFFECT_TYPE_QUICK_O)
+	e3:SetCode(EVENT_FREE_CHAIN)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetCountLimit(1,id+o*2)
 	e3:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_MAIN_END)
@@ -74,7 +75,7 @@ function s.spcon1(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.desfilter,1,nil,tp)
 end
 function s.spfilter1(c,e,tp)
-	if not c:IsCanBeSpecialSummoned(e,0,tp,false,false) then return false end
+	if not c:IsCanBeSpecialSummoned(e,0,tp,false,false) or not c:IsControler(tp) then return false end
 	if c:IsLocation(LOCATION_EXTRA) then return c:IsFaceup() and Duel.GetLocationCountFromEx(tp,tp,nil,c)>0 end
 	if c:IsLocation(LOCATION_GRAVE) then return aux.NecroValleyFilter()(c) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 end
 	return false
@@ -104,6 +105,7 @@ function s.spop1(e,tp,eg,ep,ev,re,r,rp)
 		local sg=desg:Select(tp,1,1,nil)
 		local tc=sg:GetFirst()
 		if tc then
+			Duel.BreakEffect()
 			Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
 		end
 	end
@@ -123,7 +125,7 @@ function s.filter2(c,e,tp,m,f,chkf)
 end
 function s.fsptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
-		if not e:GetHandler():IsReleasable() then return false end
+		if not e:GetHandler():IsReleasable(REASON_EFFECT) then return false end
 		local chkf=tp
 		local mg1=Duel.GetFusionMaterial(tp):Filter(s.filter0,nil,e)
 		local mg2=Duel.GetMatchingGroup(s.filter1,tp,LOCATION_EXTRA,0,nil,e)
@@ -147,6 +149,7 @@ function s.fspop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if not c:IsRelateToEffect(e) or not c:IsReleasable(REASON_EFFECT) then return end
 	Duel.Release(c,REASON_EFFECT)
+	Duel.BreakEffect()
 	local chkf=tp
 	local mg1=Duel.GetFusionMaterial(tp):Filter(s.filter0,nil,e)
 	local mg2=Duel.GetMatchingGroup(s.filter1,tp,LOCATION_EXTRA,0,nil,e)
