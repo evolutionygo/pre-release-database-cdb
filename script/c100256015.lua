@@ -124,32 +124,13 @@ function s.filter2(c,e,tp,m,f,chkf)
 		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) and c:CheckFusionMaterial(m,nil,chkf)
 end
 function s.fsptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then
-		if not e:GetHandler():IsReleasable(REASON_EFFECT) then return false end
-		local chkf=tp
-		local mg1=Duel.GetFusionMaterial(tp):Filter(s.filter0,nil,e)
-		local mg2=Duel.GetMatchingGroup(s.filter1,tp,LOCATION_EXTRA,0,nil,e)
-		mg1:Merge(mg2)
-		local res=Duel.IsExistingMatchingCard(s.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,mg1,nil,chkf)
-		if not res then
-			local ce=Duel.GetChainMaterial(tp)
-			if ce~=nil then
-				local fgroup=ce:GetTarget()
-				local mg3=fgroup(ce,e,tp)
-				local mf=ce:GetValue()
-				res=Duel.IsExistingMatchingCard(s.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,mg3,mf,chkf)
-			end
-		end
-		return res
-	end
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
-	Duel.SetOperationInfo(0,CATEGORY_TODECK,nil,1,tp,LOCATION_MZONE+LOCATION_EXTRA)
+	if chk==0 then return e:GetHandler():IsReleasable(REASON_EFFECT) end
+	Duel.SetOperationInfo(0,CATEGORY_RELEASE,e:GetHandler(),1,0,0)
 end
 function s.fspop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if not c:IsRelateToEffect(e) or not c:IsReleasable(REASON_EFFECT) then return end
 	Duel.Release(c,REASON_EFFECT)
-	Duel.BreakEffect()
 	local chkf=tp
 	local mg1=Duel.GetFusionMaterial(tp):Filter(s.filter0,nil,e)
 	local mg2=Duel.GetMatchingGroup(s.filter1,tp,LOCATION_EXTRA,0,nil,e)
@@ -164,7 +145,8 @@ function s.fspop(e,tp,eg,ep,ev,re,r,rp)
 		local mf=ce:GetValue()
 		sg2=Duel.GetMatchingGroup(s.filter2,tp,LOCATION_EXTRA,0,nil,e,tp,mg3,mf,chkf)
 	end
-	if sg1:GetCount()>0 or (sg2~=nil and sg2:GetCount()>0) then
+	if (sg1:GetCount()>0 or (sg2~=nil and sg2:GetCount()>0)) and Duel.SelectYesNo(tp,aux.Stringid(id,4)) then
+		Duel.BreakEffect()
 		local sg=sg1:Clone()
 		if sg2 then sg:Merge(sg2) end
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
