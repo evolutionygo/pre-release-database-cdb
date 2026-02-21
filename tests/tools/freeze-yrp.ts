@@ -3,6 +3,7 @@ import fs from "node:fs";
 import { createTest } from "../utility/create-test";
 import { toYrpInfo } from "../utility/yrp-info";
 import yaml from "js-yaml";
+import { normalizeYrpSingle } from "../utility/normalize-yrp-single";
 
 async function main() {
   const yrpFilenames = process.argv.slice(2);
@@ -26,7 +27,8 @@ async function main() {
     );
     await fs.promises.mkdir(path.dirname(destPath), { recursive: true });
     console.log(`Will save YRP info from ${fullPath} to ${destPath}`);
-    await createTest({ yrp: fullPath }, async (test) => {
+    const yrp = await normalizeYrpSingle(fullPath);
+    await createTest({ yrp }, async (test) => {
       const info = toYrpInfo(test);
       console.log(info.snapshotText);
       const yamlStr = yaml.dump(info);

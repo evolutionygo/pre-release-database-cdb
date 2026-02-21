@@ -16,7 +16,7 @@ describe("No Red Text", () => {
       const buf = await fs.promises.readFile(path.resolve(process.cwd(), file));
       const db = new SQL.Database(buf);
       const cdb = new YGOProCdb(db);
-      for (const data of cdb.find(
+      for (const data of cdb.step(
         `datas.type != ${OcgcoreScriptConstants.TYPE_MONSTER | OcgcoreScriptConstants.TYPE_NORMAL} and datas.type & ${OcgcoreScriptConstants.TYPE_TOKEN} = 0 and not (datas.alias > 0 and datas.alias - datas.id < 20)`,
       )) {
         const id = data.code;

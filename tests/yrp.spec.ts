@@ -2,8 +2,10 @@ import { existsSync, readdirSync } from "node:fs";
 import { createTest } from "./utility/create-test";
 import { MsgSnapshot, toYrpInfo, YrpInfo } from "./utility/yrp-info";
 import yaml from "js-yaml";
-import path from "node:path";
+import path, { normalize } from "node:path";
 import fs from "node:fs";
+import { YGOProYrp } from "ygopro-yrp-encode";
+import { normalizeYrpSingle } from "./utility/normalize-yrp-single";
 
 describe("YRP", () => {
   const yrpDirPath = path.resolve(process.cwd(), "tests", "yrp");
@@ -28,7 +30,8 @@ describe("YRP", () => {
     const testName = `YRP: ${yrpRelativePath}`;
     it(testName, async () => {
       const yrpPath = path.resolve(yrpDirPath, yrpRelativePath);
-      await createTest({ yrp: yrpPath }, async (test) => {
+      const yrp = await normalizeYrpSingle(yrpPath);
+      await createTest({ yrp }, async (test) => {
         const yrpInfoPath = path.resolve(
           process.cwd(),
           "tests",
