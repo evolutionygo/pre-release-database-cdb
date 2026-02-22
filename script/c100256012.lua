@@ -1,4 +1,4 @@
---ガガガガール
+--ガガガガール－ゼロゼロコール
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--special summon
@@ -33,21 +33,32 @@ end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.cfilter,1,nil,1-tp)
 end
-function s.xyzfilter(c,tp,mc)
-	if not c:IsFaceup() or not c:IsLevelAbove(1) then return false end
-	local mg=Group.FromCards(c,mc)
-	local e1=Effect.CreateEffect(mc)
+function s.CreateTempLevelEffect(ec,level_source,reset)
+	local reset_flag=reset and RESET_EVENT+RESETS_STANDARD or 0
+	local e1=Effect.CreateEffect(ec)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetCode(EFFECT_XYZ_LEVEL)
 	e1:SetValue(s.xyzlv)
-	e1:SetLabel(c:GetLevel())
-	mc:RegisterEffect(e1,true)
-	local res=Duel.IsExistingMatchingCard(Card.IsXyzSummonable,tp,LOCATION_EXTRA,0,1,nil,mg,2,2)
+	e1:SetLabel(level_source:GetLevel())
+	e1:SetReset(reset_flag)
+	ec:RegisterEffect(e1,true)
+	return e1
+end
+function s.SetTempLevel(ec,level_source,reset,callback)
+	local e1=s.CreateTempLevelEffect(ec,level_source,reset)
+	local res=callback()
 	if e1 then e1:Reset() end
 	return res
 end
 function s.xyzlv(e,c,rc)
-	return e:GetHandler():GetLevel()+e:GetLabel()*0x10000
+	return e:GetHandler():GetLevel() | (e:GetLabel() << 16)
+end
+function s.xyzfilter(c,tp,mc)
+	if not c:IsFaceup() or not c:IsLevelAbove(1) then return false end
+	local mg=Group.FromCards(c,mc)
+	return s.SetTempLevel(mc,c,false,function()
+		return Duel.IsExistingMatchingCard(Card.IsXyzSummonable,tp,LOCATION_EXTRA,0,1,nil,mg,2,2)
+	end)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()
@@ -65,24 +76,17 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	if not c:IsRelateToChain() or Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)==0 then return end
 	local tc=Duel.GetFirstTarget()
 	if not tc:IsRelateToChain() or tc:IsFacedown() or not tc:IsControler(tp) then return end
-	Duel.AdjustAll()
 	local mg=Group.FromCards(c,tc)
 	if mg:FilterCount(Card.IsLocation,nil,LOCATION_MZONE)<2 then return end
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetCode(EFFECT_XYZ_LEVEL)
-	e1:SetValue(s.xyzlv)
-	e1:SetLabel(tc:GetLevel())
-	e1:SetReset(RESET_EVENT+RESETS_STANDARD)
-	c:RegisterEffect(e1,true)
-	local xyzg=Duel.GetMatchingGroup(Card.IsXyzSummonable,tp,LOCATION_EXTRA,0,nil,mg,2,2)
-	if xyzg:GetCount()>0 then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-		local xyz=xyzg:Select(tp,1,1,nil):GetFirst()
-		Duel.XyzSummon(tp,xyz,mg)
-	else
-		if e1 then e1:Reset() end
-	end
+	s.SetTempLevel(c,tc,true,function()
+		Duel.AdjustAll()
+		local xyzg=Duel.GetMatchingGroup(Card.IsXyzSummonable,tp,LOCATION_EXTRA,0,nil,mg,2,2)
+		if xyzg:GetCount()>0 then
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+			local xyz=xyzg:Select(tp,1,1,nil):GetFirst()
+			Duel.XyzSummon(tp,xyz,mg)
+		end
+	end)
 end
 function s.atkcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -102,6 +106,7 @@ function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.HintSelection(g)
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 		e1:SetCode(EFFECT_SET_ATTACK_FINAL)
 		e1:SetValue(0)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
