@@ -33,21 +33,20 @@ end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.cfilter,1,nil,1-tp)
 end
-function s.CreateTempLevelEffect(ec,level_source,reset)
-	local reset_flag=reset and RESET_EVENT+RESETS_STANDARD or 0
+function s.CreateTempLevelEffect(ec,level_source)
 	local e1=Effect.CreateEffect(ec)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetCode(EFFECT_XYZ_LEVEL)
 	e1:SetValue(s.xyzlv)
 	e1:SetLabel(level_source:GetLevel())
-	e1:SetReset(reset_flag)
+	e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 	ec:RegisterEffect(e1,true)
 	return e1
 end
 function s.SetTempLevel(ec,level_source,reset,callback)
-	local e1=s.CreateTempLevelEffect(ec,level_source,reset)
+	local e1=s.CreateTempLevelEffect(ec,level_source)
 	local res=callback()
-	if e1 then e1:Reset() end
+	if e1 and reset then e1:Reset() end
 	return res
 end
 function s.xyzlv(e,c,rc)
@@ -56,7 +55,7 @@ end
 function s.xyzfilter(c,tp,mc)
 	if not c:IsFaceup() or not c:IsLevelAbove(1) then return false end
 	local mg=Group.FromCards(c,mc)
-	return s.SetTempLevel(mc,c,false,function()
+	return s.SetTempLevel(mc,c,true,function()
 		return Duel.IsExistingMatchingCard(Card.IsXyzSummonable,tp,LOCATION_EXTRA,0,1,nil,mg,2,2)
 	end)
 end
@@ -78,7 +77,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	if not tc:IsRelateToChain() or tc:IsFacedown() or not tc:IsControler(tp) then return end
 	local mg=Group.FromCards(c,tc)
 	if mg:FilterCount(Card.IsLocation,nil,LOCATION_MZONE)<2 then return end
-	s.SetTempLevel(c,tc,true,function()
+	s.SetTempLevel(c,tc,false,function()
 		Duel.AdjustAll()
 		local xyzg=Duel.GetMatchingGroup(Card.IsXyzSummonable,tp,LOCATION_EXTRA,0,nil,mg,2,2)
 		if xyzg:GetCount()>0 then
