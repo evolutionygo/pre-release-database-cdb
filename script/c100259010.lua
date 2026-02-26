@@ -36,7 +36,7 @@ function s.condition(e,tp,eg,ep,ev,re,r,rp)
 	return g:IsExists(Card.IsRace,1,nil,RACE_ZOMBIE) and g:IsExists(Card.IsCode,1,nil,97077563)
 end
 function s.tgfilter1(c)
-	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsAbleToGrave()
+	return c:IsType(TYPE_MONSTER) and c:IsAbleToGrave()
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(1-tp) and chkc:IsLocation(LOCATION_MZONE) and s.tgfilter1(chkc) end

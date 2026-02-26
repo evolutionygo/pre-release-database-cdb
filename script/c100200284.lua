@@ -80,7 +80,7 @@ function s.tdtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_TODECK,tg,2,0,0)
 end
 function s.tdop(e,tp,eg,ep,ev,re,r,rp)
-	local tg=Duel.GetTargetsRelateToChain()
+	local tg=Duel.GetTargetsRelateToChain():Filter(Card.IsOnField,nil)
 	if tg:GetCount()>0 then
 		aux.PlaceCardsOnDeckBottom(tp,tg)
 	end
