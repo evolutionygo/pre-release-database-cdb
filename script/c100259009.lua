@@ -21,7 +21,9 @@ function s.condition(e,tp,eg,ep,ev,re,r,rp)
 		(re:IsActiveType(TYPE_MONSTER) or re:GetActiveType()==TYPE_SPELL or re:IsActiveType(TYPE_QUICKPLAY))
 end
 function s.chtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil,REASON_RULE) end
+	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,LOCATION_MZONE,0,1,nil,tp,REASON_RULE)
+		or Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,0,LOCATION_MZONE,1,nil,1-tp,REASON_RULE)
+	end
 end
 function s.chop(e,tp,eg,ep,ev,re,r,rp)
 	local res=Duel.TossCoin(1-tp,1)
@@ -34,12 +36,14 @@ function s.chop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.repop1(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Hint(HINT_SELECTMSG,1-tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(1-tp,Card.IsAbleToRemove,1-tp,LOCATION_MZONE,0,1,1,nil,REASON_RULE)
+	local op=1-tp
+	Duel.Hint(HINT_SELECTMSG,op,HINTMSG_REMOVE)
+	local g=Duel.SelectMatchingCard(op,Card.IsAbleToRemove,op,LOCATION_MZONE,0,1,1,nil,op,REASON_RULE)
 	Duel.HintSelection(g)
-	Duel.Remove(g,POS_FACEUP,REASON_RULE)
+	Duel.Remove(g,POS_FACEUP,REASON_RULE,op)
 end
 function s.repop2(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,LOCATION_MZONE,0,nil,REASON_RULE)
+	local op=tp
+	local g=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,LOCATION_MZONE,0,nil,op,REASON_RULE)
 	Duel.Remove(g,POS_FACEUP,REASON_RULE)
 end

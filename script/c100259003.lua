@@ -31,7 +31,7 @@ function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SendtoGrave(c,REASON_COST+REASON_DISCARD)
 end
 function s.filter(c)
-	return (c:IsCode(c,97077563) or aux.IsCodeListed(c,97077563) and c:IsType(TYPE_SPELL+TYPE_TRAP))
+	return (c:IsCode(97077563) or (aux.IsCodeListed(c,97077563) and c:IsType(TYPE_SPELL+TYPE_TRAP)))
 		and c:IsAbleToHand()
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -59,7 +59,7 @@ end
 function s.disop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and tc:IsFaceup() then
+	if tc:IsRelateToChain() and tc:IsFaceup() then
 		local e1=Effect.CreateEffect(c)
 		e1:SetDescription(aux.Stringid(id,2))
 		e1:SetType(EFFECT_TYPE_SINGLE)

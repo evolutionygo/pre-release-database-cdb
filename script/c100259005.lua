@@ -30,8 +30,8 @@ function s.initial_effect(c)
 	--tohand
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,2))
-	e3:SetType(EFFECT_TYPE_IGNITION)
 	e3:SetCategory(CATEGORY_TOHAND)
+	e3:SetType(EFFECT_TYPE_IGNITION)
 	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetCountLimit(1,id+o)
@@ -80,8 +80,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,#g,0,0)
 end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	local g=Duel.GetTargetsRelateToChain()
+	local g=Duel.GetTargetsRelateToChain():Filter(Card.IsOnField,nil)
 	if g:GetCount()>0 then
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 	end

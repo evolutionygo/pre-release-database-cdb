@@ -29,19 +29,18 @@ end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	local g=c:GetOverlayGroup()
-	local ct=2
+	local minct=2
 	if not g:IsExists(aux.NOT(Card.IsType),1,nil,TYPE_XYZ) then
-		ct=1
+		minct=1
 	end
-	if chk==0 then return c:CheckRemoveOverlayCard(tp,ct,REASON_COST) end
-	c:RemoveOverlayCard(tp,ct,2,REASON_COST)
+	if chk==0 then return c:CheckRemoveOverlayCard(tp,minct,REASON_COST) end
+	c:RemoveOverlayCard(tp,minct,2,REASON_COST)
 end
 function s.filter(c)
 	return (c:IsPosition(POS_FACEUP_ATTACK) or c:IsLocation(LOCATION_GRAVE)) and c:IsType(TYPE_MONSTER) and c:IsCanOverlay()
 end
 function s.con(e,tp,eg,ep,ev,re,r,rp)
-	local ph=Duel.GetCurrentPhase()
-	return Duel.GetTurnPlayer()~=tp and (ph==PHASE_MAIN1 or ph==PHASE_MAIN2)
+	return Duel.GetTurnPlayer()~=tp and Duel.IsMainPhase()
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(1-tp) and s.filter(chkc) end

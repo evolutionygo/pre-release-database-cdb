@@ -45,6 +45,9 @@ end
 function s.drfilter(c)
 	return c:IsFaceup() and c:IsCode(97077563)
 end
+function s.atkupfilter(c)
+	return not c:IsHasEffect(EFFECT_REVERSE_UPDATE)
+end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetLabel()==1 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
@@ -55,20 +58,24 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		end
 	elseif e:GetLabel()==2 then
 		local g=Duel.GetMatchingGroup(s.adfilter,tp,LOCATION_MZONE,0,nil)
-		local tc=g:GetFirst()
-		while tc do
-			local e1=Effect.CreateEffect(e:GetHandler())
-			e1:SetType(EFFECT_TYPE_SINGLE)
-			e1:SetCode(EFFECT_UPDATE_ATTACK)
-			e1:SetValue(400)
-			e1:SetReset(RESET_EVENT+RESETS_STANDARD)
-			tc:RegisterEffect(e1)
-			tc=g:GetNext()
-		end
-		local dct=Duel.GetMatchingGroupCount(s.drfilter,tp,LOCATION_ONFIELD,0,nil)
-		if #g>0 and dct>0 and Duel.IsPlayerCanDraw(tp,dct) and Duel.SelectYesNo(tp,aux.Stringid(id,3)) then
-			Duel.BreakEffect()
-			Duel.Draw(tp,dct,REASON_EFFECT)
+			if #g>0 then
+			local tc=g:GetFirst()
+			while tc do
+				local e1=Effect.CreateEffect(e:GetHandler())
+				e1:SetType(EFFECT_TYPE_SINGLE)
+				e1:SetCode(EFFECT_UPDATE_ATTACK)
+				e1:SetValue(400)
+				e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+				tc:RegisterEffect(e1)
+				tc=g:GetNext()
+			end
+			if g:IsExists(s.atkupfilter,1,nil) then
+				local dct=Duel.GetMatchingGroupCount(s.drfilter,tp,LOCATION_ONFIELD,0,nil)
+				if dct>0 and Duel.IsPlayerCanDraw(tp,dct) and Duel.SelectYesNo(tp,aux.Stringid(id,3)) then
+					Duel.BreakEffect()
+					Duel.Draw(tp,dct,REASON_EFFECT)
+				end
+			end
 		end
 	end
 end
