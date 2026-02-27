@@ -23,6 +23,7 @@ function s.initial_effect(c)
 	e3:SetDescription(aux.Stringid(id,1))
 	e3:SetCategory(CATEGORY_SEARCH+CATEGORY_SPECIAL_SUMMON+CATEGORY_TOHAND+CATEGORY_DECKDES+CATEGORY_GRAVE_ACTION+CATEGORY_GRAVE_SPSUMMON)
 	e3:SetType(EFFECT_TYPE_QUICK_O)
+	e3:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
 	e3:SetCode(EVENT_CHAINING)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetCountLimit(1,EFFECT_COUNT_CODE_SINGLE)
@@ -88,7 +89,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 			Duel.SendtoHand(oc,nil,REASON_EFFECT)
 			Duel.ConfirmCards(1-tp,oc)
 			res=oc:IsLocation(LOCATION_HAND)
-		else
+		elseif ft>0 and oc:IsCanBeSpecialSummoned(e,0,tp,false,false) then
 			res=Duel.SpecialSummon(oc,0,tp,tp,false,false,POS_FACEUP)>0
 		end
 		local tc=Duel.GetFirstTarget()
