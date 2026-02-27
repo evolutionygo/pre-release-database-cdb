@@ -64,7 +64,7 @@ function s.hsptg(e,tp,eg,ep,ev,re,r,rp,chk,c)
 	local rg=Duel.GetMatchingGroup(s.hspfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil,tp,c)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
 	local sg=rg:SelectSubGroup(tp,s.fselect,true,2,2,tp,c)
-	if sg:GetCount()>0 then
+	if sg and sg:GetCount()>0 then
 		sg:KeepAlive()
 		e:SetLabelObject(sg)
 		return true
