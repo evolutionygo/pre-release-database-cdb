@@ -61,7 +61,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		if tc:IsRelateToChain()
 			and tc:IsCanBeSpecialSummoned(e,0,tp,false,false)
 			and not Duel.IsPlayerAffectedByEffect(tp,59822133) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then
-				if Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP) then
+			if Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP) then
 				local e1=Effect.CreateEffect(c)
 				e1:SetType(EFFECT_TYPE_SINGLE)
 				e1:SetCode(EFFECT_DISABLE)
@@ -75,8 +75,8 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 				tc:RegisterEffect(e2)
 			end
 		end
+		Duel.SpecialSummonComplete()
 	end
-	Duel.SpecialSummonComplete()
 end
 function s.splimit(e,c)
 	return not c:IsType(TYPE_SYNCHRO) and c:IsLocation(LOCATION_EXTRA)

@@ -51,7 +51,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	local dg=g:Select(tp,5,5,nil)
 	Duel.HintSelection(dg)
 	if Duel.SendtoDeck(dg,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)~=0
-		and dg:IsExists(Card.IsLocation,1,nil,LOCATION_DECK+LOCATION_EXTRA) then
+		and dg:IsExists(Card.IsLocation,5,nil,LOCATION_DECK+LOCATION_EXTRA) then
 		Duel.BreakEffect()
 		if Duel.Draw(tp,2,REASON_EFFECT)>0
 			and c:IsRelateToChain()

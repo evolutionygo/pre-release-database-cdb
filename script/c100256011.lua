@@ -29,7 +29,7 @@ function s.CreateTempSwapLevelEffect(ec,c1,c2)
 	c1:RegisterEffect(e1,true)
 	return e1
 end
-function s.SetTempSwapLevel(ec,c,reset,callback)
+function s.SetTempSwapLevel(ec,c,callback)
 	local e1=nil
 	local e2=nil
 	if ec:IsLevelAbove(1) then
@@ -38,8 +38,8 @@ function s.SetTempSwapLevel(ec,c,reset,callback)
 	if c:IsLevelAbove(1) then
 		e2=s.CreateTempSwapLevelEffect(c,ec,c)
 	end
-	local res=callback()
-	if reset then
+	local res,resetflag = callback()
+	if resetflag then
 		if e1 then e1:Reset() end
 		if e2 then e2:Reset() end
 	end
@@ -47,8 +47,8 @@ function s.SetTempSwapLevel(ec,c,reset,callback)
 end
 function s.spfilter(c,e,tp,ec)
 	if not (not c:IsCode(id) and c:IsSetCard(0x8f,0x54,0x59,0x82) and c:IsLevelAbove(1) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)) then return false end
-	return s.SetTempSwapLevel(ec,c,true,function()
-		return Duel.IsExistingMatchingCard(s.xyzfiltr,tp,LOCATION_EXTRA,0,1,nil,Group.FromCards(c,ec))
+	return s.SetTempSwapLevel(ec,c,function()
+		return Duel.IsExistingMatchingCard(s.xyzfiltr,tp,LOCATION_EXTRA,0,1,nil,Group.FromCards(c,ec)), true
 	end)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -73,14 +73,16 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		if Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)==2
 			and g:IsExists(Card.IsLocation,2,nil,LOCATION_MZONE)
 			and g:IsExists(Card.IsFaceup,2,nil) then
-			s.SetTempSwapLevel(c,tc,false,function()
+			s.SetTempSwapLevel(c,tc,function()
 				Duel.AdjustAll()
 				local xyzg=Duel.GetMatchingGroup(s.xyzfiltr,tp,LOCATION_EXTRA,0,nil,g)
 				if xyzg:GetCount()>0 then
 					Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 					local xyz=xyzg:Select(tp,1,1,nil):GetFirst()
 					Duel.XyzSummon(tp,xyz,g)
+					return nil, false
 				end
+				return nil, true
 			end)
 		end
 	end
