@@ -14,15 +14,27 @@ function s.initial_effect(c)
 	e1:SetOperation(s.activate)
 	c:RegisterEffect(e1)
 end
-function s.spfilter2(c,e,tp)
+function s.spfilter(c,e,tp)
 	return c:IsRace(RACE_SPELLCASTER) and c:IsAttribute(ATTRIBUTE_DARK) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
+function s.spfilter2(c,e,tp)
+	return c:IsPublic() and c:IsRace(RACE_SPELLCASTER) and c:IsAttribute(ATTRIBUTE_DARK) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	local b1=Duel.IsExistingMatchingCard(s.spfilter2,tp,LOCATION_HAND+LOCATION_DECK,0,1,nil,e,tp) and
+	local b1=Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_HAND+LOCATION_DECK,0,1,nil,e,tp) and
 		Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-	local b2=Duel.IsPlayerCanSpecialSummon(1-tp) and
-		(Duel.GetFieldGroupCount(tp,0,LOCATION_DECK)>0 or Duel.IsExistingMatchingCard(aux.NOT(Card.IsPublic),tp,0,LOCATION_HAND,1,nil)) and
-		Duel.GetLocationCount(1-tp,LOCATION_MZONE)>0
+	local b2=false
+	if Duel.GetLocationCount(1-tp,LOCATION_MZONE)>0 and Duel.IsPlayerCanSpecialSummon(1-tp) then
+		if Duel.GetFieldGroupCount(tp,0,LOCATION_DECK)>0 or Duel.IsExistingMatchingCard(aux.NOT(Card.IsPublic),tp,0,LOCATION_HAND,1,nil) then
+			for lv=1,12 do
+				if Duel.IsPlayerCanSpecialSummonMonster(1-tp,0,0,TYPE_MONSTER,-2,-2,lv,RACE_SPELLCASTER,ATTRIBUTE_DARK,POS_FACEUP) then
+					b2=true
+					break
+				end
+			end
+		end
+		b2=b2 or Duel.IsExistingMatchingCard(s.spfilter2,1-tp,LOCATION_HAND,0,1,nil,e,1-tp)
+	end
 	if chk==0 then return b1 and b2 end
 end
 function s.thfilter(c)
@@ -34,10 +46,10 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local ss=false
 	for p in aux.TurnPlayers() do
 		if Duel.GetLocationCount(p,LOCATION_MZONE)>0
-			and Duel.IsExistingMatchingCard(s.spfilter2,p,LOCATION_HAND+LOCATION_DECK,0,1,nil,e,p)
+			and Duel.IsExistingMatchingCard(s.spfilter,p,LOCATION_HAND+LOCATION_DECK,0,1,nil,e,p)
 			and Duel.SelectYesNo(p,aux.Stringid(id,1)) then
 			Duel.Hint(HINT_SELECTMSG,p,HINTMSG_SPSUMMON)
-			local sc=Duel.SelectMatchingCard(p,s.spfilter2,p,LOCATION_HAND+LOCATION_DECK,0,1,1,nil,e,p):GetFirst()
+			local sc=Duel.SelectMatchingCard(p,s.spfilter,p,LOCATION_HAND+LOCATION_DECK,0,1,1,nil,e,p):GetFirst()
 			if Duel.SpecialSummonStep(sc,0,p,p,false,false,POS_FACEUP) then
 				ss=true
 				local e1=Effect.CreateEffect(c)
