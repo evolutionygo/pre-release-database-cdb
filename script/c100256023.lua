@@ -43,12 +43,13 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.thfilter),tp,LOCATION_DECK+LOCATION_GRAVE,0,1,1,nil,tp):GetFirst()
 	if tc then
 		local res=false
-		if tc:IsAbleToHand() and (tc:IsForbidden() or not tc:CheckUniqueOnField(tp) or Duel.SelectOption(tp,1190,aux.Stringid(id,1))==0) then
+		local tfchk=not tc:IsForbidden() and tc:CheckUniqueOnField(tp)
+		if tc:IsAbleToHand() and (not tfchk or Duel.SelectOption(tp,1190,aux.Stringid(id,1))==0) then
 			if Duel.SendtoHand(tc,nil,REASON_EFFECT)~=0 and tc:IsLocation(LOCATION_HAND) then
 				res=true
 				Duel.ConfirmCards(1-tp,tc)
 			end
-		else
+		elseif tfchk then
 			local fc=Duel.GetFieldCard(tp,LOCATION_SZONE,5)
 			if fc then
 				Duel.SendtoGrave(fc,REASON_RULE)
@@ -64,13 +65,16 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 				if Duel.SpecialSummon(g,0,tp,tp,true,false,POS_FACEUP_DEFENSE)~=0
 					and Duel.IsExistingMatchingCard(s.atkfilter,tp,0,LOCATION_MZONE,1,nil) then
 					local sg=Duel.GetMatchingGroup(Card.IsFaceup,tp,0,LOCATION_MZONE,nil)
-					for mc in aux.Next(sg) do
-						local e1=Effect.CreateEffect(e:GetHandler())
-						e1:SetType(EFFECT_TYPE_SINGLE)
-						e1:SetCode(EFFECT_UPDATE_ATTACK)
-						e1:SetValue(-2500)
-						e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
-						mc:RegisterEffect(e1)
+					if #sg>0 then
+						Duel.BreakEffect()
+						for mc in aux.Next(sg) do
+							local e1=Effect.CreateEffect(e:GetHandler())
+							e1:SetType(EFFECT_TYPE_SINGLE)
+							e1:SetCode(EFFECT_UPDATE_ATTACK)
+							e1:SetValue(-2500)
+							e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+							mc:RegisterEffect(e1)
+						end
 					end
 				end
 			end
