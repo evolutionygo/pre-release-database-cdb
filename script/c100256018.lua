@@ -80,7 +80,7 @@ function s.cfilter2(c,e,tp,lg)
 		and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp,c:GetRace(),c:GetType())
 end
 function s.spfilter(c,e,tp,rac,type)
-	return c:IsType(TYPE_FUSION+TYPE_SYNCHRO+TYPE_XYZ+TYPE_RITUAL) 
+	return c:IsType(TYPE_FUSION+TYPE_SYNCHRO+TYPE_XYZ+TYPE_RITUAL)
 		and c:GetType()&type&(TYPE_FUSION+TYPE_SYNCHRO+TYPE_XYZ+TYPE_RITUAL)==0
 		and c:IsRace(rac)
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
