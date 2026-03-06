@@ -27,9 +27,14 @@ end
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetMatchingGroupCount(Card.IsType,tp,LOCATION_GRAVE,0,nil,TYPE_MONSTER)>=5 and Duel.GetMatchingGroupCount(Card.IsType,tp,0,LOCATION_GRAVE,nil,TYPE_MONSTER)>=5
 end
+function s.rmfilter(c,tp)
+	return c:IsAbleToRemove(tp,POS_FACEDOWN) and c:IsType(TYPE_MONSTER)
+end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
+	local rm1=Duel.IsExistingMatchingCard(s.rmfilter,tp,LOCATION_DECK,0,1,nil,tp)
+	local rm2=Duel.IsPlayerCanRemove(1-tp) and Duel.GetFieldGroupCount(tp,0,LOCATION_DECK)>0
 	if chk==0 then return Duel.IsExistingMatchingCard(aux.TRUE,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil)
-		and Duel.IsPlayerCanRemove(tp) end
+		and (rm1 or rm2) end
 	local g=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,#g,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,0,PLAYER_ALL,LOCATION_DECK)
