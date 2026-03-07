@@ -39,11 +39,8 @@ function s.ctop(e,tp,eg,ep,ev,re,r,rp)
 	local ct=eg:FilterCount(s.ctfilter,nil)
 	e:GetHandler():AddCounter(0x74,ct)
 end
-function s.thcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsMainPhase()
-end
 function s.spfilter1(c,e,tp)
-	return c:IsLevelBelow(6) and c:IsRace(RACE_FAIRY+RACE_FAIRY)
+	return c:IsLevelBelow(6) and c:IsRace(RACE_FAIRY+RACE_FIEND)
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.thfilter(c)
@@ -94,7 +91,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	if op==1 then
 		if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-		local g=Duel.SelectMatchingCard(tp,s.spfilter1,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,1,nil,e,tp)
+		local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.spfilter1),tp,LOCATION_HAND+LOCATION_GRAVE,0,1,1,nil,e,tp)
 		if g:GetCount()>0 then
 			Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 		end
@@ -108,7 +105,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	elseif op==5 then
 		if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-		local g=Duel.SelectMatchingCard(tp,s.spfilter2,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,1,nil,e,tp)
+		local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.spfilter2),tp,LOCATION_HAND+LOCATION_GRAVE,0,1,1,nil,e,tp)
 		if g:GetCount()>0 then
 			Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 		end
