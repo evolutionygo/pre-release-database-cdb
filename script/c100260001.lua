@@ -22,7 +22,7 @@ function s.initial_effect(c)
 	e2:SetCondition(s.adcon)
 	e2:SetValue(-1500)
 	c:RegisterEffect(e2)
-	--to deck
+	--release effect
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,1))
 	e3:SetCategory(CATEGORY_TODECK+CATEGORY_SPECIAL_SUMMON)
@@ -66,7 +66,7 @@ function s.aclimit(e,re,tp)
 	return re:IsActiveType(TYPE_MONSTER) and rc:IsSummonType(SUMMON_TYPE_SPECIAL) and rc:IsLocation(LOCATION_MZONE) and rc:IsSummonLocation(LOCATION_DECK+LOCATION_EXTRA)
 end
 function s.cfilter(c)
-	return c:IsFaceup() and c:IsSummonType(SUMMON_TYPE_ADVANCE)
+	return c:IsSummonType(SUMMON_TYPE_ADVANCE)
 end
 function s.adcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_MZONE,0,1,nil)
@@ -92,7 +92,7 @@ function s.tdtg(e,tp,eg,ep,ev,re,r,rp,chk)
 			{b1,aux.Stringid(id,2),1},
 			{b2,aux.Stringid(id,3),2})
 	end
-	e:SetLabel(op,ct)
+	e:SetLabel(op)
 	if op==1 then
 		if e:IsCostChecked() then
 			e:SetCategory(CATEGORY_TODECK)
@@ -112,7 +112,6 @@ function s.tdop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if e:GetLabel()==1 then
 		local g=Duel.GetMatchingGroup(s.tdfilter,tp,LOCATION_EXTRA+LOCATION_MZONE,LOCATION_EXTRA+LOCATION_MZONE,nil)
-		if aux.NecroValleyNegateCheck(g) then return end
 		Duel.SendtoDeck(g,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)
 	elseif e:GetLabel()==2 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
