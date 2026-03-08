@@ -51,17 +51,17 @@ function s.desfilter(c,e)
 	return c:IsType(TYPE_SPELL+TYPE_TRAP) and Duel.GetMZoneCount(e:GetControler(),c)>0
 		and c:IsCanBeEffectTarget(e)
 end
-function s.gcheck(g,tp)
+function s.gcheck2(g,tp)
 	return g:FilterCount(Card.IsControler,nil,tp)==g:FilterCount(Card.IsControler,nil,1-tp)
 end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end
 	local g=Duel.GetMatchingGroup(s.desfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil,e)
-	if chk==0 then return g:CheckSubGroup(s.gcheck,2,2,tp)
+	if chk==0 then return g:CheckSubGroup(s.gcheck2,2,2,tp)
 		and not Duel.IsPlayerAffectedByEffect(tp,59822133)
 		and Duel.IsPlayerCanSpecialSummonMonster(tp,id+o,0,TYPES_TOKEN_MONSTER,800,800,2,RACE_FAIRY,ATTRIBUTE_LIGHT,POS_FACEUP_DEFENSE)
 		and Duel.IsPlayerCanSpecialSummonMonster(tp,id+o,0,TYPES_TOKEN_MONSTER,800,800,2,RACE_FAIRY,ATTRIBUTE_LIGHT,POS_FACEUP_DEFENSE,1-tp) end
-	local sg=g:SelectSubGroup(tp,s.gcheck,false,2,2,tp)
+	local sg=g:SelectSubGroup(tp,s.gcheck2,false,2,2,tp)
 	Duel.SetTargetCard(sg)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,sg,#sg,0,0)
 end
