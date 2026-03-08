@@ -16,7 +16,6 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 	local e2=e1:Clone()
 	e2:SetCode(EVENT_DAMAGE_STEP_END)
-	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e2:SetCondition(s.descon2)
 	c:RegisterEffect(e2)
 	--attribute
@@ -57,13 +56,17 @@ function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if g:GetCount()>0 then
 		Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,g:GetCount(),0,0)
 	end
-	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,g:FilterCount(Card.IsType,nil,TYPE_LINK)*300)
+	local dam=Duel.GetMatchingGroupCount(Card.IsType,tp,LOCATION_GRAVE,0,nil,TYPE_LINK)*300
+	if dam>0 then
+		Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,dam)
+	end
 end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(aux.TRUE,tp,0,LOCATION_MZONE,nil)
 	if Duel.Destroy(g,REASON_EFFECT)~=0 then
-		local ct=Duel.GetMatchingGroupCount(Card.IsType,tp,LOCATION_GRAVE,LOCATION_GRAVE,nil,TYPE_LINK)
+		local ct=Duel.GetMatchingGroupCount(Card.IsType,tp,LOCATION_GRAVE,0,nil,TYPE_LINK)
 		if ct>0 then
+			Duel.BreakEffect()
 			Duel.Damage(1-tp,ct*300,REASON_EFFECT)
 		end
 	end
@@ -74,14 +77,15 @@ function s.immval(e,te)
 end
 function s.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
+	local atk=c:GetAttack()
 	if chk==0 then return c:IsReason(REASON_BATTLE+REASON_EFFECT) and not c:IsReason(REASON_REPLACE)
-		and c:IsAttackAbove(1000) and not c:IsHasEffect(EFFECT_REVERSE_UPDATE) end
+		and atk>=1000 end
 	if Duel.SelectEffectYesNo(tp,e:GetHandler(),96) then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_UPDATE_ATTACK)
+		e1:SetCode(EFFECT_SET_ATTACK_FINAL)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_DISABLE)
-		e1:SetValue(-1000)
+		e1:SetValue(atk-1000)
 		c:RegisterEffect(e1)
 		return true
 	else return false end
