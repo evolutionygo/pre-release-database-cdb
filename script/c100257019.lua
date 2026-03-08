@@ -48,7 +48,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
 end
 function s.desfilter(c,e)
-	return c:IsType(TYPE_SPELL+TYPE_TRAP) and Duel.GetMZoneCount(e:GetControler(),c)>0
+	return c:IsType(TYPE_SPELL+TYPE_TRAP) and Duel.GetMZoneCount(c:GetControler(),c)>0
 		and c:IsCanBeEffectTarget(e)
 end
 function s.gcheck2(g,tp)
