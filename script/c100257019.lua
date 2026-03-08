@@ -47,22 +47,23 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	if not c:IsRelateToChain() then return end
 	Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
 end
-function s.desfilter(c,tp)
-	return c:IsType(TYPE_SPELL+TYPE_TRAP) and Duel.GetMZoneCount(tp,c)>0
+function s.desfilter(c,e)
+	return c:IsType(TYPE_SPELL+TYPE_TRAP) and Duel.GetMZoneCount(e:GetControler(),c)>0
+		and c:IsCanBeEffectTarget(e)
+end
+function s.gcheck(g,tp)
+	return g:FilterCount(Card.IsControler,nil,tp)==g:FilterCount(Card.IsControler,nil,1-tp)
 end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end
-	if chk==0 then return Duel.IsExistingTarget(s.desfilter,tp,LOCATION_ONFIELD,0,1,nil,tp)
-		and Duel.IsExistingTarget(s.desfilter,tp,0,LOCATION_ONFIELD,1,nil,1-tp)
+	local g=Duel.GetMatchingGroup(s.desfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil,e)
+	if chk==0 then return g:CheckSubGroup(s.gcheck,2,2,tp)
 		and not Duel.IsPlayerAffectedByEffect(tp,59822133)
 		and Duel.IsPlayerCanSpecialSummonMonster(tp,id+o,0,TYPES_TOKEN_MONSTER,800,800,2,RACE_FAIRY,ATTRIBUTE_LIGHT,POS_FACEUP_DEFENSE)
 		and Duel.IsPlayerCanSpecialSummonMonster(tp,id+o,0,TYPES_TOKEN_MONSTER,800,800,2,RACE_FAIRY,ATTRIBUTE_LIGHT,POS_FACEUP_DEFENSE,1-tp) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g=Duel.SelectTarget(tp,s.desfilter,tp,LOCATION_ONFIELD,0,1,1,nil,tp)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g2=Duel.SelectTarget(tp,s.desfilter,tp,0,LOCATION_ONFIELD,1,1,nil,1-tp)
-	g:Merge(g2)
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,#g,0,0)
+	local sg=g:SelectSubGroup(tp,s.gcheck,false,2,2,tp)
+	Duel.SetTargetCard(sg)
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,sg,#sg,0,0)
 end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
