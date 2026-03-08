@@ -26,18 +26,20 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	if not tc then return end
 	if Duel.SendtoHand(tc,nil,REASON_EFFECT)~=0 and tc:IsLocation(LOCATION_HAND) then
 		Duel.ConfirmCards(1-tp,tc)
-		local e1=Effect.CreateEffect(e:GetHandler())
-		e1:SetType(EFFECT_TYPE_FIELD)
-		e1:SetCode(EFFECT_CANNOT_SUMMON)
-		e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-		e1:SetTargetRange(1,0)
-		e1:SetTarget(s.sumlimit)
-		e1:SetLabel(tc:GetCode())
-		e1:SetReset(RESET_PHASE+PHASE_END,2)
-		Duel.RegisterEffect(e1,tp)
-		local e2=e1:Clone()
-		e2:SetCode(EFFECT_CANNOT_MSET)
-		Duel.RegisterEffect(e2,tp)
+		if e:IsHasType(EFFECT_TYPE_ACTIVATE) then
+			local e1=Effect.CreateEffect(e:GetHandler())
+			e1:SetType(EFFECT_TYPE_FIELD)
+			e1:SetCode(EFFECT_CANNOT_SUMMON)
+			e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+			e1:SetTargetRange(1,0)
+			e1:SetTarget(s.sumlimit)
+			e1:SetLabel(tc:GetCode())
+			e1:SetReset(RESET_PHASE+PHASE_END,2)
+			Duel.RegisterEffect(e1,tp)
+			local e2=e1:Clone()
+			e2:SetCode(EFFECT_CANNOT_MSET)
+			Duel.RegisterEffect(e2,tp)
+		end
 	end
 end
 function s.sumlimit(e,c)

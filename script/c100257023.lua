@@ -12,10 +12,10 @@ function s.initial_effect(c)
 	e1:SetTarget(s.sumtg)
 	e1:SetOperation(s.sumop)
 	c:RegisterEffect(e1)
-	--summon
+	--spsummon
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
-	e2:SetCategory(CATEGORY_SUMMON)
+	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetProperty(EFFECT_FLAG_DELAY)
 	e2:SetCode(EVENT_SUMMON_SUCCESS)
@@ -72,7 +72,7 @@ function s.spcon2(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_NORMAL)
 end
 function s.rlfilter(c,e,tp,ec)
-	return c:IsLevelAbove(1) and c:IsLevelBelow(ec:GetLevel()) and c:IsReleasable()
+	return c:IsLevelAbove(1) and ec:GetLevel()>c:GetLevel() and c:IsReleasable(REASON_EFFECT)
 		and not c:IsType(TYPE_TUNER) and c:IsFaceup()
 		and Duel.IsExistingMatchingCard(s.spfilter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,ec:GetLevel()-c:GetLevel(),Group.FromCards(c,ec))
 end
@@ -82,17 +82,17 @@ function s.spfilter2(c,e,tp,lv,sg)
 end
 function s.sptg2(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.rlfilter,tp,LOCATION_MZONE,0,1,e:GetHandler(),e,tp,e:GetHandler())
-		and e:GetHandler():IsReleasable()
+		and e:GetHandler():IsReleasable(REASON_EFFECT)
 		and aux.MustMaterialCheck(nil,tp,EFFECT_MUST_BE_SMATERIAL) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 end
 function s.spop2(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if not c:IsRelateToChain() then return end
+	if not c:IsRelateToChain() or not c:IsFaceup() or not c:IsReleasable(REASON_EFFECT) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
 	local tc=Duel.SelectMatchingCard(tp,s.rlfilter,tp,LOCATION_MZONE,0,1,1,e:GetHandler(),e,tp,e:GetHandler()):GetFirst()
 	if tc then
-		lv=c:GetLevel()-tc:GetLevel()
+		local lv=c:GetLevel()-tc:GetLevel()
 		if Duel.Release(Group.FromCards(c,tc),REASON_EFFECT)>0 then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 			local g=Duel.SelectMatchingCard(tp,s.spfilter2,tp,LOCATION_EXTRA,0,1,1,nil,e,tp,lv,nil)

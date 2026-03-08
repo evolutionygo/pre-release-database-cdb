@@ -34,7 +34,7 @@ end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.GetMatchingGroup(s.sprfilter,tp,LOCATION_HAND+LOCATION_DECK+LOCATION_MZONE,0,e:GetHandler())
 	if chk==0 then return g:CheckSubGroup(s.gcheck,4,4,tp) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
 	local sg=g:SelectSubGroup(tp,s.gcheck,false,4,4,tp)
 	Duel.SendtoGrave(sg,REASON_COST)
 end
@@ -65,7 +65,8 @@ function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,#g,0,0)
 end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToChain,nil)
+	local c=e:GetHandler()
+	local g=Duel.GetTargetsRelateToChain():Filter(Card.IsOnField,nil)
 	if g:GetCount()>0 and Duel.Destroy(g,REASON_EFFECT)>0 then
 		if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0
 			or Duel.GetLocationCount(1-tp,LOCATION_MZONE)<=0
@@ -78,5 +79,13 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SpecialSummonStep(token1,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
 		Duel.SpecialSummonStep(token2,0,tp,1-tp,false,false,POS_FACEUP_DEFENSE)
 		Duel.SpecialSummonComplete()
+		if c:IsFaceup() and c:IsRelateToChain() then
+			local e1=Effect.CreateEffect(c)
+			e1:SetType(EFFECT_TYPE_SINGLE)
+			e1:SetCode(EFFECT_UPDATE_ATTACK)
+			e1:SetValue(1600)
+			e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_DISABLE)
+			c:RegisterEffect(e1)
+		end
 	end
 end
