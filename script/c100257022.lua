@@ -27,7 +27,7 @@ function s.sumcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return not e:GetHandler():IsPublic() end
 end
 function s.sumfilter(c)
-	return c:IsSetCard(0x1) and c:IsSummonable(true,nil)
+	return c:IsSetCard(0x2de) and c:IsSummonable(true,nil)
 end
 function s.sumtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.sumfilter,tp,LOCATION_HAND+LOCATION_MZONE,0,1,nil) end
