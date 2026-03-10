@@ -45,9 +45,9 @@ end
 function s.spfilter(c,e,tp)
 	if not c:IsFaceupEx() or not c:IsSetCard(0x1144) then return false end
 	if c:IsCode(101305005,101305006,101305007) then
-		return c:IsCanBeSpecialSummoned(e,0,tp,false,true,POS_FACEUP_DEFENSE)
+		return c:IsCanBeSpecialSummoned(e,0,tp,false,true)
 	else
-		return c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE)
+		return c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 	end
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
