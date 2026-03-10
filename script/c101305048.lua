@@ -31,7 +31,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function s.tgfilter(c)
-	return c:IsFaceup() and c:IsAbleToGrave()
+	return c:IsFaceupEx() and c:IsAbleToGrave()
 end
 function s.gcheck(g,tp)
 	return g:FilterCount(Card.IsType,nil,TYPE_MONSTER)==3
@@ -39,9 +39,9 @@ function s.gcheck(g,tp)
 		or g:FilterCount(Card.IsType,nil,TYPE_TRAP)==3
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	local g=Duel.GetMatchingGroup(s.tgfilter,tp,LOCATION_ONFIELD,0,e:GetHandler())
+	local g=Duel.GetMatchingGroup(s.tgfilter,tp,LOCATION_HAND+LOCATION_ONFIELD,0,e:GetHandler())
 	if chk==0 then return g:CheckSubGroup(s.gcheck,3,3,tp) end
-	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,3,tp,LOCATION_ONFIELD)
+	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,3,tp,LOCATION_HAND+LOCATION_ONFIELD)
 end
 function s.spfilter(c,e,tp)
 	if not c:IsFaceupEx() or not c:IsSetCard(0x1144) then return false end
@@ -53,7 +53,7 @@ function s.spfilter(c,e,tp)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local g=Duel.GetMatchingGroup(s.tgfilter,tp,LOCATION_ONFIELD,0,aux.ExceptThisCard(e))
+	local g=Duel.GetMatchingGroup(s.tgfilter,tp,LOCATION_HAND+LOCATION_ONFIELD,0,aux.ExceptThisCard(e))
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
 	local sg=g:SelectSubGroup(tp,s.gcheck,false,3,3)
 	if sg:GetCount()>0 and Duel.SendtoGrave(sg,nil,REASON_EFFECT)~=0
