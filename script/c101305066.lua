@@ -19,6 +19,7 @@ function s.initial_effect(c)
 	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetRange(LOCATION_GRAVE)
 	e2:SetHintTiming(0,TIMINGS_CHECK_MONSTER)
+	e2:SetCountLimit(1,id+o)
 	e2:SetCost(aux.bfgcost)
 	e2:SetTarget(s.fsptg)
 	e2:SetOperation(s.fspop)
@@ -37,7 +38,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 		and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,nil,e,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND+LOCATION_GRAVE)
 end
-function s.cfilter(c,e,tp)
+function s.cfilter(c)
 	return c:IsFaceup() and c:GetOriginalLevel()==10 and c:IsSetCard(0x1144)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)

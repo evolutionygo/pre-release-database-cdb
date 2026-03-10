@@ -12,7 +12,6 @@ function s.initial_effect(c)
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_TOGRAVE+CATEGORY_DECKDES)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_FZONE)
-	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 	e2:SetCountLimit(3)
 	e2:SetTarget(s.sptg)
 	e2:SetOperation(s.spop)
@@ -57,7 +56,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
 	local sg=g:SelectSubGroup(tp,s.gcheck,false,3,3)
 	if sg:GetCount()>0 and Duel.SendtoGrave(sg,nil,REASON_EFFECT)~=0
-		and sg:IsExists(Card.IsLocation,3,nil,LOCATION_GRAVE)
+		and sg:IsExists(Card.IsLocation,1,nil,LOCATION_GRAVE)
 		and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and Duel.IsExistingMatchingCard(aux.NecroValleyFilter(s.spfilter),tp,LOCATION_HAND+LOCATION_DECK+LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil,e,tp)
 		and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
@@ -68,9 +67,9 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		if tc then
 			local res=false
 			if tc:IsCode(101305005,101305006,101305007) then
-				res=Duel.SpecialSummonStep(tc,0,tp,tp,false,true,POS_FACEUP_DEFENSE)
+				res=Duel.SpecialSummonStep(tc,0,tp,tp,false,true,POS_FACEUP)
 			else
-				res=Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
+				res=Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP)
 			end
 			if res then
 				local e1=Effect.CreateEffect(c)

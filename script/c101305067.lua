@@ -98,11 +98,11 @@ end
 function s.tdtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then return c:IsAbleToDeck() end
-	e:SetCategory(CATEGORY_TODECK)
 	Duel.SetOperationInfo(0,CATEGORY_TODECK,c,1,0,0)
 end
 function s.tdop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if not c:IsRelateToChain() then return end
-	Duel.SendtoDeck(c,nil,SEQ_DECKBOTTOM,REASON_EFFECT)
+	if c:IsRelateToChain() and aux.NecroValleyFilter()(c) then
+		Duel.SendtoDeck(c,nil,SEQ_DECKBOTTOM,REASON_EFFECT)
+	end
 end

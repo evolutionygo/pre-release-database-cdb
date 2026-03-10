@@ -42,7 +42,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function s.ffilter(c)
-	return not c:IsSummonableCard()
+	return not c:IsSummonableCard() and c:IsLevel(10)
 end
 function s.splimit(e,se,sp,st)
 	return bit.band(st,SUMMON_TYPE_FUSION)==SUMMON_TYPE_FUSION
