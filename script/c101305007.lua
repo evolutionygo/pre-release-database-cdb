@@ -1,4 +1,4 @@
---無窮の三幻魔-幻魔皇ラビエル
+--無窮の三幻魔－幻魔皇ラビエル
 local s,id,o=GetID()
 function s.initial_effect(c)
 	c:EnableReviveLimit()
@@ -27,6 +27,7 @@ function s.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_QUICK_O)
 	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetRange(LOCATION_MZONE)
+	e2:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_END_PHASE)
 	e2:SetCountLimit(1)
 	e2:SetCost(s.descost)
 	e2:SetTarget(s.destg)
@@ -53,17 +54,19 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	if g:GetCount()>0 then
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,g)
-		Duel.ShuffleHand(tp)
-		Duel.BreakEffect()
-		Duel.DiscardHand(tp,nil,1,1,REASON_EFFECT+REASON_DISCARD)
+		local dg=Duel.SelectMatchingCard(tp,Card.IsDiscardable,tp,LOCATION_HAND,0,1,1,nil,REASON_DISCARD+REASON_EFFECT)
+		if dg:GetCount()>0 then
+			Duel.ShuffleHand(tp)
+			Duel.SendtoGrave(dg,REASON_EFFECT+REASON_DISCARD)
+		end
 	end
 end
-function s.costfilter(c)
-	return c:IsSetCard(0x1144)
+function s.costfilter(c,tp)
+	return c:IsSetCard(0x1144) and Duel.IsExistingMatchingCard(nil,tp,0,LOCATION_MZONE,1,c)
 end
 function s.descost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.CheckReleaseGroup(tp,s.costfilter,2,e:GetHandler()) end
-	local g=Duel.SelectReleaseGroup(tp,s.costfilter,2,2,e:GetHandler())
+	if chk==0 then return Duel.CheckReleaseGroup(tp,s.costfilter,2,e:GetHandler(),tp) end
+	local g=Duel.SelectReleaseGroup(tp,s.costfilter,2,2,e:GetHandler(),tp)
 	Duel.Release(g,REASON_COST)
 end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)

@@ -25,7 +25,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 	--special summon
 	local e3=Effect.CreateEffect(c)
-	e3:SetDescription(aux.Stringid(id,1))
+	e3:SetDescription(aux.Stringid(id,2))
 	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e3:SetType(EFFECT_TYPE_IGNITION)
 	e3:SetRange(LOCATION_GRAVE)
@@ -38,6 +38,10 @@ end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return not e:GetHandler():IsPublic() end
 end
+function s.hfilter(c,e,tp)
+	return c:IsDiscardable(REASON_EFFECT+REASON_DISCARD)
+		and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_HAND,0,1,c,e,tp)
+end
 function s.spfilter(c,e,tp)
 	if not c:IsSetCard(0x1144) or c:IsLevel(8) then return false end
 	if c:IsCode(101305005,101305006,101305007) then
@@ -46,28 +50,33 @@ function s.spfilter(c,e,tp)
 		return c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE)
 	end
 end
+function s.spsummon(c,tp)
+	if c:IsCode(101305005,101305006,101305007) then
+		Duel.SpecialSummon(c,0,tp,tp,false,true,POS_FACEUP_DEFENSE)
+	else
+		Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
+	end
+end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_HAND,0,1,nil,e,tp)
-		and Duel.GetMatchingGroupCount(aux.TRUE,tp,LOCATION_HAND,0,2,nil) end
+		and Duel.IsExistingMatchingCard(s.hfilter,tp,LOCATION_HAND,0,1,nil,e,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND)
 	Duel.SetOperationInfo(0,CATEGORY_HANDES,nil,0,tp,1)
 end
-function s.hfilter(c,e,tp)
-	return Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_HAND,0,1,c,e,tp)
-end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.DiscardHand(tp,s.hfilter,1,1,REASON_EFFECT+REASON_DISCARD,nil,e,tp)~=0 then
+	local dres=0
+	if not Duel.IsExistingMatchingCard(s.hfilter,tp,LOCATION_HAND,0,1,nil,e,tp) then
+		dres=Duel.DiscardHand(tp,nil,1,1,REASON_EFFECT+REASON_DISCARD)
+	else
+		dres=Duel.DiscardHand(tp,s.hfilter,1,1,REASON_EFFECT+REASON_DISCARD,nil,e,tp)
+	end
+	if dres>0 then
 		if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_HAND,0,1,1,nil,e,tp)
 		local tc=g:GetFirst()
 		if tc then
-			if tc:IsCode(101305005,101305006,101305007) then
-				Duel.SpecialSummon(tc,0,tp,tp,false,true,POS_FACEUP_DEFENSE)
-			else
-				Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
-			end
+			s.spsummon(tc,tp)
 		end
 	else
 		Duel.DiscardHand(tp,nil,1,1,REASON_EFFECT+REASON_DISCARD)
@@ -94,13 +103,9 @@ function s.spop2(e,tp,eg,ep,ev,re,r,rp)
 	if not tc:IsRelateToChain() then tc=nil end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.spfilter),tp,LOCATION_HAND+LOCATION_GRAVE,0,1,1,tc,e,tp)
-	local tc=g:GetFirst()
-	if tc then
-		if tc:IsCode(101305005,101305006,101305007) then
-			Duel.SpecialSummon(tc,0,tp,tp,false,true,POS_FACEUP_DEFENSE)
-		else
-			Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
-		end
+	local sc=g:GetFirst()
+	if sc then
+		s.spsummon(sc,tp)
 	end
 end
 function s.sptg3(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -114,10 +119,6 @@ function s.spop3(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.spfilter),tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
 	local tc=g:GetFirst()
 	if tc then
-		if tc:IsCode(101305005,101305006,101305007) then
-			Duel.SpecialSummon(tc,0,tp,tp,false,true,POS_FACEUP_DEFENSE)
-		else
-			Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
-		end
+		s.spsummon(tc,tp)
 	end
 end
