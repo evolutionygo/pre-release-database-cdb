@@ -53,16 +53,17 @@ end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local g=Duel.GetMatchingGroup(s.tgfilter,tp,LOCATION_HAND+LOCATION_ONFIELD,0,aux.ExceptThisCard(e))
+	if not g:CheckSubGroup(s.gcheck,3,3,tp) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
 	local sg=g:SelectSubGroup(tp,s.gcheck,false,3,3)
-	if sg:GetCount()>0 and Duel.SendtoGrave(sg,nil,REASON_EFFECT)~=0
-		and sg:IsExists(Card.IsLocation,1,nil,LOCATION_GRAVE)
+	if sg:GetCount()>0 and Duel.SendtoGrave(sg,REASON_EFFECT)==3
+		and sg:IsExists(Card.IsLocation,3,nil,LOCATION_GRAVE)
 		and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and Duel.IsExistingMatchingCard(aux.NecroValleyFilter(s.spfilter),tp,LOCATION_HAND+LOCATION_DECK+LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil,e,tp)
 		and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-		local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.spfilter),tp,LOCATION_HAND+LOCATION_DECK+LOCATION_GRAVE+LOCATION_REMOVED,0,1,1,nil,e,tp)
-		local tc=g:GetFirst()
+		local spg=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.spfilter),tp,LOCATION_HAND+LOCATION_DECK+LOCATION_GRAVE+LOCATION_REMOVED,0,1,1,nil,e,tp)
+		local tc=spg:GetFirst()
 		Duel.BreakEffect()
 		if tc then
 			local res=false
@@ -73,8 +74,9 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 			end
 			if res then
 				local e1=Effect.CreateEffect(c)
+				e1:SetDescription(aux.Stringid(id,3))
 				e1:SetType(EFFECT_TYPE_SINGLE)
-				e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+				e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_CLIENT_HINT)
 				e1:SetRange(LOCATION_MZONE)
 				e1:SetCode(EFFECT_IMMUNE_EFFECT)
 				e1:SetReset(RESET_EVENT+RESETS_STANDARD)

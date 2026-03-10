@@ -1,7 +1,7 @@
 --三幻魔の殉教者
 local s,id,o=GetID()
 function s.initial_effect(c)
-	--set
+	--place
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
@@ -39,10 +39,9 @@ function s.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 function s.pfilter(c,tp)
-	return c:IsSetCard(0x1144)
+	return c:IsSetCard(0x1144) and not c:IsForbidden() and c:CheckUniqueOnField(tp)
 		and (c:IsType(TYPE_CONTINUOUS) and Duel.GetLocationCount(tp,LOCATION_SZONE)>0
-		or c:IsType(TYPE_FIELD))
-		and not c:IsForbidden() and c:CheckUniqueOnField(tp)
+			or c:IsType(TYPE_FIELD))
 end
 function s.settg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.pfilter,tp,LOCATION_DECK,0,1,nil,tp) end

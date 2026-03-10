@@ -40,13 +40,15 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	if sg:GetCount()>0 then
 		Duel.SendtoHand(sg,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,sg)
-		Duel.ShuffleHand(tp)
-		Duel.BreakEffect()
-		Duel.DiscardHand(tp,nil,2,2,REASON_EFFECT+REASON_DISCARD)
+		local dg=Duel.SelectMatchingCard(tp,Card.IsDiscardable,tp,LOCATION_HAND,0,2,2,nil,REASON_DISCARD+REASON_EFFECT)
+		if dg:GetCount()>0 then
+			Duel.ShuffleHand(tp)
+			Duel.SendtoGrave(dg,REASON_EFFECT+REASON_DISCARD)
+		end
 	end
 end
 function s.thfilter2(c)
-	return not c:IsSummonableCard() and c:IsRace(RACE_PYRO+RACE_THUNDER+RACE_FIEND) 
+	return not c:IsSummonableCard() and c:IsRace(RACE_PYRO+RACE_THUNDER+RACE_FIEND)
 		and c:IsLevel(10) and c:IsAbleToHand()
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
