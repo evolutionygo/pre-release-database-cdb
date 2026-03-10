@@ -26,7 +26,6 @@ function s.initial_effect(c)
 	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e3:SetRange(LOCATION_SZONE)
 	e3:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_END_PHASE)
-	e3:SetCountLimit(1,id+o)
 	e3:SetCost(s.poscost)
 	e3:SetTarget(s.postg)
 	e3:SetOperation(s.posop)
@@ -66,7 +65,7 @@ function s.setop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.costfilter(c)
-	return c:IsFaceup() and c:IsSetCard(id) and c:IsAbleToGraveAsCost()
+	return c:IsFaceup() and c:IsCode(id) and c:IsAbleToGraveAsCost()
 end
 function s.poscost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()

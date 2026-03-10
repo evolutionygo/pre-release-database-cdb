@@ -44,6 +44,9 @@ end
 function s.ffilter(c)
 	return not c:IsSummonableCard()
 end
+function s.splimit(e,se,sp,st)
+	return bit.band(st,SUMMON_TYPE_FUSION)==SUMMON_TYPE_FUSION
+end
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	return c:IsSummonType(SUMMON_TYPE_FUSION) or re:GetHandler()==c
