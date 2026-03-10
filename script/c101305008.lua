@@ -1,4 +1,4 @@
---三幻魔の操世者4
+--三幻魔の操世者
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--special summon
