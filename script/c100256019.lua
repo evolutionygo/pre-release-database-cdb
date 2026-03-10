@@ -80,7 +80,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local tc2=nil
 	if Duel.GetLocationCount(p1,LOCATION_MZONE)>0
 		and Duel.IsExistingMatchingCard(aux.NecroValleyFilter(s.spfilter2),p1,LOCATION_GRAVE,0,1,nil,e,p1)
-		and Duel.SelectYesNo(p1,aux.Stringid(id,2)) then
+		and Duel.SelectYesNo(p1,aux.Stringid(id,3)) then
 		Duel.Hint(HINT_SELECTMSG,p1,HINTMSG_SPSUMMON)
 		local sg1=Duel.SelectMatchingCard(p1,aux.NecroValleyFilter(s.spfilter2),p1,LOCATION_GRAVE,0,1,1,nil,e,p1)
 		Duel.HintSelection(sg1)
@@ -88,7 +88,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 	if Duel.GetLocationCount(p2,LOCATION_MZONE)>0
 		and Duel.IsExistingMatchingCard(aux.NecroValleyFilter(s.spfilter2),p2,LOCATION_GRAVE,0,1,nil,e,p2)
-		and Duel.SelectYesNo(p2,aux.Stringid(id,2)) then
+		and Duel.SelectYesNo(p2,aux.Stringid(id,3)) then
 		Duel.Hint(HINT_SELECTMSG,p2,HINTMSG_SPSUMMON)
 		local sg2=Duel.SelectMatchingCard(p2,aux.NecroValleyFilter(s.spfilter2),p2,LOCATION_GRAVE,0,1,1,nil,e,p2)
 		Duel.HintSelection(sg2)
@@ -96,7 +96,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 	if tc1 then
 		if Duel.SpecialSummonStep(tc1,0,p1,p1,true,false,POS_FACEUP) then
-			tc1:RegisterFlagEffect(0,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id,3))
+			tc1:RegisterFlagEffect(0,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id,4))
 			local e1=Effect.CreateEffect(c)
 			e1:SetType(EFFECT_TYPE_SINGLE)
 			e1:SetCode(EFFECT_LEAVE_FIELD_REDIRECT)
@@ -108,7 +108,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 	if tc2 then
 		if Duel.SpecialSummonStep(tc2,0,p2,p2,true,false,POS_FACEUP) then
-			tc2:RegisterFlagEffect(0,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id,3))
+			tc2:RegisterFlagEffect(0,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id,4))
 			local e1=Effect.CreateEffect(c)
 			e1:SetType(EFFECT_TYPE_SINGLE)
 			e1:SetCode(EFFECT_LEAVE_FIELD_REDIRECT)
