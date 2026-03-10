@@ -25,13 +25,15 @@ function s.initial_effect(c)
 	e2:SetOperation(s.fspop)
 	c:RegisterEffect(e2)
 end
+---The `nolimit` parameter for Special Summon effects of Phantasms cards
+---@param c Card
+---@return boolean
+function aux.PhantasmsSpSummonType(c)
+	return c:IsType(TYPE_SPSUMMON)
+end
 function s.spfilter(c,e,tp)
 	if not c:IsSetCard(0x1144) or not c:IsType(TYPE_MONSTER) then return false end
-	if c:IsCode(101305005,101305006,101305007) then
-		return c:IsCanBeSpecialSummoned(e,0,tp,false,true,POS_FACEUP_DEFENSE)
-	else
-		return c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE)
-	end
+	return c:IsCanBeSpecialSummoned(e,0,tp,false,aux.PhantasmsSpSummonType(c),POS_FACEUP_DEFENSE)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
@@ -49,44 +51,46 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=g:GetFirst()
 	if tc then
 		local res=0
-		if tc:IsCode(101305005,101305006,101305007) then
-			res=Duel.SpecialSummon(tc,0,tp,tp,false,true,POS_FACEUP_DEFENSE)
-		else
-			res=Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
-		end
-		if res>0 and Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_MZONE,0,2,nil)
-			and Duel.IsExistingMatchingCard(aux.NegateAnyFilter,tp,0,LOCATION_ONFIELD,1,nil)
-			and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
-			Duel.BreakEffect()
-			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DISABLE)
-			local ng=Duel.SelectMatchingCard(tp,aux.NegateAnyFilter,tp,0,LOCATION_ONFIELD,1,1,nil)
-			Duel.HintSelection(ng)
-			local nc=ng:GetFirst()
-			if nc:IsCanBeDisabledByEffect(e) then
-				local e1=Effect.CreateEffect(c)
-				e1:SetType(EFFECT_TYPE_SINGLE)
-				e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-				e1:SetCode(EFFECT_DISABLE)
-				e1:SetReset(RESET_EVENT+RESETS_STANDARD)
-				nc:RegisterEffect(e1)
-				local e2=Effect.CreateEffect(c)
-				e2:SetType(EFFECT_TYPE_SINGLE)
-				e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-				e2:SetCode(EFFECT_DISABLE_EFFECT)
-				e2:SetValue(RESET_TURN_SET)
-				e2:SetReset(RESET_EVENT+RESETS_STANDARD)
-				nc:RegisterEffect(e2)
-				if tc:IsType(TYPE_TRAPMONSTER) then
-					local e3=Effect.CreateEffect(c)
-					e3:SetType(EFFECT_TYPE_SINGLE)
-					e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-					e3:SetCode(EFFECT_DISABLE_TRAPMONSTER)
-					e3:SetReset(RESET_EVENT+RESETS_STANDARD)
-					nc:RegisterEffect(e3)
+		local flag=aux.PhantasmsSpSummonType(tc)
+		res=Duel.SpecialSummon(tc,0,tp,tp,false,flag,POS_FACEUP_DEFENSE)
+		if res>0 then
+			if Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_MZONE,0,2,nil)
+				and Duel.IsExistingMatchingCard(aux.NegateAnyFilter,tp,0,LOCATION_ONFIELD,1,nil)
+				and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
+				Duel.BreakEffect()
+				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DISABLE)
+				local ng=Duel.SelectMatchingCard(tp,aux.NegateAnyFilter,tp,0,LOCATION_ONFIELD,1,1,nil)
+				Duel.HintSelection(ng)
+				local nc=ng:GetFirst()
+				if nc:IsCanBeDisabledByEffect(e) then
+					local e1=Effect.CreateEffect(c)
+					e1:SetType(EFFECT_TYPE_SINGLE)
+					e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+					e1:SetCode(EFFECT_DISABLE)
+					e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+					nc:RegisterEffect(e1)
+					local e2=Effect.CreateEffect(c)
+					e2:SetType(EFFECT_TYPE_SINGLE)
+					e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+					e2:SetCode(EFFECT_DISABLE_EFFECT)
+					e2:SetValue(RESET_TURN_SET)
+					e2:SetReset(RESET_EVENT+RESETS_STANDARD)
+					nc:RegisterEffect(e2)
+					if tc:IsType(TYPE_TRAPMONSTER) then
+						local e3=Effect.CreateEffect(c)
+						e3:SetType(EFFECT_TYPE_SINGLE)
+						e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+						e3:SetCode(EFFECT_DISABLE_TRAPMONSTER)
+						e3:SetReset(RESET_EVENT+RESETS_STANDARD)
+						nc:RegisterEffect(e3)
+					end
+					Duel.AdjustInstantly()
+					Duel.NegateRelatedChain(nc,RESET_TURN_SET)
+					Duel.Destroy(nc,REASON_EFFECT)
 				end
-				Duel.AdjustInstantly()
-				Duel.NegateRelatedChain(nc,RESET_TURN_SET)
-				Duel.Destroy(nc,REASON_EFFECT)
+			end
+			if flag then
+				tc:CompleteProcedure()
 			end
 		end
 	end

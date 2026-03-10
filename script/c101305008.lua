@@ -35,6 +35,12 @@ function s.initial_effect(c)
 	e3:SetOperation(s.spop3)
 	c:RegisterEffect(e3)
 end
+---The `nolimit` parameter for Special Summon effects of Phantasms cards
+---@param c Card
+---@return boolean
+function aux.PhantasmsSpSummonType(c)
+	return c:IsType(TYPE_SPSUMMON)
+end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return not e:GetHandler():IsPublic() end
 end
@@ -44,17 +50,12 @@ function s.hfilter(c,e,tp)
 end
 function s.spfilter(c,e,tp)
 	if not c:IsSetCard(0x1144) or c:IsLevel(8) then return false end
-	if c:IsCode(101305005,101305006,101305007) then
-		return c:IsCanBeSpecialSummoned(e,0,tp,false,true,POS_FACEUP_DEFENSE)
-	else
-		return c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE)
-	end
+	return c:IsCanBeSpecialSummoned(e,0,tp,false,aux.PhantasmsSpSummonType(c),POS_FACEUP_DEFENSE)
 end
 function s.spsummon(c,tp)
-	if c:IsCode(101305005,101305006,101305007) then
-		Duel.SpecialSummon(c,0,tp,tp,false,true,POS_FACEUP_DEFENSE)
-	else
-		Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
+	local flag=aux.PhantasmsSpSummonType(c)
+	if Duel.SpecialSummon(c,0,tp,tp,false,flag,POS_FACEUP_DEFENSE) and flag then
+		c:CompleteProcedure()
 	end
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)

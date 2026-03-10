@@ -29,6 +29,12 @@ function s.initial_effect(c)
 	e3:SetOperation(s.drop)
 	c:RegisterEffect(e3)
 end
+---The `nolimit` parameter for Special Summon effects of Phantasms cards
+---@param c Card
+---@return boolean
+function aux.PhantasmsSpSummonType(c)
+	return c:IsType(TYPE_SPSUMMON)
+end
 function s.tgfilter(c)
 	return c:IsFaceupEx() and c:IsAbleToGrave()
 end
@@ -44,11 +50,7 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.spfilter(c,e,tp)
 	if not c:IsFaceupEx() or not c:IsSetCard(0x1144) then return false end
-	if c:IsCode(101305005,101305006,101305007) then
-		return c:IsCanBeSpecialSummoned(e,0,tp,false,true)
-	else
-		return c:IsCanBeSpecialSummoned(e,0,tp,false,false)
-	end
+	return c:IsCanBeSpecialSummoned(e,0,tp,false,aux.PhantasmsSpSummonType(c))
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -67,11 +69,8 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.BreakEffect()
 		if tc then
 			local res=false
-			if tc:IsCode(101305005,101305006,101305007) then
-				res=Duel.SpecialSummonStep(tc,0,tp,tp,false,true,POS_FACEUP)
-			else
-				res=Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP)
-			end
+			local flag=aux.PhantasmsSpSummonType(tc)
+			res=Duel.SpecialSummonStep(tc,0,tp,tp,false,flag,POS_FACEUP)
 			if res then
 				local e1=Effect.CreateEffect(c)
 				e1:SetDescription(aux.Stringid(id,3))
@@ -83,6 +82,9 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 				e1:SetValue(s.efilter)
 				e1:SetOwnerPlayer(tp)
 				tc:RegisterEffect(e1,true)
+				if flag then
+					tc:CompleteProcedure()
+				end
 			end
 			Duel.SpecialSummonComplete()
 		end
