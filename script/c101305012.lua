@@ -30,6 +30,7 @@ end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return re:GetHandler():IsOnField() and re:GetHandler():IsRelateToEffect(re)
 		and re:IsActiveType(TYPE_MONSTER) and Duel.GetTurnPlayer()==1-tp
+		and rp==1-tp
 end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return not e:GetHandler():IsPublic() end
@@ -70,7 +71,7 @@ function s.cfilter(c)
 	return c:IsReason(REASON_EFFECT)
 end
 function s.tgcon(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(s.cfilter,1,nil)
+	return eg:IsExists(s.cfilter,1,e:GetHandler())
 end
 function s.tgfilter(c)
 	return c:IsSetCard(0x2df) and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToGrave()

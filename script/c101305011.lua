@@ -51,7 +51,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	if tc and tc:IsRelateToChain() and tc:IsType(TYPE_MONSTER)
 		and Duel.Destroy(tc,REASON_EFFECT)~=0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-		local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_HAND,0,1,1,nil,e,tp,tc)
+		local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_HAND,0,1,1,nil,e,tp)
 		if g:GetCount()>0 then
 			Duel.ShuffleHand(tp)
 			Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
@@ -73,7 +73,7 @@ function s.cfilter(c)
 	return c:IsReason(REASON_EFFECT)
 end
 function s.thcon(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(s.cfilter,1,nil)
+	return eg:IsExists(s.cfilter,1,e:GetHandler())
 end
 function s.thfilter(c)
 	return not c:IsCode(id) and c:IsSetCard(0x2df) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
