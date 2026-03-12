@@ -1,10 +1,10 @@
---雷盟-ブレイクアウェイ
+--雷盟－ブレイクアウェイ
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
-	e1:SetCategory(CATEGORY_TOGRAVE|CATEGORY_SPECIAL_SUMMON)
+	e1:SetCategory(CATEGORY_DESTROY)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
@@ -31,21 +31,21 @@ function s.pfilter(c,tp)
 	return c:IsType(TYPE_CONTINUOUS) and c:IsType(TYPE_TRAP) and c:IsSetCard(0x2df)
 		and not c:IsForbidden() and c:CheckUniqueOnField(tp)
 end
-function s.cfilter(c,ec)
+function s.cfilter(c,ec,tp)
 	return c:IsFaceup() and c:IsRace(RACE_THUNDER) and c:IsAbleToHandAsCost()
 		and Duel.IsExistingTarget(aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,Group.FromCards(c,ec))
 end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local b1=Duel.GetLocationCount(tp,LOCATION_SZONE)>0
 		and Duel.IsExistingMatchingCard(s.pfilter,tp,LOCATION_DECK,0,1,nil,tp)
-	local b2=Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_MZONE,0,1,e:GetHandler(),e:GetHandler())
+	local b2=Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_MZONE,0,1,e:GetHandler(),e:GetHandler(),tp)
 	if chk==0 then return b1 or b2 end
 	local op=aux.SelectFromOptions(tp,
 			{b1,aux.Stringid(id,2),1},
 			{b2,aux.Stringid(id,3),2})
 	if op==2 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
-		local g=Duel.SelectMatchingCard(tp,s.cfilter,tp,LOCATION_MZONE,0,1,1,e:GetHandler(),e:GetHandler())
+		local g=Duel.SelectMatchingCard(tp,s.cfilter,tp,LOCATION_MZONE,0,1,1,e:GetHandler(),e:GetHandler(),tp)
 		Duel.SendtoHand(g,nil,REASON_COST)
 	end
 	e:SetLabel(op)

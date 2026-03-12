@@ -1,4 +1,4 @@
---雷盟-オルタネータ
+--雷盟－オルタネータ
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddCodeList(c,101305050)
@@ -25,7 +25,7 @@ function s.initial_effect(c)
 	e4:SetType(EFFECT_TYPE_QUICK_O)
 	e4:SetRange(LOCATION_SZONE)
 	e4:SetCode(EVENT_FREE_CHAIN)
-	e4:SetHintTiming(0,TIMING_END_PHASE)
+	e4:SetHintTiming(TIMING_DRAW_PHASE,TIMING_DRAW_PHASE+TIMING_END_PHASE)
 	e4:SetCountLimit(1,id)
 	e4:SetCost(s.thcost)
 	e4:SetTarget(s.thtg)
@@ -54,18 +54,19 @@ function s.cfilter(c,tp)
 		and Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil,c:GetCode())
 end
 function s.thfilter(c,code)
-	return c:IsSetCard(0x2df) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
-		and not c:IsCode(id)
+	return c:IsRace(RACE_THUNDER) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
+		and not c:IsCode(code)
 end
 function s.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_HAND+LOCATION_ONFIELD,0,1,e:GetHandler(),tp) end
+	local c=e:GetHandler()
+	if chk==0 then return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_HAND+LOCATION_ONFIELD,0,1,c,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-	local g=Duel.SelectMatchingCard(tp,s.cfilter,tp,LOCATION_HAND+LOCATION_ONFIELD,0,1,1,e:GetHandler(),tp)
+	local g=Duel.SelectMatchingCard(tp,s.cfilter,tp,LOCATION_HAND+LOCATION_ONFIELD,0,1,1,c,tp)
 	if g:GetFirst():IsLocation(LOCATION_HAND) then
 		Duel.ConfirmCards(1-tp,g)
 	end
-	Duel.SendtoDeck(g,nil,SEQ_DECKSHUFFLE,REASON_COST)
 	e:SetLabel(g:GetFirst():GetCode())
+	Duel.SendtoDeck(g,nil,SEQ_DECKSHUFFLE,REASON_COST)
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil,0) end

@@ -1,4 +1,4 @@
---天空城塞クーロン4
+--天空城塞クーロン
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--Activate

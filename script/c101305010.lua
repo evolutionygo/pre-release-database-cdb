@@ -8,6 +8,7 @@ function s.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_QUICK_O)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetRange(LOCATION_HAND)
+	e1:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_MAIN_END+TIMING_END_PHASE)
 	e1:SetCountLimit(1,id)
 	e1:SetCondition(s.spcon)
 	e1:SetCost(s.spcost)
@@ -61,20 +62,22 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
-	if ft<=0 then return end
-	if ft>3 then ft=3 end
-	if Duel.IsPlayerAffectedByEffect(tp,59822133) then ft=1 end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_HAND,0,1,ft,nil,e,tp)
-	if g:GetCount()>0 then
-		local ct=Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
-		local dg=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)
-		if ct~=0 and dg:GetCount()>0 and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
-			Duel.BreakEffect()
-			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-			local sdg=dg:Select(tp,1,ct,nil)
-			Duel.HintSelection(sdg)
-			Duel.Destroy(sdg,REASON_EFFECT)
+	if ft>0 then
+		if ft>3 then ft=3 end
+		if Duel.IsPlayerAffectedByEffect(tp,59822133) then ft=1 end
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+		local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_HAND,0,1,ft,nil,e,tp)
+		if g:GetCount()>0 then
+			local ct=Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
+			Duel.AdjustAll()
+			local dg=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)
+			if ct~=0 and dg:GetCount()>0 and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
+				Duel.BreakEffect()
+				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
+				local sdg=dg:Select(tp,1,ct,nil)
+				Duel.HintSelection(sdg)
+				Duel.Destroy(sdg,REASON_EFFECT)
+			end
 		end
 	end
 	local e1=Effect.CreateEffect(e:GetHandler())
@@ -91,7 +94,7 @@ function s.splimit(e,c)
 end
 function s.negcon(e,tp,eg,ep,ev,re,r,rp)
 	local loc=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_LOCATION)
-	return ep~=tp and LOCATION_HAND&loc==0
+	return LOCATION_HAND&loc==0
 		and re:IsActiveType(TYPE_MONSTER)
 		and not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED)
 		and Duel.IsChainNegatable(ev)
@@ -103,6 +106,7 @@ function s.negcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_MZONE,0,1,e:GetHandler()) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
 	local g=Duel.SelectMatchingCard(tp,s.cfilter,tp,LOCATION_MZONE,0,1,1,e:GetHandler())
+	Duel.HintSelection(g)
 	Duel.SendtoHand(g,nil,REASON_COST)
 end
 function s.negtg(e,tp,eg,ep,ev,re,r,rp,chk)
