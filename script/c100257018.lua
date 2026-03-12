@@ -60,45 +60,57 @@ function s.spfilter(c,e,tp,code)
 	return not c:IsCode(code) and c:IsSetCard(0x102) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
-	if e:GetLabel()==1 then
+	local sel=e:GetLabel()
+	if not Duel.IsExistingMatchingCard(aux.NecroValleyFilter(s.thfilter),tp,LOCATION_GRAVE,0,sel,nil) then return end
+	if sel==1 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
 		local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.tdfilter),tp,LOCATION_GRAVE,0,1,1,nil)
 		local tc=g:GetFirst()
-		if tc and Duel.SendtoDeck(tc,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)~=0
-			and tc:IsLocation(LOCATION_DECK+LOCATION_EXTRA)
-			and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-			and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_DECK,0,1,nil,e,tp,tc:GetCode())
-			and Duel.SelectYesNo(tp,aux.Stringid(id,4)) then
-			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-			local sg=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp,tc:GetCode())
-			if sg:GetCount()>0 then
-				Duel.BreakEffect()
-				Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP)
+		if tc then
+			Duel.HintSelection(g)
+			if Duel.SendtoDeck(tc,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)~=0
+				and tc:IsLocation(LOCATION_DECK+LOCATION_EXTRA)
+				and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+				and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_DECK,0,1,nil,e,tp,tc:GetCode())
+				and Duel.SelectYesNo(tp,aux.Stringid(id,4)) then
+				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+				local sg=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp,tc:GetCode())
+				if sg:GetCount()>0 then
+					Duel.BreakEffect()
+					Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP)
+				end
 			end
 		end
-	elseif e:GetLabel()==2 then
+	elseif sel==2 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
 		local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.tdfilter),tp,LOCATION_GRAVE,0,2,2,nil)
-		if g:GetCount()>0 and Duel.SendtoDeck(g,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)~=0
-			and g:IsExists(Card.IsLocation,1,nil,LOCATION_DECK+LOCATION_EXTRA)
-			and Duel.IsExistingMatchingCard(aux.NecroValleyFilter(s.thfilter),tp,LOCATION_GRAVE,0,1,nil) then
-			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-			local sg=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.thfilter),tp,LOCATION_GRAVE,0,1,1,nil)
-			if sg:GetCount()>0 then
-				Duel.SendtoHand(sg,nil,REASON_EFFECT)
-				Duel.ConfirmCards(1-tp,sg)
+		if g:GetCount()==2 then
+			Duel.HintSelection(g)
+			if Duel.SendtoDeck(g,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)~=0
+				and g:IsExists(Card.IsLocation,1,nil,LOCATION_DECK+LOCATION_EXTRA)
+				and Duel.IsExistingMatchingCard(aux.NecroValleyFilter(s.thfilter),tp,LOCATION_GRAVE,0,1,nil) then
+				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+				local sg=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.thfilter),tp,LOCATION_GRAVE,0,1,1,nil)
+				if sg:GetCount()>0 then
+					Duel.SendtoHand(sg,nil,REASON_EFFECT)
+					Duel.ConfirmCards(1-tp,sg)
+				end
 			end
 		end
-	elseif e:GetLabel()==3 then
+	elseif sel==3 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
 		local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.tdfilter),tp,LOCATION_GRAVE,0,3,3,nil)
-		if g:GetCount()>0 and Duel.SendtoDeck(g,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)~=0
-			and g:IsExists(Card.IsLocation,1,nil,LOCATION_DECK+LOCATION_EXTRA)
-			and Duel.IsExistingMatchingCard(aux.NecroValleyFilter(s.tdfilter2),tp,0,LOCATION_GRAVE,1,nil) then
-			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-			local sg=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.tdfilter2),tp,0,LOCATION_GRAVE,1,3,nil)
-			if sg:GetCount()>0 then
-				Duel.SendtoDeck(sg,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)
+		if g:GetCount()==3 then
+			Duel.HintSelection(g)
+			if Duel.SendtoDeck(g,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)~=0
+				and g:IsExists(Card.IsLocation,1,nil,LOCATION_DECK+LOCATION_EXTRA)
+				and Duel.IsExistingMatchingCard(aux.NecroValleyFilter(s.tdfilter2),tp,0,LOCATION_GRAVE,1,nil) then
+				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
+				local sg=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.tdfilter2),tp,0,LOCATION_GRAVE,1,3,nil)
+				if sg:GetCount()>0 then
+					Duel.HintSelection(sg)
+					Duel.SendtoDeck(sg,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)
+				end
 			end
 		end
 	end
