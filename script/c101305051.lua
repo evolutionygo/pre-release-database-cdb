@@ -51,7 +51,8 @@ function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 	e:SetLabel(op)
 end
-function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
+function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc~=e:GetHandler() and chkc:IsOnField() end
 	local b1=Duel.GetLocationCount(tp,LOCATION_SZONE)>0
 		and Duel.IsExistingMatchingCard(s.pfilter,tp,LOCATION_DECK,0,1,nil,tp)
 	local b2=Duel.IsExistingTarget(aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,e:GetHandler())
