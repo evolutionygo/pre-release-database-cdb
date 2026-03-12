@@ -29,7 +29,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local b3=Duel.IsExistingMatchingCard(s.tdfilter,tp,LOCATION_GRAVE,0,3,nil)
 		and Duel.IsExistingMatchingCard(s.tdfilter2,tp,0,LOCATION_GRAVE,1,nil)
 		and (not e:IsCostChecked() or Duel.GetFlagEffect(tp,id+o*2)==0)
-	if chk==0 then return b1 or b2 end
+	if chk==0 then return b1 or b2 or b3 end
 	local op=aux.SelectFromOptions(tp,
 			{b1,aux.Stringid(id,1),1},
 			{b2,aux.Stringid(id,2),2},
