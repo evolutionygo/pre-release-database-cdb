@@ -11,13 +11,13 @@ function s.initial_effect(c)
 	e1:SetOperation(s.activate)
 	c:RegisterEffect(e1)
 end
-function s.tdfilter(c,e,tp,res)
+function s.tdfilter(c)
 	return c:IsRace(RACE_DRAGON) and c:IsAbleToDeck()
 end
 function s.thfilter(c)
 	return c:IsType(TYPE_FIELD) and c:IsAbleToHand()
 end
-function s.tdfilter2(c,e,tp,res)
+function s.tdfilter2(c)
 	return c:IsType(TYPE_MONSTER) and c:IsAbleToDeck()
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -32,15 +32,14 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return b1 or b2 end
 	local op=aux.SelectFromOptions(tp,
 			{b1,aux.Stringid(id,1),1},
-			{b1,aux.Stringid(id,2),2},
-			{b2,aux.Stringid(id,3),3})
+			{b2,aux.Stringid(id,2),2},
+			{b3,aux.Stringid(id,3),3})
 	e:SetLabel(op)
 	if op==1 then
 		if e:IsCostChecked() then
 			e:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_TODECK+CATEGORY_DECKDES)
 			Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1)
 		end
-		Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK)
 		Duel.SetOperationInfo(0,CATEGORY_TODECK,nil,1,tp,LOCATION_GRAVE)
 	elseif op==2 then
 		if e:IsCostChecked() then
@@ -58,7 +57,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 end
 function s.spfilter(c,e,tp,code)
-	return not c:IsCode(id) and c:IsSetCard(0x102) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return not c:IsCode(code) and c:IsSetCard(0x102) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetLabel()==1 then
