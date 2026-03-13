@@ -19,7 +19,7 @@ function s.cfilter(c,e,tp)
 end
 function s.spfilter(c,e,tp,g)
 	g:AddCard(c)
-	return c:IsFaceupEx() and c:IsSetCard(0x10db,0x2073) and c:IsType(TYPE_XYZ)
+	return c:IsFaceupEx() and c:IsSetCard(0x10db,0x2073)
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 		and g:IsExists(s.stfilter,1,nil,e,tp)
 end
