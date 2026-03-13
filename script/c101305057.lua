@@ -24,7 +24,7 @@ function s.spfilter(c,e,tp,g)
 		and g:IsExists(s.stfilter,1,nil,e,tp)
 end
 function s.stfilter(c,e,tp)
-	return c:IsFaceup() and c:IsType(TYPE_XYZ) and c:IsAttribute(ATTRIBUTE_DARK)
+	return c:IsFaceupEx() and c:IsType(TYPE_XYZ) and c:IsAttribute(ATTRIBUTE_DARK)
 		and aux.MustMaterialCheck(c,tp,EFFECT_MUST_BE_XMATERIAL)
 		and Duel.IsExistingMatchingCard(s.xyzfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp,c,c:GetRank())
 end
