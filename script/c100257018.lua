@@ -61,7 +61,7 @@ function s.spfilter(c,e,tp,code)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local sel=e:GetLabel()
-	if not Duel.IsExistingMatchingCard(aux.NecroValleyFilter(s.thfilter),tp,LOCATION_GRAVE,0,sel,nil) then return end
+	if not Duel.IsExistingMatchingCard(aux.NecroValleyFilter(s.tdfilter),tp,LOCATION_GRAVE,0,sel,nil) then return end
 	if sel==1 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
 		local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.tdfilter),tp,LOCATION_GRAVE,0,1,1,nil)
