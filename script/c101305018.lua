@@ -28,6 +28,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 	--xyz level
 	local e4=Effect.CreateEffect(c)
+	e4:SetDescription(aux.Stringid(id,2))
 	e4:SetType(EFFECT_TYPE_IGNITION)
 	e4:SetRange(LOCATION_GRAVE)
 	e4:SetProperty(EFFECT_FLAG_CARD_TARGET)
