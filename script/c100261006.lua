@@ -18,14 +18,14 @@ function s.initial_effect(c)
 	e2:SetTarget(s.thtg)
 	e2:SetOperation(s.thop)
 	c:RegisterEffect(e2)
-	--
-	local e5=Effect.CreateEffect(c)
-	e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e5:SetRange(LOCATION_FZONE)
-	e5:SetCode(EVENT_CHAIN_SOLVING)
-	e5:SetCondition(s.rmcon)
-	e5:SetOperation(s.rmop)
-	c:RegisterEffect(e5)
+	--remove
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e3:SetRange(LOCATION_FZONE)
+	e3:SetCode(EVENT_CHAIN_SOLVING)
+	e3:SetCondition(s.rmcon)
+	e3:SetOperation(s.rmop)
+	c:RegisterEffect(e3)
 end
 function s.thfilter(c)
 	return (c:IsSetCard(0x62) or aux.IsCodeListed(c,15259703))
@@ -55,7 +55,7 @@ function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if Duel.SelectEffectYesNo(tp,e:GetHandler(),aux.Stringid(id,3)) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-		local tg=Duel.SelectMatchingCard(tp,s.rmfilter,tp,LOCATION_MZONE,0,1,1,nil,tp)
+		local tg=Duel.SelectMatchingCard(tp,s.rmfilter,tp,LOCATION_MZONE,0,1,1,nil)
 		local rc=tg:GetFirst()
 		if Duel.Remove(rc,0,REASON_EFFECT+REASON_TEMPORARY)~=0 then
 			rc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,1)
@@ -82,7 +82,7 @@ function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.rmlimit(e,c,tp,r,re)
-	return c:GetOriginalCode()==e:GetLabel() and re and re:IsActiveType(TYPE_MONSTER) and re:GetHandler():IsCode(id) and r==REASON_EFFECT
+	return c:GetOriginalCode()==e:GetLabel() and re and re:GetHandler():GetOriginalCode()==id and r&REASON_EFFECT~=0
 end
 function s.retcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetLabelObject():GetFlagEffect(id)~=0

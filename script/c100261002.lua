@@ -14,7 +14,7 @@ function s.initial_effect(c)
 	--special summon
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
-	e2:SetCategory(CATEGORY_DESTROY+CATEGORY_SPECIAL_SUMMON)
+	e2:SetCategory(CATEGORY_RELEASE+CATEGORY_SPECIAL_SUMMON)
 	e2:SetType(EFFECT_TYPE_QUICK_O)
 	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetRange(LOCATION_MZONE)
@@ -39,7 +39,7 @@ function s.cfilter2(c,tp)
 	return c:IsReleasableByEffect() and Duel.GetMZoneCount(tp,c)>0
 end
 function s.spfilter(c,e,tp)
-	return aux.IsCodeListed(c,15259703) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
+	return aux.IsCodeListed(c,15259703) and c:IsType(TYPE_MONSTER) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local loc=0
