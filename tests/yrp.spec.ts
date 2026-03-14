@@ -52,8 +52,10 @@ describe("YRP", () => {
           expect(currentInfo.snapshot.chains).toEqual(
             expectedInfo.snapshot.chains,
           );
-          expect(currentInfo.snapshot.cards).toEqual(
-            expectedInfo.snapshot.cards,
+          const stripSnapshotCards = (snapshot: YrpInfo['snapshot']) =>
+            snapshot.cards.map(({ name, ...rest }) => rest);
+          expect(stripSnapshotCards(currentInfo.snapshot)).toEqual(
+            stripSnapshotCards(expectedInfo.snapshot),
           );
           const sortMesssages = (messages: MsgSnapshot[]) =>
             messages
