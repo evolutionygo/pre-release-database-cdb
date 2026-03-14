@@ -42,7 +42,7 @@ function s.posfilter(c)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) and Duel.IsPlayerCanSpecialSummonMonster(tp,id,0x10db,TYPES_NORMAL_TRAP_MONSTER,0,300,3,RACE_WARRIOR,ATTRIBUTE_DARK) then
+	if c:IsRelateToChain() and Duel.IsPlayerCanSpecialSummonMonster(tp,id,0x10db,TYPES_NORMAL_TRAP_MONSTER,0,300,3,RACE_WARRIOR,ATTRIBUTE_DARK) then
 		c:AddMonsterAttribute(TYPE_NORMAL)
 		if Duel.SpecialSummon(c,0,tp,tp,true,false,POS_FACEUP_DEFENSE)~=0
 			and Duel.IsExistingMatchingCard(s.posfilter,tp,0,LOCATION_MZONE,1,nil)

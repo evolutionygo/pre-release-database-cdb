@@ -45,7 +45,8 @@ function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,sg,sg:GetCount(),0,0)
 end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Destroy(Duel.GetTargetsRelateToChain(),REASON_EFFECT)
+	local sg=Duel.GetTargetsRelateToChain():Filter(Card.IsOnField,nil)
+	Duel.Destroy(sg,REASON_EFFECT)
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return ep==1-tp
