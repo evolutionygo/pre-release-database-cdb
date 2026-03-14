@@ -1,4 +1,4 @@
---完全なる世界トゥーン・ワールド
+--完全なる世界 トゥーン・ワールド
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--change code
@@ -32,7 +32,8 @@ function s.thfilter(c)
 		and c:IsAbleToHand()
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil) and Duel.GetFlagEffect(tp,id)<3 end
+	Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
@@ -46,7 +47,6 @@ end
 function s.rmcon(e,tp,eg,ep,ev,re,r,rp)
 	return re:GetHandler()~=e:GetHandler()
 		and Duel.IsExistingMatchingCard(s.rmfilter,tp,LOCATION_MZONE,0,1,nil)
-		and Duel.GetFlagEffect(tp,id)<3
 end
 function s.rmfilter(c)
 	return c:IsFaceup() and c:IsAbleToRemove() and c:IsType(TYPE_TOON)
@@ -79,7 +79,6 @@ function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 			e2:SetLabel(rc:GetOriginalCode())
 			e2:SetReset(RESET_PHASE+PHASE_END)
 			Duel.RegisterEffect(e2,tp)
-			Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1)
 		end
 	end
 end
