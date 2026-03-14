@@ -1,0 +1,3083 @@
+messages:
+  - identifier: 162
+    msg: ReloadField
+    duelRule: 5
+    players:
+      - lp: 8000
+        mzone:
+          - occupied: 1
+            position: 1
+            xyzCount: 0
+          - occupied: 1
+            position: 1
+            xyzCount: 0
+          - occupied: 1
+            position: 8
+            xyzCount: 0
+          - occupied: 1
+            position: 1
+            xyzCount: 0
+          - occupied: 0
+          - occupied: 1
+            position: 1
+            xyzCount: 0
+          - occupied: 0
+        szone:
+          - occupied: 0
+          - occupied: 1
+            position: 10
+          - occupied: 1
+            position: 10
+          - occupied: 0
+          - occupied: 0
+          - occupied: 0
+          - occupied: 0
+          - occupied: 0
+        deckCount: 3
+        handCount: 5
+        graveCount: 0
+        removedCount: 0
+        extraCount: 4
+        extraPCount: 0
+      - lp: 8000
+        mzone:
+          - occupied: 1
+            position: 1
+            xyzCount: 0
+          - occupied: 1
+            position: 1
+            xyzCount: 0
+          - occupied: 0
+          - occupied: 0
+          - occupied: 0
+          - occupied: 0
+          - occupied: 0
+        szone:
+          - occupied: 0
+          - occupied: 0
+          - occupied: 0
+          - occupied: 0
+          - occupied: 0
+          - occupied: 0
+          - occupied: 0
+          - occupied: 0
+        deckCount: 0
+        handCount: 0
+        graveCount: 0
+        removedCount: 0
+        extraCount: 0
+        extraPCount: 0
+    chains: []
+  - identifier: 40
+    msg: NewTurn
+    player: 0
+  - identifier: 41
+    msg: NewPhase
+    phase: 1
+  - identifier: 2
+    msg: Hint
+    type: 1
+    player: 0
+    desc: 27
+  - identifier: 2
+    msg: Hint
+    type: 1
+    player: 0
+    desc: 20
+  - identifier: 16
+    msg: SelectChain
+    player: 0
+    count: 2
+    specialCount: 0
+    hint0: 1
+    hint1: 0
+    chains:
+      - edesc: 0
+        forced: 0
+        code: 4178474
+        controller: 0
+        location: 8
+        sequence: 1
+        subsequence: 10
+        desc: 0
+      - edesc: 0
+        forced: 0
+        code: 4178474
+        controller: 0
+        location: 8
+        sequence: 2
+        subsequence: 10
+        desc: 0
+  - identifier: 41
+    msg: NewPhase
+    phase: 2
+  - identifier: 2
+    msg: Hint
+    type: 1
+    player: 0
+    desc: 21
+  - identifier: 16
+    msg: SelectChain
+    player: 0
+    count: 2
+    specialCount: 0
+    hint0: 2
+    hint1: 0
+    chains:
+      - edesc: 0
+        forced: 0
+        code: 4178474
+        controller: 0
+        location: 8
+        sequence: 1
+        subsequence: 10
+        desc: 0
+      - edesc: 0
+        forced: 0
+        code: 4178474
+        controller: 0
+        location: 8
+        sequence: 2
+        subsequence: 10
+        desc: 0
+  - identifier: 41
+    msg: NewPhase
+    phase: 4
+  - identifier: 11
+    msg: SelectIdleCmd
+    player: 0
+    summonableCount: 4
+    summonableCards:
+      - code: 100256015
+        controller: 0
+        location: 2
+        sequence: 0
+      - code: 100256015
+        controller: 0
+        location: 2
+        sequence: 1
+      - code: 100256015
+        controller: 0
+        location: 2
+        sequence: 2
+      - code: 100256015
+        controller: 0
+        location: 2
+        sequence: 3
+    spSummonableCount: 0
+    spSummonableCards: []
+    reposableCount: 5
+    reposableCards:
+      - code: 16178681
+        controller: 0
+        location: 4
+        sequence: 0
+      - code: 16195942
+        controller: 0
+        location: 4
+        sequence: 1
+      - code: 82044279
+        controller: 0
+        location: 4
+        sequence: 2
+      - code: 41209827
+        controller: 0
+        location: 4
+        sequence: 3
+      - code: 16178681
+        controller: 0
+        location: 4
+        sequence: 5
+    msetableCount: 4
+    msetableCards:
+      - code: 100256015
+        controller: 0
+        location: 2
+        sequence: 0
+      - code: 100256015
+        controller: 0
+        location: 2
+        sequence: 1
+      - code: 100256015
+        controller: 0
+        location: 2
+        sequence: 2
+      - code: 100256015
+        controller: 0
+        location: 2
+        sequence: 3
+    ssetableCount: 1
+    ssetableCards:
+      - code: 43711255
+        controller: 0
+        location: 2
+        sequence: 4
+    activatableCount: 8
+    activatableCards:
+      - code: 100256015
+        controller: 0
+        location: 2
+        sequence: 0
+        desc: 1160
+      - code: 100256015
+        controller: 0
+        location: 2
+        sequence: 1
+        desc: 1160
+      - code: 100256015
+        controller: 0
+        location: 2
+        sequence: 2
+        desc: 1160
+      - code: 100256015
+        controller: 0
+        location: 2
+        sequence: 3
+        desc: 1160
+      - code: 43711255
+        controller: 0
+        location: 2
+        sequence: 4
+        desc: 0
+      - code: 41209827
+        controller: 0
+        location: 4
+        sequence: 3
+        desc: 659357233
+      - code: 4178474
+        controller: 0
+        location: 8
+        sequence: 1
+        desc: 0
+      - code: 4178474
+        controller: 0
+        location: 8
+        sequence: 2
+        desc: 0
+    canBp: 1
+    canEp: 1
+    canShuffle: 1
+  - identifier: 2
+    msg: Hint
+    type: 3
+    player: 0
+    desc: 43711255
+  - identifier: 18
+    msg: SelectPlace
+    player: 0
+    count: 1
+    flag: 4294960895
+  - identifier: 50
+    msg: Move
+    code: 43711255
+    previous:
+      controller: 0
+      location: 2
+      sequence: 4
+      position: 10
+    current:
+      controller: 0
+      location: 8
+      sequence: 3
+      position: 5
+    reason: 0
+  - identifier: 70
+    msg: Chaining
+    code: 43711255
+    controller: 0
+    location: 8
+    sequence: 3
+    subsequence: 5
+    chainCardLocation:
+      controller: 0
+      location: 8
+      sequence: 3
+    desc: 0
+    chainCount: 1
+  - identifier: 2
+    msg: Hint
+    type: 3
+    player: 0
+    desc: 564
+  - identifier: 142
+    msg: AnnounceCard
+    player: 0
+    count: 1
+    opcodes:
+      - 1
+  - identifier: 2
+    msg: Hint
+    type: 8
+    player: 0
+    desc: 76794549
+  - identifier: 71
+    msg: Chained
+    chainCount: 1
+  - identifier: 16
+    msg: SelectChain
+    player: 1
+    count: 0
+    specialCount: 0
+    hint0: 0
+    hint1: 0
+    chains: []
+  - identifier: 16
+    msg: SelectChain
+    player: 0
+    count: 2
+    specialCount: 2
+    hint0: 0
+    hint1: 0
+    chains:
+      - edesc: 0
+        forced: 0
+        code: 4178474
+        controller: 0
+        location: 8
+        sequence: 1
+        subsequence: 10
+        desc: 0
+      - edesc: 0
+        forced: 0
+        code: 4178474
+        controller: 0
+        location: 8
+        sequence: 2
+        subsequence: 10
+        desc: 0
+  - identifier: 72
+    msg: ChainSolving
+    chainCount: 1
+  - identifier: 160
+    msg: CardHint
+    controller: 0
+    location: 8
+    sequence: 3
+    subsequence: 5
+    type: 2
+    value: 76794549
+  - identifier: 73
+    msg: ChainSolved
+    chainCount: 1
+  - identifier: 74
+    msg: ChainEnd
+  - identifier: 16
+    msg: SelectChain
+    player: 0
+    count: 2
+    specialCount: 0
+    hint0: 32768
+    hint1: 32768
+    chains:
+      - edesc: 0
+        forced: 0
+        code: 4178474
+        controller: 0
+        location: 8
+        sequence: 1
+        subsequence: 10
+        desc: 0
+      - edesc: 0
+        forced: 0
+        code: 4178474
+        controller: 0
+        location: 8
+        sequence: 2
+        subsequence: 10
+        desc: 0
+  - identifier: 16
+    msg: SelectChain
+    player: 1
+    count: 0
+    specialCount: 0
+    hint0: 32768
+    hint1: 32768
+    chains: []
+  - identifier: 11
+    msg: SelectIdleCmd
+    player: 0
+    summonableCount: 4
+    summonableCards:
+      - code: 100256015
+        controller: 0
+        location: 2
+        sequence: 0
+      - code: 100256015
+        controller: 0
+        location: 2
+        sequence: 1
+      - code: 100256015
+        controller: 0
+        location: 2
+        sequence: 2
+      - code: 100256015
+        controller: 0
+        location: 2
+        sequence: 3
+    spSummonableCount: 0
+    spSummonableCards: []
+    reposableCount: 5
+    reposableCards:
+      - code: 16178681
+        controller: 0
+        location: 4
+        sequence: 0
+      - code: 16195942
+        controller: 0
+        location: 4
+        sequence: 1
+      - code: 82044279
+        controller: 0
+        location: 4
+        sequence: 2
+      - code: 41209827
+        controller: 0
+        location: 4
+        sequence: 3
+      - code: 16178681
+        controller: 0
+        location: 4
+        sequence: 5
+    msetableCount: 4
+    msetableCards:
+      - code: 100256015
+        controller: 0
+        location: 2
+        sequence: 0
+      - code: 100256015
+        controller: 0
+        location: 2
+        sequence: 1
+      - code: 100256015
+        controller: 0
+        location: 2
+        sequence: 2
+      - code: 100256015
+        controller: 0
+        location: 2
+        sequence: 3
+    ssetableCount: 0
+    ssetableCards: []
+    activatableCount: 7
+    activatableCards:
+      - code: 100256015
+        controller: 0
+        location: 2
+        sequence: 0
+        desc: 1160
+      - code: 100256015
+        controller: 0
+        location: 2
+        sequence: 1
+        desc: 1160
+      - code: 100256015
+        controller: 0
+        location: 2
+        sequence: 2
+        desc: 1160
+      - code: 100256015
+        controller: 0
+        location: 2
+        sequence: 3
+        desc: 1160
+      - code: 41209827
+        controller: 0
+        location: 4
+        sequence: 3
+        desc: 659357233
+      - code: 4178474
+        controller: 0
+        location: 8
+        sequence: 1
+        desc: 0
+      - code: 4178474
+        controller: 0
+        location: 8
+        sequence: 2
+        desc: 0
+    canBp: 1
+    canEp: 1
+    canShuffle: 1
+  - identifier: 2
+    msg: Hint
+    type: 3
+    player: 0
+    desc: 100256015
+  - identifier: 18
+    msg: SelectPlace
+    player: 0
+    count: 1
+    flag: 4294962943
+  - identifier: 50
+    msg: Move
+    code: 100256015
+    previous:
+      controller: 0
+      location: 2
+      sequence: 0
+      position: 10
+    current:
+      controller: 0
+      location: 8
+      sequence: 0
+      position: 5
+    reason: 0
+  - identifier: 70
+    msg: Chaining
+    code: 100256015
+    controller: 0
+    location: 8
+    sequence: 0
+    subsequence: 5
+    chainCardLocation:
+      controller: 0
+      location: 8
+      sequence: 0
+    desc: 1160
+    chainCount: 1
+  - identifier: 71
+    msg: Chained
+    chainCount: 1
+  - identifier: 16
+    msg: SelectChain
+    player: 1
+    count: 0
+    specialCount: 0
+    hint0: 0
+    hint1: 0
+    chains: []
+  - identifier: 16
+    msg: SelectChain
+    player: 0
+    count: 2
+    specialCount: 2
+    hint0: 0
+    hint1: 0
+    chains:
+      - edesc: 0
+        forced: 0
+        code: 4178474
+        controller: 0
+        location: 8
+        sequence: 1
+        subsequence: 10
+        desc: 0
+      - edesc: 0
+        forced: 0
+        code: 4178474
+        controller: 0
+        location: 8
+        sequence: 2
+        subsequence: 10
+        desc: 0
+  - identifier: 72
+    msg: ChainSolving
+    chainCount: 1
+  - identifier: 73
+    msg: ChainSolved
+    chainCount: 1
+  - identifier: 74
+    msg: ChainEnd
+  - identifier: 16
+    msg: SelectChain
+    player: 0
+    count: 2
+    specialCount: 0
+    hint0: 32768
+    hint1: 32768
+    chains:
+      - edesc: 0
+        forced: 0
+        code: 4178474
+        controller: 0
+        location: 8
+        sequence: 1
+        subsequence: 10
+        desc: 0
+      - edesc: 0
+        forced: 0
+        code: 4178474
+        controller: 0
+        location: 8
+        sequence: 2
+        subsequence: 10
+        desc: 0
+  - identifier: 16
+    msg: SelectChain
+    player: 1
+    count: 0
+    specialCount: 0
+    hint0: 32768
+    hint1: 32768
+    chains: []
+  - identifier: 11
+    msg: SelectIdleCmd
+    player: 0
+    summonableCount: 3
+    summonableCards:
+      - code: 100256015
+        controller: 0
+        location: 2
+        sequence: 0
+      - code: 100256015
+        controller: 0
+        location: 2
+        sequence: 1
+      - code: 100256015
+        controller: 0
+        location: 2
+        sequence: 2
+    spSummonableCount: 0
+    spSummonableCards: []
+    reposableCount: 5
+    reposableCards:
+      - code: 16178681
+        controller: 0
+        location: 4
+        sequence: 0
+      - code: 16195942
+        controller: 0
+        location: 4
+        sequence: 1
+      - code: 82044279
+        controller: 0
+        location: 4
+        sequence: 2
+      - code: 41209827
+        controller: 0
+        location: 4
+        sequence: 3
+      - code: 16178681
+        controller: 0
+        location: 4
+        sequence: 5
+    msetableCount: 3
+    msetableCards:
+      - code: 100256015
+        controller: 0
+        location: 2
+        sequence: 0
+      - code: 100256015
+        controller: 0
+        location: 2
+        sequence: 1
+      - code: 100256015
+        controller: 0
+        location: 2
+        sequence: 2
+    ssetableCount: 0
+    ssetableCards: []
+    activatableCount: 7
+    activatableCards:
+      - code: 100256015
+        controller: 0
+        location: 2
+        sequence: 0
+        desc: 1160
+      - code: 100256015
+        controller: 0
+        location: 2
+        sequence: 1
+        desc: 1160
+      - code: 100256015
+        controller: 0
+        location: 2
+        sequence: 2
+        desc: 1160
+      - code: 41209827
+        controller: 0
+        location: 4
+        sequence: 3
+        desc: 659357233
+      - code: 4178474
+        controller: 0
+        location: 8
+        sequence: 1
+        desc: 0
+      - code: 4178474
+        controller: 0
+        location: 8
+        sequence: 2
+        desc: 0
+      - code: 100256015
+        controller: 0
+        location: 8
+        sequence: 0
+        desc: 1604096240
+    canBp: 1
+    canEp: 1
+    canShuffle: 1
+  - identifier: 70
+    msg: Chaining
+    code: 100256015
+    controller: 0
+    location: 8
+    sequence: 0
+    subsequence: 5
+    chainCardLocation:
+      controller: 0
+      location: 8
+      sequence: 0
+    desc: 1604096240
+    chainCount: 1
+  - identifier: 71
+    msg: Chained
+    chainCount: 1
+  - identifier: 16
+    msg: SelectChain
+    player: 1
+    count: 0
+    specialCount: 0
+    hint0: 0
+    hint1: 0
+    chains: []
+  - identifier: 16
+    msg: SelectChain
+    player: 0
+    count: 2
+    specialCount: 2
+    hint0: 0
+    hint1: 0
+    chains:
+      - edesc: 0
+        forced: 0
+        code: 4178474
+        controller: 0
+        location: 8
+        sequence: 1
+        subsequence: 10
+        desc: 0
+      - edesc: 0
+        forced: 0
+        code: 4178474
+        controller: 0
+        location: 8
+        sequence: 2
+        subsequence: 10
+        desc: 0
+  - identifier: 53
+    msg: PosChange
+    code: 4178474
+    card:
+      controller: 0
+      location: 8
+      sequence: 1
+    previousPosition: 10
+    currentPosition: 5
+  - identifier: 70
+    msg: Chaining
+    code: 4178474
+    controller: 0
+    location: 8
+    sequence: 1
+    subsequence: 5
+    chainCardLocation:
+      controller: 0
+      location: 8
+      sequence: 1
+    desc: 0
+    chainCount: 2
+  - identifier: 2
+    msg: Hint
+    type: 3
+    player: 0
+    desc: 501
+  - identifier: 15
+    msg: SelectCard
+    player: 0
+    cancelable: 0
+    min: 1
+    max: 1
+    count: 3
+    cards:
+      - code: 100256015
+        controller: 0
+        location: 2
+        sequence: 0
+        subsequence: 10
+      - code: 100256015
+        controller: 0
+        location: 2
+        sequence: 1
+        subsequence: 10
+      - code: 100256015
+        controller: 0
+        location: 2
+        sequence: 2
+        subsequence: 10
+  - identifier: 50
+    msg: Move
+    code: 100256015
+    previous:
+      controller: 0
+      location: 2
+      sequence: 0
+      position: 10
+    current:
+      controller: 0
+      location: 16
+      sequence: 0
+      position: 5
+    reason: 16512
+  - identifier: 2
+    msg: Hint
+    type: 3
+    player: 0
+    desc: 502
+  - identifier: 15
+    msg: SelectCard
+    player: 0
+    cancelable: 0
+    min: 1
+    max: 1
+    count: 10
+    cards:
+      - code: 16178681
+        controller: 0
+        location: 4
+        sequence: 0
+        subsequence: 1
+      - code: 16195942
+        controller: 0
+        location: 4
+        sequence: 1
+        subsequence: 1
+      - code: 82044279
+        controller: 0
+        location: 4
+        sequence: 2
+        subsequence: 8
+      - code: 41209827
+        controller: 0
+        location: 4
+        sequence: 3
+        subsequence: 1
+      - code: 16178681
+        controller: 0
+        location: 4
+        sequence: 5
+        subsequence: 1
+      - code: 100256015
+        controller: 0
+        location: 8
+        sequence: 0
+        subsequence: 5
+      - code: 4178474
+        controller: 0
+        location: 8
+        sequence: 2
+        subsequence: 10
+      - code: 43711255
+        controller: 0
+        location: 8
+        sequence: 3
+        subsequence: 5
+      - code: 16178681
+        controller: 1
+        location: 4
+        sequence: 0
+        subsequence: 1
+      - code: 41209827
+        controller: 1
+        location: 4
+        sequence: 1
+        subsequence: 1
+  - identifier: 83
+    msg: BecomeTarget
+    count: 1
+    targets:
+      - 16843776
+  - identifier: 71
+    msg: Chained
+    chainCount: 2
+  - identifier: 16
+    msg: SelectChain
+    player: 1
+    count: 0
+    specialCount: 0
+    hint0: 0
+    hint1: 0
+    chains: []
+  - identifier: 16
+    msg: SelectChain
+    player: 0
+    count: 1
+    specialCount: 1
+    hint0: 0
+    hint1: 0
+    chains:
+      - edesc: 0
+        forced: 0
+        code: 4178474
+        controller: 0
+        location: 8
+        sequence: 2
+        subsequence: 10
+        desc: 0
+  - identifier: 53
+    msg: PosChange
+    code: 4178474
+    card:
+      controller: 0
+      location: 8
+      sequence: 2
+    previousPosition: 10
+    currentPosition: 5
+  - identifier: 70
+    msg: Chaining
+    code: 4178474
+    controller: 0
+    location: 8
+    sequence: 2
+    subsequence: 5
+    chainCardLocation:
+      controller: 0
+      location: 8
+      sequence: 2
+    desc: 0
+    chainCount: 3
+  - identifier: 2
+    msg: Hint
+    type: 3
+    player: 0
+    desc: 501
+  - identifier: 15
+    msg: SelectCard
+    player: 0
+    cancelable: 0
+    min: 1
+    max: 1
+    count: 2
+    cards:
+      - code: 100256015
+        controller: 0
+        location: 2
+        sequence: 0
+        subsequence: 10
+      - code: 100256015
+        controller: 0
+        location: 2
+        sequence: 1
+        subsequence: 10
+  - identifier: 50
+    msg: Move
+    code: 100256015
+    previous:
+      controller: 0
+      location: 2
+      sequence: 0
+      position: 10
+    current:
+      controller: 0
+      location: 16
+      sequence: 1
+      position: 5
+    reason: 16512
+  - identifier: 2
+    msg: Hint
+    type: 3
+    player: 0
+    desc: 502
+  - identifier: 15
+    msg: SelectCard
+    player: 0
+    cancelable: 0
+    min: 1
+    max: 1
+    count: 10
+    cards:
+      - code: 16178681
+        controller: 0
+        location: 4
+        sequence: 0
+        subsequence: 1
+      - code: 16195942
+        controller: 0
+        location: 4
+        sequence: 1
+        subsequence: 1
+      - code: 82044279
+        controller: 0
+        location: 4
+        sequence: 2
+        subsequence: 8
+      - code: 41209827
+        controller: 0
+        location: 4
+        sequence: 3
+        subsequence: 1
+      - code: 16178681
+        controller: 0
+        location: 4
+        sequence: 5
+        subsequence: 1
+      - code: 100256015
+        controller: 0
+        location: 8
+        sequence: 0
+        subsequence: 5
+      - code: 4178474
+        controller: 0
+        location: 8
+        sequence: 1
+        subsequence: 5
+      - code: 43711255
+        controller: 0
+        location: 8
+        sequence: 3
+        subsequence: 5
+      - code: 16178681
+        controller: 1
+        location: 4
+        sequence: 0
+        subsequence: 1
+      - code: 41209827
+        controller: 1
+        location: 4
+        sequence: 1
+        subsequence: 1
+  - identifier: 83
+    msg: BecomeTarget
+    count: 1
+    targets:
+      - 17105920
+  - identifier: 71
+    msg: Chained
+    chainCount: 3
+  - identifier: 16
+    msg: SelectChain
+    player: 1
+    count: 0
+    specialCount: 0
+    hint0: 0
+    hint1: 0
+    chains: []
+  - identifier: 16
+    msg: SelectChain
+    player: 0
+    count: 0
+    specialCount: 0
+    hint0: 0
+    hint1: 0
+    chains: []
+  - identifier: 72
+    msg: ChainSolving
+    chainCount: 3
+  - identifier: 50
+    msg: Move
+    code: 16178681
+    previous:
+      controller: 0
+      location: 4
+      sequence: 5
+      position: 1
+    current:
+      controller: 0
+      location: 64
+      sequence: 4
+      position: 4
+    reason: 65
+  - identifier: 73
+    msg: ChainSolved
+    chainCount: 3
+  - identifier: 72
+    msg: ChainSolving
+    chainCount: 2
+  - identifier: 50
+    msg: Move
+    code: 16195942
+    previous:
+      controller: 0
+      location: 4
+      sequence: 1
+      position: 1
+    current:
+      controller: 0
+      location: 16
+      sequence: 2
+      position: 5
+    reason: 65
+  - identifier: 73
+    msg: ChainSolved
+    chainCount: 2
+  - identifier: 72
+    msg: ChainSolving
+    chainCount: 1
+  - identifier: 50
+    msg: Move
+    code: 100256015
+    previous:
+      controller: 0
+      location: 8
+      sequence: 0
+      position: 5
+    current:
+      controller: 0
+      location: 64
+      sequence: 5
+      position: 4
+    reason: 65
+  - identifier: 2
+    msg: Hint
+    type: 3
+    player: 0
+    desc: 527
+  - identifier: 15
+    msg: SelectCard
+    player: 0
+    cancelable: 0
+    min: 1
+    max: 1
+    count: 1
+    cards:
+      - code: 14513273
+        controller: 0
+        location: 1
+        sequence: 0
+        subsequence: 10
+  - identifier: 2
+    msg: Hint
+    type: 3
+    player: 0
+    desc: 14513273
+  - identifier: 18
+    msg: SelectPlace
+    player: 0
+    count: 1
+    flag: 4294962943
+  - identifier: 50
+    msg: Move
+    code: 14513273
+    previous:
+      controller: 0
+      location: 1
+      sequence: 1
+      position: 10
+    current:
+      controller: 0
+      location: 8
+      sequence: 0
+      position: 5
+    reason: 0
+  - identifier: 32
+    msg: ShuffleDeck
+    player: 0
+  - identifier: 73
+    msg: ChainSolved
+    chainCount: 1
+  - identifier: 50
+    msg: Move
+    code: 4178474
+    previous:
+      controller: 0
+      location: 8
+      sequence: 1
+      position: 5
+    current:
+      controller: 0
+      location: 16
+      sequence: 3
+      position: 5
+    reason: 1024
+  - identifier: 50
+    msg: Move
+    code: 4178474
+    previous:
+      controller: 0
+      location: 8
+      sequence: 2
+      position: 5
+    current:
+      controller: 0
+      location: 16
+      sequence: 4
+      position: 5
+    reason: 1024
+  - identifier: 74
+    msg: ChainEnd
+  - identifier: 16
+    msg: SelectChain
+    player: 0
+    count: 1
+    specialCount: 1
+    hint0: 8945664
+    hint1: 32768
+    chains:
+      - edesc: 0
+        forced: 0
+        code: 100256015
+        controller: 0
+        location: 2
+        sequence: 0
+        subsequence: 10
+        desc: 1604096241
+  - identifier: 70
+    msg: Chaining
+    code: 100256015
+    controller: 0
+    location: 2
+    sequence: 0
+    subsequence: 10
+    chainCardLocation:
+      controller: 0
+      location: 2
+      sequence: 0
+    desc: 1604096241
+    chainCount: 1
+  - identifier: 71
+    msg: Chained
+    chainCount: 1
+  - identifier: 16
+    msg: SelectChain
+    player: 1
+    count: 0
+    specialCount: 0
+    hint0: 0
+    hint1: 0
+    chains: []
+  - identifier: 16
+    msg: SelectChain
+    player: 0
+    count: 0
+    specialCount: 0
+    hint0: 0
+    hint1: 0
+    chains: []
+  - identifier: 72
+    msg: ChainSolving
+    chainCount: 1
+  - identifier: 2
+    msg: Hint
+    type: 3
+    player: 0
+    desc: 100256015
+  - identifier: 18
+    msg: SelectPlace
+    player: 0
+    count: 1
+    flag: 4294967277
+  - identifier: 19
+    msg: SelectPosition
+    player: 0
+    code: 100256015
+    positions: 5
+  - identifier: 50
+    msg: Move
+    code: 100256015
+    previous:
+      controller: 0
+      location: 2
+      sequence: 0
+      position: 10
+    current:
+      controller: 0
+      location: 4
+      sequence: 1
+      position: 1
+    reason: 2048
+  - identifier: 62
+    msg: SpSummoning
+    code: 100256015
+    controller: 0
+    location: 4
+    sequence: 1
+    position: 1
+  - identifier: 63
+    msg: SpSummoned
+  - identifier: 13
+    msg: SelectYesNo
+    player: 0
+    desc: 1604096243
+  - identifier: 2
+    msg: Hint
+    type: 3
+    player: 0
+    desc: 509
+  - identifier: 15
+    msg: SelectCard
+    player: 0
+    cancelable: 0
+    min: 1
+    max: 1
+    count: 3
+    cards:
+      - code: 16195942
+        controller: 0
+        location: 16
+        sequence: 2
+        subsequence: 5
+      - code: 100256015
+        controller: 0
+        location: 64
+        sequence: 5
+        subsequence: 4
+      - code: 16178681
+        controller: 0
+        location: 64
+        sequence: 4
+        subsequence: 4
+  - identifier: 2
+    msg: Hint
+    type: 3
+    player: 0
+    desc: 16195942
+  - identifier: 18
+    msg: SelectPlace
+    player: 0
+    count: 1
+    flag: 4294967279
+  - identifier: 19
+    msg: SelectPosition
+    player: 0
+    code: 16195942
+    positions: 5
+  - identifier: 50
+    msg: Move
+    code: 16195942
+    previous:
+      controller: 0
+      location: 16
+      sequence: 2
+      position: 5
+    current:
+      controller: 0
+      location: 4
+      sequence: 4
+      position: 1
+    reason: 2048
+  - identifier: 62
+    msg: SpSummoning
+    code: 16195942
+    controller: 0
+    location: 4
+    sequence: 4
+    position: 1
+  - identifier: 63
+    msg: SpSummoned
+  - identifier: 73
+    msg: ChainSolved
+    chainCount: 1
+  - identifier: 74
+    msg: ChainEnd
+  - identifier: 16
+    msg: SelectChain
+    player: 0
+    count: 1
+    specialCount: 0
+    hint0: 32896
+    hint1: 32768
+    chains:
+      - edesc: 0
+        forced: 0
+        code: 100256015
+        controller: 0
+        location: 4
+        sequence: 1
+        subsequence: 1
+        desc: 1604096242
+  - identifier: 70
+    msg: Chaining
+    code: 100256015
+    controller: 0
+    location: 4
+    sequence: 1
+    subsequence: 1
+    chainCardLocation:
+      controller: 0
+      location: 4
+      sequence: 1
+    desc: 1604096242
+    chainCount: 1
+  - identifier: 71
+    msg: Chained
+    chainCount: 1
+  - identifier: 16
+    msg: SelectChain
+    player: 1
+    count: 0
+    specialCount: 0
+    hint0: 0
+    hint1: 0
+    chains: []
+  - identifier: 16
+    msg: SelectChain
+    player: 0
+    count: 0
+    specialCount: 0
+    hint0: 0
+    hint1: 0
+    chains: []
+  - identifier: 72
+    msg: ChainSolving
+    chainCount: 1
+  - identifier: 50
+    msg: Move
+    code: 100256015
+    previous:
+      controller: 0
+      location: 4
+      sequence: 1
+      position: 1
+    current:
+      controller: 0
+      location: 64
+      sequence: 6
+      position: 4
+    reason: 66
+  - identifier: 13
+    msg: SelectYesNo
+    player: 0
+    desc: 1604096244
+  - identifier: 2
+    msg: Hint
+    type: 3
+    player: 0
+    desc: 509
+  - identifier: 15
+    msg: SelectCard
+    player: 0
+    cancelable: 0
+    min: 1
+    max: 1
+    count: 2
+    cards:
+      - code: 41209827
+        controller: 0
+        location: 64
+        sequence: 3
+        subsequence: 10
+      - code: 13331639
+        controller: 0
+        location: 64
+        sequence: 0
+        subsequence: 10
+  - identifier: 2
+    msg: Hint
+    type: 3
+    player: 0
+    desc: 511
+  - identifier: 26
+    msg: SelectUnselectCard
+    player: 0
+    finishable: 0
+    cancelable: 0
+    min: 4
+    max: 4
+    selectableCount: 5
+    selectableCards:
+      - code: 16178681
+        controller: 0
+        location: 4
+        sequence: 0
+        subsequence: 1
+      - code: 82044279
+        controller: 0
+        location: 4
+        sequence: 2
+        subsequence: 8
+      - code: 41209827
+        controller: 0
+        location: 4
+        sequence: 3
+        subsequence: 1
+      - code: 16195942
+        controller: 0
+        location: 4
+        sequence: 4
+        subsequence: 1
+      - code: 16178681
+        controller: 0
+        location: 64
+        sequence: 4
+        subsequence: 4
+    unselectableCount: 0
+    unselectableCards: []
+  - identifier: 26
+    msg: SelectUnselectCard
+    player: 0
+    finishable: 0
+    cancelable: 0
+    min: 4
+    max: 4
+    selectableCount: 3
+    selectableCards:
+      - code: 82044279
+        controller: 0
+        location: 4
+        sequence: 2
+        subsequence: 8
+      - code: 41209827
+        controller: 0
+        location: 4
+        sequence: 3
+        subsequence: 1
+      - code: 16195942
+        controller: 0
+        location: 4
+        sequence: 4
+        subsequence: 1
+    unselectableCount: 1
+    unselectableCards:
+      - code: 16178681
+        controller: 0
+        location: 64
+        sequence: 4
+        subsequence: 4
+  - identifier: 26
+    msg: SelectUnselectCard
+    player: 0
+    finishable: 0
+    cancelable: 0
+    min: 4
+    max: 4
+    selectableCount: 5
+    selectableCards:
+      - code: 16178681
+        controller: 0
+        location: 4
+        sequence: 0
+        subsequence: 1
+      - code: 82044279
+        controller: 0
+        location: 4
+        sequence: 2
+        subsequence: 8
+      - code: 41209827
+        controller: 0
+        location: 4
+        sequence: 3
+        subsequence: 1
+      - code: 16195942
+        controller: 0
+        location: 4
+        sequence: 4
+        subsequence: 1
+      - code: 16178681
+        controller: 0
+        location: 64
+        sequence: 4
+        subsequence: 4
+    unselectableCount: 0
+    unselectableCards: []
+  - identifier: 26
+    msg: SelectUnselectCard
+    player: 0
+    finishable: 0
+    cancelable: 0
+    min: 4
+    max: 4
+    selectableCount: 3
+    selectableCards:
+      - code: 82044279
+        controller: 0
+        location: 4
+        sequence: 2
+        subsequence: 8
+      - code: 41209827
+        controller: 0
+        location: 4
+        sequence: 3
+        subsequence: 1
+      - code: 16195942
+        controller: 0
+        location: 4
+        sequence: 4
+        subsequence: 1
+    unselectableCount: 1
+    unselectableCards:
+      - code: 16178681
+        controller: 0
+        location: 64
+        sequence: 4
+        subsequence: 4
+  - identifier: 26
+    msg: SelectUnselectCard
+    player: 0
+    finishable: 0
+    cancelable: 0
+    min: 4
+    max: 4
+    selectableCount: 2
+    selectableCards:
+      - code: 82044279
+        controller: 0
+        location: 4
+        sequence: 2
+        subsequence: 8
+      - code: 41209827
+        controller: 0
+        location: 4
+        sequence: 3
+        subsequence: 1
+    unselectableCount: 2
+    unselectableCards:
+      - code: 16195942
+        controller: 0
+        location: 4
+        sequence: 4
+        subsequence: 1
+      - code: 16178681
+        controller: 0
+        location: 64
+        sequence: 4
+        subsequence: 4
+  - identifier: 26
+    msg: SelectUnselectCard
+    player: 0
+    finishable: 0
+    cancelable: 0
+    min: 4
+    max: 4
+    selectableCount: 1
+    selectableCards:
+      - code: 82044279
+        controller: 0
+        location: 4
+        sequence: 2
+        subsequence: 8
+    unselectableCount: 3
+    unselectableCards:
+      - code: 16195942
+        controller: 0
+        location: 4
+        sequence: 4
+        subsequence: 1
+      - code: 41209827
+        controller: 0
+        location: 4
+        sequence: 3
+        subsequence: 1
+      - code: 16178681
+        controller: 0
+        location: 64
+        sequence: 4
+        subsequence: 4
+  - identifier: 31
+    msg: ConfirmCards
+    player: 1
+    skipPanel: 0
+    count: 1
+    cards:
+      - code: 82044279
+        controller: 0
+        location: 4
+        sequence: 2
+  - identifier: 83
+    msg: BecomeTarget
+    count: 1
+    targets:
+      - 17040384
+  - identifier: 83
+    msg: BecomeTarget
+    count: 1
+    targets:
+      - 16974848
+  - identifier: 83
+    msg: BecomeTarget
+    count: 1
+    targets:
+      - 67387392
+  - identifier: 50
+    msg: Move
+    code: 82044279
+    previous:
+      controller: 0
+      location: 4
+      sequence: 2
+      position: 8
+    current:
+      controller: 0
+      location: 64
+      sequence: 4
+      position: 8
+    reason: 262216
+  - identifier: 50
+    msg: Move
+    code: 41209827
+    previous:
+      controller: 0
+      location: 4
+      sequence: 3
+      position: 1
+    current:
+      controller: 0
+      location: 64
+      sequence: 5
+      position: 8
+    reason: 262216
+  - identifier: 50
+    msg: Move
+    code: 16195942
+    previous:
+      controller: 0
+      location: 4
+      sequence: 4
+      position: 1
+    current:
+      controller: 0
+      location: 64
+      sequence: 6
+      position: 8
+    reason: 262216
+  - identifier: 50
+    msg: Move
+    code: 16178681
+    previous:
+      controller: 0
+      location: 64
+      sequence: 7
+      position: 4
+    current:
+      controller: 0
+      location: 1
+      sequence: 0
+      position: 10
+    reason: 262216
+  - identifier: 2
+    msg: Hint
+    type: 3
+    player: 0
+    desc: 13331639
+  - identifier: 18
+    msg: SelectPlace
+    player: 0
+    count: 1
+    flag: 4294967169
+  - identifier: 19
+    msg: SelectPosition
+    player: 0
+    code: 13331639
+    positions: 5
+  - identifier: 50
+    msg: Move
+    code: 13331639
+    previous:
+      controller: 0
+      location: 64
+      sequence: 0
+      position: 10
+    current:
+      controller: 0
+      location: 4
+      sequence: 2
+      position: 1
+    reason: 2048
+  - identifier: 62
+    msg: SpSummoning
+    code: 13331639
+    controller: 0
+    location: 4
+    sequence: 2
+    position: 1
+  - identifier: 63
+    msg: SpSummoned
+  - identifier: 32
+    msg: ShuffleDeck
+    player: 0
+  - identifier: 73
+    msg: ChainSolved
+    chainCount: 1
+  - identifier: 74
+    msg: ChainEnd
+  - identifier: 70
+    msg: Chaining
+    code: 13331639
+    controller: 0
+    location: 4
+    sequence: 2
+    subsequence: 1
+    chainCardLocation:
+      controller: 0
+      location: 4
+      sequence: 2
+    desc: 213306225
+    chainCount: 1
+  - identifier: 71
+    msg: Chained
+    chainCount: 1
+  - identifier: 16
+    msg: SelectChain
+    player: 1
+    count: 0
+    specialCount: 0
+    hint0: 0
+    hint1: 0
+    chains: []
+  - identifier: 16
+    msg: SelectChain
+    player: 0
+    count: 0
+    specialCount: 0
+    hint0: 0
+    hint1: 0
+    chains: []
+  - identifier: 72
+    msg: ChainSolving
+    chainCount: 1
+  - identifier: 50
+    msg: Move
+    code: 16178681
+    previous:
+      controller: 1
+      location: 4
+      sequence: 0
+      position: 1
+    current:
+      controller: 1
+      location: 64
+      sequence: 0
+      position: 4
+    reason: 65
+  - identifier: 50
+    msg: Move
+    code: 41209827
+    previous:
+      controller: 1
+      location: 4
+      sequence: 1
+      position: 1
+    current:
+      controller: 1
+      location: 16
+      sequence: 0
+      position: 5
+    reason: 65
+  - identifier: 73
+    msg: ChainSolved
+    chainCount: 1
+  - identifier: 74
+    msg: ChainEnd
+  - identifier: 16
+    msg: SelectChain
+    player: 0
+    count: 0
+    specialCount: 0
+    hint0: 32768
+    hint1: 8945664
+    chains: []
+  - identifier: 16
+    msg: SelectChain
+    player: 1
+    count: 0
+    specialCount: 0
+    hint0: 8945664
+    hint1: 32768
+    chains: []
+  - identifier: 11
+    msg: SelectIdleCmd
+    player: 0
+    summonableCount: 0
+    summonableCards: []
+    spSummonableCount: 0
+    spSummonableCards: []
+    reposableCount: 1
+    reposableCards:
+      - code: 16178681
+        controller: 0
+        location: 4
+        sequence: 0
+    msetableCount: 0
+    msetableCards: []
+    ssetableCount: 0
+    ssetableCards: []
+    activatableCount: 0
+    activatableCards: []
+    canBp: 1
+    canEp: 1
+    canShuffle: 0
+  - identifier: 2
+    msg: Hint
+    type: 1
+    player: 1
+    desc: 23
+  - identifier: 16
+    msg: SelectChain
+    player: 1
+    count: 0
+    specialCount: 0
+    hint0: 0
+    hint1: 4
+    chains: []
+  - identifier: 41
+    msg: NewPhase
+    phase: 8
+  - identifier: 10
+    msg: SelectBattleCmd
+    player: 0
+    activatableCount: 0
+    activatableCards: []
+    attackableCount: 2
+    attackableCards:
+      - code: 16178681
+        controller: 0
+        location: 4
+        sequence: 0
+        directAttack: 1
+      - code: 13331639
+        controller: 0
+        location: 4
+        sequence: 2
+        directAttack: 1
+    canM2: 1
+    canEp: 1
+  - identifier: 110
+    msg: Attack
+    attacker:
+      controller: 0
+      location: 4
+      sequence: 0
+      position: 1
+    defender:
+      controller: 0
+      location: 0
+      sequence: 0
+      position: 0
+  - identifier: 16
+    msg: SelectChain
+    player: 0
+    count: 0
+    specialCount: 0
+    hint0: 4096
+    hint1: 0
+    chains: []
+  - identifier: 16
+    msg: SelectChain
+    player: 1
+    count: 0
+    specialCount: 0
+    hint0: 0
+    hint1: 4096
+    chains: []
+  - identifier: 2
+    msg: Hint
+    type: 1
+    player: 0
+    desc: 24
+  - identifier: 2
+    msg: Hint
+    type: 1
+    player: 1
+    desc: 24
+  - identifier: 16
+    msg: SelectChain
+    player: 0
+    count: 0
+    specialCount: 0
+    hint0: 16777216
+    hint1: 16777216
+    chains: []
+  - identifier: 16
+    msg: SelectChain
+    player: 1
+    count: 0
+    specialCount: 0
+    hint0: 16777216
+    hint1: 16777216
+    chains: []
+  - identifier: 113
+    msg: DamageStepStart
+  - identifier: 2
+    msg: Hint
+    type: 1
+    player: 0
+    desc: 40
+  - identifier: 2
+    msg: Hint
+    type: 1
+    player: 1
+    desc: 40
+  - identifier: 16
+    msg: SelectChain
+    player: 0
+    count: 0
+    specialCount: 0
+    hint0: 0
+    hint1: 0
+    chains: []
+  - identifier: 16
+    msg: SelectChain
+    player: 1
+    count: 0
+    specialCount: 0
+    hint0: 0
+    hint1: 0
+    chains: []
+  - identifier: 2
+    msg: Hint
+    type: 1
+    player: 0
+    desc: 41
+  - identifier: 2
+    msg: Hint
+    type: 1
+    player: 1
+    desc: 41
+  - identifier: 16
+    msg: SelectChain
+    player: 0
+    count: 0
+    specialCount: 0
+    hint0: 8192
+    hint1: 0
+    chains: []
+  - identifier: 16
+    msg: SelectChain
+    player: 1
+    count: 0
+    specialCount: 0
+    hint0: 0
+    hint1: 8192
+    chains: []
+  - identifier: 2
+    msg: Hint
+    type: 1
+    player: 0
+    desc: 42
+  - identifier: 2
+    msg: Hint
+    type: 1
+    player: 1
+    desc: 42
+  - identifier: 16
+    msg: SelectChain
+    player: 0
+    count: 0
+    specialCount: 0
+    hint0: 16384
+    hint1: 0
+    chains: []
+  - identifier: 16
+    msg: SelectChain
+    player: 1
+    count: 0
+    specialCount: 0
+    hint0: 0
+    hint1: 16384
+    chains: []
+  - identifier: 111
+    msg: Battle
+    attacker:
+      location:
+        controller: 0
+        location: 4
+        sequence: 0
+        position: 1
+      atk: 2500
+      def: 2000
+    attackerBattleState: 0
+    defender:
+      location:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
+      atk: 0
+      def: 0
+    defenderBattleState: 0
+  - identifier: 91
+    msg: Damage
+    player: 1
+    value: 2500
+  - identifier: 2
+    msg: Hint
+    type: 1
+    player: 0
+    desc: 43
+  - identifier: 2
+    msg: Hint
+    type: 1
+    player: 1
+    desc: 43
+  - identifier: 16
+    msg: SelectChain
+    player: 0
+    count: 0
+    specialCount: 0
+    hint0: 134217728
+    hint1: 134348800
+    chains: []
+  - identifier: 16
+    msg: SelectChain
+    player: 1
+    count: 0
+    specialCount: 0
+    hint0: 134348800
+    hint1: 134217728
+    chains: []
+  - identifier: 2
+    msg: Hint
+    type: 1
+    player: 0
+    desc: 44
+  - identifier: 2
+    msg: Hint
+    type: 1
+    player: 1
+    desc: 44
+  - identifier: 16
+    msg: SelectChain
+    player: 0
+    count: 0
+    specialCount: 0
+    hint0: 0
+    hint1: 0
+    chains: []
+  - identifier: 16
+    msg: SelectChain
+    player: 1
+    count: 0
+    specialCount: 0
+    hint0: 0
+    hint1: 0
+    chains: []
+  - identifier: 114
+    msg: DamageStepEnd
+  - identifier: 10
+    msg: SelectBattleCmd
+    player: 0
+    activatableCount: 0
+    activatableCards: []
+    attackableCount: 1
+    attackableCards:
+      - code: 13331639
+        controller: 0
+        location: 4
+        sequence: 2
+        directAttack: 1
+    canM2: 1
+    canEp: 1
+  - identifier: 110
+    msg: Attack
+    attacker:
+      controller: 0
+      location: 4
+      sequence: 2
+      position: 1
+    defender:
+      controller: 0
+      location: 0
+      sequence: 0
+      position: 0
+  - identifier: 16
+    msg: SelectChain
+    player: 0
+    count: 0
+    specialCount: 0
+    hint0: 4096
+    hint1: 0
+    chains: []
+  - identifier: 16
+    msg: SelectChain
+    player: 1
+    count: 0
+    specialCount: 0
+    hint0: 0
+    hint1: 4096
+    chains: []
+  - identifier: 2
+    msg: Hint
+    type: 1
+    player: 0
+    desc: 24
+  - identifier: 2
+    msg: Hint
+    type: 1
+    player: 1
+    desc: 24
+  - identifier: 16
+    msg: SelectChain
+    player: 0
+    count: 0
+    specialCount: 0
+    hint0: 16777216
+    hint1: 16777216
+    chains: []
+  - identifier: 16
+    msg: SelectChain
+    player: 1
+    count: 0
+    specialCount: 0
+    hint0: 16777216
+    hint1: 16777216
+    chains: []
+  - identifier: 113
+    msg: DamageStepStart
+  - identifier: 2
+    msg: Hint
+    type: 1
+    player: 0
+    desc: 40
+  - identifier: 2
+    msg: Hint
+    type: 1
+    player: 1
+    desc: 40
+  - identifier: 16
+    msg: SelectChain
+    player: 0
+    count: 0
+    specialCount: 0
+    hint0: 0
+    hint1: 0
+    chains: []
+  - identifier: 16
+    msg: SelectChain
+    player: 1
+    count: 0
+    specialCount: 0
+    hint0: 0
+    hint1: 0
+    chains: []
+  - identifier: 2
+    msg: Hint
+    type: 1
+    player: 0
+    desc: 41
+  - identifier: 2
+    msg: Hint
+    type: 1
+    player: 1
+    desc: 41
+  - identifier: 16
+    msg: SelectChain
+    player: 0
+    count: 0
+    specialCount: 0
+    hint0: 8192
+    hint1: 0
+    chains: []
+  - identifier: 16
+    msg: SelectChain
+    player: 1
+    count: 0
+    specialCount: 0
+    hint0: 0
+    hint1: 8192
+    chains: []
+  - identifier: 2
+    msg: Hint
+    type: 1
+    player: 0
+    desc: 42
+  - identifier: 2
+    msg: Hint
+    type: 1
+    player: 1
+    desc: 42
+  - identifier: 16
+    msg: SelectChain
+    player: 0
+    count: 0
+    specialCount: 0
+    hint0: 16384
+    hint1: 0
+    chains: []
+  - identifier: 16
+    msg: SelectChain
+    player: 1
+    count: 0
+    specialCount: 0
+    hint0: 0
+    hint1: 16384
+    chains: []
+  - identifier: 111
+    msg: Battle
+    attacker:
+      location:
+        controller: 0
+        location: 4
+        sequence: 2
+        position: 1
+      atk: 4000
+      def: 4000
+    attackerBattleState: 0
+    defender:
+      location:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
+      atk: 0
+      def: 0
+    defenderBattleState: 0
+  - identifier: 91
+    msg: Damage
+    player: 1
+    value: 4000
+  - identifier: 2
+    msg: Hint
+    type: 1
+    player: 0
+    desc: 43
+  - identifier: 2
+    msg: Hint
+    type: 1
+    player: 1
+    desc: 43
+  - identifier: 16
+    msg: SelectChain
+    player: 0
+    count: 0
+    specialCount: 0
+    hint0: 134217728
+    hint1: 134348800
+    chains: []
+  - identifier: 16
+    msg: SelectChain
+    player: 1
+    count: 0
+    specialCount: 0
+    hint0: 134348800
+    hint1: 134217728
+    chains: []
+  - identifier: 2
+    msg: Hint
+    type: 1
+    player: 0
+    desc: 44
+  - identifier: 2
+    msg: Hint
+    type: 1
+    player: 1
+    desc: 44
+  - identifier: 16
+    msg: SelectChain
+    player: 0
+    count: 0
+    specialCount: 0
+    hint0: 0
+    hint1: 0
+    chains: []
+  - identifier: 16
+    msg: SelectChain
+    player: 1
+    count: 0
+    specialCount: 0
+    hint0: 0
+    hint1: 0
+    chains: []
+  - identifier: 114
+    msg: DamageStepEnd
+  - identifier: 10
+    msg: SelectBattleCmd
+    player: 0
+    activatableCount: 0
+    activatableCards: []
+    attackableCount: 0
+    attackableCards: []
+    canM2: 1
+    canEp: 1
+snapshot:
+  cards:
+    - flags: 15712255
+      controller: 0
+      location: 1
+      sequence: 0
+      empty: false
+      code: 96227613
+      position: 10
+      alias: 96227613
+      type: 16777249
+      level: 7
+      rank: 0
+      attribute: 32
+      race: 8
+      attack: 0
+      defense: 0
+      baseAttack: 0
+      baseDefense: 0
+      reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
+      targetCards: []
+      overlayCards: []
+      counters: []
+      owner: 0
+      status: 8
+      lscale: 0
+      rscale: 0
+      link: 0
+      linkMarker: 0
+      name: 霸王门 零
+    - flags: 15712255
+      controller: 0
+      location: 1
+      sequence: 1
+      empty: false
+      code: 16178681
+      position: 10
+      alias: 16178681
+      type: 16777249
+      level: 7
+      rank: 0
+      attribute: 32
+      race: 8192
+      attack: 2500
+      defense: 2000
+      baseAttack: 2500
+      baseDefense: 2000
+      reason: 262216
+      reasonCard:
+        controller: 0
+        location: 4
+        sequence: 2
+        position: 1
+      targetCards: []
+      overlayCards: []
+      counters: []
+      owner: 0
+      status: 0
+      lscale: 4
+      rscale: 4
+      link: 0
+      linkMarker: 0
+      name: 异色眼灵摆龙
+    - flags: 15712255
+      controller: 0
+      location: 1
+      sequence: 2
+      empty: false
+      code: 76794549
+      position: 10
+      alias: 76794549
+      type: 16777249
+      level: 7
+      rank: 0
+      attribute: 32
+      race: 2
+      attack: 2500
+      defense: 2000
+      baseAttack: 2500
+      baseDefense: 2000
+      reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
+      targetCards: []
+      overlayCards: []
+      counters: []
+      owner: 0
+      status: 67108872
+      lscale: 1
+      rscale: 1
+      link: 0
+      linkMarker: 0
+      name: 宙读之魔术士
+    - flags: 15712255
+      controller: 0
+      location: 4
+      sequence: 0
+      empty: false
+      code: 16178681
+      position: 1
+      alias: 16178681
+      type: 16777249
+      level: 7
+      rank: 0
+      attribute: 32
+      race: 8192
+      attack: 2500
+      defense: 2000
+      baseAttack: 2500
+      baseDefense: 2000
+      reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
+      targetCards: []
+      overlayCards: []
+      counters: []
+      owner: 0
+      status: 8
+      lscale: 4
+      rscale: 4
+      link: 0
+      linkMarker: 0
+      name: 异色眼灵摆龙
+    - flags: 15712255
+      controller: 0
+      location: 4
+      sequence: 2
+      empty: false
+      code: 13331639
+      position: 1
+      alias: 13331639
+      type: 16777313
+      level: 12
+      rank: 0
+      attribute: 32
+      race: 8192
+      attack: 4000
+      defense: 4000
+      baseAttack: 4000
+      baseDefense: 4000
+      reason: 2048
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
+      targetCards: []
+      overlayCards: []
+      counters: []
+      owner: 0
+      status: 8
+      lscale: 1
+      rscale: 1
+      link: 0
+      linkMarker: 0
+      name: 霸王龙 扎克
+    - flags: 15712255
+      controller: 0
+      location: 8
+      sequence: 0
+      empty: false
+      code: 14513273
+      position: 5
+      alias: 14513273
+      type: 16777218
+      level: 7
+      rank: 0
+      attribute: 16
+      race: 2
+      attack: 2500
+      defense: 2000
+      baseAttack: 2500
+      baseDefense: 2000
+      reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
+      targetCards: []
+      overlayCards: []
+      counters: []
+      owner: 0
+      status: 8
+      lscale: 1
+      rscale: 1
+      link: 0
+      linkMarker: 0
+      name: 霸王门之魔术师
+    - flags: 15712255
+      controller: 0
+      location: 8
+      sequence: 3
+      empty: false
+      code: 43711255
+      position: 5
+      alias: 43711255
+      type: 131074
+      level: 0
+      rank: 0
+      attribute: 0
+      race: 0
+      attack: 0
+      defense: 0
+      baseAttack: 0
+      baseDefense: 0
+      reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
+      targetCards: []
+      overlayCards: []
+      counters: []
+      owner: 0
+      status: 0
+      lscale: 0
+      rscale: 0
+      link: 0
+      linkMarker: 0
+      name: 禁止令
+    - flags: 15712255
+      controller: 0
+      location: 16
+      sequence: 0
+      empty: false
+      code: 100256015
+      position: 5
+      alias: 100256015
+      type: 16777249
+      level: 7
+      rank: 0
+      attribute: 32
+      race: 2
+      attack: 2500
+      defense: 2000
+      baseAttack: 2500
+      baseDefense: 2000
+      reason: 16512
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
+      targetCards: []
+      overlayCards: []
+      counters: []
+      owner: 0
+      status: 0
+      lscale: 1
+      rscale: 1
+      link: 0
+      linkMarker: 0
+      name: 星霜之魔术师-宙读之魔术士
+    - flags: 15712255
+      controller: 0
+      location: 16
+      sequence: 1
+      empty: false
+      code: 100256015
+      position: 5
+      alias: 100256015
+      type: 16777249
+      level: 7
+      rank: 0
+      attribute: 32
+      race: 2
+      attack: 2500
+      defense: 2000
+      baseAttack: 2500
+      baseDefense: 2000
+      reason: 16512
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
+      targetCards: []
+      overlayCards: []
+      counters: []
+      owner: 0
+      status: 0
+      lscale: 1
+      rscale: 1
+      link: 0
+      linkMarker: 0
+      name: 星霜之魔术师-宙读之魔术士
+    - flags: 15712255
+      controller: 0
+      location: 16
+      sequence: 2
+      empty: false
+      code: 4178474
+      position: 5
+      alias: 4178474
+      type: 4
+      level: 0
+      rank: 0
+      attribute: 0
+      race: 0
+      attack: 0
+      defense: 0
+      baseAttack: 0
+      baseDefense: 0
+      reason: 1024
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
+      targetCards: []
+      overlayCards: []
+      counters: []
+      owner: 0
+      status: 8
+      lscale: 0
+      rscale: 0
+      link: 0
+      linkMarker: 0
+      name: 雷破
+    - flags: 15712255
+      controller: 0
+      location: 16
+      sequence: 3
+      empty: false
+      code: 4178474
+      position: 5
+      alias: 4178474
+      type: 4
+      level: 0
+      rank: 0
+      attribute: 0
+      race: 0
+      attack: 0
+      defense: 0
+      baseAttack: 0
+      baseDefense: 0
+      reason: 1024
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
+      targetCards: []
+      overlayCards: []
+      counters: []
+      owner: 0
+      status: 8
+      lscale: 0
+      rscale: 0
+      link: 0
+      linkMarker: 0
+      name: 雷破
+    - flags: 15712255
+      controller: 0
+      location: 64
+      sequence: 0
+      empty: false
+      code: 16195942
+      position: 10
+      alias: 16195942
+      type: 8388641
+      level: 0
+      rank: 4
+      attribute: 32
+      race: 8192
+      attack: 2500
+      defense: 2000
+      baseAttack: 2500
+      baseDefense: 2000
+      reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
+      targetCards: []
+      overlayCards: []
+      counters: []
+      owner: 0
+      status: 0
+      lscale: 0
+      rscale: 0
+      link: 0
+      linkMarker: 0
+      name: 暗叛逆超量龙
+    - flags: 15712255
+      controller: 0
+      location: 64
+      sequence: 1
+      empty: false
+      code: 82044279
+      position: 10
+      alias: 82044279
+      type: 8225
+      level: 7
+      rank: 0
+      attribute: 8
+      race: 8192
+      attack: 2500
+      defense: 2000
+      baseAttack: 2500
+      baseDefense: 2000
+      reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
+      targetCards: []
+      overlayCards: []
+      counters: []
+      owner: 0
+      status: 0
+      lscale: 0
+      rscale: 0
+      link: 0
+      linkMarker: 0
+      name: 幻透翼同调龙
+    - flags: 15712255
+      controller: 0
+      location: 64
+      sequence: 2
+      empty: false
+      code: 41209827
+      position: 10
+      alias: 41209827
+      type: 97
+      level: 8
+      rank: 0
+      attribute: 32
+      race: 8192
+      attack: 2800
+      defense: 2000
+      baseAttack: 2800
+      baseDefense: 2000
+      reason: 0
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
+      targetCards: []
+      overlayCards: []
+      counters: []
+      owner: 0
+      status: 0
+      lscale: 0
+      rscale: 0
+      link: 0
+      linkMarker: 0
+      name: 凶饿毒融合龙
+    - flags: 15712255
+      controller: 0
+      location: 64
+      sequence: 3
+      empty: false
+      code: 82044279
+      position: 8
+      alias: 82044279
+      type: 8225
+      level: 7
+      rank: 0
+      attribute: 8
+      race: 8192
+      attack: 2500
+      defense: 2000
+      baseAttack: 2500
+      baseDefense: 2000
+      reason: 262216
+      reasonCard:
+        controller: 0
+        location: 4
+        sequence: 2
+        position: 1
+      targetCards: []
+      overlayCards: []
+      counters: []
+      owner: 0
+      status: 0
+      lscale: 0
+      rscale: 0
+      link: 0
+      linkMarker: 0
+      name: 幻透翼同调龙
+    - flags: 15712255
+      controller: 0
+      location: 64
+      sequence: 4
+      empty: false
+      code: 41209827
+      position: 8
+      alias: 41209827
+      type: 97
+      level: 8
+      rank: 0
+      attribute: 32
+      race: 8192
+      attack: 2800
+      defense: 2000
+      baseAttack: 2800
+      baseDefense: 2000
+      reason: 262216
+      reasonCard:
+        controller: 0
+        location: 4
+        sequence: 2
+        position: 1
+      targetCards: []
+      overlayCards: []
+      counters: []
+      owner: 0
+      status: 0
+      lscale: 0
+      rscale: 0
+      link: 0
+      linkMarker: 0
+      name: 凶饿毒融合龙
+    - flags: 15712255
+      controller: 0
+      location: 64
+      sequence: 5
+      empty: false
+      code: 16195942
+      position: 8
+      alias: 16195942
+      type: 8388641
+      level: 0
+      rank: 4
+      attribute: 32
+      race: 8192
+      attack: 2500
+      defense: 2000
+      baseAttack: 2500
+      baseDefense: 2000
+      reason: 262216
+      reasonCard:
+        controller: 0
+        location: 4
+        sequence: 2
+        position: 1
+      targetCards: []
+      overlayCards: []
+      counters: []
+      owner: 0
+      status: 0
+      lscale: 0
+      rscale: 0
+      link: 0
+      linkMarker: 0
+      name: 暗叛逆超量龙
+    - flags: 15712255
+      controller: 0
+      location: 64
+      sequence: 6
+      empty: false
+      code: 100256015
+      position: 4
+      alias: 100256015
+      type: 16777249
+      level: 7
+      rank: 0
+      attribute: 32
+      race: 2
+      attack: 2500
+      defense: 2000
+      baseAttack: 2500
+      baseDefense: 2000
+      reason: 65
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
+      targetCards: []
+      overlayCards: []
+      counters: []
+      owner: 0
+      status: 0
+      lscale: 1
+      rscale: 1
+      link: 0
+      linkMarker: 0
+      name: 星霜之魔术师-宙读之魔术士
+    - flags: 15712255
+      controller: 0
+      location: 64
+      sequence: 7
+      empty: false
+      code: 100256015
+      position: 4
+      alias: 100256015
+      type: 16777249
+      level: 7
+      rank: 0
+      attribute: 32
+      race: 2
+      attack: 2500
+      defense: 2000
+      baseAttack: 2500
+      baseDefense: 2000
+      reason: 66
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
+      targetCards: []
+      overlayCards: []
+      counters: []
+      owner: 0
+      status: 0
+      lscale: 1
+      rscale: 1
+      link: 0
+      linkMarker: 0
+      name: 星霜之魔术师-宙读之魔术士
+    - flags: 15712255
+      controller: 1
+      location: 16
+      sequence: 0
+      empty: false
+      code: 41209827
+      position: 5
+      alias: 41209827
+      type: 97
+      level: 8
+      rank: 0
+      attribute: 32
+      race: 8192
+      attack: 2800
+      defense: 2000
+      baseAttack: 2800
+      baseDefense: 2000
+      reason: 65
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
+      targetCards: []
+      overlayCards: []
+      counters: []
+      owner: 1
+      status: 8
+      lscale: 0
+      rscale: 0
+      link: 0
+      linkMarker: 0
+      name: 凶饿毒融合龙
+    - flags: 15712255
+      controller: 1
+      location: 64
+      sequence: 0
+      empty: false
+      code: 16178681
+      position: 4
+      alias: 16178681
+      type: 16777249
+      level: 7
+      rank: 0
+      attribute: 32
+      race: 8192
+      attack: 2500
+      defense: 2000
+      baseAttack: 2500
+      baseDefense: 2000
+      reason: 65
+      reasonCard:
+        controller: 0
+        location: 0
+        sequence: 0
+        position: 0
+      targetCards: []
+      overlayCards: []
+      counters: []
+      owner: 1
+      status: 8
+      lscale: 4
+      rscale: 4
+      link: 0
+      linkMarker: 0
+      name: 异色眼灵摆龙
+  lp:
+    - 8000
+    - 1500
+  chains: []
+snapshotText: |-
+  ********* Field Snapshot *********
+  LP: P0 8000 | P1 1500
+  ********* Player 0 *********
+    Spell: #0 霸王门之魔术师
+           #3 禁止令
+  Monster: #0 异色眼灵摆龙
+           #2 霸王龙 扎克
+    Grave: 星霜之魔术师-宙读之魔术士
+           星霜之魔术师-宙读之魔术士
+           雷破
+           雷破
+  ********* Player 1 *********
+    Grave: 凶饿毒融合龙
+  ********* Finish *********
