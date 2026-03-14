@@ -29,7 +29,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function s.rfilter(c,tp)
-	return (c:IsControler(tp) or c:IsFaceup()) and c:IsAttackAbove(2000)
+	return c:IsFaceup() and c:IsAttackAbove(2000)
 		and c:IsReleasable(REASON_SPSUMMON)
 end
 function s.fselect(g,tp)
