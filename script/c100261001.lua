@@ -36,6 +36,7 @@ function s.sumfilter(e,c)
 end
 function s.sumop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetFlagEffect(tp,id)~=0 then return end
+	Duel.Hint(HINT_CARD,0,id)
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetDescription(aux.Stringid(id,1))
 	e1:SetType(EFFECT_TYPE_FIELD)

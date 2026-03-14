@@ -30,7 +30,7 @@ function s.initial_effect(c)
 	e3:SetCode(EVENT_FREE_CHAIN)
 	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e3:SetRange(LOCATION_MZONE)
-	e3:SetHintTiming(TIMINGS_CHECK_MONSTER+TIMING_END_PHASE+TIMING_DAMAGE_STEP)
+	e3:SetHintTiming(TIMINGS_CHECK_MONSTER+TIMING_END_PHASE)
 	e3:SetCountLimit(1)
 	e3:SetTarget(s.tdtg)
 	e3:SetOperation(s.tdop)
@@ -64,7 +64,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 			if tc:IsAbleToHand() and (not tc:IsSSetable() or Duel.SelectOption(tp,1190,1153)==0) then
 				Duel.SendtoHand(tc,nil,REASON_EFFECT)
 				Duel.ConfirmCards(1-tp,tc)
-			else
+			elseif tc:IsSSetable() then
 				Duel.SSet(tp,tc)
 			end
 		end

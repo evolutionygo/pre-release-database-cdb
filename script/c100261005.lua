@@ -3,6 +3,7 @@ local s,id,o=GetID()
 function s.initial_effect(c)
 	c:EnableReviveLimit()
 	aux.AddMaterialCodeList(c,53183600)
+	aux.AddSetNameMonsterList(c,0x62)
 	aux.AddFusionProcFunFun(c,aux.FilterBoolFunction(Card.IsFusionCode,53183600),s.ffilter,2,true)
 	aux.AddContactFusionProcedure(c,s.cfilter,LOCATION_HAND+LOCATION_MZONE+LOCATION_GRAVE,0,aux.ContactFusionSendToDeck(c))
 	--cannot special summon
@@ -49,7 +50,7 @@ function s.ffilter(c)
 	return c:IsType(TYPE_TOON)
 end
 function s.thfilter(c)
-	return (c:IsSetCard(0x62) or c:IsCode(id) or aux.IsCodeListed(c,15259703))
+	return (c:IsSetCard(0x62) or aux.IsSetNameMonsterListed(c,0x62) or aux.IsCodeListed(c,15259703))
 		and c:IsAbleToHand()
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)

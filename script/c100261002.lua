@@ -32,11 +32,10 @@ function s.addcon(e)
 	return Duel.IsExistingMatchingCard(s.cfilter,e:GetHandlerPlayer(),LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil)
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
-	local ph=Duel.GetCurrentPhase()
-	return ph==PHASE_MAIN1 or ph==PHASE_MAIN2
+	return Duel.IsMainPhase()
 end
-function s.cfilter2(c,tp)
-	return c:IsReleasableByEffect() and Duel.GetMZoneCount(tp,c)>0
+function s.cfilter2(c,tp,skip)
+	return c:IsReleasableByEffect() and (skip or Duel.GetMZoneCount(tp,c)>0)
 end
 function s.spfilter(c,e,tp)
 	return aux.IsCodeListed(c,15259703) and c:IsType(TYPE_MONSTER) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
@@ -46,7 +45,8 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_ONFIELD,0,1,nil) then
 		loc=LOCATION_MZONE
 	end
-	if chk==0 then return Duel.IsExistingMatchingCard(s.cfilter2,tp,LOCATION_MZONE,loc,1,nil,tp) and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_HAND+LOCATION_DECK,0,1,nil,e,tp) end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.cfilter2,tp,LOCATION_MZONE,loc,1,nil,tp)
+		and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_HAND+LOCATION_DECK,0,1,nil,e,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_RELEASE,nil,1,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND+LOCATION_DECK)
 end
@@ -56,7 +56,12 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		loc=LOCATION_MZONE
 	end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
-	local rg=Duel.SelectMatchingCard(tp,s.cfilter2,tp,LOCATION_MZONE,loc,1,1,nil,tp)
+	local rg
+	if Duel.IsExistingMatchingCard(s.cfilter2,tp,LOCATION_MZONE,loc,1,nil,tp,false) then
+		rg=Duel.SelectMatchingCard(tp,s.cfilter2,tp,LOCATION_MZONE,loc,1,1,nil,tp,false)
+	else
+		rg=Duel.SelectMatchingCard(tp,s.cfilter2,tp,LOCATION_MZONE,loc,1,1,nil,tp,true)
+	end
 	if rg:GetCount()>0 and Duel.Release(rg,REASON_EFFECT)>0
 		and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
