@@ -10,7 +10,7 @@ function s.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 	e1:SetCode(EFFECT_SPSUMMON_CONDITION)
-	e1:SetValue(s.splimit)
+	e1:SetValue(aux.synlimit)
 	c:RegisterEffect(e1)
 	--special summon
 	local e2=Effect.CreateEffect(c)
@@ -58,9 +58,6 @@ function s.regop(e,tp,eg,ep,ev,re,r,rp)
 			Duel.RegisterFlagEffect(tc:GetSummonPlayer(),id,0,0,0)
 		end
 	end
-end
-function s.splimit(e,se,sp,st)
-	return not e:GetHandler():IsLocation(LOCATION_EXTRA)
 end
 function s.cfilter(c)
 	return c:IsType(TYPE_MONSTER) and c:IsCode(70902743) or c:IsType(TYPE_TUNER) and c:IsAbleToRemoveAsCost()
