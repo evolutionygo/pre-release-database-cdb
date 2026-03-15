@@ -43,6 +43,12 @@ function s.initial_effect(c)
 	e4:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
 	e4:SetValue(1)
 	c:RegisterEffect(e4)
+	--double tuner
+	local e5=Effect.CreateEffect(c)
+	e5:SetType(EFFECT_TYPE_SINGLE)
+	e5:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e5:SetCode(21142671)
+	c:RegisterEffect(e5)
 	if not s.global_flag then
 		s.global_flag=true
 		local ge1=Effect.CreateEffect(c)
