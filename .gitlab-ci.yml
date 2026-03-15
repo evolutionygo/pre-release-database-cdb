@@ -36,6 +36,23 @@ merge_databases:
       - test-release.cdb
       - test-update.cdb
 
+strip_rc_databases:
+  stage: prepare2
+  dependencies:
+    - merge_databases
+  tags:
+    - linux
+  script:
+    - apt update --allow-insecure-repositories && apt -y install sqlite3
+    - |
+      for db in test-release.cdb test-update.cdb; do
+        sqlite3 "$db" "DELETE FROM datas WHERE id >= 100000000; DELETE FROM texts WHERE id >= 100000000;"
+      done
+  artifacts:
+    paths:
+      - test-release.cdb
+      - test-update.cdb
+
 prepare_jest_env:
   stage: prepare
   dependencies: []
@@ -249,6 +266,12 @@ server_clear:
   dependencies:
     - merge_databases
 
+server_rc:
+  extends: server
+  dependencies:
+    - strip_rc_databases
+    - add_script_diff
+
 .minio:
   stage: deploy
   dependencies:
@@ -339,6 +362,13 @@ deploy_to_tiramisu:
   variables:
     SERVER_HOST: tiramisu.moenext.com
     SERVER_USER: mycard
+
+deploy_to_tiramisu_rc:
+  extends: deploy_to_tiramisu
+  dependencies:
+    - server_rc
+  variables:
+    SERVER_PATH: ~/ygopro-rc/expansions
 
 deploy_to_koishi:
   extends: .deploy_to_server
