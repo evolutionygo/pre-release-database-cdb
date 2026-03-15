@@ -1,4 +1,4 @@
---スカーレッド・ノヴァ・ドラゴン-バーニング・ソウル
+--スカーレッド・ノヴァ・ドラゴン－バーニング・ソウル
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddCodeList(c,70902743)
@@ -65,8 +65,9 @@ function s.regop(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 end
-function s.cfilter(c)
-	return c:IsType(TYPE_MONSTER) and c:IsCode(70902743) or c:IsType(TYPE_TUNER) and c:IsAbleToRemoveAsCost()
+function s.cfilter(c,tp)
+	return (c:IsType(TYPE_MONSTER) and c:IsCode(70902743) or c:IsType(TYPE_TUNER))
+		and c:IsAbleToRemoveAsCost() and c:IsAbleToRemove(tp,POS_FACEUP,REASON_SPSUMMON)
 end
 function s.cfilter2(c,g)
 	return c:IsCode(70902743) and g:IsExists(Card.IsType,2,c,TYPE_TUNER)
@@ -77,13 +78,13 @@ end
 function s.spcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
-	local fg=Duel.GetMatchingGroup(s.cfilter,tp,LOCATION_GRAVE,0,nil)
+	local fg=Duel.GetMatchingGroup(s.cfilter,tp,LOCATION_GRAVE,0,nil,tp)
 	return fg:CheckSubGroup(s.fselect,3,3)
 		and Duel.GetLocationCountFromEx(tp,tp,nil,c)>0
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,c)
 	local cp=c:GetControler()
-	local g=Duel.GetMatchingGroup(s.cfilter,cp,LOCATION_GRAVE,0,nil)
+	local g=Duel.GetMatchingGroup(s.cfilter,cp,LOCATION_GRAVE,0,nil,cp)
 	Duel.Hint(HINT_SELECTMSG,cp,HINTMSG_REMOVE)
 	local sg=g:SelectSubGroup(cp,s.fselect,true,3,3)
 	if sg then
@@ -95,7 +96,7 @@ end
 function s.spop(e,tp,eg,ep,ev,re,r,rp,c)
 	local sg=e:GetLabelObject()
 	c:SetMaterial(sg)
-	Duel.Remove(sg,POS_FACEUP,REASON_COST)
+	Duel.Remove(sg,POS_FACEUP,REASON_SPSUMMON)
 end
 function s.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetFlagEffect(tp,id)>0
@@ -122,16 +123,16 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.thfilter),tp,LOCATION_GRAVE,0,1,1,nil)
 	if g:GetCount()>0 then
-		Duel.SendtoHand(g,nil,REASON_EFFECT)
-		Duel.ConfirmCards(1-tp,g)
-	end
-	if c:IsRelateToChain() and c:IsFaceup() then
-		Duel.BreakEffect()
-		local e1=Effect.CreateEffect(c)
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_UPDATE_ATTACK)
-		e1:SetValue(2000)
-		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_DISABLE)
-		c:RegisterEffect(e1)
+		Duel.HintSelection(g)
+		if Duel.SendtoHand(g,nil,REASON_EFFECT)>0
+			and g:IsExists(Card.IsLocation,1,nil,LOCATION_HAND)
+			and c:IsRelateToChain() and c:IsFaceup() then
+			local e1=Effect.CreateEffect(c)
+			e1:SetType(EFFECT_TYPE_SINGLE)
+			e1:SetCode(EFFECT_UPDATE_ATTACK)
+			e1:SetValue(2000)
+			e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_DISABLE)
+			c:RegisterEffect(e1)
+		end
 	end
 end
