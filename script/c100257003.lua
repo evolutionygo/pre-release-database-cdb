@@ -24,14 +24,6 @@ function s.initial_effect(c)
 	e2:SetTarget(s.drtg)
 	e2:SetOperation(s.drop)
 	c:RegisterEffect(e2)
-	if not s.global_check then
-		s.global_check=true
-		local ge1=Effect.CreateEffect(c)
-		ge1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		ge1:SetCode(EVENT_TO_GRAVE)
-		ge1:SetOperation(s.checkop)
-		Duel.RegisterEffect(ge1,0)
-	end
 end
 function s.checkop(e,tp,eg,ep,ev,re,r,rp)
 	for tc in aux.Next(eg) do
@@ -85,7 +77,8 @@ function s.spelimit(e,c)
 	return not c:IsRace(RACE_DRAGON+RACE_SPELLCASTER)
 end
 function s.drcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():GetFlagEffectLabel(id)>0
+	return e:GetHandler():GetTurnID()==Duel.GetTurnCount()
+		and not e:GetHandler():IsReason(REASON_RETURN)
 		and Duel.GetCurrentPhase()==PHASE_MAIN2
 end
 function s.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
