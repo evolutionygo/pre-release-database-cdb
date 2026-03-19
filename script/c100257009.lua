@@ -37,6 +37,7 @@ function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONFIRM)
 	local sg=g:SelectSubGroup(tp,s.gcheck,false,1,g:GetCount(),ct)
 	Duel.ConfirmCards(1-tp,sg)
+	Duel.ShuffleHand(tp)
 	e:SetLabel(sg:FilterCount(Card.IsType,nil,TYPE_TUNER),sg:GetCount())
 end
 function s.filter(c)
