@@ -87,7 +87,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		if g:GetCount()==2 then
 			Duel.HintSelection(g)
 			if Duel.SendtoDeck(g,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)~=0
-				and g:IsExists(Card.IsLocation,1,nil,LOCATION_DECK+LOCATION_EXTRA)
+				and g:FilterCount(Card.IsLocation,nil,LOCATION_DECK+LOCATION_EXTRA)==2
 				and Duel.IsExistingMatchingCard(aux.NecroValleyFilter(s.thfilter),tp,LOCATION_GRAVE,0,1,nil) then
 				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 				local sg=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.thfilter),tp,LOCATION_GRAVE,0,1,1,nil)
@@ -103,7 +103,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		if g:GetCount()==3 then
 			Duel.HintSelection(g)
 			if Duel.SendtoDeck(g,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)~=0
-				and g:IsExists(Card.IsLocation,1,nil,LOCATION_DECK+LOCATION_EXTRA)
+				and g:FilterCount(Card.IsLocation,nil,LOCATION_DECK+LOCATION_EXTRA)==3
 				and Duel.IsExistingMatchingCard(aux.NecroValleyFilter(s.tdfilter2),tp,0,LOCATION_GRAVE,1,nil) then
 				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
 				local sg=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.tdfilter2),tp,0,LOCATION_GRAVE,1,3,nil)

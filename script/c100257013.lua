@@ -15,7 +15,7 @@ function s.initial_effect(c)
 	e1:SetTarget(s.distg)
 	e1:SetOperation(s.disop)
 	c:RegisterEffect(e1)
-	--spsummon
+	--fusion summon
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_FUSION_SUMMON)
@@ -44,7 +44,7 @@ end
 function s.disop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if tc and tc:IsRelateToChain() and tc:IsFaceup() then
+	if tc and tc:IsType(TYPE_MONSTER) and tc:IsRelateToChain() and tc:IsFaceup() then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_SET_ATTACK_FINAL)
@@ -75,7 +75,7 @@ function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return rp==1-tp
 end
 function s.filter1(c,e)
-	return c:IsOnField() and c:IsFaceup() and c:IsFusionAttribute(ATTRIBUTE_DARK) and not c:IsImmuneToEffect(e)
+	return c:IsOnField() and c:IsFusionAttribute(ATTRIBUTE_DARK) and not c:IsImmuneToEffect(e)
 end
 function s.filter2(c,e,tp,m,f,gc,chkf)
 	return c:IsType(TYPE_FUSION) and c:IsAttribute(ATTRIBUTE_DARK) and (not f or f(c))

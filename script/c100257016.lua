@@ -57,6 +57,7 @@ function s.coop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.SelectMatchingCard(tp,s.cfilter,tp,0,LOCATION_MZONE,1,1,nil,c)
 	local tc=g:GetFirst()
 	if tc then
+		Duel.HintSelection(g)
 		local zone=bit.band(c:GetLinkedZone(),0x1f)
 		Duel.GetControl(tc,tp,0,0,zone)
 	end
