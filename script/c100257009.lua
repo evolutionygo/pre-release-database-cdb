@@ -4,11 +4,12 @@ function s.initial_effect(c)
 	aux.AddCodeList(c,70902743)
 	--Activate
 	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_DISABLE)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
-	e1:SetHintTiming(0,TIMINGS_CHECK_MONSTER)
-	e1:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_CONTINUOUS_TARGET)
+	e1:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_DAMAGE_STEP)
+	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_CONTINUOUS_TARGET)
 	e1:SetCountLimit(1,id+EFFECT_COUNT_CODE_OATH)
 	e1:SetCost(s.cost)
 	e1:SetTarget(s.target)
@@ -46,14 +47,14 @@ end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and s.filter(chkc) and chkc:IsControler(1-tp) end
 	if chk==0 then return e:IsCostChecked() and Duel.IsExistingTarget(s.filter,tp,0,LOCATION_MZONE,1,nil) end
-	local ct,atk=e:GetLabel()
+	local ct,_=e:GetLabel()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
 	local g=Duel.SelectTarget(tp,s.filter,tp,0,LOCATION_MZONE,ct+1,ct+1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DISABLE,g,g:GetCount(),0,0)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local ct,atk=e:GetLabel()
+	local _,atk=e:GetLabel()
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsType,nil,TYPE_MONSTER)
 	local tg=g:Filter(Card.IsRelateToChain,nil)
 	local fid=c:GetFieldID()
@@ -79,14 +80,14 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		e3:SetCondition(s.descon)
 		e3:SetReset(RESET_EVENT+RESETS_STANDARD)
 		c:RegisterEffect(e3)
+	else
+		Duel.Destroy(c,REASON_EFFECT)
+		return
 	end
 	for tc in aux.Next(tg) do
 		c:SetCardTarget(tc)
 		tc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,0,1,fid)
 	end
-end
-function s.desfilter(c,e)
-	return e:GetLabel()~=c:GetFlagEffectLabel(id)
 end
 function s.descon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetCardTarget():GetCount()==0

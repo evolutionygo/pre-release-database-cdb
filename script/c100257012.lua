@@ -1,4 +1,4 @@
---GDロボ・オービタル 7
+--GDロボ・オービタル ７
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--search
