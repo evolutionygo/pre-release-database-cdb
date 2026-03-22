@@ -65,16 +65,16 @@ function s.matval(e,lc,mg,c,tp)
 	end
 	return true,true
 end
-function s.matfilter(c)
-	local tp=c:GetControler()
-	return c:IsLocation(LOCATION_HAND) or c:IsPreviousControler(1-tp)
+function s.matfilter(c,tp)
+	return not c:IsLocation(LOCATION_ONFIELD) or c:IsControler(1-tp)
 end
 function s.valcheck(e,c)
 	local g=c:GetMaterial()
-	if g:IsExists(s.matfilter,1,nil) then
-		e:GetLabelObject():SetLabel(0)
-	else
+	local tp=c:GetControler()
+	if g:GetCount()>0 and not g:IsExists(s.matfilter,1,nil,tp) then
 		e:GetLabelObject():SetLabel(1)
+	else
+		e:GetLabelObject():SetLabel(0)
 	end
 end
 function s.tgcon(e,tp,eg,ep,ev,re,r,rp)
