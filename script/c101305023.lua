@@ -46,10 +46,13 @@ function s.spcon(e,c)
 	local tp=c:GetControler()
 	return Duel.IsExistingMatchingCard(s.spfilter,c:GetControler(),LOCATION_MZONE,0,1,nil,tp)
 end
+function s.gcheck(g,tp)
+	return g:IsExists(s.spfilter,1,nil,tp)
+end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,c)
-	local g=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_MZONE,0,nil,tp)
+	local g=Duel.GetMatchingGroup(nil,tp,LOCATION_MZONE,0,nil)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
-	local sg=g:CancelableSelect(tp,1,2,nil)
+	local sg=g:SelectSubGroup(tp,s.gcheck,true,1,2,tp)
 	if sg then
 		sg:KeepAlive()
 		e:SetLabelObject(sg)
@@ -58,6 +61,7 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,c)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp,c)
 	local g=e:GetLabelObject()
+	Duel.HintSelection(g)
 	Duel.SendtoHand(g,nil,REASON_SPSUMMON)
 end
 function s.cfilter(c)
@@ -121,7 +125,7 @@ function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) and aux.NecroValleyFilter()(c) then
+	if c:IsRelateToChain() and aux.NecroValleyFilter()(c) then
 		Duel.SendtoHand(c,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,c)
 	end
