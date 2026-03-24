@@ -1,4 +1,4 @@
---カオスエンド・ルーラー―開闢と終焉の支配者-
+--カオスエンド・ルーラー －開闢と終焉の支配者－
 local s,id,o=GetID()
 function s.initial_effect(c)
 	c:EnableReviveLimit()
@@ -98,7 +98,7 @@ function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 	if aux.NecroValleyNegateCheck(ckg) then return end
 	local g=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD+LOCATION_GRAVE,nil)
 	if g:GetCount()>0 and Duel.Remove(g,POS_FACEUP,REASON_EFFECT)~=0 then
-		local dam=Duel.GetOperatedGroup():Filter(Card.IsLocation,nil,LOCATION_GRAVE):GetCount()
+		local dam=Duel.GetOperatedGroup():Filter(Card.IsLocation,nil,LOCATION_REMOVED):GetCount()
 		if dam>0 then
 			Duel.Damage(1-tp,dam*500,REASON_EFFECT)
 		end
