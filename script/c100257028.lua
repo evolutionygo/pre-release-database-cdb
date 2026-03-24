@@ -16,7 +16,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 	local e2=e1:Clone()
 	e2:SetCode(EVENT_DAMAGE_STEP_END)
-	e2:SetCondition(s.descon2)
+	e2:SetCondition(aux.dsercon)
 	c:RegisterEffect(e2)
 	--attribute
 	local e3=Effect.CreateEffect(c)
@@ -45,10 +45,6 @@ function s.initial_effect(c)
 end
 function s.descon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_LINK)
-end
-function s.descon2(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	return c:IsRelateToBattle()
 end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
