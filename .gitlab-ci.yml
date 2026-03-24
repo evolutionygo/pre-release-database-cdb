@@ -119,6 +119,26 @@ add_script_diff:
     paths:
       - script
 
+prepare_server_lflist:
+  stage: prepare
+  dependencies: []
+  tags:
+    - linux
+  script:
+    - mkdir dist
+    - git clone --depth=1 --branch=server https://code.moenext.com/mycard/ygopro.git ygopro-server
+    - cd ygopro-server
+    - git fetch --depth=1 origin master
+    - |
+      server_time=$(git log -1 --format=%ct HEAD -- lflist.conf || true)
+      master_time=$(git log -1 --format=%ct FETCH_HEAD -- lflist.conf || true)
+      if [ -n "$server_time" ] && { [ -z "$master_time" ] || [ "$server_time" -gt "$master_time" ]; }; then
+        cp lflist.conf ../dist/
+      fi
+  artifacts:
+    paths:
+      - dist
+
 .json:
   stage: prepare2
   dependencies:
@@ -319,6 +339,7 @@ deploy:
   stage: deploy
   dependencies:
     - pack
+    - prepare_server_lflist
   tags: 
     - linux
   variables:
@@ -327,6 +348,7 @@ deploy:
     appVersion: $CI_COMMIT_REF_NAME
   script:
     - apt update; apt -y install tar zstd curl jq
+    - if [ -f dist/lflist.conf ]; then cp dist/lflist.conf data/; fi
     - git clone https://code.moenext.com/mycard/mycard-package-script
     - cd mycard-package-script
     - ./index.sh makeBuild ygopro-super-pre ../data || true
