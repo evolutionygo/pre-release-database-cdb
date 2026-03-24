@@ -44,8 +44,9 @@ function s.initial_effect(c)
 	e5:SetOperation(s.rmop)
 	c:RegisterEffect(e5)
 end
-function s.spcostfilter(c)
+function s.spcostfilter(c,tp)
 	return c:IsAbleToRemoveAsCost() and c:IsAttribute(ATTRIBUTE_LIGHT+ATTRIBUTE_DARK)
+		and c:IsAbleToRemove(tp,POS_FACEUP,REASON_SPSUMMON)
 end
 function s.spfilter(c,res)
 	if res then
@@ -58,11 +59,11 @@ function s.spcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
 	if Duel.GetMZoneCount(tp)<=0 then return false end
-	local g=Duel.GetMatchingGroup(s.spcostfilter,tp,LOCATION_GRAVE,0,nil)
+	local g=Duel.GetMatchingGroup(s.spcostfilter,tp,LOCATION_GRAVE,0,nil,tp)
 	return g:CheckSubGroup(aux.gfcheck,2,2,s.spfilter,true,false)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,c)
-	local g=Duel.GetMatchingGroup(s.spcostfilter,tp,LOCATION_GRAVE,0,nil)
+	local g=Duel.GetMatchingGroup(s.spcostfilter,tp,LOCATION_GRAVE,0,nil,tp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local sg=g:SelectSubGroup(tp,aux.gfcheck,true,2,2,s.spfilter,true,false)
 	if sg then
@@ -97,7 +98,9 @@ function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 	if aux.NecroValleyNegateCheck(ckg) then return end
 	local g=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD+LOCATION_GRAVE,nil)
 	if g:GetCount()>0 and Duel.Remove(g,POS_FACEUP,REASON_EFFECT)~=0 then
-		local dam=Duel.GetOperatedGroup():GetCount()
-		Duel.Damage(1-tp,dam*500,REASON_EFFECT)
+		local dam=Duel.GetOperatedGroup():Filter(Card.IsLocation,nil,LOCATION_GRAVE):GetCount()
+		if dam>0 then
+			Duel.Damage(1-tp,dam*500,REASON_EFFECT)
+		end
 	end
 end
