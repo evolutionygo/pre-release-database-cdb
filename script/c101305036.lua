@@ -1,4 +1,4 @@
---無現壊収ヌルゲイナー
+--無現壊収 ヌルゲイナー
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--synchro summon
@@ -18,6 +18,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 	--special summon
 	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
@@ -59,7 +60,6 @@ end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	if tc:IsRelateToChain() and aux.NecroValleyFilter()(tc)
 		and Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP) then
 		local e1=Effect.CreateEffect(c)
@@ -74,8 +74,9 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		e2:SetReset(RESET_EVENT+RESETS_STANDARD)
 		tc:RegisterEffect(e2)
 		local e3=Effect.CreateEffect(c)
+		e3:SetDescription(aux.Stringid(id,2))
 		e3:SetType(EFFECT_TYPE_SINGLE)
-		e3:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_IGNORE_IMMUNE)
+		e3:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_CLIENT_HINT)
 		e3:SetCode(EFFECT_CANNOT_BE_SYNCHRO_MATERIAL)
 		e3:SetRange(LOCATION_MZONE)
 		e3:SetReset(RESET_EVENT+RESETS_STANDARD)
@@ -91,8 +92,8 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		local e6=e3:Clone()
 		e6:SetCode(EFFECT_CANNOT_BE_LINK_MATERIAL)
 		tc:RegisterEffect(e6)
+		Duel.SpecialSummonComplete()
 	end
-	Duel.SpecialSummonComplete()
 end
 function s.fuslimit(e,c,sumtype)
 	return sumtype==SUMMON_TYPE_FUSION
