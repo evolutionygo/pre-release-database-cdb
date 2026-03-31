@@ -1,4 +1,4 @@
---
+--薄明の魔 レイラージュ
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--pendulum summon
@@ -31,6 +31,7 @@ function s.initial_effect(c)
 	e3:SetCode(EVENT_FREE_CHAIN)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e3:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_END_PHASE)
 	e3:SetCountLimit(1,id+o*2)
 	e3:SetCost(s.indcost)
 	e3:SetTarget(s.indtg)
@@ -59,6 +60,7 @@ function s.repval(e,c)
 	return c==e:GetLabelObject()
 end
 function s.repop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_CARD,0,id)
 	Duel.Destroy(e:GetHandler(),REASON_EFFECT)
 end
 function s.pfilter(c,tp)
@@ -78,7 +80,7 @@ function s.mvop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToChain() and not tc:IsImmuneToEffect(e)
-		and Duel.MoveToField(tc,tp,tp,LOCATION_PZONE,POS_FACEUP,true)then
+		and Duel.MoveToField(tc,tp,tp,LOCATION_PZONE,POS_FACEUP,true) then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_CANNOT_TRIGGER)
