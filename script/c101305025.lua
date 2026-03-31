@@ -42,7 +42,7 @@ function s.repfilter(c,tp)
 		and c:IsControler(tp) and c:IsReason(REASON_EFFECT) and not c:IsReason(REASON_REPLACE) and c:GetReasonPlayer()==1-tp
 end
 function s.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsAbleToRemove() and eg:IsExists(s.repfilter,1,nil,tp) end
+	if chk==0 then return e:GetHandler():IsDestructable(e) and eg:IsExists(s.repfilter,1,nil,tp) end
 	if Duel.SelectEffectYesNo(tp,e:GetHandler(),96) then
 		local g=eg:Filter(s.repfilter,nil,tp)
 		if g:GetCount()==1 then
@@ -60,10 +60,6 @@ function s.repval(e,c)
 end
 function s.repop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Destroy(e:GetHandler(),REASON_EFFECT)
-end
-function s.mvcon2(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	return c:IsType(TYPE_SPELL) and c:IsType(TYPE_CONTINUOUS)
 end
 function s.pfilter(c,tp)
 	return c:IsFaceup() and c:IsType(TYPE_PENDULUM)
