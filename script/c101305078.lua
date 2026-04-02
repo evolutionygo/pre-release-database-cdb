@@ -1,7 +1,3 @@
---车道管制
-function c101305078.initial_effect(c)
-	
-end
 --レーン・リストリクション
 local s,id,o=GetID()
 function s.initial_effect(c)
