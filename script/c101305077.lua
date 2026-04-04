@@ -47,10 +47,12 @@ function s.desfilter(c,seq,tp)
 	if cloc==LOCATION_SZONE and cseq>=5 then return false end
 	if cloc==LOCATION_MZONE and seq<5 and cseq>=5 then
 		return seq==1 and cseq==5 or seq==3 and cseq==6
-			or math.abs(cseq-seq)==1
 	end
 	if cloc==LOCATION_MZONE and seq>=5 then
 		return seq==5 and cseq==1 or seq==6 and cseq==3
+	end
+	if cloc==LOCATION_MZONE and seq<5 and cseq<5  then
+		return math.abs(cseq-seq)==1
 	end
 	if cloc==LOCATION_SZONE and seq<5 then
 		return cseq==seq
