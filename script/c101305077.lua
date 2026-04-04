@@ -1,0 +1,72 @@
+--落とし穴
+local s,id,o=GetID()
+function s.initial_effect(c)
+	--Activate
+	local e1=Effect.CreateEffect(c)
+	e1:SetCategory(CATEGORY_DESTROY)
+	e1:SetType(EFFECT_TYPE_ACTIVATE)
+	e1:SetCode(EVENT_CHAINING)
+	e1:SetCondition(s.condition)
+	e1:SetTarget(s.target)
+	e1:SetOperation(s.activate)
+	c:RegisterEffect(e1)
+	if not s.global_check then
+		s.global_check=true
+		local ge1=Effect.CreateEffect(c)
+		ge1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		ge1:SetCode(EVENT_SPSUMMON_SUCCESS)
+		ge1:SetOperation(s.checkop)
+		Duel.RegisterEffect(ge1,0)
+	end
+end
+function s.checkop(e,tp,eg,ep,ev,re,r,rp)
+	for tc in aux.Next(eg) do
+		Duel.RegisterFlagEffect(tc:GetSummonPlayer(),id,RESET_PHASE+PHASE_END,0,1)
+	end
+end
+function s.condition(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	return ep==1-tp and re:GetHandler():IsOnField() and re:GetHandler():IsRelateToEffect(re) and re:IsActiveType(TYPE_MONSTER)
+		and Duel.GetFlagEffect(1-tp,id)>0
+end
+function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return re:GetHandler():IsDestructable() end
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,eg,1,0,0)
+end
+function s.seqfilter(c,seq,tp)
+	local cseq=c:GetSequence()
+	if c:GetControler()~=tp then
+		if not (seq==1 or seq==3) then return end
+		return seq==1 and cseq==6 or seq==3 and cseq==5
+	end
+	local cseq=c:GetSequence()
+	local cloc=c:GetLocation()
+	if cloc==LOCATION_SZONE and cseq>=5 then return false end
+	if cloc==LOCATION_MZONE and seq<5 and cseq>=5 then
+		return seq==1 and cseq==5 or seq==3 and cseq==6
+			or math.abs(cseq-seq)==1
+	end
+	if cloc==LOCATION_MZONE and seq>=5 then
+		return seq==5 and cseq==1 or seq==6 and cseq==3
+	end
+	if cloc==LOCATION_SZONE and seq<5 then
+		return cseq==seq
+	end
+	return false
+end
+function s.activate(e,tp,eg,ep,ev,re,r,rp)
+	local rc=re:GetHandler()
+	if rc:IsRelateToEffect(re) then
+		local seq=rc:GetSequence()
+		if Duel.Destroy(rc,REASON_EFFECT)~=0 then
+			local g=Group.CreateGroup()
+			if rc:IsPreviousControler(1-tp) then
+				g=Duel.GetMatchingGroup(s.desfilter,tp,0,LOCATION_ONFIELD,nil,seq,1-tp)
+			else
+				g=Duel.GetMatchingGroup(s.desfilter,tp,0,LOCATION_ONFIELD,nil,seq,tp)
+			end
+			Duel.BreakEffect()
+			Duel.Destroy(g,REASON_EFFECT)
+		end
+	end
+end
