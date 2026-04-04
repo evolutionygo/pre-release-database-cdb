@@ -1,4 +1,4 @@
---落とし穴
+--嗚呼な落とし穴
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--Activate
@@ -36,7 +36,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	g:AddCard(rc)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,g:GetCount(),0,0)
 end
-function s.seqfilter(c,seq,tp)
+function s.desfilter(c,seq,tp)
 	local cseq=c:GetSequence()
 	if c:GetControler()~=tp then
 		if not (seq==1 or seq==3) then return end
