@@ -3,6 +3,7 @@ local s,id,o=GetID()
 function s.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_DESTROY)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_CHAINING)
@@ -25,7 +26,6 @@ function s.checkop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
 	return ep==1-tp and re:GetHandler():IsOnField() and re:GetHandler():IsRelateToEffect(re) and re:IsActiveType(TYPE_MONSTER)
 		and Duel.GetFlagEffect(1-tp,id)>0
 end
@@ -38,30 +38,27 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.desfilter(c,seq,tp)
 	local cseq=c:GetSequence()
+	local cloc=c:GetLocation()
 	if c:GetControler()~=tp then
 		if not (seq==1 or seq==3) then return end
 		return seq==1 and cseq==6 or seq==3 and cseq==5
 	end
-	local cseq=c:GetSequence()
-	local cloc=c:GetLocation()
-	if cloc==LOCATION_SZONE and cseq>=5 then return false end
-	if cloc==LOCATION_MZONE and seq<5 and cseq>=5 then
-		return seq==1 and cseq==5 or seq==3 and cseq==6
+	if cloc==LOCATION_SZONE then
+		if cseq>=5 then return false end
+		if seq<5 then return cseq==seq end
 	end
-	if cloc==LOCATION_MZONE and seq>=5 then
-		return seq==5 and cseq==1 or seq==6 and cseq==3
-	end
-	if cloc==LOCATION_MZONE and seq<5 and cseq<5  then
-		return math.abs(cseq-seq)==1
-	end
-	if cloc==LOCATION_SZONE and seq<5 then
-		return cseq==seq
+	if cloc==LOCATION_MZONE then
+		if seq<5 then
+			if cseq>=5 then return seq==1 and cseq==5 or seq==3 and cseq==6 end
+			if cseq<5 then return math.abs(cseq-seq)==1 end
+		end
+		if seq>=5 then return seq==5 and cseq==1 or seq==6 and cseq==3 end
 	end
 	return false
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local rc=re:GetHandler()
-	if rc:IsRelateToEffect(re) and rc:IsLocation(LOCATION_MZONE) then
+	if rc:IsRelateToChain() and rc:IsLocation(LOCATION_MZONE) then
 		local seq=rc:GetSequence()
 		if Duel.Destroy(rc,REASON_EFFECT)~=0 then
 			local g=Duel.GetMatchingGroup(s.desfilter,tp,0,LOCATION_ONFIELD,nil,seq,rc:GetPreviousControler())
