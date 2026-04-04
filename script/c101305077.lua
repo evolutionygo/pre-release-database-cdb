@@ -30,8 +30,11 @@ function s.condition(e,tp,eg,ep,ev,re,r,rp)
 		and Duel.GetFlagEffect(1-tp,id)>0
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return re:GetHandler():IsDestructable() end
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,eg,1,0,0)
+	local rc=re:GetHandler()
+	if chk==0 then return rc:IsDestructable() end
+	local g=Duel.GetMatchingGroup(s.desfilter,tp,0,LOCATION_ONFIELD,nil,rc:GetSequence(),1-tp)
+	g:AddCard(rc)
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,g:GetCount(),0,0)
 end
 function s.seqfilter(c,seq,tp)
 	local cseq=c:GetSequence()
@@ -59,12 +62,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	if rc:IsRelateToEffect(re) then
 		local seq=rc:GetSequence()
 		if Duel.Destroy(rc,REASON_EFFECT)~=0 then
-			local g=Group.CreateGroup()
-			if rc:IsPreviousControler(1-tp) then
-				g=Duel.GetMatchingGroup(s.desfilter,tp,0,LOCATION_ONFIELD,nil,seq,1-tp)
-			else
-				g=Duel.GetMatchingGroup(s.desfilter,tp,0,LOCATION_ONFIELD,nil,seq,tp)
-			end
+			local g=Duel.GetMatchingGroup(s.desfilter,tp,0,LOCATION_ONFIELD,nil,seq,rc:GetPreviousControler())
 			Duel.BreakEffect()
 			Duel.Destroy(g,REASON_EFFECT)
 		end
