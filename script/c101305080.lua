@@ -26,6 +26,7 @@ function s.initial_effect(c)
 	e3:SetRange(LOCATION_SZONE)
 	e3:SetTargetRange(1,1)
 	e3:SetValue(HALF_DAMAGE)
+	e3:SetCondition(s.actcon)
 	c:RegisterEffect(e3)
 	--set
 	local e4=Effect.CreateEffect(c)
