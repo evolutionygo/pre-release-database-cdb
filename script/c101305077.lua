@@ -58,7 +58,7 @@ function s.desfilter(c,seq,tp)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local rc=re:GetHandler()
-	if rc:IsRelateToChain() and rc:IsLocation(LOCATION_MZONE) then
+	if rc:IsRelateToChain(ev) and rc:IsLocation(LOCATION_MZONE) then
 		local seq=rc:GetSequence()
 		if Duel.Destroy(rc,REASON_EFFECT)~=0 then
 			local g=Duel.GetMatchingGroup(s.desfilter,tp,0,LOCATION_ONFIELD,nil,seq,rc:GetPreviousControler())
