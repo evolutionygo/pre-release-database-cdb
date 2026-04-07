@@ -27,7 +27,7 @@ function s.cfilter(c)
 	return c:IsAttackAbove(3000) and c:IsRace(RACE_DRAGON) and not c:IsPublic()
 end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	local g=Duel.GetMatchingGroup(s.cfilter,tp,LOCATION_EXTRA,0,nil,e,tp)
+	local g=Duel.GetMatchingGroup(s.cfilter,tp,LOCATION_EXTRA,0,nil)
 	if chk==0 then return g:GetClassCount(Card.GetCode)>2 end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONFIRM)
 	local sg=g:SelectSubGroup(tp,aux.dncheck,false,3,3)
