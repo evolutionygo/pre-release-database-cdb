@@ -38,6 +38,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		if ct>0 and dg:FilterCount(Card.IsAbleToRemove,nil,tp,POS_FACEDOWN)==3
 			and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
 			Duel.BreakEffect()
+			Duel.DisableShuffleCheck()
 			Duel.Remove(dg,POS_FACEDOWN,REASON_EFFECT)
 		end
 		if ct>1 and Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD,1,nil,tp,POS_FACEDOWN)
