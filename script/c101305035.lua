@@ -1,4 +1,4 @@
---誇り高き耀聖の詩-エルフェンノーツ
+--誇り高き耀聖の詩－エルフェンノーツ
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--synchro summon
