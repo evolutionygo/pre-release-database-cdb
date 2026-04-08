@@ -67,7 +67,7 @@ function s.spfilter2(c,e,tp,zone)
 	return c:IsType(TYPE_FUSION+TYPE_SYNCHRO+TYPE_XYZ) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP,tp,zone)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	local zone=aux.GetMultiLinkedZone(tp)
+	local zone=Duel.GetLinkedZone(tp)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and s.spfilter2(chkc,e,tp,zone) end
 	if chk==0 then return zone~=0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and Duel.IsExistingTarget(s.spfilter2,tp,LOCATION_GRAVE,0,1,nil,e,tp,zone) end
@@ -76,9 +76,9 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
-	local zone=aux.GetMultiLinkedZone(tp)
+	local zone=Duel.GetLinkedZone(tp)
 	local tc=Duel.GetFirstTarget()
-	if zone~=0 and tc:IsRelateToEffect(e) then
+	if zone~=0 and tc:IsRelateToChain() then
 		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP,zone)
 	end
 end
