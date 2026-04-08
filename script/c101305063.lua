@@ -41,14 +41,14 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 		if Duel.GetTurnPlayer()==tp then
 			return Duel.IsExistingMatchingCard(s.tdfilter,tp,LOCATION_DECK,0,1,nil)
 		else
-			return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil,tp)
+			return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK+LOCATION_MZONE+LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil,tp)
 		end
 	end
 	if Duel.GetTurnPlayer()==tp then
 		if e:IsCostChecked() then
 			e:SetCategory(CATEGORY_DESTROY)
 		end
-	elseif op==2 then
+	else
 		if e:IsCostChecked() then
 			e:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND)
 		end
