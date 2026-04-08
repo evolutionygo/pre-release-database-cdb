@@ -30,7 +30,7 @@ function s.cfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0x1cd,0x1d2,0x1d8)
 end
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
-	return not Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_ONFIELD,0,1,nil)
+	return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_ONFIELD,0,1,nil)
 end
 function s.spfilter(c,e,tp)
 	return c:IsCode(97556336) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
@@ -78,7 +78,7 @@ end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local zone=Duel.GetLinkedZone(tp)
 	local tc=Duel.GetFirstTarget()
-	if zone~=0 and tc:IsRelateToChain() then
+	if zone~=0 and tc:IsRelateToChain() and aux.NecroValleyFilter()(tc) then
 		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP,zone)
 	end
 end
