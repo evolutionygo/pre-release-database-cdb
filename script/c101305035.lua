@@ -10,6 +10,7 @@ function s.initial_effect(c)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCode(EFFECT_CANNOT_ATTACK_ANNOUNCE)
 	e1:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
+	e1:SetCondition(s.ancondition)
 	e1:SetTarget(s.antarget)
 	c:RegisterEffect(e1)
 	--special summon
@@ -25,6 +26,9 @@ function s.initial_effect(c)
 	e2:SetTarget(s.sptg)
 	e2:SetOperation(s.spop)
 	c:RegisterEffect(e2)
+end
+function s.ancondition(e,tp,eg,ep,ev,re,r,rp)
+	return e:GetHandler():GetSequence()==2
 end
 function s.antarget(e,c)
 	return c:GetSequence()~=2
