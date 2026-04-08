@@ -32,7 +32,7 @@ end
 function s.tdfilter(c)
 	return c:IsRace(RACE_THUNDER+RACE_ROCK)
 end
-function s.thfilter(c)
+function s.thfilter(c,tp)
 	return c:IsFaceupEx() and c:IsRace(RACE_THUNDER+RACE_ROCK) and c:IsAbleToHand()
 		and (not c:IsLocation(LOCATION_DECK) or Duel.GetFlagEffect(tp,id)>0)
 end
