@@ -85,8 +85,8 @@ function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.GetDecktopGroup(tp,3)
 	if chk==0 then return g:FilterCount(Card.IsAbleToRemoveAsCost,nil,POS_FACEDOWN)==3
 		and Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>=3
-		or Duel.IsExistingMatchingCard(s.costfilter,tp,LOCATION_GRAVE,1,nil,e,tp) end
-	if not Duel.IsExistingMatchingCard(s.costfilter,tp,LOCATION_GRAVE,1,nil,e,tp) 
+		or Duel.IsExistingMatchingCard(s.costfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp) end
+	if not Duel.IsExistingMatchingCard(s.costfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp) 
 		or not Duel.SelectYesNo(tp,aux.Stringid(101305055,2)) then
 		Duel.DisableShuffleCheck()
 		Duel.Remove(g,POS_FACEDOWN,REASON_COST)

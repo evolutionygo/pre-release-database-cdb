@@ -14,7 +14,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function s.spfilter(c,e,tp)
-	return c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsSetCard(0x1ce)
+	return c:IsFaceupEx() and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsSetCard(0x1ce)
 		and (not c:IsLocation(LOCATION_EXTRA) and Duel.GetMZoneCount(tp)>0
 			or c:IsLocation(LOCATION_EXTRA) and Duel.GetLocationCountFromEx(tp,tp,nil,c)>0)
 end

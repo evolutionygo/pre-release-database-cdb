@@ -22,7 +22,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function s.cfilter(c,tp)
-	return c:IsFaceupEx() and c:IsCode(53589300,68231287,5914858)
+	return (c:IsLocation(LOCATION_EXTRA) or c:IsFaceupEx()) and c:IsCode(53589300,68231287,5914858)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.GetMatchingGroup(s.cfilter,tp,LOCATION_EXTRA+LOCATION_MZONE+LOCATION_GRAVE,0,nil,tp)
@@ -47,7 +47,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.actop(e,tp,eg,ep,ev,re,r,rp)
-	if ep==tp and re:GetHandler():IsSetCard(0x2e0) and re:IsActiveType(TYPE_MONSTER) then
+	if ep==tp and re:GetHandler():IsSetCard(0x1ce) and re:IsActiveType(TYPE_MONSTER) then
 		Duel.SetChainLimit(s.chainlm)
 	end
 end
