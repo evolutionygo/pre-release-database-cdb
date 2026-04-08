@@ -70,7 +70,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			Duel.MoveSequence(tc,SEQ_DECKTOP)
 			Duel.ConfirmDecktop(tp,1)
 			if Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,nil)
-				and Duel.IsExistingMatchingCard(aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil)
+				and Duel.IsExistingMatchingCard(aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,aux.ExceptThisCard(e))
 				and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
 				Duel.BreakEffect()
 				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
