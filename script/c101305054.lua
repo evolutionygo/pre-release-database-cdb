@@ -86,5 +86,5 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.atktg(e,c)
-	return not c:IsType(TYPE_XYZ)
+	return not c:IsType(TYPE_FUSION)
 end
