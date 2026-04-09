@@ -26,7 +26,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local b1=Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil,e,tp)
 	local b2=Duel.IsExistingMatchingCard(s.tgfilter,tp,LOCATION_DECK,0,1,nil)
-	local b3=Duel.IsExistingMatchingCard(s.rmfilter,tp,0,LOCATION_EXTRA,1,nil)
+	local b3=Duel.IsExistingMatchingCard(s.rmfilter,tp,0,LOCATION_EXTRA,3,nil)
 	if chk==0 then return b1 or b2 or b3 end
 	local op=aux.SelectFromOptions(tp,
 			{b1,aux.Stringid(id,1),1},
@@ -66,7 +66,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 		end
 	elseif e:GetLabel()==2 then
-		Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,4))
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_OPERATECARD)
 		local g=Duel.SelectMatchingCard(tp,s.tgfilter,tp,LOCATION_DECK,0,1,1,nil)
 		if g:GetCount()>0 then
 			local tc=g:GetFirst()
@@ -77,10 +77,13 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			end
 		end
 	elseif e:GetLabel()==3 then
-		local g=Duel.GetMatchingGroup(Card.IsFacedown,tp,0,LOCATION_EXTRA,nil):RandomSelect(1-tp,3)
-		Duel.ConfirmCards(tp,g,true)
+		local g=Duel.GetMatchingGroup(Card.IsFacedown,tp,0,LOCATION_EXTRA,nil)
+		if g:GetCount()<3 then return end
+		local cg=g:RandomSelect(1-tp,3)
+		local flag=cg:FilterCount(Card.IsAbleToRemove,nil)>0
+		Duel.ConfirmCards(tp,cg,flag)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-		local sg=g:FilterSelect(tp,Card.IsAbleToRemove,1,1,nil)
+		local sg=cg:FilterSelect(tp,Card.IsAbleToRemove,1,1,nil)
 		Duel.Remove(sg,POS_FACEUP,REASON_EFFECT)
 		Duel.ShuffleExtra(1-tp)
 	end

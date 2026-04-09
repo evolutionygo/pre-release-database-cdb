@@ -1,4 +1,4 @@
---魔法名-『新しき世界の始まり』
+--魔法名－「新しき世界の始まり」
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--Activate
@@ -28,7 +28,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function s.cfilter(c)
-	return (c:IsSetCard(0x2e1) and c:IsType(TYPE_MONSTER) or c:IsType(TYPE_FUSION)) and c:IsAbleToRemoveAsCost()
+	return (c:IsSetCard(0x2e1) or c:IsType(TYPE_FUSION)) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost()
 end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_GRAVE,0,1,nil) end
@@ -74,12 +74,12 @@ function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=e:GetLabelObject()
 	Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)
 end
-function s.cfilter(c)
+function s.rmfilter(c)
 	return c:IsFaceupEx() and (not c:IsPreviousLocation(LOCATION_ONFIELD) or c:IsPreviousLocation(LOCATION_MZONE))
 		and c:IsType(TYPE_MONSTER)
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(s.cfilter,1,nil)
+	return eg:IsExists(s.rmfilter,1,nil)
 end
 function s.spfilter2(c,e,tp)
 	return c:IsFaceupEx() and c:IsSetCard(0xf4) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
