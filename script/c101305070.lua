@@ -51,7 +51,8 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.cfilter(c)
-	return c:IsFaceup() and (not c:IsPreviousLocation(LOCATION_ONFIELD) and c:IsType(TYPE_MONSTER) or c:IsPreviousLocation(LOCATION_MZONE)) and c:IsPreviousPosition(POS_FACEUP)
+	return c:IsFaceupEx() and (not c:IsPreviousLocation(LOCATION_ONFIELD) or c:IsPreviousLocation(LOCATION_MZONE) and c:IsPreviousPosition(POS_FACEUP))
+		and c:IsType(TYPE_MONSTER)
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.cfilter,1,nil)

@@ -38,7 +38,7 @@ function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 end
-function s.filter(c)
+function s.sumfilter(c)
 	return c:IsRace(RACE_SPELLCASTER) and c:IsSummonable(true,nil)
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
