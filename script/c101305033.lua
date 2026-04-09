@@ -52,8 +52,8 @@ function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 	local sg=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(Card.IsAbleToRemove),tp,LOCATION_ONFIELD+LOCATION_GRAVE,LOCATION_ONFIELD+LOCATION_GRAVE,1,ct,nil)
 	if #sg>0 then
 		Duel.HintSelection(sg)
-		Duel.Remove(sg,POS_FACEUP,REASON_EFFECT)
-		if res==1 and Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,0,LOCATION_EXTRA,1,nil)
+		if Duel.Remove(sg,POS_FACEUP,REASON_EFFECT)~=0
+			and res==1 and Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,0,LOCATION_EXTRA,1,nil)
 			and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 			Duel.BreakEffect()
 			local g=Duel.GetFieldGroup(tp,0,LOCATION_EXTRA)
