@@ -19,11 +19,14 @@ end
 function s.tgfilter(c)
 	return c:IsSetCard(0x2e1) and c:IsType(TYPE_MONSTER) and (c:IsAbleToGrave() or c:IsAbleToRemove())
 end
+function s.rmfilter(c)
+	return c:IsFacedown() and c:IsAbleToRemove()
+end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local b1=Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil,e,tp)
 	local b2=Duel.IsExistingMatchingCard(s.tgfilter,tp,LOCATION_DECK,0,1,nil)
-	local b3=Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,0,LOCATION_EXTRA,1,nil)
+	local b3=Duel.IsExistingMatchingCard(s.rmfilter,tp,0,LOCATION_EXTRA,1,nil)
 	if chk==0 then return b1 or b2 or b3 end
 	local op=aux.SelectFromOptions(tp,
 			{b1,aux.Stringid(id,1),1},
@@ -74,7 +77,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			end
 		end
 	elseif e:GetLabel()==3 then
-		local g=Duel.GetFieldGroup(tp,0,LOCATION_EXTRA):RandomSelect(1-tp,3)
+		local g=Duel.GetMatchingGroup(Card.IsFacedown,tp,0,LOCATION_EXTRA,nil):RandomSelect(1-tp,3)
 		Duel.ConfirmCards(tp,g,true)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 		local sg=g:FilterSelect(tp,Card.IsAbleToRemove,1,1,nil)
