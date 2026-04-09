@@ -28,7 +28,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function s.cfilter(c)
-	return (c:IsSetCard(0x2e1) or c:IsType(TYPE_FUSION)) and c:IsAbleToRemoveAsCost()
+	return (c:IsSetCard(0x2e1) and c:IsType(TYPE_MONSTER) or c:IsType(TYPE_FUSION)) and c:IsAbleToRemoveAsCost()
 end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_GRAVE,0,1,nil) end
@@ -37,7 +37,7 @@ function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
 function s.spfilter(c,e,tp)
-	return c:IsSetCard(0xf4) and c:IsType(TYPE_FUSION) and c:IsLevelBelow(7)
+	return c:IsSetCard(0xf4) and c:IsType(TYPE_FUSION)
 		and c:IsCanBeSpecialSummoned(e,0,tp,true,false) and Duel.GetLocationCountFromEx(tp,tp,nil,c)>0
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
