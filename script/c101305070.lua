@@ -75,7 +75,7 @@ function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)
 end
 function s.cfilter(c)
-	return c:IsFaceupEx() and (not c:IsPreviousLocation(LOCATION_ONFIELD) or c:IsPreviousLocation(LOCATION_MZONE) and c:IsPreviousPosition(POS_FACEUP))
+	return c:IsFaceupEx() and (not c:IsPreviousLocation(LOCATION_ONFIELD) or c:IsPreviousLocation(LOCATION_MZONE))
 		and c:IsType(TYPE_MONSTER)
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
