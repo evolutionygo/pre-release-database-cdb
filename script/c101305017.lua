@@ -55,13 +55,12 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.setfilter(c)
-	return (c:IsCode(74063034) or aux.IsCodeListed(c,74063034)) and c:IsType(TYPE_SPELL) and c:IsSSetable()
+	return (c:IsCode(74063034) or aux.IsCodeListed(c,74063034) and c:IsType(TYPE_SPELL)) and c:IsSSetable()
 end
 function s.settg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.setfilter,tp,LOCATION_DECK,0,1,nil) end
 end
 function s.setop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SET)
 	local g=Duel.SelectMatchingCard(tp,s.setfilter,tp,LOCATION_DECK,0,1,1,nil)
 	local tc=g:GetFirst()
@@ -70,12 +69,12 @@ function s.setop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.discon(e,tp,eg,ep,ev,re,r,rp)
-	if not Duel.IsChainDisablable(ev) then return false end
+	if not Duel.IsChainDisablable(ev) or not aux.nbcon(tp,re) then return false end
 	local te,p=Duel.GetChainInfo(ev-1,CHAININFO_TRIGGERING_EFFECT,CHAININFO_TRIGGERING_PLAYER)
 	return te and te:IsActiveType(TYPE_FUSION) and p==tp and rp==1-tp
 end
 function s.distg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return aux.nbcon(tp,re) and e:GetHandler():IsAbleToRemove() end
+	if chk==0 then return e:GetHandler():IsAbleToRemove() end
 	Duel.SetOperationInfo(0,CATEGORY_DISABLE,eg,1,0,0)
 	if re:GetHandler():IsRelateToEffect(re) then
 		local g=eg:Clone()

@@ -69,14 +69,15 @@ end
 function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if not tc:IsRelateToChain() then return end
+	if not tc:IsRelateToChain() or not tc:IsFaceup() then return end
 	local g=Duel.GetMatchingGroup(Card.IsFaceup,tp,0,LOCATION_MZONE,nil)
-	if tc:IsFaceup() and g:GetCount()>0 then
+	if g:GetCount()>0 then
 		local atkd=tc:GetAttack()
 		for sc in aux.Next(g) do
 			local e1=Effect.CreateEffect(c)
 			e1:SetType(EFFECT_TYPE_SINGLE)
 			e1:SetCode(EFFECT_UPDATE_ATTACK)
+			e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 			e1:SetValue(-atkd)
 			e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
 			sc:RegisterEffect(e1)

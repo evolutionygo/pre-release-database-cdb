@@ -53,6 +53,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SUMMON)
 			local tc=Duel.SelectMatchingCard(tp,s.sumfilter,tp,LOCATION_HAND+LOCATION_MZONE,0,1,1,nil):GetFirst()
 			if tc then
+				Duel.ShuffleHand(tp)
 				Duel.Summon(tp,tc,true,nil)
 			end
 		end
@@ -80,7 +81,7 @@ end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToChain() and aux.NecroValleyFilter()(c)
-		and Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP) then
+		and Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)>0 then
 		Duel.AdjustAll()
 		local chkf=tp
 		local mg1=Duel.GetFusionMaterial(tp):Filter(s.filter1,nil,e)

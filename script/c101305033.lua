@@ -4,7 +4,7 @@ function s.initial_effect(c)
 	--fusion material
 	c:EnableReviveLimit()
 	aux.AddFusionProcFunRep2(c,s.ffilter,2,7,true)
-	--rempve
+	--remove
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_REMOVE)
@@ -58,8 +58,8 @@ function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 			local g=Duel.GetFieldGroup(tp,0,LOCATION_EXTRA)
 			Duel.ConfirmCards(tp,g,true)
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-			local sg=g:FilterSelect(tp,Card.IsAbleToRemove,1,3,nil)
-			Duel.Remove(sg,POS_FACEUP,REASON_EFFECT)
+			local rg=g:FilterSelect(tp,Card.IsAbleToRemove,1,3,nil)
+			Duel.Remove(rg,POS_FACEUP,REASON_EFFECT)
 			Duel.ShuffleExtra(1-tp)
 		end
 	end
@@ -81,6 +81,7 @@ function s.attop(e,tp,eg,ep,ev,re,r,rp)
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_CHANGE_ATTRIBUTE)
+		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 		e1:SetValue(e:GetLabel())
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
 		tc:RegisterEffect(e1)
