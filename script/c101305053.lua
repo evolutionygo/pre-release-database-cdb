@@ -24,9 +24,6 @@ function s.initial_effect(c)
 	e2:SetOperation(s.tdop)
 	c:RegisterEffect(e2)
 end
-function s.mfilter0(c)
-	return c:IsOnField() and c:IsAbleToRemove()
-end
 function s.mfilter1(c,e)
 	return c:IsLocation(LOCATION_ONFIELD) and not c:IsImmuneToEffect(e)
 end
