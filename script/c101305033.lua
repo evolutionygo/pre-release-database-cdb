@@ -4,6 +4,13 @@ function s.initial_effect(c)
 	--fusion material
 	c:EnableReviveLimit()
 	aux.AddFusionProcFunRep2(c,s.ffilter,2,7,true)
+	local e0=Effect.CreateEffect(c)
+	e0:SetType(EFFECT_TYPE_SINGLE)
+	e0:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e0:SetCode(EFFECT_FUSION_MATERIAL)
+	e0:SetCondition(s.FSCondition)
+	e0:SetOperation(s.FSOperation)
+	c:RegisterEffect(e0)
 	--remove
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
@@ -28,8 +35,45 @@ function s.initial_effect(c)
 	e2:SetOperation(s.attop)
 	c:RegisterEffect(e2)
 end
-function s.ffilter(c,fc,sub,mg,sg)
-	return c:IsType(TYPE_FUSION) and (not sg or not sg:IsExists(Card.IsFusionAttribute,1,c,c:GetFusionAttribute()))
+function s.FSFilter(c,fc)
+	return c:IsType(TYPE_FUSION) and c:IsCanBeFusionMaterial(fc)
+end
+function s.FSFilter1(g,fc,gc,tp,chkf)
+	if gc and not g:IsContains(gc) then return false end
+	if g:IsExists(aux.TuneMagicianCheckX,1,nil,g,EFFECT_TUNE_MAGICIAN_F) then return false end
+	if not aux.MustMaterialCheck(g,tp,EFFECT_MUST_BE_FMATERIAL) then return false end
+	if aux.FCheckAdditional and not aux.FCheckAdditional(tp,g,fc)
+		or aux.FGoalCheckAdditional and not aux.FGoalCheckAdditional(tp,g,fc) then return false end
+	return aux.dabcheck(g) and (chkf==PLAYER_NONE or Duel.GetLocationCountFromEx(tp,tp,g,fc)>0)
+end
+function s.FSCondition(e,g,gc,chkf)
+	if g==nil then return aux.MustMaterialCheck(nil,e:GetHandlerPlayer(),EFFECT_MUST_BE_FMATERIAL) end
+	local c=e:GetHandler()
+	local mg=g:Filter(s.FSFilter,nil,c)
+	local tp=e:GetHandlerPlayer()
+	local res=false
+	if gc then
+		if not mg:IsContains(gc) then return false end
+		res=mg:CheckSubGroup(s.FSFilter1,2,99,c,gc,tp,chkf)
+	else
+		res=mg:CheckSubGroup(s.FSFilter1,2,99,c,nil,tp,chkf)
+	end
+	return res
+end
+function s.FSOperation(e,tp,eg,ep,ev,re,r,rp,gc,chkf)
+	local c=e:GetHandler()
+	local mg=eg:Filter(s.FSFilter,nil,c)
+	local g=Group.CreateGroup()
+	while g:GetCount()==0 do
+		if gc then
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
+			g=mg:SelectSubGroup(tp,s.FSFilter1,true,2,99,c,gc,tp,chkf)
+		else
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
+			g=mg:SelectSubGroup(tp,s.FSFilter1,true,2,99,c,nil,tp,chkf)
+		end
+	end
+	Duel.SetFusionMaterial(g)
 end
 function s.rmcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_FUSION)
