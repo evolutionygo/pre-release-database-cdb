@@ -72,8 +72,8 @@ function s.atttg(e,tp,eg,ep,ev,re,r,rp,chk)
 		att=bit.bor(att,(0x7f-tc:GetAttribute()))
 	end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATTRIBUTE)
-	local rc=Duel.AnnounceAttribute(tp,1,att)
-	e:SetLabel(rc)
+	local ratt=Duel.AnnounceAttribute(tp,1,att)
+	e:SetLabel(ratt)
 end
 function s.attop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,aux.ExceptThisCard(e))
