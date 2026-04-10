@@ -32,7 +32,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	if tc then
 		Duel.ConfirmCards(1-tp,tc)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-		local sg=Duel.SelectMatchingCard(tp,s.cfilter,tp,LOCATION_EXTRA,0,1,1,nil,tc)
+		local sg=Duel.SelectMatchingCard(tp,s.cfilter,tp,LOCATION_DECK,0,1,1,nil,tc)
 		local sc=sg:GetFirst()
 		if sc and Duel.Remove(sc,POS_FACEUP,REASON_EFFECT)~=0 and c:IsRelateToChain() then
 			Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
