@@ -38,7 +38,7 @@ end
 function c84523092.descost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local res=Duel.IsPlayerAffectedByEffect(tp,100261028) and e:GetHandler():IsSetCard(0x128)
 	if chk==0 then return Duel.IsExistingMatchingCard(c84523092.costfilter,tp,LOCATION_HAND+LOCATION_SZONE+LOCATION_DECK,0,1,nil,tp,res) end
-	local g=Duel.GetMatchingGroup(c84523092.costfilter,tp,LOCATION_HAND+LOCATION_SZONE+LOCATION_DECK,0,nil,tp)
+	local g=Duel.GetMatchingGroup(c84523092.costfilter,tp,LOCATION_HAND+LOCATION_SZONE+LOCATION_DECK,0,nil,tp,res)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DISCARD)
 	local tc=g:Select(tp,1,1,nil):GetFirst()
 	if not tc:IsLocation(LOCATION_HAND) then
