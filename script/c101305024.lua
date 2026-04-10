@@ -34,8 +34,9 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 		local sg=Duel.SelectMatchingCard(tp,s.cfilter,tp,LOCATION_DECK,0,1,1,nil,tc)
 		local sc=sg:GetFirst()
-		if sc and Duel.Remove(sc,POS_FACEUP,REASON_EFFECT)~=0 and c:IsRelateToChain() then
-			Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
+		if sc and Duel.Remove(sc,POS_FACEUP,REASON_EFFECT)~=0 and c:IsRelateToChain()
+			and Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)~=0 then
+			c:RegisterFlagEffect(0,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id,2))
 			local e1=Effect.CreateEffect(e:GetHandler())
 			e1:SetType(EFFECT_TYPE_SINGLE)
 			e1:SetCode(EFFECT_ADD_FUSION_CODE)
