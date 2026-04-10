@@ -1,7 +1,7 @@
 --ウィッチクラフト・ディストーション
 local s,id,o=GetID()
 function s.initial_effect(c)
-	--While you control a Lv5+ Witchcraft monster, negate and destroy the activation of a monster effect, Spell, or Trap
+	--negate
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_NEGATE+CATEGORY_DESTROY)
@@ -13,7 +13,7 @@ function s.initial_effect(c)
 	e1:SetTarget(s.ngtg)
 	e1:SetOperation(s.ngop)
 	c:RegisterEffect(e1)
-	--If not sent to GY this turn, banish from GY to add 1 Lv5+ Spellcaster from Deck to hand, then discard 1
+	--search
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetCategory(CATEGORY_TOHAND+CATEGORY_HANDES)
@@ -29,7 +29,7 @@ function s.initial_effect(c)
 end
 function s.mfilter(c,tp)
 	return c:IsSetCard(0x128) and c:IsType(TYPE_MONSTER) and c:IsLevelAbove(5)
-		and c:IsControler(tp) and c:IsFaceup()
+		and c:IsFaceup()
 end
 function s.ngcon(e,tp,eg,ep,ev,re,r,rp)
 	return (re:IsHasType(EFFECT_TYPE_ACTIVATE) or re:IsActiveType(TYPE_MONSTER))

@@ -7,6 +7,7 @@ function s.initial_effect(c)
 	e1:SetCategory(CATEGORY_DESTROY+CATEGORY_SPECIAL_SUMMON+CATEGORY_FUSION_SUMMON+CATEGORY_TODECK+CATEGORY_GRAVE_ACTION)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
+	e1:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_END_PHASE)
 	e1:SetCountLimit(1,id)
 	e1:SetTarget(s.target)
 	e1:SetOperation(s.activate)
@@ -27,9 +28,6 @@ end
 function s.cfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0x128)
 end
-function s.filter0(c)
-	return c:IsFaceupEx() and c:IsRace(RACE_SPELLCASTER) and c:IsAbleToDeck()
-end
 function s.filter1(c,e)
 	return c:IsFaceupEx() and c:IsRace(RACE_SPELLCASTER) and not c:IsImmuneToEffect(e) and c:IsAbleToDeck()
 end
@@ -38,11 +36,10 @@ function s.filter2(c,e,tp,m,f,chkf)
 		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) and c:CheckFusionMaterial(m,nil,chkf)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	local ch=Duel.GetCurrentChain()
 	local b1=Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_MZONE,0,1,nil)
 		and Duel.IsExistingMatchingCard(aux.TRUE,tp,0,LOCATION_ONFIELD,1,nil)
 	local chkf=tp
-	local mg1=Duel.GetMatchingGroup(s.filter0,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,nil)
+	local mg1=Duel.GetMatchingGroup(s.filter1,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,nil)
 	local res=Duel.IsExistingMatchingCard(s.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,mg1,nil,chkf)
 	if not res then
 		local ce=Duel.GetChainMaterial(tp)
@@ -84,9 +81,10 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		local g2=Duel.GetMatchingGroup(aux.TRUE,tp,0,LOCATION_ONFIELD,nil)
 		if g1:GetCount()>0 and g2:GetCount()>0 then
 			g1:Merge(g2)
-			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 			local sg=g1:SelectSubGroup(tp,s.gcheck,false,2,2,tp)
 			if sg:GetCount()>0 then
+				Duel.HintSelection(sg)
 				Duel.Destroy(sg,REASON_EFFECT)
 			end
 		end
@@ -109,14 +107,14 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 			local tg=sg:Select(tp,1,1,nil)
 			local tc=tg:GetFirst()
-			if sg1:IsContains(tc) and (sg2==nil or not sg2:IsContains(tc) or not Duel.SelectYesNo(tp,ce:GetDescription())) then
+			if sg1:IsContains(tc) and (sg2==nil or not sg2:IsContains(tc) or ce and not Duel.SelectYesNo(tp,ce:GetDescription())) then
 				local mat1=Duel.SelectFusionMaterial(tp,tc,mg1,nil,chkf)
 				tc:SetMaterial(mat1)
 				Duel.HintSelection(mat1)
 				Duel.SendtoDeck(mat1,nil,SEQ_DECKSHUFFLE,REASON_EFFECT+REASON_MATERIAL+REASON_FUSION)
 				Duel.BreakEffect()
 				Duel.SpecialSummon(tc,SUMMON_TYPE_FUSION,tp,tp,false,false,POS_FACEUP)
-			else
+			elseif ce then
 				local mat2=Duel.SelectFusionMaterial(tp,tc,mg2,nil,chkf)
 				local fop=ce:GetOperation()
 				fop(ce,e,tp,tc,mat2)

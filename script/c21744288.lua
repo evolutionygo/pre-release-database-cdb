@@ -37,7 +37,7 @@ function c21744288.costfilter(c,tp,res)
 		and c:IsLocation(LOCATION_DECK) and res
 end
 function c21744288.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	local res=Duel.IsPlayerAffectedByEffect(tp,100261028)
+	local res=Duel.IsPlayerAffectedByEffect(tp,100261028) and e:GetHandler():IsSetCard(0x128)
 	if chk==0 then return e:GetHandler():IsReleasable()
 		and Duel.IsExistingMatchingCard(c21744288.costfilter,tp,LOCATION_HAND+LOCATION_SZONE+LOCATION_DECK,0,1,nil,tp,res) end
 	local g=Duel.GetMatchingGroup(c21744288.costfilter,tp,LOCATION_HAND+LOCATION_SZONE+LOCATION_DECK,0,nil,tp,res)

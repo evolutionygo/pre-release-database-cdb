@@ -39,8 +39,9 @@ end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if tc and tc:IsRelateToEffect(e) and Duel.SendtoHand(tc,nil,REASON_EFFECT)>0 and tc:IsLocation(LOCATION_HAND)
-		and c:IsRelateToEffect(e) then
+	if tc and tc:IsRelateToChain() and aux.NecroValleyFilter()(tc)
+		and Duel.SendtoHand(tc,nil,REASON_EFFECT)>0 and tc:IsLocation(LOCATION_HAND)
+		and tc:IsRelateToChain() then
 		Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
 	end
 	local e1=Effect.CreateEffect(c)
