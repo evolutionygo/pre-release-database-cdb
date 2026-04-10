@@ -64,9 +64,9 @@ end
 function s.FSOperation(e,tp,eg,ep,ev,re,r,rp,gc,chkf)
 	local c=e:GetHandler()
 	local mg=eg:Filter(s.FSFilter,nil,c)
-	local g=Group.CreateGroup()
 	aux.GCheckAdditional=aux.dabcheck
-	while g:GetCount()==0 do
+	local g=nil
+	while not g do
 		if gc then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
 			g=mg:SelectSubGroup(tp,s.FSFilter1,true,2,99,c,gc,tp,chkf)
