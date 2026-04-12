@@ -53,7 +53,10 @@ function s.FSCondition(e,g,gc,chkf)
 	local res=false
 	aux.GCheckAdditional=aux.dabcheck
 	if gc then
-		if not mg:IsContains(gc) then return false end
+		if not mg:IsContains(gc) then
+			aux.GCheckAdditional=nil
+			return false
+		end
 		res=mg:CheckSubGroup(s.FSFilter1,2,99,c,gc,tp,chkf)
 	else
 		res=mg:CheckSubGroup(s.FSFilter1,2,99,c,nil,tp,chkf)
