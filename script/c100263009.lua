@@ -3,7 +3,6 @@ local s,id,o=GetID()
 function s.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_SUMMON+CATEGORY_MSET)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
@@ -19,9 +18,8 @@ function s.initial_effect(c)
 	e2:SetValue(SUMMON_TYPE_NORMAL)
 	c:RegisterEffect(e2)
 	e1:SetLabelObject(e2)
-	--search & summon
+	--token
 	local e3=Effect.CreateEffect(c)
-	e3:SetDescription(aux.Stringid(id,1))
 	e3:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND+CATEGORY_SUMMON+CATEGORY_MSET)
 	e3:SetType(EFFECT_TYPE_IGNITION)
 	e3:SetRange(LOCATION_GRAVE)
@@ -68,8 +66,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.thfilter2(c,e,tp)
 	local minc,maxc=c:GetTributeRequirement()
-	return c:IsLevel(5) and (c:IsSummonable(true,nil) or c:IsMSetable(true,nil)) and c:IsSummonableCard()
-		and c:IsAbleToHand() and s.sunthfilter(c,e,tp,minc,maxc) and Duel.IsPlayerCanSummon(tp,SUMMON_TYPE_ADVANCE,c)
+	return c:IsLevel(5) and (c:IsSummonable(true,nil) or c:IsMSetable(true,nil)) and c:IsSummonableCard() and c:IsAbleToHand() and s.sunthfilter(c,e,tp,minc,maxc) and Duel.IsPlayerCanSummon(tp,SUMMON_TYPE_ADVANCE,c)
 end
 function s.sunthfilter(c,e,tp,minc,maxc)
 	local e1=nil
@@ -85,24 +82,30 @@ function s.sunthfilter(c,e,tp,minc,maxc)
 		local te=c:IsHasEffect(EFFECT_TRIBUTE_LIMIT,tp)
 		local ev=te:GetValue()
 		if not Duel.IsExistingMatchingCard(s.sunthfilter2,tp,LOCATION_MZONE,0,1,nil,e,ev) then
+			if e1 then e1:Reset() end
 			return false
 		end
 	end
 	if c:IsHasEffect(EFFECT_LIMIT_SUMMON_PROC,c:GetControler()) then
 		local tte=c:IsHasEffect(EFFECT_LIMIT_SUMMON_PROC,c:GetControler())
 		local ec=tte:GetCondition()
-		if not ec(e,c,0) then return false end
+		if not ec(e,c,0) then
+			if e1 then e1:Reset() end
+			return false
+		end
 	end
 	if c:IsHasEffect(EFFECT_SUMMON_PROC,c:GetControler()) then
 		local tte=c:IsHasEffect(EFFECT_SUMMON_PROC,c:GetControler())
 		local ec=tte:GetCondition()
 		if ec(e,c,0) then
+			if e1 then e1:Reset() end
 			return true
 		end
 	else
 		if not Duel.CheckTribute(c,minc,maxc) then return false end
 	end
 	if c:IsHasEffect(EFFECT_CANNOT_SUMMON,c:GetControler()) then
+		if e1 then e1:Reset() end
 		return false
 	end
 	if e1 then e1:Reset() end
