@@ -25,7 +25,7 @@ function s.initial_effect(c)
 	e2:SetCategory(CATEGORY_ATKCHANGE)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_MZONE)
-	e2:SetCountLimit(1,id)
+	e2:SetCountLimit(1)
 	e2:SetCost(s.datcost)
 	e2:SetTarget(s.dattg)
 	e2:SetOperation(s.datop)
@@ -52,9 +52,10 @@ end
 function s.spop(e,tp,eg,ep,ev,re,r,rp,c)
 	local g=e:GetLabelObject()
 	Duel.Release(g,REASON_SPSUMMON)
+	g:DeleteGroup()
 end
 function s.costfilter(c)
-	return (c:IsSetCard(0xe9) and c:IsType(TYPE_MONSTER) or c:IsCode(id)) and c:IsAbleToGraveAsCost()
+	return c:IsSetCard(0xe9,0x2066) and c:IsType(TYPE_MONSTER) and not c:IsCode(id) and c:IsAbleToGraveAsCost()
 end
 function s.datcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.costfilter,tp,LOCATION_DECK,0,1,nil) end
@@ -68,7 +69,7 @@ function s.dattg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.datop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) and c:IsFaceup() then
+	if c:IsRelateToChain() and c:IsFaceup() then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_SET_BASE_ATTACK)

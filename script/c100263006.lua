@@ -75,7 +75,7 @@ function s.cfilter(c)
 end
 function s.tdtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local ct=Duel.GetMatchingGroupCount(aux.TRUE,tp,0,LOCATION_ONFIELD,nil)
-	if chk==0 then return ct>0 and Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>ct
+	if chk==0 then return Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>ct
 		and Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_DECK,0,1,nil) end
 end
 function s.gcheck(g)

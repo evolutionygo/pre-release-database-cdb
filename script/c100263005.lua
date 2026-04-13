@@ -27,9 +27,8 @@ function s.initial_effect(c)
 	e3:SetDescription(aux.Stringid(id,2))
 	e3:SetCategory(CATEGORY_DAMAGE)
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e3:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DELAY)
+	e3:SetProperty(EFFECT_FLAG_DELAY)
 	e3:SetCode(EVENT_DESTROYED)
-	e3:SetCountLimit(1,id+o)
 	e3:SetCondition(s.damcon)
 	e3:SetTarget(s.damtg)
 	e3:SetOperation(s.damop)
@@ -99,10 +98,9 @@ function s.atktg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetTargetCard(e:GetHandler():GetBattleTarget())
 end
 function s.atkop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if c:IsRelateToChain() and c:IsFaceup() and tc:IsRelateToChain() and tc:IsFaceup() and tc:GetAttack()>0 then
-		local e1=Effect.CreateEffect(c)
+	if tc:IsRelateToChain() and tc:IsFaceup() and tc:IsControler(1-tp) and tc:GetAttack()>0 then
+		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_SET_ATTACK_FINAL)
 		e1:SetValue(0)
@@ -112,7 +110,7 @@ function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.damcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	return (c:IsReason(REASON_BATTLE) or rp==1-tp) and c:IsPreviousControler(tp)
+	return rp==1-tp and c:IsPreviousControler(tp)
 end
 function s.damtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
