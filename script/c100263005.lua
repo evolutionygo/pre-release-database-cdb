@@ -24,6 +24,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 	--damage
 	local e3=Effect.CreateEffect(c)
+	e3:SetDescription(aux.Stringid(id,2))
 	e3:SetCategory(CATEGORY_DAMAGE)
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e3:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DELAY)
@@ -64,9 +65,9 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		local op=0
 		if b1 or b2 then
 			op=aux.SelectFromOptions(tp,
-				{true,aux.Stringid(id,1),0},
-				{b1,aux.Stringid(id,2),1},
-				{b2,aux.Stringid(id,3),2})
+				{true,aux.Stringid(id,3),0},
+				{b1,aux.Stringid(id,4),1},
+				{b2,aux.Stringid(id,5),2})
 		end
 		if op~=0 then
 			Duel.BreakEffect()
