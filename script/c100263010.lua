@@ -1,8 +1,10 @@
 --Ｄ－バースト
 local s,id,o=GetID()
 function s.initial_effect(c)
+	aux.AddCodeList(c,17132130)
 	--Activate
 	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_DESTROY+CATEGORY_DRAW+CATEGORY_SPECIAL_SUMMON+CATEGORY_GRAVE_SPSUMMON)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
@@ -27,7 +29,7 @@ function s.desfilter(c)
 	return c:IsFaceup() and c:IsType(TYPE_SPELL)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_ONFIELD) and chkc:IsControler(tp) 
+	if chkc then return chkc:IsLocation(LOCATION_ONFIELD) and chkc:IsControler(tp)
 		and s.desfilter(chkc) and chkc~=e:GetHandler() end
 	if chk==0 then return Duel.IsPlayerCanDraw(tp,1)
 		and Duel.IsExistingTarget(s.desfilter,tp,LOCATION_ONFIELD,0,1,e:GetHandler()) end
@@ -45,9 +47,9 @@ function s.spfilter(c,e,tp)
 	return c:IsFaceupEx() and c:IsSetCard(0xc008) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
-	local g,p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
-	g=g:Filter(Card.IsRelateToChain,nil)
-	if g:GetCount()>0 and Duel.Destroy(g,REASON_EFFECT)>0
+	local dg,p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
+	dg=dg:Filter(Card.IsRelateToChain,nil)
+	if dg:GetCount()>0 and Duel.Destroy(dg,REASON_EFFECT)>0
 		and Duel.Draw(p,d,REASON_EFFECT)~=0
 		and Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_MZONE,0,1,nil)
 		and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
@@ -63,7 +65,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.atkcon(e,tp,eg,ep,ev,re,r,rp)
 	local at=Duel.GetAttacker()
-	return (at:GetEquipCount()>0 or at:IsSetCard(0xc008)) and at:IsChainAttackable()
+	return (at:GetEquipCount()>0 or at:IsCode(17132130)) and at:IsChainAttackable()
 end
 function s.atktg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end

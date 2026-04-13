@@ -3,6 +3,7 @@ local s,id,o=GetID()
 function s.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_SUMMON+CATEGORY_MSET)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
@@ -18,8 +19,9 @@ function s.initial_effect(c)
 	e2:SetValue(SUMMON_TYPE_NORMAL)
 	c:RegisterEffect(e2)
 	e1:SetLabelObject(e2)
-	--token
+	--search & summon
 	local e3=Effect.CreateEffect(c)
+	e3:SetDescription(aux.Stringid(id,1))
 	e3:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND+CATEGORY_SUMMON+CATEGORY_MSET)
 	e3:SetType(EFFECT_TYPE_IGNITION)
 	e3:SetRange(LOCATION_GRAVE)
@@ -66,7 +68,8 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.thfilter2(c,e,tp)
 	local minc,maxc=c:GetTributeRequirement()
-	return c:IsLevel(5) and (c:IsSummonable(true,nil) or c:IsMSetable(true,nil)) and c:IsSummonableCard() and c:IsAbleToHand() and s.sunthfilter(c,e,tp,minc,maxc) and Duel.IsPlayerCanSummon(tp,SUMMON_TYPE_ADVANCE,c)
+	return c:IsLevel(5) and (c:IsSummonable(true,nil) or c:IsMSetable(true,nil)) and c:IsSummonableCard()
+		and c:IsAbleToHand() and s.sunthfilter(c,e,tp,minc,maxc) and Duel.IsPlayerCanSummon(tp,SUMMON_TYPE_ADVANCE,c)
 end
 function s.sunthfilter(c,e,tp,minc,maxc)
 	local e1=nil
