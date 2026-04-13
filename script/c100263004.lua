@@ -50,9 +50,8 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,c)
 	else return false end
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp,c)
-	local g=e:GetLabelObject()
-	Duel.Release(g,REASON_SPSUMMON)
-	g:DeleteGroup()
+	local rc=e:GetLabelObject()
+	Duel.Release(rc,REASON_SPSUMMON)
 end
 function s.costfilter(c)
 	return c:IsSetCard(0xe9,0x2066) and c:IsType(TYPE_MONSTER) and not c:IsCode(id) and c:IsAbleToGraveAsCost()
