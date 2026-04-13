@@ -45,6 +45,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_HAND,0,1,1,nil,e,tp)
 	if g:GetCount()>0 then
+		Duel.ShuffleHand(tp)
 		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 	end
 end
@@ -53,7 +54,6 @@ function s.cointg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_COIN,nil,0,tp,1)
 end
 function s.coinop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
 	local res=-1
 	if Duel.IsPlayerAffectedByEffect(tp,73206827) then
 		local b1=Duel.IsExistingMatchingCard(aux.TRUE,tp,LOCATION_MZONE,0,1,nil)
@@ -78,15 +78,21 @@ function s.coinop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 		local g=Duel.SelectMatchingCard(tp,aux.TRUE,tp,LOCATION_MZONE,0,1,1,nil)
 		local tc=g:GetFirst()
-		if tc and Duel.Destroy(tc,REASON_EFFECT)~=0 and tc:GetBaseAttack()>0 then
-			Duel.Damage(tp,tc:GetBaseAttack(),REASON_EFFECT)
+		if tc then
+			Duel.HintSelection(g)
+			if Duel.Destroy(tc,REASON_EFFECT)~=0 and tc:GetTextAttack()>0 then
+				Duel.Damage(tp,tc:GetTextAttack(),REASON_EFFECT)
+			end
 		end
 	elseif res==0 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 		local g=Duel.SelectMatchingCard(tp,aux.TRUE,tp,0,LOCATION_MZONE,1,1,nil)
 		local tc=g:GetFirst()
-		if tc and Duel.Destroy(tc,REASON_EFFECT)~=0 and tc:GetBaseAttack()>0 then
-			Duel.Damage(1-tp,tc:GetBaseAttack(),REASON_EFFECT)
+		if tc then
+			Duel.HintSelection(g)
+			if Duel.Destroy(tc,REASON_EFFECT)~=0 and tc:GetTextAttack()>0 then
+				Duel.Damage(1-tp,tc:GetTextAttack(),REASON_EFFECT)
+			end
 		end
 	end
 end
