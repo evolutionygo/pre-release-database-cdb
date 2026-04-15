@@ -3,6 +3,7 @@ local s,id,o=GetID()
 function s.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
@@ -25,7 +26,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function s.cfilter(c,tp)
-	return c:IsType(TYPE_RITUAL) and c:IsType(TYPE_SPELL) and not c:IsPublic()
+	return c:IsAllTypes(TYPE_RITUAL+TYPE_SPELL) and not c:IsPublic()
 		and Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil,c)
 end
 function s.thfilter(c,ec)
@@ -49,7 +50,8 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.thcfilter(c,tp)
-	return c:IsPreviousControler(tp) and c:IsPreviousLocation(LOCATION_MZONE) and c:IsPreviousPosition(POS_FACEUP) and c:GetPreviousTypeOnField()&TYPE_RITUAL~=0 and c:IsReason(REASON_EFFECT)
+	return c:IsPreviousControler(tp) and c:IsPreviousLocation(LOCATION_MZONE)
+		and c:IsPreviousPosition(POS_FACEUP) and c:GetPreviousTypeOnField()&TYPE_RITUAL~=0 and c:IsReason(REASON_EFFECT)
 end
 function s.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.thcfilter,1,nil,tp)
