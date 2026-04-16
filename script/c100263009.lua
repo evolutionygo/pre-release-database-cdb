@@ -34,11 +34,12 @@ function s.initial_effect(c)
 end
 function s.ntcon(e,c,minc)
 	if c==nil then return true end
-	return minc==0 and Duel.CheckTribute(c,0)
+	return minc==0 and Duel.CheckTribute(c,0) and c:IsLocation(LOCATION_HAND)
+		and Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
 end
 function s.sumfilter(c,res,se)
 	return (c:IsSummonable(true,nil) or c:IsMSetable(true,nil))
-		or (res and c:IsLevelAbove(5) and (c:IsSummonable(false,se) or c:IsMSetable(false,se)))
+		or (res and c:IsLevelAbove(5) and c:IsSummonable(false,se))
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local res=Duel.IsExistingMatchingCard(aux.TRUE,tp,0,LOCATION_MZONE,1,nil)
@@ -54,14 +55,15 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=g:GetFirst()
 	if tc then
 		local ne=nil
-		if (res and tc:IsLevelAbove(5)
-			and (tc:IsSummonable(false,se) or tc:IsMSetable(false,se)))
-			and not (tc:IsSummonable(true,nil) or tc:IsMSetable(true,nil))
-			or Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
+		if (res and tc:IsLevelAbove(5) and tc:IsSummonable(false,se)
+			and (not (tc:IsSummonable(true,nil) or tc:IsMSetable(true,nil))
+				or Duel.SelectYesNo(tp,aux.Stringid(id,2)))) then
 			ne=se
 		end
-		if tc:IsSummonable(true,ne) and (not tc:IsMSetable(true,ne)
-			or Duel.SelectPosition(tp,tc,POS_FACEUP_ATTACK+POS_FACEDOWN_DEFENSE)==POS_FACEUP_ATTACK) then
+		if tc:IsSummonable(true,ne) and
+			(ne==se
+				or not tc:IsMSetable(true,ne)
+				or Duel.SelectPosition(tp,tc,POS_FACEUP_ATTACK+POS_FACEDOWN_DEFENSE)==POS_FACEUP_ATTACK) then
 			Duel.Summon(tp,tc,true,ne)
 		else Duel.MSet(tp,tc,true,ne) end
 	end
