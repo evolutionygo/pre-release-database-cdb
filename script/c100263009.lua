@@ -70,7 +70,9 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.thfilter2(c,e,tp)
 	local minc,maxc=c:GetTributeRequirement()
-	return c:IsLevel(5) and (c:IsSummonable(true,nil) or c:IsMSetable(true,nil)) and c:IsSummonableCard() and c:IsAbleToHand() and s.sunthfilter(c,e,tp,minc,maxc) and Duel.IsPlayerCanSummon(tp,SUMMON_TYPE_ADVANCE,c)
+	return c:IsLevelAbove(5) and (c:IsSummonable(true,nil) or c:IsMSetable(true,nil))
+		and c:IsSummonableCard() and c:IsAbleToHand() and s.sunthfilter(c,e,tp,minc,maxc)
+		and Duel.IsPlayerCanSummon(tp,SUMMON_TYPE_ADVANCE,c)
 end
 function s.sunthfilter(c,e,tp,minc,maxc)
 	local e1=nil
@@ -140,7 +142,7 @@ function s.sunthfilter2(c,e,ev)
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter2,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil,e,tp) end
-	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK+LOCATION_GRAVE)
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
