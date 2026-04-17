@@ -61,7 +61,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.atkval(e,c)
-	return c:GetOverlayGroup():GetSum(Card.GetAttack)+c:GetOverlayGroup():GetSum(Card.GetDefense)
+	return c:GetOverlayGroup():Filter(Card.IsSetCard,nil,0x146):GetSum(Card.GetAttack)+c:GetOverlayGroup():Filter(Card.IsSetCard,nil,0x146):GetSum(Card.GetDefense)
 end
 function s.thcost2(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,5,REASON_COST) end
