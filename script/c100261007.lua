@@ -34,7 +34,7 @@ function s.picon(e)
 	return Duel.IsExistingMatchingCard(s.cfilter,e:GetHandlerPlayer(),LOCATION_ONFIELD+LOCATION_GRAVE,0,1,nil)
 end
 function s.cfilter2(c)
-	return c:IsFaceupEx() and c:IsSetCard(0x62) and c:IsType(TYPE_TOON)
+	return c:IsFaceupEx() and c:IsType(TYPE_TOON)
 end
 function s.cfilter3(c)
 	return c:IsFaceupEx() and c:IsSetCard(0x62) and c:IsType(TYPE_SPELL)

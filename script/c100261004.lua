@@ -23,6 +23,7 @@ end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsDiscardable() end
 	Duel.SendtoGrave(e:GetHandler(),REASON_COST+REASON_DISCARD)
+	Duel.SetTargetCard(e:GetHandler())
 end
 function s.tffilter(c,tp)
 	return c:IsCode(100261007)
@@ -35,7 +36,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local b1=Duel.GetLocationCount(tp,LOCATION_SZONE)>0
 		and Duel.IsExistingMatchingCard(s.tffilter,tp,LOCATION_HAND+LOCATION_DECK,0,1,nil,tp)
 		and (not e:IsCostChecked() or Duel.GetFlagEffect(tp,id)==0)
-	local b2=Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_GRAVE,0,1,nil)
+	local b2=Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_GRAVE,0,1,e:GetHandler())
 		and (not e:IsCostChecked() or Duel.GetFlagEffect(tp,id+o)==0)
 	if chk==0 then return b1 or b2 end
 	local op=0
@@ -68,7 +69,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 		end
 	elseif e:GetLabel()==2 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-		local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.thfilter),tp,LOCATION_GRAVE,0,1,1,nil)
+		local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.thfilter),tp,LOCATION_GRAVE,0,1,1,aux.ExceptThisCard(e))
 		local tc=g:GetFirst()
 		if tc then
 			Duel.SendtoHand(g,nil,REASON_EFFECT)
