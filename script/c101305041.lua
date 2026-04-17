@@ -53,15 +53,14 @@ function s.filter(c)
 	return Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE,PLAYER_NONE,0)>0
 end
 function s.zonetg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_MZONE)and s.chkfilter(chkc) end
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and s.filter(chkc) end
 	if chk==0 then return Duel.IsExistingTarget(s.filter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,1))
-	local g=Duel.SelectTarget(tp,s.filter,tp,LOCATION_MZONE,0,1,1,nil,tp)
+	local g=Duel.SelectTarget(tp,s.filter,tp,LOCATION_MZONE,0,1,1,nil)
 end
 function s.zoneop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if not tc:IsRelateToCard() or Duel.GetLocationCount(tc:GetControler(),LOCATION_MZONE,PLAYER_NONE,0)<=0 then return end
-	Duel.MoveSequence(tc,seq)
+	if not tc:IsRelateToChain() or Duel.GetLocationCount(tc:GetControler(),LOCATION_MZONE,PLAYER_NONE,0)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOZONE)
 	if tc:IsControler(tp) then
 		local fd=Duel.SelectDisableField(tp,1,LOCATION_MZONE,0,0)
