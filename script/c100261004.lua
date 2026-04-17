@@ -32,7 +32,6 @@ function s.thfilter(c,tp)
 	return not c:IsCode(id) and aux.IsCodeListed(c,15259703) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	local ch=Duel.GetCurrentChain()
 	local b1=Duel.GetLocationCount(tp,LOCATION_SZONE)>0
 		and Duel.IsExistingMatchingCard(s.tffilter,tp,LOCATION_HAND+LOCATION_DECK,0,1,nil,tp)
 		and (not e:IsCostChecked() or Duel.GetFlagEffect(tp,id)==0)
