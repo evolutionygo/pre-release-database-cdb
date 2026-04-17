@@ -28,7 +28,7 @@ function s.tffilter(c,tp)
 	return c:IsCode(100261007)
 		and not c:IsForbidden() and c:CheckUniqueOnField(tp)
 end
-function s.thfilter(c,tp)
+function s.thfilter(c)
 	return not c:IsCode(id) and aux.IsCodeListed(c,15259703) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
