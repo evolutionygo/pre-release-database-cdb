@@ -1,7 +1,7 @@
 --闇の眼を持つ幻想師・ノー・フェイス
 local s,id,o=GetID()
 function s.initial_effect(c)
-	aux.AddCodeList(c,15259703)
+	aux.AddCodeList(c,15259703,100261007)
 	--to hand
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_IGNITION)
