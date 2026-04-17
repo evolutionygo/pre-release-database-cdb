@@ -55,7 +55,7 @@ function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 	local sg=g:SelectSubGroup(tp,s.gcheck,false,2,24,tp)
 	Duel.SetTargetCard(sg)
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,sg,sg:GetCount(),0,0)
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,sg,sg:GetCount(),0,0)
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	local sg=Duel.GetTargetsRelateToChain():Filter(Card.IsOnField,nil)
