@@ -58,12 +58,9 @@ function s.ncop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RegisterEffect(e1,tp)
 end
 function s.actop(e,tp,eg,ep,ev,re,r,rp)
-	if ep==tp and re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:GetHandler():IsCode(e:GetLabel()) then
-		Duel.SetChainLimit(s.chainlm)
+	if re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:GetHandler():IsCode(e:GetLabel()) then
+		Duel.SetChainLimit(aux.FALSE)
 	end
-end
-function s.chainlm(e,rp,tp)
-	return tp==rp
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsReason(REASON_EFFECT) and re:IsActiveType(TYPE_SPELL+TYPE_TRAP) and e:GetHandler():IsPreviousLocation(LOCATION_HAND+LOCATION_ONFIELD)
