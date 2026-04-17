@@ -1,4 +1,4 @@
---S-Force シグナス
+--S－Force シグナス
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--to hand
@@ -33,9 +33,10 @@ function s.thfilter(c)
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil) end
+	Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 end
-function s.cfilter(c,tp)
+function s.dmfilter(c,tp)
 	return c:IsType(TYPE_MONSTER) and c:IsControler(1-tp)
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
@@ -44,11 +45,15 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	if g:GetCount()>0 then
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,g)
-		local cg=c:GetColumnGroup()
-		if cg:IsExists(s.cfilter,1,nil,tp) and Duel.IsPlayerCanDraw(tp,1)
-			and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
-			Duel.BreakEffect()
-			Duel.Draw(tp,1,REASON_EFFECT)
+		local c=e:GetHandler()
+		if c:IsRelatedToChain()then
+			local cg=c:GetColumnGroup()
+			if cg:IsExists(s.dmfilter,1,nil,tp) and Duel.IsPlayerCanDraw(tp,1)
+				and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
+				Duel.BreakEffect()
+				Duel.ShuffleDeck(tp)
+				Duel.Draw(tp,1,REASON_EFFECT)
+			end
 		end
 	end
 end
@@ -66,6 +71,7 @@ function s.atkfilter(c)
 end
 function s.atktg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.atkfilter,tp,LOCATION_MZONE,0,1,nil) end
+	Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
 end
 function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
