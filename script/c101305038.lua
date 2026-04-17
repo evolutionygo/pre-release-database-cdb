@@ -49,7 +49,6 @@ function s.thfilter(c)
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil) end
-	Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK+LOCATION_GRAVE)
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
@@ -61,7 +60,8 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.atkval(e,c)
-	return c:GetOverlayGroup():Filter(Card.IsSetCard,nil,0x146):GetSum(Card.GetAttack)+c:GetOverlayGroup():Filter(Card.IsSetCard,nil,0x146):GetSum(Card.GetDefense)
+	local og=c:GetOverlayGroup():Filter(aux.AND(Card.IsSetCard,Card.IsType),nil,0x146,TYPE_MONSTER)
+	return og:GetSum(Card.GetAttack)+og:GetSum(Card.GetDefense)
 end
 function s.thcost2(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,5,REASON_COST) end

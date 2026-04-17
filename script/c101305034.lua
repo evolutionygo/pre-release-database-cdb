@@ -16,7 +16,7 @@ function s.initial_effect(c)
 	e1:SetTarget(s.thtg)
 	e1:SetOperation(s.thop)
 	c:RegisterEffect(e1)
-	--to hand
+	--special summon
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
@@ -42,7 +42,7 @@ function s.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_FUSION)
 end
 function s.thfilter(c,e,tp)
-	return c:IsCanBeEffectTarget(e)
+	return c:IsCanBeEffectTarget(e) and c:IsAbleToHand()
 		and (c:IsControler(1-tp) or c:IsFaceup() and c:IsSetCard(0x146))
 end
 function s.gcheck(g,tp)
@@ -53,7 +53,7 @@ function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end
 	if chk==0 then return g:CheckSubGroup(s.gcheck,2,2,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local sg=g:SelectSubGroup(tp,s.gcheck,false,2,24,tp)
+	local sg=g:SelectSubGroup(tp,s.gcheck,false,2,g:GetCount(),tp)
 	Duel.SetTargetCard(sg)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,sg,sg:GetCount(),0,0)
 end
@@ -84,7 +84,7 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsRelateToChain() and c:IsFaceup() and c:IsLevelAbove(3) then
+	if c:IsRelateToChain() and c:IsFaceup() and c:IsLevelAbove(3) and not c:IsImmuneToEffect(e) then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_UPDATE_LEVEL)

@@ -1,7 +1,7 @@
 --始まりの神 ファーラ
 local s,id,o=GetID()
 function s.initial_effect(c)
-	--not c
+	--chain limit
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetType(EFFECT_TYPE_IGNITION)
@@ -54,7 +54,7 @@ function s.ncop(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetCode(EVENT_CHAINING)
 	e1:SetOperation(s.actop)
 	e1:SetLabel(e:GetLabel())
-	e1:SetReset(RESET_PHASE+PHASE_END)
+	e1:SetReset(RESET_PHASE+PHASE_END,2)
 	Duel.RegisterEffect(e1,tp)
 end
 function s.actop(e,tp,eg,ep,ev,re,r,rp)
@@ -63,7 +63,9 @@ function s.actop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():IsReason(REASON_EFFECT) and re:IsActiveType(TYPE_SPELL+TYPE_TRAP) and e:GetHandler():IsPreviousLocation(LOCATION_HAND+LOCATION_ONFIELD)
+	local c=e:GetHandler()
+	return c:IsReason(REASON_EFFECT) and re:IsActiveType(TYPE_SPELL+TYPE_TRAP)
+		and c:IsPreviousLocation(LOCATION_HAND+LOCATION_ONFIELD)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
@@ -71,7 +73,6 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,c,1,0,0)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	local c=e:GetHandler()
 	if c:IsRelateToChain() and aux.NecroValleyFilter()(c) then
 		Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
@@ -89,12 +90,15 @@ function s.cttg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_CONTROL,nil,1,1-tp,LOCATION_MZONE)
 end
 function s.ctop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONTROL)
-	local g=Duel.SelectMatchingCard(tp,s.tgfilter,tp,0,LOCATION_MZONE,1,1,nil,tp)
+	local g=Duel.GetMatchingGroup(s.tgfilter,tp,0,LOCATION_MZONE,nil,tp)
+	if g:GetCount()==0 then return end
 	local tc=g:GetFirst()
+	if g:GetCount()>1 then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONTROL)
+		tc=g:Select(tp,1,1,nil):GetFirst()
+	end
 	if tc then
-		Duel.HintSelection(g)
+		Duel.HintSelection(Group.FromCards(tc))
 		Duel.GetControl(tc,tp)
 	end
 end
