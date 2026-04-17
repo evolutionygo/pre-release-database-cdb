@@ -36,7 +36,7 @@ function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsAbleToRemove() and chkc:IsLocation(LOCATION_ONFIELD+LOCATION_GRAVE) and chkc:IsControler(1-tp) end
 	if chk==0 then return Duel.IsExistingTarget(Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD+LOCATION_GRAVE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectTarget(tp,Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD+LOCATION_GRAVE,1,1,nil)
+	local g=aux.SelectTargetFromFieldFirst(tp,Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD+LOCATION_GRAVE,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,1,0,0)
 end
 function s.eqfiltter(c)
@@ -50,12 +50,13 @@ function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 		and Duel.GetLocationCount(tp,LOCATION_MZONE,PLAYER_NONE,0)>0
 		and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 		Duel.BreakEffect()
-		Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,3))
-		local tc=Duel.SelectMatchingCard(tp,s.eqfiltter,tp,LOCATION_MZONE,0,1,1,nil):GetFirst()
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_OPERATECARD)
+		local mc=Duel.SelectMatchingCard(tp,s.eqfiltter,tp,LOCATION_MZONE,0,1,1,nil):GetFirst()
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOZONE)
 		local fd=Duel.SelectDisableField(tp,1,LOCATION_MZONE,0,0)
+		Duel.HintSelection(Group.FromCards(mc))
 		Duel.Hint(HINT_ZONE,tp,fd)
 		local seq=math.log(fd,2)
-		Duel.MoveSequence(tc,seq)
+		Duel.MoveSequence(mc,seq)
 	end
 end

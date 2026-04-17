@@ -1,9 +1,9 @@
 --怠慢な壺
 local s,id=GetID()
 function s.initial_effect(c)
-	--Draw cards equal to the number of cards on opponent's field;
-	--if 2+ drawn, return (drawn-1) from hand to bottom of deck in any order
+	--draw
 	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_DRAW+CATEGORY_TODECK)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
@@ -36,6 +36,7 @@ function s.activate(e,tp)
 		Duel.BreakEffect()
 		Duel.Hint(HINT_SELECTMSG,p,HINTMSG_TODECK)
 		local g=Duel.SelectMatchingCard(p,Card.IsAbleToDeck,p,LOCATION_HAND,0,ret,ret,nil)
+		Duel.ShuffleHand(p)
 		aux.PlaceCardsOnDeckBottom(p,g)
 	end
 end

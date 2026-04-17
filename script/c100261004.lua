@@ -2,8 +2,9 @@
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddCodeList(c,15259703,100261007)
-	--to hand
+	--activate
 	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetRange(LOCATION_HAND)
 	e1:SetCost(s.cost)

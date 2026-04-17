@@ -3,6 +3,7 @@ local s,id,o=GetID()
 function s.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
@@ -25,7 +26,7 @@ function s.initial_effect(c)
 	Duel.AddCustomActivityCounter(id,ACTIVITY_SPSUMMON,s.counterfilter)
 end
 function s.counterfilter(c)
-	return c:IsSetCard(0x146)
+	return c:IsSetCard(0x146) and c:IsFaceup()
 end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetCustomActivityCount(id,tp,ACTIVITY_SPSUMMON)==0 end
@@ -55,28 +56,31 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local sg=g:SelectSubGroup(tp,aux.dncheck,false,1,4)
 	if sg and Duel.SendtoHand(sg,nil,REASON_EFFECT)~=0 then
 		Duel.ConfirmCards(1-tp,sg)
-		Duel.ShuffleDeck(tp)
-		Duel.SkipPhase(tp,PHASE_MAIN1,RESET_PHASE+PHASE_END,1)
-		Duel.SkipPhase(tp,PHASE_BATTLE,RESET_PHASE+PHASE_END,1,1)
-		Duel.SkipPhase(tp,PHASE_MAIN2,RESET_PHASE+PHASE_END,1)
-		local e1=Effect.CreateEffect(e:GetHandler())
-		e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-		e1:SetType(EFFECT_TYPE_FIELD)
-		e1:SetCode(EFFECT_CANNOT_BP)
-		e1:SetTargetRange(1,0)
-		e1:SetReset(RESET_PHASE+PHASE_END)
-		Duel.RegisterEffect(e1,tp)
+		if sg:IsExists(Card.IsLocation,1,nil,LOCATION_HAND) then
+			Duel.SkipPhase(tp,PHASE_MAIN1,RESET_PHASE+PHASE_END,1)
+			Duel.SkipPhase(tp,PHASE_BATTLE,RESET_PHASE+PHASE_END,1,1)
+			Duel.SkipPhase(tp,PHASE_MAIN2,RESET_PHASE+PHASE_END,1)
+			local e1=Effect.CreateEffect(e:GetHandler())
+			e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+			e1:SetType(EFFECT_TYPE_FIELD)
+			e1:SetCode(EFFECT_CANNOT_BP)
+			e1:SetTargetRange(1,0)
+			e1:SetReset(RESET_PHASE+PHASE_END)
+			Duel.RegisterEffect(e1,tp)
+		end
 	end
 end
 function s.thfilter2(c)
-	return not c:IsCode(id) and c:IsSetCard(0x146) and c:IsAbleToHand()
+	return not c:IsCode(id) and c:IsSetCard(0x146) and c:IsAbleToHand() and c:IsAbleToDeck()
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	local c=e:GetHandler()
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and s.thfilter2(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(s.thfilter2,tp,LOCATION_GRAVE,0,2,nil) end
+	if chk==0 then return Duel.IsExistingTarget(s.thfilter2,tp,LOCATION_GRAVE,0,2,c) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g=Duel.SelectTarget(tp,s.thfilter2,tp,LOCATION_GRAVE,0,2,2,nil)
+	local g=Duel.SelectTarget(tp,s.thfilter2,tp,LOCATION_GRAVE,0,2,2,c)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_TODECK,g,1,0,0)
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
@@ -84,12 +88,16 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	if tg:GetCount()>0 then
 		if tg:GetCount()==1 then
 			Duel.SendtoHand(tg,nil,REASON_EFFECT)
+			Duel.ConfirmCards(1-tp,tg)
 		else
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-			local sg=tg:FilterSelect(tp,Card.IsAbleToHand,1,1,nil)
+			local sg=tg:Select(tp,1,1,nil)
 			tg:Sub(sg)
 			Duel.SendtoHand(sg,nil,REASON_EFFECT)
-			Duel.SendtoDeck(tg,nil,SEQ_DECKBOTTOM,REASON_EFFECT)
+			Duel.ConfirmCards(1-tp,sg)
+			if sg:IsExist(Card.IsLocation,1,nil,LOCATION_HAND) then
+				Duel.SendtoDeck(tg,nil,SEQ_DECKBOTTOM,REASON_EFFECT)
+			end
 		end
 	end
 end
