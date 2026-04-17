@@ -85,6 +85,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 		if tg:GetCount()==1 then
 			Duel.SendtoHand(tg,nil,REASON_EFFECT)
 		else
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 			local sg=tg:FilterSelect(tp,Card.IsAbleToHand,1,1,nil)
 			tg:Sub(sg)
 			Duel.SendtoHand(sg,nil,REASON_EFFECT)
