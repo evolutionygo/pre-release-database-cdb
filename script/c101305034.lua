@@ -41,7 +41,7 @@ end
 function s.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_FUSION)
 end
-function s.thfilter(c,tp)
+function s.thfilter(c,e,tp)
 	return c:IsCanBeEffectTarget(e)
 		and (c:IsControler(1-tp) or c:IsFaceup() and c:IsSetCard(0x146))
 end
@@ -65,7 +65,7 @@ function s.cfilter(c,sp)
 	return c:IsSummonPlayer(sp)
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(c20003027.cfilter,1,nil,1-tp)
+	return eg:IsExists(s.cfilter,1,nil,1-tp)
 end
 function s.spcon2(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetAttacker():IsControler(1-tp)

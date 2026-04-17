@@ -49,7 +49,7 @@ function s.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if ch>1 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CODE)
 		local g=Group.CreateGroup()
-		for i=1,ev do
+		for i=1,ch-1 do
 			local te=Duel.GetChainInfo(i,CHAININFO_TRIGGERING_EFFECT)
 			g:AddCard(te:GetHandler())
 		end
