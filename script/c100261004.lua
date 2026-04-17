@@ -30,7 +30,7 @@ function s.tffilter(c,tp)
 		and not c:IsForbidden() and c:CheckUniqueOnField(tp)
 end
 function s.thfilter(c)
-	return not c:IsCode(id) and aux.IsCodeListed(c,15259703) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
+	return aux.IsCodeListed(c,15259703) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local b1=Duel.GetLocationCount(tp,LOCATION_SZONE)>0
