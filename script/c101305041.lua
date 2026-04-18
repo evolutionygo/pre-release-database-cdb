@@ -46,7 +46,7 @@ function s.indcon(e)
 	return cg:IsExists(s.cfilter,1,nil,e:GetHandlerPlayer())
 end
 function s.sumlimit(e,c,sump,sumtype,sumpos,targetp,se)
-	return se:IsActiveType(TYPE_MONSTER)
+	return se:IsActiveType(TYPE_MONSTER) and se:IsActivated()
 		and c:IsType(TYPE_MONSTER)
 end
 function s.filter(c)
