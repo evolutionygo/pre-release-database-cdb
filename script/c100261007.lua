@@ -86,7 +86,7 @@ function s.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.disop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if not c:IsRelateToChain() and c:IsFaceup() then
+	if c:IsRelateToChain() and c:IsFaceup() then
 		local ac=Duel.GetChainInfo(0,CHAININFO_TARGET_PARAM)
 		local fid=c:GetFieldID()
 		c:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,1,fid)

@@ -46,7 +46,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,g)
 		local c=e:GetHandler()
-		if c:IsRelatedToChain()then
+		if c:IsRelatedToChain() then
 			local cg=c:GetColumnGroup()
 			if cg:IsExists(s.dmfilter,1,nil,tp) and Duel.IsPlayerCanDraw(tp,1)
 				and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then

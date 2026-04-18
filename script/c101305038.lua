@@ -59,8 +59,11 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.ConfirmCards(1-tp,g)
 	end
 end
+function s.cafilter(c)
+	return c:IsSetCard(0x146) and c:IsType(TYPE_MONSTER)
+end
 function s.atkval(e,c)
-	local og=c:GetOverlayGroup():Filter(aux.AND(Card.IsSetCard,Card.IsType),nil,0x146,TYPE_MONSTER)
+	local og=c:GetOverlayGroup():Filter(s.cafilter,nil)
 	return og:GetSum(Card.GetAttack)+og:GetSum(Card.GetDefense)
 end
 function s.thcost2(e,tp,eg,ep,ev,re,r,rp,chk)
