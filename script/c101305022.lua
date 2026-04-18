@@ -81,9 +81,13 @@ end
 function s.ctcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsPreviousLocation(LOCATION_GRAVE)
 end
+---comment
+---@param c Card
+---@param tp any
+---@return boolean
 function s.tgfilter(c,tp)
-	return c:IsControlerCanBeChanged()
-		and not Duel.IsExistingMatchingCard(Card.IsAttackAbove,tp,0,LOCATION_MZONE,1,nil,c:GetAttack()+1)
+	return c:IsFaceup() and c:IsControlerCanBeChanged()
+		and not Duel.IsExistingMatchingCard(aux.AND(Card.IsFaceup,Card.IsAttackAbove),tp,0,LOCATION_MZONE,1,nil,c:GetAttack()+1)
 end
 function s.cttg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.tgfilter,tp,0,LOCATION_MZONE,1,nil,tp) end

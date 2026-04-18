@@ -77,7 +77,7 @@ function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and s.thfilter2(chkc) end
 	if chk==0 then return Duel.IsExistingTarget(s.thfilter2,tp,LOCATION_GRAVE,0,2,c) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
 	local g=Duel.SelectTarget(tp,s.thfilter2,tp,LOCATION_GRAVE,0,2,2,c)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,1,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_TODECK,g,1,0,0)
@@ -95,7 +95,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 			tg:Sub(sg)
 			Duel.SendtoHand(sg,nil,REASON_EFFECT)
 			Duel.ConfirmCards(1-tp,sg)
-			if sg:IsExist(Card.IsLocation,1,nil,LOCATION_HAND) then
+			if sg:IsExists(Card.IsLocation,1,nil,LOCATION_HAND) then
 				Duel.SendtoDeck(tg,nil,SEQ_DECKBOTTOM,REASON_EFFECT)
 			end
 		end
