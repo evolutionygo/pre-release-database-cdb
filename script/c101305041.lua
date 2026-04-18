@@ -68,14 +68,9 @@ function s.zoneop(e,tp,eg,ep,ev,re,r,rp)
 		local seq=math.log(fd,2)
 		Duel.MoveSequence(tc,seq)
 	else
-		local seq=Duel.SelectDisableField(tp,1,0,LOCATION_MZONE,0)/0x10000
+		local fd=Duel.SelectDisableField(tp,1,0,LOCATION_MZONE,0)
 		Duel.Hint(HINT_ZONE,tp,fd)
-		local nseq=0
-		if seq==1 then nseq=0
-		elseif seq==2 then nseq=1
-		elseif seq==4 then nseq=2
-		elseif seq==8 then nseq=3
-		else nseq=4 end
+		local nseq=math.log(bit.rshift(fd,16),2)
 		Duel.MoveSequence(tc,nseq)
 	end
 end

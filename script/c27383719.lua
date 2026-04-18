@@ -53,10 +53,16 @@ function c27383719.costfilter(c,e,tp)
 end
 function c27383719.descost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c27383719.costfilter,tp,LOCATION_HAND+LOCATION_GRAVE+LOCATION_DECK,0,1,nil,e,tp) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+	local cg=Duel.GetMatchingGroup(c27383719.costfilter,tp,LOCATION_HAND+LOCATION_GRAVE+LOCATION_DECK,0,nil,e,tp)
+	if cg:IsExists(Card.IsHasEffect,1,nil,101305074,tp) then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_OPERATECARD)
+	else
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+	end
 	local tg=Duel.SelectMatchingCard(tp,c27383719.costfilter,tp,LOCATION_HAND+LOCATION_GRAVE+LOCATION_DECK,0,1,1,nil,e,tp)
 	local te=tg:GetFirst():IsHasEffect(101305074,tp)
 	if te then
+		Duel.Hint(HINT_CARD,0,101305074)
 		te:UseCountLimit(tp)
 		Duel.SendtoGrave(tg,REASON_REPLACE)
 	else

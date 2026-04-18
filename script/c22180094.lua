@@ -48,16 +48,23 @@ function c22180094.costfilter(c,e,tp)
 	elseif c:IsHasEffect(101305074,tp) then
 		return e:GetHandler():IsSetCard(0x156) and not c:IsCode(101305074)
 			and c:IsSetCard(0x156) and c:IsAbleToGraveAsCost()
+			and Duel.IsExistingMatchingCard(c22180094.spfilter,tp,LOCATION_DECK,0,1,c,e,tp)
 	elseif c:IsLocation(LOCATION_HAND) then
 		return c:IsSetCard(0x156) and c:IsAbleToRemoveAsCost()
 	end
 end
 function c22180094.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c22180094.costfilter,tp,LOCATION_HAND+LOCATION_GRAVE+LOCATION_DECK,0,1,nil,e,tp) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+	local cg=Duel.GetMatchingGroup(c22180094.costfilter,tp,LOCATION_HAND+LOCATION_GRAVE+LOCATION_DECK,0,nil,e,tp)
+	if cg:IsExists(Card.IsHasEffect,1,nil,101305074,tp) then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_OPERATECARD)
+	else
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+	end
 	local tg=Duel.SelectMatchingCard(tp,c22180094.costfilter,tp,LOCATION_HAND+LOCATION_GRAVE+LOCATION_DECK,0,1,1,nil,e,tp)
 	local te=tg:GetFirst():IsHasEffect(101305074,tp)
 	if te then
+		Duel.Hint(HINT_CARD,0,101305074)
 		te:UseCountLimit(tp)
 		Duel.SendtoGrave(tg,REASON_REPLACE)
 	else
