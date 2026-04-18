@@ -52,13 +52,13 @@ function s.ncop(e,tp,eg,ep,ev,re,r,rp)
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e1:SetCode(EVENT_CHAINING)
-	e1:SetOperation(s.actop)
 	e1:SetLabel(e:GetLabel())
+	e1:SetOperation(s.actop)
 	e1:SetReset(RESET_PHASE+PHASE_END,2)
 	Duel.RegisterEffect(e1,tp)
 end
 function s.actop(e,tp,eg,ep,ev,re,r,rp)
-	if re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:GetHandler():IsCode(e:GetLabel()) then
+	if re:GetHandler():IsCode(e:GetLabel()) then
 		Duel.SetChainLimit(aux.FALSE)
 	end
 end
