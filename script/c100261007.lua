@@ -27,6 +27,20 @@ function s.initial_effect(c)
 	e4:SetTarget(s.distg)
 	e4:SetOperation(s.disop)
 	c:RegisterEffect(e4)
+	local e5=Effect.CreateEffect(c)
+	e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e5:SetRange(LOCATION_SZONE)
+	e5:SetCode(EVENT_ADJUST)
+	e5:SetCondition(s.picon2)
+	e5:SetOperation(s.piop)
+	c:RegisterEffect(e5)
+	local e6=Effect.CreateEffect(c)
+	e6:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e6:SetRange(LOCATION_SZONE)
+	e6:SetCode(EVENT_SSET)
+	e6:SetCondition(s.picon)
+	e6:SetOperation(s.piop2)
+	c:RegisterEffect(e6)
 end
 function s.cfilter(c)
 	return c:IsFaceupEx() and c:IsSetCard(0x62)
@@ -117,4 +131,20 @@ function s.discon3(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.disop2(e,tp,eg,ep,ev,re,r,rp)
 	Duel.NegateEffect(ev)
+end
+function s.picon2(e)
+	return Duel.IsExistingMatchingCard(s.cfilter,e:GetHandlerPlayer(),LOCATION_ONFIELD+LOCATION_GRAVE,0,1,nil)
+		and e:GetHandler():GetFlagEffect(id)==0
+end
+function s.filter(c)
+	return c:IsFacedown()
+end
+function s.piop(e,tp,eg,ep,ev,re,r,rp)
+	local g=Duel.GetMatchingGroup(s.filter,tp,0,LOCATION_ONFIELD,nil)
+	Duel.ConfirmCards(tp,g)
+	e:GetHandler():RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,0,1)
+end
+function s.piop2(e,tp,eg,ep,ev,re,r,rp)
+	local sg=eg:Filter(Card.IsControler,nil,1-e:GetHandlerPlayer())
+	Duel.ConfirmCards(tp,sg)
 end
