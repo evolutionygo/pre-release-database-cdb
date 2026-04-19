@@ -121,13 +121,9 @@ end
 function s.discon(e,tp,eg,ep,ev,re,r,rp)
 	local ac,fid=e:GetLabel()
 	local ec=e:GetLabelObject()
-	if not ec:IsFaceupEx() or not re:GetHandler():IsOriginalCodeRule(ac) then
-		return false
-	end
-	for _,flag in ipairs({ec:GetFlagEffectLabel(id)}) do
-		if flag==fid then return true end
-	end
-	return false
+	return ec:IsFaceupEx()
+		and ec:GetFlagEffectLabel(id)==fid
+		and re:GetHandler():IsOriginalCodeRule(ac)
 end
 function s.disop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.NegateEffect(ev)
