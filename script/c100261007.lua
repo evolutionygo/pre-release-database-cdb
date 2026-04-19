@@ -6,7 +6,7 @@ function s.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	c:RegisterEffect(e1)
-	--
+	--check set cards
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD)
 	e2:SetCode(EFFECT_PUBLIC)
@@ -14,36 +14,36 @@ function s.initial_effect(c)
 	e2:SetCondition(s.picon)
 	e2:SetTargetRange(0,LOCATION_HAND)
 	c:RegisterEffect(e2)
-	--Activate
-	local e4=Effect.CreateEffect(c)
-	e4:SetDescription(aux.Stringid(id,1))
-	e4:SetCategory(CATEGORY_DISABLE)
-	e4:SetType(EFFECT_TYPE_QUICK_O)
-	e4:SetCode(EVENT_FREE_CHAIN)
-	e4:SetRange(LOCATION_SZONE)
-	e4:SetHintTiming(0,TIMING_DRAW+TIMINGS_CHECK_MONSTER+TIMING_END_PHASE)
-	e4:SetCountLimit(1,id)
-	e4:SetCondition(s.discon)
-	e4:SetTarget(s.distg)
-	e4:SetOperation(s.disop)
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e3:SetRange(LOCATION_SZONE)
+	e3:SetCode(EVENT_SSET)
+	e3:SetCondition(s.picon)
+	e3:SetOperation(s.piop2)
+	c:RegisterEffect(e3)
+	local e4=e3:Clone()
+	e4:SetCode(EVENT_MSET)
 	c:RegisterEffect(e4)
 	local e5=Effect.CreateEffect(c)
 	e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e5:SetRange(LOCATION_SZONE)
 	e5:SetCode(EVENT_ADJUST)
-	e5:SetCondition(s.picon2)
-	e5:SetOperation(s.piop)
+	e5:SetCondition(s.adjustcon)
+	e5:SetOperation(s.adjustop)
 	c:RegisterEffect(e5)
+	--disable
 	local e6=Effect.CreateEffect(c)
-	e6:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e6:SetDescription(aux.Stringid(id,1))
+	e6:SetCategory(CATEGORY_DISABLE)
+	e6:SetType(EFFECT_TYPE_QUICK_O)
+	e6:SetCode(EVENT_FREE_CHAIN)
 	e6:SetRange(LOCATION_SZONE)
-	e6:SetCode(EVENT_SSET)
-	e6:SetCondition(s.picon)
-	e6:SetOperation(s.piop2)
+	e6:SetHintTiming(0,TIMING_DRAW+TIMINGS_CHECK_MONSTER+TIMING_END_PHASE)
+	e6:SetCountLimit(1,id)
+	e6:SetCondition(s.accon)
+	e6:SetTarget(s.actg)
+	e6:SetOperation(s.acop)
 	c:RegisterEffect(e6)
-	local e7=e6:Clone()
-	e7:SetCode(EVENT_MSET)
-	c:RegisterEffect(e7)
 end
 function s.cfilter(c)
 	return c:IsFaceupEx() and c:IsSetCard(0x62)
@@ -57,11 +57,11 @@ end
 function s.cfilter3(c)
 	return c:IsFaceupEx() and c:IsSetCard(0x62) and c:IsType(TYPE_SPELL)
 end
-function s.discon(e)
+function s.accon(e)
 	return Duel.IsExistingMatchingCard(s.cfilter2,e:GetHandlerPlayer(),LOCATION_MZONE+LOCATION_GRAVE,0,1,nil)
 		and Duel.IsExistingMatchingCard(s.cfilter3,e:GetHandlerPlayer(),LOCATION_ONFIELD+LOCATION_GRAVE,0,1,nil)
 end
-function s.distg(e,tp,eg,ep,ev,re,r,rp,chk)
+function s.actg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	local ch=Duel.GetCurrentChain()
 	if ch>1 then
@@ -101,7 +101,7 @@ function s.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 		Duel.SetOperationInfo(0,CATEGORY_ANNOUNCE,nil,0,tp,0)
 	end
 end
-function s.disop(e,tp,eg,ep,ev,re,r,rp)
+function s.acop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToChain() and c:IsFaceup() then
 		local ac=Duel.GetChainInfo(0,CHAININFO_TARGET_PARAM)
@@ -110,42 +110,39 @@ function s.disop(e,tp,eg,ep,ev,re,r,rp)
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 		e1:SetCode(EVENT_CHAIN_SOLVING)
-		e1:SetCondition(s.discon3)
-		e1:SetOperation(s.disop2)
+		e1:SetCondition(s.discon)
+		e1:SetOperation(s.disop)
 		e1:SetLabel(ac,fid)
 		e1:SetLabelObject(c)
 		e1:SetReset(RESET_PHASE+PHASE_END)
 		Duel.RegisterEffect(e1,tp)
 	end
 end
-function s.distg2(e,c)
+function s.discon(e,tp,eg,ep,ev,re,r,rp)
 	local ac,fid=e:GetLabel()
-	return c:IsOriginalCodeRule(ac)
+	local ec=e:GetLabelObject()
+	if not ec:IsFaceupEx() or not re:GetHandler():IsOriginalCodeRule(ac) then
+		return false
+	end
+	for _,flag in ipairs({ec:GetFlagEffectLabel(id)}) do
+		if flag==fid then return true end
+	end
+	return false
 end
-function s.discon2(e,tp,eg,ep,ev,re,r,rp)
-	local ac,fid=e:GetLabel()
-	return e:GetLabelObject():IsFaceupEx() and e:GetLabelObject():GetFlagEffectLabel(id)==fid
-end
-function s.discon3(e,tp,eg,ep,ev,re,r,rp)
-	local ac,fid=e:GetLabel()
-	return e:GetLabelObject():IsFaceupEx()
-		and e:GetLabelObject():GetFlagEffectLabel(id)==fid
-		and re:GetHandler():IsOriginalCodeRule(ac)
-end
-function s.disop2(e,tp,eg,ep,ev,re,r,rp)
+function s.disop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.NegateEffect(ev)
 end
-function s.picon2(e)
+function s.adjustcon(e)
 	return Duel.IsExistingMatchingCard(s.cfilter,e:GetHandlerPlayer(),LOCATION_ONFIELD+LOCATION_GRAVE,0,1,nil)
-		and e:GetHandler():GetFlagEffect(id)==0
+		and e:GetHandler():GetFlagEffect(id+o)==0
 end
-function s.filter(c)
+function s.setfilter(c)
 	return c:IsFacedown()
 end
-function s.piop(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetMatchingGroup(s.filter,tp,0,LOCATION_ONFIELD,nil)
+function s.adjustop(e,tp,eg,ep,ev,re,r,rp)
+	local g=Duel.GetMatchingGroup(s.setfilter,tp,0,LOCATION_ONFIELD,nil)
 	Duel.ConfirmCards(tp,g)
-	e:GetHandler():RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,0,1)
+	e:GetHandler():RegisterFlagEffect(id+o,RESET_EVENT+RESETS_STANDARD,0,1)
 end
 function s.piop2(e,tp,eg,ep,ev,re,r,rp)
 	local sg=eg:Filter(Card.IsControler,nil,1-e:GetHandlerPlayer())
