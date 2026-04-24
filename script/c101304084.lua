@@ -47,7 +47,7 @@ function s.sumcon(e,c,minc)
 	local min=1
 	if minc>=1 then min=minc end
 	local tp=c:GetControler()
-	local mg=Duel.GetMatchingGroup(s.TRUE,tp,LOCATION_MZONE,LOCATION_MZONE,nil,tp)
+	local mg=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_MZONE,LOCATION_MZONE,nil,tp)
 	return c:IsLevelAbove(5) and Duel.CheckTribute(c,min,12,mg)
 end
 function s.sumop(e,tp,eg,ep,ev,re,r,rp,c,minc)

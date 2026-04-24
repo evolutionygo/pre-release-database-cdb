@@ -42,12 +42,8 @@ function s.regcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.regop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local g=c:GetMaterial()
 	local ct=e:GetLabelObject():GetLabel()
 	if ct==0 then return end
-	if g:IsExists(Card.IsType,1,nil,TYPE_EFFECT) then
-		c:RegisterFlagEffect(85360035,RESET_EVENT+RESETS_STANDARD,0,1)
-	end
 	if ct>=3 then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
