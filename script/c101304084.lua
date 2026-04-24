@@ -23,6 +23,7 @@ function s.initial_effect(c)
 	e3:SetCategory(CATEGORY_COUNTER)
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e3:SetCode(EVENT_SUMMON_SUCCESS)
+	e3:SetProperty(EFFECT_FLAG_DELAY)
 	e3:SetCondition(s.addcon)
 	e3:SetTarget(s.addtg)
 	e3:SetOperation(s.addc)
@@ -75,7 +76,7 @@ function s.addc(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.discon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsChainDisablable(ev)
+	return ep~=tp and Duel.IsChainDisablable(ev)
 end
 function s.discost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x75,1,REASON_COST) end
