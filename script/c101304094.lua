@@ -118,15 +118,15 @@ function s.fsop(e,tp,eg,ep,ev,re,r,rp)
 			Duel.BreakEffect()
 			Duel.SpecialSummon(tc,SUMMON_TYPE_FUSION,tp,tp,false,false,POS_FACEUP)
 		elseif ce and mg3 then
-            local mat2=Duel.SelectFusionMaterial(tp,tc,mg3,nil,chkf)
-            local fop=ce:GetOperation()
-            if fop then fop(ce,e,tp,tc,mat2) end
+			local mat2=Duel.SelectFusionMaterial(tp,tc,mg3,nil,chkf)
+			local fop=ce:GetOperation()
+			if fop then fop(ce,e,tp,tc,mat2) end
 		end
 		if tc then tc:CompleteProcedure() end
 	end
 end
 function s.thfilter(c)
-    return c:IsSetCard(0x1dd) and c:IsAbleToHand()
+	return c:IsSetCard(0x1dd) and c:IsAbleToHand()
 end
 function s.deckgmx(c)
 	return c:IsSetCard(0x1dd)
@@ -161,6 +161,7 @@ function s.digop(e,tp,eg,ep,ev,re,r,rp)
 	if not qc then return end
 	local nflip=dcount-seq
 	s.confirm_decktop_s(tp,nflip)
+	Duel.RaiseEvent(e:GetHandler(),EVENT_CUSTOM+101304092,e,0,tp,tp,0)
 	local g=Duel.GetDecktopGroup(tp,nflip)
 	if g:GetCount()==0 then return end
 	if qc:IsAbleToHand() then

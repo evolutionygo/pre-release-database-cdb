@@ -38,18 +38,19 @@ function s.gmxfilter(c)
 	return c:IsSetCard(0x1dd)
 end
 function s.negop(e,tp,eg,ep,ev,re,r,rp)
-    local g=Duel.GetDecktopGroup(tp,5)
-    if g:GetCount()==0 then return end
+	local g=Duel.GetDecktopGroup(tp,5)
+	if g:GetCount()==0 then return end
 	Duel.ConfirmDecktop(tp,5)
+	Duel.RaiseEvent(e:GetHandler(),EVENT_CUSTOM+101304092,e,0,tp,tp,0)
 	local flag=g:IsExists(s.gmxfilter,1,nil)
 	if flag then
 		Duel.NegateEffect(ev)
-        Duel.SortDecktop(tp,tp,5)
-        if Duel.SelectOption(tp,aux.Stringid(id,1),aux.Stringid(id,2))==1 then
-            for i=1,5 do
-                local mg=Duel.GetDecktopGroup(tp,1)
-                Duel.MoveSequence(mg:GetFirst(),SEQ_DECKBOTTOM)
-            end
-        end
+		Duel.SortDecktop(tp,tp,5)
+		if Duel.SelectOption(tp,aux.Stringid(id,1),aux.Stringid(id,2))==1 then
+			for i=1,5 do
+				local mg=Duel.GetDecktopGroup(tp,1)
+				Duel.MoveSequence(mg:GetFirst(),SEQ_DECKBOTTOM)
+			end
+		end
 	end
 end
