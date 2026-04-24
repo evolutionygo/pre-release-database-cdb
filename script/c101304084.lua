@@ -91,7 +91,7 @@ function s.disop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_COIN)
 	local coin=Duel.AnnounceCoin(tp)
 	local res=Duel.TossCoin(tp,1)
-	if coin==res then
+	if coin~=res then
 		Duel.NegateEffect(ev)
 	elseif c:IsRelateToChain() and c:IsFaceupEx() then
 		local batk=c:GetBaseAttack()
