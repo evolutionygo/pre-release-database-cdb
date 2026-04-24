@@ -11,7 +11,7 @@ function s.initial_effect(c)
 	e1:SetTargetRange(1,0)
 	e1:SetTarget(s.splimit)
 	c:RegisterEffect(e1)
-    --tohand
+	--tohand
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetCategory(CATEGORY_TOHAND)
@@ -38,10 +38,10 @@ function s.initial_effect(c)
 	--destroy
 	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(id,3))
-    e4:SetCategory(CATEGORY_DESTROY+CATEGORY_TOEXTRA)
+	e4:SetCategory(CATEGORY_DESTROY+CATEGORY_TOEXTRA)
 	e4:SetType(EFFECT_TYPE_IGNITION)
 	e4:SetRange(LOCATION_MZONE)
-    e4:SetCountLimit(1,id+o*2)
+	e4:SetCountLimit(1,id+o*2)
 	e4:SetCost(s.descost)
 	e4:SetTarget(s.destg)
 	e4:SetOperation(s.desop)
@@ -87,7 +87,7 @@ function s.descost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.PayLPCost(tp,1000)
 end
 function s.desfilter(c)
-    return c:GetOriginalType()&TYPE_PENDULUM~=0 and c:IsFaceupEx()
+	return c:GetOriginalType()&TYPE_PENDULUM~=0 and c:IsFaceupEx()
 end
 function s.tedfilter(c)
 	return c:IsAllTypes(TYPE_PENDULUM+TYPE_MONSTER) and c:IsAbleToExtra()
@@ -98,20 +98,20 @@ function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_TOEXTRA,nil,1,tp,LOCATION_DECK)
 end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
-    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 	local g=Duel.SelectMatchingCard(tp,s.desfilter,tp,LOCATION_HAND+LOCATION_ONFIELD,0,1,1,nil)
 	if g:GetCount()>0 then
-        if g:FilterCount(Card.IsLocation,nil,LOCATION_ONFIELD)>0 then
-            Duel.HintSelection(g)
-        end
-        if Duel.Destroy(g,REASON_EFFECT)>0
-            and Duel.IsExistingMatchingCard(s.tedfilter,tp,LOCATION_DECK,0,1,nil)
-            and Duel.SelectYesNo(tp,aux.Stringid(id,4)) then
-            Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,5))
-            local tg=Duel.SelectMatchingCard(tp,s.tedfilter,tp,LOCATION_DECK,0,1,1,nil)
-            if tg:GetCount()>0 then
-                Duel.SendtoExtraP(tg,tp,REASON_EFFECT)
-            end
-        end
+		if g:FilterCount(Card.IsLocation,nil,LOCATION_ONFIELD)>0 then
+			Duel.HintSelection(g)
+		end
+		if Duel.Destroy(g,REASON_EFFECT)>0
+			and Duel.IsExistingMatchingCard(s.tedfilter,tp,LOCATION_DECK,0,1,nil)
+			and Duel.SelectYesNo(tp,aux.Stringid(id,4)) then
+			Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,5))
+			local tg=Duel.SelectMatchingCard(tp,s.tedfilter,tp,LOCATION_DECK,0,1,1,nil)
+			if tg:GetCount()>0 then
+				Duel.SendtoExtraP(tg,tp,REASON_EFFECT)
+			end
+		end
 	end
 end

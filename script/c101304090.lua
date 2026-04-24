@@ -41,20 +41,20 @@ function s.tg1(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND)
 end
 function s.op1(e,tp,eg,ep,ev,re,r,rp)
-    local e1=Effect.CreateEffect(e:GetHandler())
-    e1:SetType(EFFECT_TYPE_FIELD)
-    e1:SetCode(EFFECT_CANNOT_DIRECT_ATTACK)
+	local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetCode(EFFECT_CANNOT_DIRECT_ATTACK)
 	e1:SetTargetRange(LOCATION_MZONE,0)
-    e1:SetTarget(s.dirlim)
-    e1:SetReset(RESET_PHASE+PHASE_END)
-    Duel.RegisterEffect(e1,tp)
+	e1:SetTarget(s.dirlim)
+	e1:SetReset(RESET_PHASE+PHASE_END)
+	Duel.RegisterEffect(e1,tp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,s.spfilter1,tp,LOCATION_HAND,0,1,1,nil,e,tp)
 	local tc=g:GetFirst()
 	if tc then
-        Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
-    end
+		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
+	end
 end
 function s.dirlim(e,c)
 	return not c:IsSetCard(0x1dd)
@@ -63,9 +63,9 @@ function s.spcon2(e,tp,eg,ep,ev,re,r,rp)
 	return re:IsActiveType(TYPE_MONSTER)
 end
 function s.spfilter2(c,e,tp)
-    return c:IsLevelBelow(4) and (c:IsSetCard(0x1dd) or c:IsRace(RACE_DINOSAUR))
-        and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE)
-        and c:IsFaceupEx()
+	return c:IsLevelBelow(4) and (c:IsSetCard(0x1dd) or c:IsRace(RACE_DINOSAUR))
+		and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE)
+		and c:IsFaceupEx()
 end
 function s.tg2(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
