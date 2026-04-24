@@ -161,7 +161,9 @@ function s.digop(e,tp,eg,ep,ev,re,r,rp)
 	if not qc then return end
 	local nflip=dcount-seq
 	s.confirm_decktop_s(tp,nflip)
-	Duel.RaiseEvent(e:GetHandler(),EVENT_CUSTOM+101304092,e,0,tp,tp,0)
+	if e:GetHandler():IsSetCard(0x1dd) then
+		Duel.RaiseEvent(e:GetHandler(),EVENT_CUSTOM+101304092,e,0,tp,tp,0)
+	end
 	local g=Duel.GetDecktopGroup(tp,nflip)
 	if g:GetCount()==0 then return end
 	if qc:IsAbleToHand() then

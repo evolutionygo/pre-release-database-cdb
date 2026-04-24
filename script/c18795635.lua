@@ -58,7 +58,9 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 	local excavate_count=dcount-seq
 	Duel.ConfirmDecktop(tp,excavate_count)
-	Duel.RaiseEvent(e:GetHandler(),EVENT_CUSTOM+101304092,e,0,tp,tp,0)
+	if e:GetHandler():IsSetCard(0x1dd) then
+		Duel.RaiseEvent(e:GetHandler(),EVENT_CUSTOM+101304092,e,0,tp,tp,0)
+	end
 	Duel.SetLP(tp,Duel.GetLP(tp)-excavate_count*400)
 	local mg=Duel.GetDecktopGroup(tp,excavate_count):Filter(Card.IsType,nil,TYPE_MONSTER)
 	local chkf=tp

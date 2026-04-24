@@ -83,7 +83,9 @@ function s.excop(e,tp,eg,ep,ev,re,r,rp)
 	end
 	if not qc then return end
 	s.confirm_decktop_s(tp,dcount-seq)
-	Duel.RaiseEvent(e:GetHandler(),EVENT_CUSTOM+101304092,e,0,tp,tp,0)
+	if e:GetHandler():IsSetCard(0x1dd) then
+		Duel.RaiseEvent(e:GetHandler(),EVENT_CUSTOM+101304092,e,0,tp,tp,0)
+	end
 	if qc:IsAbleToGrave() then
 		Duel.SendtoGrave(qc,REASON_EFFECT)
 		Duel.ShuffleDeck(tp)

@@ -1,6 +1,7 @@
 --VIP Whale
 local s,id,o=GetID()
 function s.initial_effect(c)
+	c:EnableCounterPermit(0x75)
 	--summon proc
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
@@ -23,6 +24,7 @@ function s.initial_effect(c)
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e3:SetCode(EVENT_SUMMON_SUCCESS)
 	e3:SetCondition(s.addcon)
+	e3:SetTarget(s.addtg)
 	e3:SetOperation(s.addc)
 	e3:SetLabelObject(e2)
 	c:RegisterEffect(e3)
@@ -58,10 +60,14 @@ function s.sumop(e,tp,eg,ep,ev,re,r,rp,c,minc)
 end
 function s.valcheck(e,c)
 	local g=c:GetMaterial()
-	e:SetLabel(g:FilterCount(Card.IsAttribute,nil,ATTRIBUTE_WATER))
+	e:SetLabel(g:GetCount())
 end
 function s.addcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_ADVANCE)
+end
+function s.addtg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return e:GetLabelObject():GetLabel()>0 end
+	Duel.SetOperationInfo(0,CATEGORY_COUNTER,nil,0,tp,1)
 end
 function s.addc(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetHandler():IsRelateToChain() and e:GetHandler():IsFaceup() then
@@ -82,7 +88,7 @@ end
 function s.disop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_COIN)
-	local coin=Duel.AnnounceCoin(p)
+	local coin=Duel.AnnounceCoin(tp)
 	local res=Duel.TossCoin(tp,1)
 	if coin==res then
 		Duel.NegateEffect(ev)
@@ -92,7 +98,7 @@ function s.disop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_SET_BASE_ATTACK_FINAL)
 		e1:SetValue(math.ceil(batk/2))
-		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END+RESET_DISABLE)
 		c:RegisterEffect(e1)
 	end
 end

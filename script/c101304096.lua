@@ -41,7 +41,9 @@ function s.negop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetDecktopGroup(tp,5)
 	if g:GetCount()==0 then return end
 	Duel.ConfirmDecktop(tp,5)
-	Duel.RaiseEvent(e:GetHandler(),EVENT_CUSTOM+101304092,e,0,tp,tp,0)
+	if e:GetHandler():IsSetCard(0x1dd) then
+		Duel.RaiseEvent(e:GetHandler(),EVENT_CUSTOM+101304092,e,0,tp,tp,0)
+	end
 	local flag=g:IsExists(s.gmxfilter,1,nil)
 	if flag then
 		Duel.NegateEffect(ev)

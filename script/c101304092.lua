@@ -28,6 +28,7 @@ function s.initial_effect(c)
 	e2:SetTarget(s.rectg)
 	e2:SetOperation(s.recop)
 	c:RegisterEffect(e2)
+	--special summon
 	local e3=e2:Clone()
 	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e3:SetRange(LOCATION_GRAVE)
