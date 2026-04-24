@@ -87,6 +87,7 @@ function s.setop(e,tp,eg,ep,ev,re,r,rp)
 	if not tc then return end
 	Duel.SSet(tp,tc)
 	Duel.BreakEffect()
+	Duel.ShuffleDeck(tp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
 	local hg=Duel.SelectMatchingCard(tp,aux.TRUE,tp,LOCATION_HAND,0,1,1,nil)
 	local hc=hg:GetFirst()

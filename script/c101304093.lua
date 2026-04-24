@@ -35,7 +35,7 @@ end
 function s.valcheck(e,c)
 	local mg=c:GetMaterial()
 	local mg1=mg:Filter(Card.IsRace,nil,RACE_DINOSAUR)
-	e:GetLabelObject():SetLabel(#mg1)
+	e:SetLabel(#mg1)
 end
 function s.regcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_FUSION)
