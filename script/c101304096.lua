@@ -44,6 +44,7 @@ function s.negop(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetHandler():IsSetCard(0x1dd) then
 		Duel.RaiseEvent(e:GetHandler(),EVENT_CUSTOM+101304092,e,0,tp,tp,0)
 	end
+	Duel.BreakEffect()
 	local flag=g:IsExists(s.gmxfilter,1,nil)
 	if flag then
 		Duel.NegateEffect(ev)
