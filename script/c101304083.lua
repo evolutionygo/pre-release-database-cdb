@@ -49,7 +49,7 @@ function s.initial_effect(c)
 end
 function s.splimit(e,c,tp,sumtp,sumpos)
 	if not c then return false end
-	return not c:IsType(TYPE_PENDULUM)
+	return not c:IsType(TYPE_PENDULUM) and bit.band(sumtp,SUMMON_TYPE_PENDULUM)==SUMMON_TYPE_PENDULUM
 end
 function s.pthfilter(c)
 	return c:IsFaceup() and c:IsAttackBelow(1000)
