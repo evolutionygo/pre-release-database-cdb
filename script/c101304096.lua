@@ -7,14 +7,14 @@ function s.initial_effect(c)
 	e0:SetCode(EVENT_FREE_CHAIN)
 	e0:SetCondition(s.actcon)
 	c:RegisterEffect(e0)
-	--negate
+	--disable
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_DISABLE)
 	e1:SetType(EFFECT_TYPE_QUICK_O)
 	e1:SetCode(EVENT_CHAINING)
 	e1:SetRange(LOCATION_SZONE)
-	e1:SetCountLimit(1,id)
+	e1:SetCountLimit(1)
 	e1:SetCondition(s.negcon)
 	e1:SetTarget(s.negtg)
 	e1:SetOperation(s.negop)
@@ -28,8 +28,7 @@ function s.actcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.negcon(e,tp,eg,ep,ev,re,r,rp)
 	local loc=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_LOCATION)
-	return not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) and ep~=tp
-		and loc==LOCATION_MZONE and re:IsActiveType(TYPE_MONSTER) and Duel.IsChainDisablable(ev)
+	return ep~=tp and loc==LOCATION_MZONE and re:IsActiveType(TYPE_MONSTER) and Duel.IsChainDisablable(ev)
 end
 function s.negtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>=5 end
