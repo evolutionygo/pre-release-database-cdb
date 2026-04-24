@@ -26,7 +26,7 @@ function s.initial_effect(c)
 	e2:SetCode(EVENT_CUSTOM+101304092)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetProperty(EFFECT_FLAG_DELAY)
-	e2:SetCountLimit(1,id)
+	e2:SetCountLimit(1)
 	e2:SetCondition(s.descon)
 	e2:SetTarget(s.destg)
 	e2:SetOperation(s.desop)
@@ -92,7 +92,7 @@ function s.reccon(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.recop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_CARD,0,id)
-	Duel.SetLP(1-tp,Duel.GetLP(1-tp)-1500)
+	Duel.SetLP(1-tp,Duel.GetLP(1-tp)-800)
 end
 function s.descon(e,tp,eg,ep,ev,re,r,rp)
 	return rp==tp
