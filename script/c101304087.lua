@@ -66,22 +66,20 @@ end
 function s.ecfilter(c)
 	return c:IsFaceup() and c:IsRace(RACE_MACHINE) and c:IsLinkAbove(3) and c:IsType(TYPE_LINK)
 end
-function s.thcon1(e,tp,eg,ep,ev,re,r,rp)
-	if not Duel.IsMainPhase() then return false end
+function s.getlg(tp)
 	local lg=Duel.GetMatchingGroup(s.ecfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 	local lg2=Group.CreateGroup()
 	for lc in aux.Next(lg) do
 		lg2:Merge(lc:GetLinkedGroup())
 	end
+	return lg2
+end
+function s.thcon1(e,tp,eg,ep,ev,re,r,rp)
+	local lg2=s.getlg(tp)
 	return not lg2 or not lg2:IsContains(e:GetHandler())
 end
 function s.thcon2(e,tp,eg,ep,ev,re,r,rp)
-	if not Duel.IsMainPhase() then return false end
-	local lg=Duel.GetMatchingGroup(s.ecfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
-	local lg2=Group.CreateGroup()
-	for lc in aux.Next(lg) do
-		lg2:Merge(lc:GetLinkedGroup())
-	end
+	local lg2=s.getlg(tp)
 	return lg2 and lg2:IsContains(e:GetHandler())
 end
 function s.thfilter(c,e)
@@ -95,18 +93,13 @@ function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end
 	local g=Duel.GetMatchingGroup(s.thfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil,e)
 	if chk==0 then return g:CheckSubGroup(s.gcheck2,2,2,tp) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
 	local sg=g:SelectSubGroup(tp,s.gcheck2,false,2,2,tp)
 	Duel.SetTargetCard(sg)
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,sg,sg:GetCount(),0,0)
-end
-function s.hfilter(c,e)
-	return c:IsRelateToEffect(e) and c:IsFaceup()
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,sg,sg:GetCount(),0,0)
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
-	if not g then return end
-	local sg=g:Filter(Card.IsRelateToChain,nil)
+	local sg=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToChain,nil)
 	if sg:GetCount()>0 then
 		Duel.SendtoHand(sg,nil,REASON_EFFECT)
 	end

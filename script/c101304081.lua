@@ -44,7 +44,7 @@ end
 function s.cfilter(c)
 	return c:IsType(TYPE_MONSTER)
 end
-function s.spcon1(e,tp,eg,ep,ev,re,r,rp)
+function s.tgcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(s.cfilter,tp,0,LOCATION_MZONE+LOCATION_GRAVE,1,nil)
 end
 function s.tgcost(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -69,7 +69,7 @@ function s.tgop(e,tp,eg,ep,ev,re,r,rp)
 		and c:IsRelateToChain() and c:IsFaceup()
 		and Duel.IsExistingMatchingCard(s.codefilter,tp,LOCATION_GRAVE,0,1,nil,c)
 		and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
 		local sg=Duel.SelectMatchingCard(tp,s.codefilter,tp,LOCATION_GRAVE,0,1,1,nil,c)
 		local tc=sg:GetFirst()
 		if tc then
