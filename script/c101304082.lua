@@ -32,7 +32,7 @@ end
 function s.ffilter(c,fc,sub,mg,sg)
 	return (not sg or sg:FilterCount(aux.TRUE,c)==0
 			or (sg:IsExists(s.matchfilter,#sg-1,c,c:GetFusionAttribute(),c:GetRace())
-				and not sg:IsExists(aux.NOT(Card.IsLevel),1,c,c:GetLevel())))
+				and not sg:IsExists(Card.IsLevel,1,c,c:GetLevel())))
 		and c:IsLevelAbove(1)
 end
 function s.efftg(e,c)
