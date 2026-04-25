@@ -34,10 +34,10 @@ function s.rfilter(c)
 	return c:IsLinkAbove(1) and c:IsRace(RACE_MACHINE) and c:IsType(TYPE_LINK) and c:IsAbleToRemoveAsCost()
 end
 function s.fselect(g)
-	return g:GetSum(Card.GetLevel)==5
+	return g:GetSum(Card.GetLink)==5
 end
 function s.gcheck(g)
-	return g:GetSum(Card.GetLevel)<=5
+	return g:GetSum(Card.GetLink)<=5
 end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.GetMatchingGroup(s.rfilter,tp,LOCATION_EXTRA,0,nil)
