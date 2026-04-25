@@ -57,11 +57,11 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToChain() and aux.NecroValleyFilter()(tc)
 		and Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)~=0
-		and Duel.IsExistingMatchingCard(aux.NegateMonsterFilter,tp,0,LOCATION_MZONE,1,nil,tc:GetAttack())
+		and Duel.IsExistingMatchingCard(s.disfilter,tp,0,LOCATION_MZONE,1,nil,tc:GetAttack())
 		and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 		Duel.BreakEffect()
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DISABLE)
-		local g=Duel.SelectMatchingCard(tp,aux.NegateMonsterFilter,tp,0,LOCATION_MZONE,1,1,nil,tc:GetAttack())
+		local g=Duel.SelectMatchingCard(tp,s.disfilter,tp,0,LOCATION_MZONE,1,1,nil,tc:GetAttack())
 		Duel.HintSelection(g)
 		local nc=g:GetFirst()
 		Duel.NegateRelatedChain(nc,RESET_TURN_SET)
