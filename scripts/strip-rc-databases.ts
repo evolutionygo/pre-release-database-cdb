@@ -1,6 +1,5 @@
 import crypto from "node:crypto";
 import fs from "node:fs";
-import https from "node:https";
 import path from "node:path";
 import JSZip from "jszip";
 import initSqlJs, { Database } from "sql.js";
@@ -17,37 +16,12 @@ type YgocdbCard = {
   id: number;
 };
 
-async function fetchBuffer(url: string, redirectsLeft = 5): Promise<Buffer> {
-  return new Promise((resolve, reject) => {
-    https
-      .get(url, (response) => {
-        const statusCode = response.statusCode ?? 0;
-        const location = response.headers.location;
-
-        if (
-          statusCode >= 300 &&
-          statusCode < 400 &&
-          location &&
-          redirectsLeft > 0
-        ) {
-          response.resume();
-          const nextUrl = new URL(location, url).toString();
-          fetchBuffer(nextUrl, redirectsLeft - 1).then(resolve, reject);
-          return;
-        }
-
-        if (statusCode < 200 || statusCode >= 300) {
-          response.resume();
-          reject(new Error(`Request failed: ${url} (${statusCode})`));
-          return;
-        }
-
-        const chunks: Buffer[] = [];
-        response.on("data", (chunk) => chunks.push(Buffer.from(chunk)));
-        response.on("end", () => resolve(Buffer.concat(chunks)));
-      })
-      .on("error", reject);
-  });
+async function fetchBuffer(url: string): Promise<Buffer> {
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(`Request failed: ${url} (${response.status})`);
+  }
+  return Buffer.from(await response.arrayBuffer());
 }
 
 function parseJsonpObject(buffer: Buffer): Record<string, number> {
