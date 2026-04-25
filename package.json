@@ -54,6 +54,7 @@
   },
   "dependencies": {
     "js-yaml": "^4.1.1",
+    "jszip": "^3.10.1",
     "koishipro-core.js": "^1.4.3",
     "sql.js": "^1.13.0",
     "ygopro-cdb-encode": "^1.1.0",

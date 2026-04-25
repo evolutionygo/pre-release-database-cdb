@@ -36,23 +36,6 @@ merge_databases:
       - test-release.cdb
       - test-update.cdb
 
-strip_rc_databases:
-  stage: prepare2
-  dependencies:
-    - merge_databases
-  tags:
-    - linux
-  script:
-    - apt update --allow-insecure-repositories && apt -y install sqlite3
-    - |
-      for db in test-release.cdb test-update.cdb; do
-        sqlite3 "$db" "DELETE FROM datas WHERE id >= 100000000; DELETE FROM texts WHERE id >= 100000000;"
-      done
-  artifacts:
-    paths:
-      - test-release.cdb
-      - test-update.cdb
-
 prepare_jest_env:
   stage: prepare
   dependencies: []
@@ -76,6 +59,20 @@ npm_ci:
   artifacts:
     paths:
       - node_modules
+
+strip_rc_databases:
+  stage: prepare2
+  dependencies:
+    - merge_databases
+    - npm_ci
+  tags:
+    - linux
+  script:
+    - ./node_modules/.bin/ts-node scripts/strip-rc-databases.ts test-release.cdb test-update.cdb
+  artifacts:
+    paths:
+      - test-release.cdb
+      - test-update.cdb
 
 add_script_diff:
   stage: prepare

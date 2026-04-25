@@ -17,6 +17,7 @@
 	"allowJs": true,
 	"include": [
 		"*.ts",
+		"scripts/**/*.ts",
 		"src/**/*.ts",
 		"tests/**/*.ts"
 	]
