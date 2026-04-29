@@ -42,8 +42,8 @@ function s.thfilter(c)
 	return c:IsSetCard(0x128) and c:IsType(TYPE_SPELL) and c:IsAbleToGrave()
 end
 function s.cpfilter(c)
-	return c:IsSetCard(0x128) and (c:GetType()==TYPE_SPELL or c:IsType(TYPE_QUICKPLAY))
-		and c:CheckActivateEffect(false,true,false)~=nil
+	return c:IsSetCard(0x128) and (c:GetType()==TYPE_SPELL or c:IsType(TYPE_QUICKPLAY)) and not c:IsPublic()
+		and c:CheckActivateEffect(true,true,false)~=nil
 end
 function s.cecost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local b1=Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil)
