@@ -19,17 +19,17 @@ function s.initial_effect(c)
 	e1:SetOperation(s.ceop)
 	c:RegisterEffect(e1)
 	--to grave
-	local e3=Effect.CreateEffect(c)
-	e3:SetDescription(aux.Stringid(id,1))
-	e3:SetCategory(CATEGORY_TOGRAVE)
-	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
-	e3:SetCode(EVENT_PHASE+PHASE_END)
-	e3:SetRange(LOCATION_MZONE)
-	e3:SetCountLimit(1,id+o)
-	e3:SetCondition(s.tgcon)
-	e3:SetTarget(s.tgtg)
-	e3:SetOperation(s.tgop)
-	c:RegisterEffect(e3)
+	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(aux.Stringid(id,1))
+	e2:SetCategory(CATEGORY_TOGRAVE)
+	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e2:SetCode(EVENT_PHASE+PHASE_END)
+	e2:SetRange(LOCATION_MZONE)
+	e2:SetCountLimit(1,id+o)
+	e2:SetCondition(s.tgcon)
+	e2:SetTarget(s.tgtg)
+	e2:SetOperation(s.tgop)
+	c:RegisterEffect(e2)
 end
 function s.matfilter(c)
 	return c:IsRace(RACE_SPELLCASTER)
@@ -64,6 +64,8 @@ function s.cetg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		return Duel.IsExistingMatchingCard(s.cpfilter,tp,LOCATION_HAND,0,1,nil) or Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil)
 	end
+	local el1=0
+	local el2=e:GetLabel()
 	if e:GetLabel()==1 then
 		e:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND)
 		Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
@@ -72,26 +74,30 @@ function s.cetg(e,tp,eg,ep,ev,re,r,rp,chk)
 		Duel.ClearTargetCard()
 		local tg=te:GetTarget()
 		if tg then tg(e,tp,ceg,cep,cev,cre,cr,crp,1) end
+		el1=e:GetLabel()
 		te:SetLabelObject(e:GetLabelObject())
 		e:SetProperty(te:GetProperty()&EFFECT_FLAG_CARD_TARGET)
 		e:SetLabelObject(te)
 		e:SetCategory(0)
 		Duel.ClearOperationInfo(0)
 	end
+	e:SetLabel(el1,el2)
 end
 function s.ceop(e,tp,eg,ep,ev,re,r,rp)
-	if e:GetLabel()==1 then
+	local el1,el2=e:GetLabel()
+	if el2==1 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 		local g=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_DECK,0,1,1,nil)
 		if g:GetCount()>0 then
 			Duel.SendtoHand(g,nil,REASON_EFFECT)
 			Duel.ConfirmCards(1-tp,g)
 		end
-	elseif e:GetLabel()==2 then
+	elseif el2==2 then
 		local te=e:GetLabelObject()
 		if not te then return end
 		e:SetLabelObject(te:GetLabelObject())
 		local op=te:GetOperation()
+		e:SetLabel(el1)
 		if op then op(e,tp,eg,ep,ev,re,r,rp) end
 	end
 end
