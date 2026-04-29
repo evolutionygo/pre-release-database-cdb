@@ -73,6 +73,7 @@ function s.cetg(e,tp,eg,ep,ev,re,r,rp,chk)
 		local tg=te:GetTarget()
 		if tg then tg(e,tp,ceg,cep,cev,cre,cr,crp,1) end
 		te:SetLabelObject(e:GetLabelObject())
+		e:SetProperty(te:GetProperty()&EFFECT_FLAG_CARD_TARGET)
 		e:SetLabelObject(te)
 		e:SetCategory(0)
 		Duel.ClearOperationInfo(0)
