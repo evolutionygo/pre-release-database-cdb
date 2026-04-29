@@ -62,20 +62,13 @@ function s.cecost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.cetg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
-		if not e:IsCostChecked() then
-			e:SetLabel(1)
-		end
-		return e:IsCostChecked() or Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil)
+		return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil) or Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil)
 	end
 	if e:GetLabel()==1 then
-		if e:IsCostChecked() then
-			e:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND)
-		end
+		e:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND)
 		Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 	elseif e:GetLabel()==2 then
-		if e:IsCostChecked() then
-			e:SetCategory(0)
-		end
+		e:SetCategory(0)
 		local te,ceg,cep,cev,cre,cr,crp=e:GetLabelObject():CheckActivateEffect(true,true,false)
 		Duel.ClearTargetCard()
 		local tg=te:GetTarget()
