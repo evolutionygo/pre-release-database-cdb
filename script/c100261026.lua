@@ -76,7 +76,7 @@ function s.cetg(e,tp,eg,ep,ev,re,r,rp,chk)
 		if e:IsCostChecked() then
 			e:SetCategory(0)
 		end
-		local te,ceg,cep,cev,cre,cr,crp=e:GetLabelObject():CheckActivateEffect(false,true,true)
+		local te,ceg,cep,cev,cre,cr,crp=e:GetLabelObject():CheckActivateEffect(true,true,false)
 		Duel.ClearTargetCard()
 		local tg=te:GetTarget()
 		if tg then tg(e,tp,ceg,cep,cev,cre,cr,crp,1) end
