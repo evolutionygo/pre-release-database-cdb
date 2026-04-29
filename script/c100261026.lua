@@ -68,13 +68,13 @@ function s.cetg(e,tp,eg,ep,ev,re,r,rp,chk)
 		e:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND)
 		Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 	elseif e:GetLabel()==2 then
-		e:SetCategory(0)
 		local te,ceg,cep,cev,cre,cr,crp=e:GetLabelObject():CheckActivateEffect(true,true,false)
 		Duel.ClearTargetCard()
 		local tg=te:GetTarget()
 		if tg then tg(e,tp,ceg,cep,cev,cre,cr,crp,1) end
 		te:SetLabelObject(e:GetLabelObject())
 		e:SetLabelObject(te)
+		e:SetCategory(0)
 		Duel.ClearOperationInfo(0)
 	end
 end
