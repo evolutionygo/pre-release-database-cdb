@@ -62,7 +62,7 @@ function s.cecost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.cetg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
-		return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil) or Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil)
+		return Duel.IsExistingMatchingCard(s.cpfilter,tp,LOCATION_HAND,0,1,nil) or Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil)
 	end
 	if e:GetLabel()==1 then
 		e:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND)
