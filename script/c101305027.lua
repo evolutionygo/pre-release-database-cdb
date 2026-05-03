@@ -53,9 +53,6 @@ function s.initial_effect(c)
 	e5:SetOperation(s.rmop)
 	c:RegisterEffect(e5)
 end
-function s.stfilter(e,c)
-	return c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsControler(e:GetHandlerPlayer())
-end
 function s.rmval(e,re,r,rp)
 	return rp~=e:GetHandlerPlayer()
 end
