@@ -57,12 +57,12 @@ function c95974848.descost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if te then
 		Duel.Hint(HINT_CARD,0,101305074)
 		te:UseCountLimit(tp)
-		Duel.SendtoGrave(tg,REASON_REPLACE)
+		Duel.SendtoGrave(tg,REASON_COST+REASON_REPLACE)
 	else
 		local te2=tg:GetFirst():IsHasEffect(55049722,tp)
 		if te2 then
 			te2:UseCountLimit(tp)
-			Duel.Remove(tg,POS_FACEUP,REASON_REPLACE)
+			Duel.Remove(tg,POS_FACEUP,REASON_COST+REASON_REPLACE)
 		else
 			Duel.Remove(tg,POS_FACEUP,REASON_COST)
 		end

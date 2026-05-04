@@ -99,7 +99,7 @@ function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 		local te=tc:IsHasEffect(101305055,tp)
 		if te then
 			te:UseCountLimit(tp)
-			Duel.Remove(tc,POS_FACEUP,REASON_EFFECT+REASON_REPLACE)
+			Duel.Remove(tc,POS_FACEUP,REASON_COST+REASON_REPLACE)
 		end
 	end
 end
