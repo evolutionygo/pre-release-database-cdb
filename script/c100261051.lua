@@ -57,7 +57,7 @@ function s.distg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		sg=g:Clone()
 		Duel.SetTargetCard(sg)
 	else
-		Duel.Hint(HINTMSG_DESTROY,tp,HINTMSG_DESTROY)
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DISABLE)
 		sg=Duel.SelectTarget(tp,s.tgfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil,g,dg)
 	end
 	Duel.SetOperationInfo(0,CATEGORY_DISABLE,sg,1,0,0)

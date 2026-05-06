@@ -24,8 +24,8 @@ function s.initial_effect(c)
 	e2:SetOperation(s.spop)
 	c:RegisterEffect(e2)
 end
-function s.filter(c)
-	return c:IsFaceup()
+function s.filter(c,e)
+	return c:IsFaceup() and c:IsCanBeEffectTarget(e)
 end
 function s.lkfilter(c,tp)
 	return c:IsSetCard(0x1130) and c:IsType(TYPE_LINK) and c:IsControler(tp)
