@@ -3,6 +3,7 @@ local s,id,o=GetID()
 function s.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
@@ -34,7 +35,7 @@ function s.sgselect(g,tp)
 	return g:IsExists(s.lkfilter,1,nil,tp)
 		and Duel.IsExistingMatchingCard(s.lfilter,tp,LOCATION_EXTRA,0,1,nil,g)
 end
-function s.lfilter(c,g)
+function s.lfilter(c,mg)
 	return c:IsRace(RACE_FIEND) and c:IsLinkSummonable(mg,nil,2,2)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)

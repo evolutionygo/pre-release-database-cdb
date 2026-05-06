@@ -19,7 +19,7 @@ function s.initial_effect(c)
 	--special summon
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
-	e2:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_TOHAND)
+	e2:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_TOHAND+CATEGORY_GRAVE_SPSUMMON)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e2:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
 	e2:SetCode(EVENT_DESTROYED)
@@ -59,6 +59,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 		local sg=Duel.SelectMatchingCard(tp,aux.TRUE,tp,LOCATION_ONFIELD,0,1,1,nil)
 		if sg:GetCount()>0 then
+			Duel.HintSelection(sg)
 			Duel.Destroy(sg,REASON_EFFECT)
 		end
 	end
@@ -84,7 +85,14 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	if not aux.NecroValleyFilter()(c) then return end
 	local b1=c:IsAbleToHand()
 	local b2=Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
-	local op=aux.SelectFromOptions(tp,{b1,1190},{b2,1152})
+	local op=0
+	if b1 and not b2 then
+		op=1
+	elseif not b1 and b2 then
+		op=2
+	else
+		op=aux.SelectFromOptions(tp,{b1,1190},{b2,1152})
+	end
 	if op==1 then
 		Duel.SendtoHand(c,nil,REASON_EFFECT)
 	end

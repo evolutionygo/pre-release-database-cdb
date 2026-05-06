@@ -37,15 +37,15 @@ function s.spfilter(c,e,tp,cid)
 	return c:IsReason(REASON_DESTROY) and c:GetTurnID()==cid and c:IsRace(RACE_FIEND) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and s.spfilter(chkc,e,tp,Duel.GetTurnCount()) end
+	local cid=Duel.GetTurnCount()
+	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and s.spfilter(chkc,e,tp,cid) end
 	local ct=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	if ct>2 then ct=2 end
 	if ct>1 and Duel.IsPlayerAffectedByEffect(tp,59822133) then ct=1 end
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and ct>0
-		and Duel.IsExistingTarget(s.spfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp,Duel.GetTurnCount()) end
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and ct>0
+		and Duel.IsExistingTarget(s.spfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp,cid) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectTarget(tp,s.spfilter,tp,LOCATION_GRAVE,0,1,ct,nil,e,tp,Duel.GetTurnCount())
+	local g=Duel.SelectTarget(tp,s.spfilter,tp,LOCATION_GRAVE,0,1,ct,nil,e,tp,cid)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,g:GetCount(),0,0)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
