@@ -61,7 +61,7 @@ function s.spfilter(c,e,tp)
 	return not c:IsCode(id) and aux.IsCodeListed(c,101306052) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.retg(e,tp,eg,ep,ev,re,r,rp,chk)
-	local b1=Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_HAND+LOCATION_DECK,0,1,nil,e,tp,nil) and (e:IsCostChecked() or Duel.GetLocationCount(tp,LOCATION_MZONE)>0)
+	local b1=Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_HAND+LOCATION_DECK,0,1,nil,e,tp,nil) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 	local b2=Duel.IsExistingMatchingCard(s.tgfilter,tp,LOCATION_DECK,0,1,nil)
 	if chk==0 then return b1 or b2 end
 	local op=aux.SelectFromOptions(tp,
