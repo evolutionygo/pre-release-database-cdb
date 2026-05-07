@@ -43,6 +43,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			e1:SetCode(EFFECT_DESTROY_REPLACE)
 			e1:SetRange(LOCATION_MZONE)
 			e1:SetTarget(s.destg)
+			e1:SetLabel(tp)
 			e1:SetValue(s.repval)
 			e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 			token:RegisterEffect(e1,true)
@@ -94,5 +95,5 @@ function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	else return false end
 end
 function s.repval(e,c)
-	return c:IsFaceup() and aux.IsCodeListed(c,101306052) and c~=e:GetHandler() and c:IsControler(e:GetHandlerPlayer())
+	return c:IsFaceup() and aux.IsCodeListed(c,101306052) and c~=e:GetHandler() and c:IsControler(e:GetLabel())
 end
