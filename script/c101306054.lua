@@ -5,11 +5,10 @@ function s.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
-	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_TOKEN)
+	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_TOKEN+CATEGORY_DECKDES)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_END_PHASE)
-	e1:SetCountLimit(1,id+EFFECT_COUNT_CODE_OATH)
 	e1:SetTarget(s.target)
 	e1:SetOperation(s.activate)
 	c:RegisterEffect(e1)
@@ -28,9 +27,15 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	if ft>4 then ft=4 end
 	if Duel.IsPlayerAffectedByEffect(tp,59822133) then ft=1 end
 	if Duel.IsPlayerCanSpecialSummonMonster(tp,id+o,0,TYPES_TOKEN_MONSTER,0,0,1,RACE_BEAST,ATTRIBUTE_EARTH,POS_FACEUP_DEFENSE) and ft>0 then
-		local ctn=true
-		local cid=1
-		while ft>0 and ctn do
+		if ft>1 then
+			local ct={}
+			for i=ft,1,-1 do
+				table.insert(ct,i)
+			end
+			Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,1))
+			ft=Duel.AnnounceNumber(tp,1,ft)
+		end
+		for cid=1,ft do
 			local token=Duel.CreateToken(tp,id+o*cid)
 			Duel.SpecialSummonStep(token,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
 			local e1=Effect.CreateEffect(e:GetHandler())
@@ -48,12 +53,10 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			e2:SetValue(1)
 			e2:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
 			token:RegisterEffect(e2,true)
-			ft=ft-1
-			cid=cid+1
-			if ft<=0 or not Duel.SelectYesNo(tp,aux.Stringid(id,1)) then ctn=false end
 		end
 		Duel.SpecialSummonComplete()
-		if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 
+		Duel.AdjustAll()
+		if Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 			and Duel.IsExistingMatchingCard(aux.TRUE,tp,0,LOCATION_MZONE,1,nil)
 			and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_DECK,0,1,nil,e,tp)
 			and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then

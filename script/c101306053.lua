@@ -4,6 +4,7 @@ function s.initial_effect(c)
 	aux.AddCodeList(c,101306052)
 	--Activate
 	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_DICE+CATEGORY_ATKCHANGE)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
@@ -16,8 +17,8 @@ function s.initial_effect(c)
 	--destroy
 	local custom_code=aux.RegisterMergedDelayedEvent_ToSingleCard(c,id,{EVENT_SUMMON_SUCCESS,EVENT_SPSUMMON_SUCCESS})
 	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(id,2))
-	e2:SetCategory(CATEGORY_DESTROY+CATEGORY_DAMAGE)
+	e2:SetDescription(aux.Stringid(id,1))
+	e2:SetCategory(CATEGORY_DESTROY+CATEGORY_DAMAGE+CATEGORY_DICE)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(custom_code)
 	e2:SetRange(LOCATION_GRAVE)
@@ -59,13 +60,12 @@ function s.atktg(e,c)
 	return aux.IsCodeListed(c,101306052)
 end
 function s.desfilter(c,tp,e)
-	return c:IsLocation(LOCATION_MZONE) and c:IsControler(1-tp) and c:IsCanBeEffectTarget(e)
+	return c:IsLocation(LOCATION_MZONE) and c:IsSummonPlayer(1-tp) and c:IsCanBeEffectTarget(e)
 end
 function s.descon(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(Card.IsControler,1,nil,1-tp)
+	return eg:IsExists(Card.IsSummonPlayer,1,nil,1-tp)
 end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	local c=e:GetHandler()
 	local g=eg:Filter(s.desfilter,nil,tp,e)
 	if chkc then return g:IsContains(chkc) end
 	if chk==0 then return #g>0 end
@@ -79,11 +79,9 @@ function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	end
 end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
+	local a,b=Duel.TossDice(tp,2)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToChain() and tc:IsType(TYPE_MONSTER) then
-		local a,b=Duel.TossDice(tp,2)
-		if a+b>5 then
-			Duel.Destroy(tc,REASON_EFFECT)
-		end
+	if tc:IsRelateToChain() and tc:IsType(TYPE_MONSTER) and a+b>5 then
+		Duel.Destroy(tc,REASON_EFFECT)
 	end
 end

@@ -5,9 +5,11 @@ function s.initial_effect(c)
 	--activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
-	e1:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND+CATEGORY_GRAVE_ACTION+CATEGORY_DESTROY)
+	e1:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND+CATEGORY_GRAVE_ACTION+CATEGORY_DESTROY+CATEGORY_COIN)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
+	e1:SetProperty(EFFECT_FLAG_COIN)
+	e1:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_END_PHASE)
 	e1:SetTarget(s.target)
 	e1:SetOperation(s.activate)
 	c:RegisterEffect(e1)
@@ -38,6 +40,12 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 		end
 	end
 end
+function s.calfilter(c)
+	if c:GetTextAttack()<0 then return false end
+	if c:GetOriginalType()&TYPE_MONSTER~=0 then return true end
+	local se=c:GetSpecialSummonInfo(SUMMON_INFO_REASON_EFFECT)
+	return se and se:GetHandler()==c
+end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetLabel()==1 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
@@ -62,10 +70,11 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			p=tp
 		end
 		local sg=Duel.GetMatchingGroup(aux.TRUE,p,LOCATION_MZONE,0,nil)
+		local cg=sg:Filter(s.calfilter,nil)
 		if Duel.Destroy(sg,REASON_EFFECT)~=0 then
 			local og=Duel.GetOperatedGroup()
 			if og:GetCount()>0 and p==1-tp then
-				Duel.Damage(1-tp,math.ceil(og:GetSum(Card.GetBaseAttack,nil)/2),REASON_EFFECT)
+				Duel.Damage(1-tp,math.ceil((og&cg):GetSum(Card.GetTextAttack,nil)/2),REASON_EFFECT)
 			end
 		end
 	end
