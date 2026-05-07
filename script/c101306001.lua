@@ -31,29 +31,33 @@ function s.initial_effect(c)
 		Duel.RegisterEffect(ge1,0)
 	end
 end
+function s.checkfilter(c)
+	return c:GetPreviousTypeOnField()&TYPE_MONSTER~=0
+end
 function s.checkop(e,tp,eg,ep,ev,re,r,rp)
-	if eg:IsExists(Card.IsType,1,nil,TYPE_MONSTER) then
+	if eg:IsExists(s.checkfilter,1,nil) then
 		Duel.RegisterFlagEffect(0,id,RESET_PHASE+PHASE_END,0,1)
 	end
 end
 function s.recon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsMainPhase()
 end
-function s.cfilter(c,tp)
+function s.cfilter(c,tp,e)
 	return c:IsType(TYPE_MONSTER)
-		and (Duel.IsExistingMatchingCard(s.tgfilter,tp,LOCATION_DECK,0,1,nil) or Duel.GetMZoneCount(tp,c)>0)
+		and (Duel.IsExistingMatchingCard(s.tgfilter,tp,LOCATION_DECK,0,1,nil) or
+			Duel.GetMZoneCount(tp,c)>0 and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_HAND+LOCATION_DECK,0,1,c,e,tp))
 end
 function s.recost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.CheckReleaseGroupEx(tp,s.cfilter,1,REASON_COST,true,e:GetHandler(),tp) end
+	if chk==0 then return Duel.CheckReleaseGroupEx(tp,s.cfilter,1,REASON_COST,true,e:GetHandler(),tp,e) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
-	local g=Duel.SelectReleaseGroupEx(tp,s.cfilter,1,1,REASON_COST,true,e:GetHandler(),tp)
+	local g=Duel.SelectReleaseGroupEx(tp,s.cfilter,1,1,REASON_COST,true,e:GetHandler(),tp,e)
 	Duel.Release(g,REASON_COST)
 end
 function s.tgfilter(c)
 	return aux.IsCodeListed(c,101306052) and c:IsType(TYPE_SPELL+TYPE_TRAP)
 		and c:IsAbleToGrave()
 end
-function s.spfilter(c,e,tp,rc)
+function s.spfilter(c,e,tp)
 	return not c:IsCode(id) and aux.IsCodeListed(c,101306052) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.retg(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -61,8 +65,8 @@ function s.retg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local b2=Duel.IsExistingMatchingCard(s.tgfilter,tp,LOCATION_DECK,0,1,nil)
 	if chk==0 then return b1 or b2 end
 	local op=aux.SelectFromOptions(tp,
-			{b1,aux.Stringid(id,3),1},
-			{b2,aux.Stringid(id,4),2})
+			{b1,aux.Stringid(id,2),1},
+			{b2,aux.Stringid(id,3),2})
 	e:SetLabel(op)
 	if op==1 then
 		if e:IsCostChecked() then

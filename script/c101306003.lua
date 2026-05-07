@@ -1,10 +1,10 @@
---人造人間-サイコ・エナジー・ショッカー
+--人造人間－サイコ・エナジー・ショッカー
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--change
 	aux.EnableChangeCode(c,77585513,LOCATION_MZONE+LOCATION_GRAVE)
-	aux.AddCodeList(c,101306052,77585513)
-	--search
+	aux.AddCodeList(c,101306052)
+	--destroy
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_DESTROY)
@@ -19,15 +19,15 @@ function s.initial_effect(c)
 	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
 	c:RegisterEffect(e2)
 	--cannot trigger, normal version
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_FIELD)
-	e1:SetCode(EFFECT_CANNOT_TRIGGER)
-	e1:SetProperty(EFFECT_FLAG_SET_AVAILABLE)
-	e1:SetRange(LOCATION_MZONE)
-	e1:SetTargetRange(0,0xff)
-	e1:SetCondition(s.condition)
-	e1:SetTarget(s.distg)
-	c:RegisterEffect(e1)
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_FIELD)
+	e3:SetCode(EFFECT_CANNOT_TRIGGER)
+	e3:SetProperty(EFFECT_FLAG_SET_AVAILABLE)
+	e3:SetRange(LOCATION_MZONE)
+	e3:SetTargetRange(0,0xff)
+	e3:SetCondition(s.condition)
+	e3:SetTarget(s.distg)
+	c:RegisterEffect(e3)
 end
 function s.desfilter(c)
 	return c:IsType(TYPE_TRAP) or c:IsFacedown() and c:IsLocation(LOCATION_SZONE) and c:GetSequence()~=5

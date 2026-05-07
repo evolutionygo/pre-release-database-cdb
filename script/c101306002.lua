@@ -37,9 +37,10 @@ function s.cfilter(c)
 	return aux.IsCodeListed(c,101306052) and not c:IsPublic()
 end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_HAND,0,1,e:GetHandler()) end
+	local c=e:GetHandler()
+	if chk==0 then return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_HAND,0,1,c) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONFIRM)
-	local g=Duel.SelectMatchingCard(tp,s.cfilter,tp,LOCATION_HAND,0,1,1,e:GetHandler())
+	local g=Duel.SelectMatchingCard(tp,s.cfilter,tp,LOCATION_HAND,0,1,1,c)
 	Duel.ConfirmCards(1-tp,g)
 	Duel.ShuffleHand(tp)
 end
@@ -64,12 +65,15 @@ function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(s.thfilter,tp,LOCATION_DECK,0,nil)
-	if g:GetClassCount(Card.GetCode)<2 then return end
+	if g:GetCount()==0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local tg1=g:SelectSubGroup(tp,aux.dncheck,false,2,2)
-	Duel.SendtoHand(tg1,nil,REASON_EFFECT)
-	Duel.ConfirmCards(1-tp,tg1)
-	Duel.ShuffleHand(tp)
-	Duel.BreakEffect()
-	Duel.DiscardHand(tp,nil,1,1,REASON_EFFECT+REASON_DISCARD)
+	local tg1=g:SelectSubGroup(tp,aux.dncheck,false,1,2)
+	if Duel.SendtoHand(tg1,nil,REASON_EFFECT)>0 then
+		Duel.ConfirmCards(1-tp,tg1)
+		Duel.BreakEffect()
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DISCARD)
+		local dg=Duel.SelectMatchingCard(tp,Card.IsDiscardable,tp,LOCATION_HAND,0,1,1,nil,REASON_EFFECT)
+		Duel.ShuffleHand(tp)
+		Duel.SendtoGrave(dg,REASON_EFFECT+REASON_DISCARD)
+	end
 end
