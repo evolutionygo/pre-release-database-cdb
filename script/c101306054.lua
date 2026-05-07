@@ -80,12 +80,13 @@ end
 function s.splimit(e,c)
 	return not c:IsType(TYPE_FUSION) and c:IsLocation(LOCATION_EXTRA)
 end
-function s.rfilter(c)
+function s.rfilter(c,tp)
 	return c:IsFaceup() and aux.IsCodeListed(c,101306052) and c:IsReason(REASON_BATTLE+REASON_EFFECT) and not c:IsReason(REASON_REPLACE)
+		and c:IsControler(tp)
 end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-	if chk==0 then return eg:IsExists(s.rfilter,1,c)
+	if chk==0 then return c:GetControler()==c:GetOwner() and eg:IsExists(s.rfilter,1,c,tp)
 		and c:IsDestructable(e) and not c:IsStatus(STATUS_DESTROY_CONFIRMED) end
 	if Duel.SelectEffectYesNo(tp,c,96) then
 		Duel.Destroy(c,REASON_EFFECT+REASON_REPLACE)
@@ -93,5 +94,5 @@ function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	else return false end
 end
 function s.repval(e,c)
-	return c:IsFaceup() and aux.IsCodeListed(c,101306052) and c~=e:GetHandler()
+	return c:IsFaceup() and aux.IsCodeListed(c,101306052) and c~=e:GetHandler() and c:IsControler(e:GetHandlerPlayer())
 end

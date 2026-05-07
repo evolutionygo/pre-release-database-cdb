@@ -50,7 +50,8 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	Duel.HintSelection(g2)
 	if tc:IsFaceup() then
 		Duel.ChangePosition(tc,POS_FACEDOWN_DEFENSE)
-		tc:ClearEffectRelation()
+		local ce=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_EFFECT)
+		tc:ReleaseEffectRelation(ce)
 	end
 	for sc in aux.Next(sg) do
 		Duel.SpecialSummonStep(sc,0,tp,tp,true,true,POS_FACEDOWN_DEFENSE)

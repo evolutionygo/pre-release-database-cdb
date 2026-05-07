@@ -52,7 +52,8 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.stfilter(c,tp)
-	return c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsSSetable()
+	return c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsSSetable(true)
+		and (c:IsType(TYPE_FIELD) or Duel.GetLocationCount(tp,LOCATION_SZONE)>0)
 		and (c:IsControler(1-tp) or aux.IsCodeListed(c,101306052) and not c:IsCode(id))
 end
 function s.settg(e,tp,eg,ep,ev,re,r,rp,chk)
