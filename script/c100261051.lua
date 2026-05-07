@@ -68,7 +68,7 @@ end
 function s.disop(e,tp,eg,ep,ev,re,r,rp)
 	local tgc=Duel.GetFirstTarget()
 	local tc=nil
-	if tgc and tgc:IsRelateToChain() then tc=nil end
+	if tgc and tgc:IsRelateToChain() then tc=tgc end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 	local sg=Duel.SelectMatchingCard(tp,s.desfilter,tp,LOCATION_MZONE,0,1,1,tc)
 	if sg:GetCount()>0 then
