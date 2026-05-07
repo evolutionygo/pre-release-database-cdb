@@ -33,7 +33,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 				table.insert(ct,i)
 			end
 			Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,1))
-			ft=Duel.AnnounceNumber(tp,1,ft)
+			ft=Duel.AnnounceNumber(tp,1,table.unpack(ct))
 		end
 		for cid=1,ft do
 			local token=Duel.CreateToken(tp,id+o*cid)

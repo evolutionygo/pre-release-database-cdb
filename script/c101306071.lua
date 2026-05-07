@@ -58,7 +58,7 @@ function s.ctop(e,tp,eg,ep,ev,re,r,rp)
 				table.insert(tb,i)
 			end
 			Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,2))
-			ct=Duel.AnnounceNumber(tp,1,tb)
+			ct=Duel.AnnounceNumber(tp,1,table.unpack(tb))
 		end
 		c:AddCounter(0x76,ct)
 	end
