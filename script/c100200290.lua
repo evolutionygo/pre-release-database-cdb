@@ -23,7 +23,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function s.spfilter(c,e,tp)
-	return c:IsType(TYPE_NORMAL) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsType(TYPE_NORMAL) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_ATTACK)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
@@ -38,7 +38,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		and Duel.IsExistingMatchingCard(aux.NecroValleyFilter(s.spfilter),tp,LOCATION_HAND+LOCATION_GRAVE,0,1,nil,e,tp) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.spfilter),tp,LOCATION_HAND+LOCATION_GRAVE,0,1,ct,nil,e,tp)
-		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
+		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP_ATTACK)
 	end
 	if e:IsHasType(EFFECT_TYPE_ACTIVATE) then
 		local e1=Effect.CreateEffect(e:GetHandler())
