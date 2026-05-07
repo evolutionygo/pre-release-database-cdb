@@ -57,6 +57,10 @@ function s.initial_effect(c)
 		Duel.RegisterEffect(ge1,0)
 	end
 end
+s.material_setcode=0x3b
+function s.red_eyes_fusion_check(tp,sg,fc)
+	return aux.gffcheck(sg,Card.IsFusionCode,74677422,s.mfilter,nil)
+end
 function s.dcfilter(c)
 	return c:IsReason(REASON_EFFECT)
 end
@@ -67,9 +71,6 @@ function s.regop(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.mfilter(c)
 	return aux.IsCodeListed(c,101306052)
-end
-function s.mfilter(c)
-	return c:IsRace(RACE_ZOMBIE)
 end
 function s.splimit(e,se,sp,st)
 	return bit.band(st,SUMMON_TYPE_FUSION)==SUMMON_TYPE_FUSION and Duel.GetFlagEffect(sp,id+o)==0

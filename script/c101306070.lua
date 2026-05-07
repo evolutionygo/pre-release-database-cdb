@@ -44,7 +44,6 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 		Duel.BreakEffect()
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
 		local sg=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.spfilter),tp,LOCATION_GRAVE,LOCATION_GRAVE,1,1,nil,e,tp)
 		Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP)
 	end

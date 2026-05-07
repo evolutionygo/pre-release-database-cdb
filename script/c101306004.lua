@@ -31,7 +31,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function s.cfilter(c)
-	return c:IsFaceupEx() and (aux.IsCodeListed(c,101306052) and c:IsType(TYPE_MONSTER) or c:IsCode(22702055))
+	return c:IsFaceupEx() and not c:IsCode(id) and (aux.IsCodeListed(c,101306052)or c:IsCode(22702055))
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return rp==1-tp and re:IsActiveType(TYPE_MONSTER) and re:GetActivateLocation()==LOCATION_MZONE
@@ -61,7 +61,7 @@ end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToChain() then
+	if tc:IsRelateToChain() and tc:IsType(TYPE_MONSTER) then
 		Duel.Destroy(tc,REASON_EFFECT)
 	end
 	if c:IsRelateToChain() then
@@ -77,5 +77,6 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_CARD,0,id)
 	Duel.SendtoHand(e:GetHandler(),nil,REASON_EFFECT)
 end

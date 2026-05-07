@@ -64,11 +64,11 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 end
-function s.cffilter(c)
+function s.cfilter(c)
 	return c:IsFaceupEx() and aux.IsCodeListed(c,101306052) and c:IsType(TYPE_MONSTER)
 end
 function s.condition(e)
-	return Duel.IsExistingMatchingCard(s.cffilter,e:GetHandlerPlayer(),LOCATION_MZONE+LOCATION_GRAVE,0,1,e:GetHandler())
+	return Duel.IsExistingMatchingCard(s.cfilter,e:GetHandlerPlayer(),LOCATION_MZONE+LOCATION_GRAVE,0,1,e:GetHandler())
 end
 function s.distg(e,c)
 	return c:IsType(TYPE_TRAP)

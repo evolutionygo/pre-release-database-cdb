@@ -27,7 +27,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	if ft>4 then ft=4 end
 	if Duel.IsPlayerAffectedByEffect(tp,59822133) then ft=1 end
-	if Duel.IsPlayerCanSpecialSummonMonster(tp,id+o,0,TYPES_TOKEN_MONSTER,0,0,1,RACE_MACHINE,ATTRIBUTE_EARTH,POS_FACEUP_DEFENSE) and ft>0 then
+	if Duel.IsPlayerCanSpecialSummonMonster(tp,id+o,0,TYPES_TOKEN_MONSTER,0,0,1,RACE_BEAST,ATTRIBUTE_EARTH,POS_FACEUP_DEFENSE) and ft>0 then
 		local ctn=true
 		local cid=1
 		while ft>0 and ctn do
@@ -78,7 +78,7 @@ function s.splimit(e,c)
 	return not c:IsType(TYPE_FUSION) and c:IsLocation(LOCATION_EXTRA)
 end
 function s.rfilter(c)
-	return c:IsFaceup() and c:IsLocation(LOCATION_MZONE) and aux.IsCodeListed(c,101306052) and c:IsReason(REASON_BATTLE+REASON_EFFECT) and not c:IsReason(REASON_REPLACE)
+	return c:IsFaceup() and aux.IsCodeListed(c,101306052) and c:IsReason(REASON_BATTLE+REASON_EFFECT) and not c:IsReason(REASON_REPLACE)
 end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()

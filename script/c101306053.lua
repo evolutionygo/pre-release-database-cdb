@@ -14,8 +14,7 @@ function s.initial_effect(c)
 	e1:SetOperation(s.activate)
 	c:RegisterEffect(e1)
 	--destroy
-	local custom_code=aux.RegisterMergedDelayedEvent_ToSingleCard(c,id,EVENT_SUMMON_SUCCESS)
-	local custom_code2=aux.RegisterMergedDelayedEvent_ToSingleCard(c,id,EVENT_SPSUMMON_SUCCESS)
+	local custom_code=aux.RegisterMergedDelayedEvent_ToSingleCard(c,id,{EVENT_SUMMON_SUCCESS,EVENT_SPSUMMON_SUCCESS})
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,2))
 	e2:SetCategory(CATEGORY_DESTROY+CATEGORY_DAMAGE)
@@ -28,9 +27,6 @@ function s.initial_effect(c)
 	e2:SetTarget(s.destg)
 	e2:SetOperation(s.desop)
 	c:RegisterEffect(e2)
-	local e3=e2:Clone()
-	e3:SetCode(custom_code2)
-	c:RegisterEffect(e3)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
@@ -78,7 +74,7 @@ function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		sg=g:Clone()
 		Duel.SetTargetCard(sg)
 	else
-		Duel.Hint(HINTMSG_DESTROY,tp,HINTMSG_DESTROY)
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 		sg=Duel.SelectTarget(tp,aux.IsInGroup,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil,g)
 	end
 end
