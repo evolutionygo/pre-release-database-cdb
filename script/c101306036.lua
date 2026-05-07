@@ -85,7 +85,7 @@ end
 function s.hspfilter(c,tp,fc)
 	return c:IsFaceup() and c:IsReleasable(REASON_MATERIAL|REASON_SPSUMMON)
 		and c:IsCanBeFusionMaterial(fc,SUMMON_TYPE_SPECIAL)
-		and Duel.GetLocationCountFromEx(tp,tp,fc,c)>0
+		and Duel.GetLocationCountFromEx(tp,tp,c,fc)>0
 end
 function s.spcon(e,c)
 	if c==nil then return true end

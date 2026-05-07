@@ -10,6 +10,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 	--counter
 	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(aux.Stringid(id,0))
 	e2:SetCategory(CATEGORY_COUNTER+CATEGORY_DICE)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
 	e2:SetCode(EVENT_PHASE+PHASE_STANDBY)
@@ -21,7 +22,7 @@ function s.initial_effect(c)
 	--atk
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,1))
-	e3:SetCategory(CATEGORY_ATKCHANGE+CATEGORY_DISABLE)
+	e3:SetCategory(CATEGORY_ATKCHANGE+CATEGORY_DISABLE+CATEGORY_COIN)
 	e3:SetType(EFFECT_TYPE_TRIGGER_O+EFFECT_TYPE_FIELD)
 	e3:SetCode(EVENT_PRE_DAMAGE_CALCULATE)
 	e3:SetRange(LOCATION_SZONE)
@@ -32,7 +33,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(id,1))
-	e4:SetCategory(CATEGORY_ATKCHANGE+CATEGORY_DISABLE)
+	e4:SetCategory(CATEGORY_ATKCHANGE+CATEGORY_DISABLE+CATEGORY_COIN)
 	e4:SetType(EFFECT_TYPE_QUICK_O)
 	e4:SetCode(EVENT_CHAINING)
 	e4:SetRange(LOCATION_SZONE)
@@ -50,7 +51,17 @@ function s.ctop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local ct=Duel.TossDice(tp,1)
 	if c:GetCounter(0x76)+ct>6 then ct=6-c:GetCounter(0x76) end
-	c:AddCounter(0x76,ct)
+	if ct>0 then
+		if ct>1 then
+			local tb={}
+			for i=ct,1,-1 do
+				table.insert(tb,i)
+			end
+			Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,2))
+			ct=Duel.AnnounceNumber(tp,1,tb)
+		end
+		c:AddCounter(0x76,ct)
+	end
 end
 function s.atkcon(e,tp,eg,ep,ev,re,r,rp)
 	local a=Duel.GetAttacker()
