@@ -32,7 +32,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
 	Duel.SelectTarget(tp,s.filter,tp,LOCATION_MZONE,0,1,1,nil)
 end
-function s.desfiltet(c,atk)
+function s.desfilter(c,atk)
 	return c:IsFaceup() and c:GetBaseAttack()<atk
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
@@ -45,10 +45,10 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetValue(600)
 		tc:RegisterEffect(e1)
 		Duel.AdjustAll()
-		if Duel.IsExistingMatchingCard(s.desfiltet,tp,0,LOCATION_MZONE,1,nil,tc:GetAttack())
+		if Duel.IsExistingMatchingCard(s.desfilter,tp,0,LOCATION_MZONE,1,nil,tc:GetAttack())
 			and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 			Duel.BreakEffect()
-			local sg=Duel.GetMatchingGroup(s.desfiltet,tp,0,LOCATION_MZONE,nil,tc:GetAttack())
+			local sg=Duel.GetMatchingGroup(s.desfilter,tp,0,LOCATION_MZONE,nil,tc:GetAttack())
 			Duel.Destroy(sg,REASON_EFFECT)
 		end
 	end

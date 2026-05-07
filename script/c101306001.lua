@@ -1,4 +1,4 @@
---疾風の豹戦士パンサーウォリア
+--疾風の豹戦士パンサーウォリアー
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddCodeList(c,101306052)
