@@ -1,4 +1,4 @@
---幽獄の時計都市-ダーク・シティ
+--幽獄の時計都市－ダーク・シティ
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddCodeList(c,75041269)
@@ -89,7 +89,7 @@ function s.spfilter(c,e,tp)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-	if chk==0 then 
+	if chk==0 then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)

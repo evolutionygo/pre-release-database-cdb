@@ -1,4 +1,4 @@
---D-HERO ドレッドノートサーヴァント
+--D－HERO ドレッドノートサーヴァント
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddCodeList(c,24094653)
@@ -15,6 +15,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 	--todeck
 	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetCategory(CATEGORY_TODECK)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
@@ -50,12 +51,15 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.BreakEffect()
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 		local g=Duel.SelectMatchingCard(tp,aux.TRUE,tp,LOCATION_ONFIELD,0,1,1,nil)
-		if g:GetCount()>0 and Duel.Destroy(g,REASON_EFFECT)~=0 then
-			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-			local sg=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_DECK,0,1,1,nil)
-			if sg:GetCount()>0 then
-				Duel.SendtoHand(sg,nil,REASON_EFFECT)
-				Duel.ConfirmCards(1-tp,sg)
+		if g:GetCount()>0 then
+			Duel.HintSelection(g)
+			if Duel.Destroy(g,REASON_EFFECT)~=0 then
+				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+				local sg=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_DECK,0,1,1,nil)
+				if sg:GetCount()>0 then
+					Duel.SendtoHand(sg,nil,REASON_EFFECT)
+					Duel.ConfirmCards(1-tp,sg)
+				end
 			end
 		end
 	end
@@ -75,7 +79,7 @@ function s.tdtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function s.tdop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc and tc:IsRelateToChain() then
+	if tc and tc:IsRelateToChain() and tc:IsOnField() then
 		Duel.SendtoDeck(tc,nil,SEQ_DECKTOP,REASON_EFFECT)
 	end
 end
