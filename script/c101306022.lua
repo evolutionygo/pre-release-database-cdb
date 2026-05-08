@@ -97,11 +97,6 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetReset(RESET_PHASE+PHASE_END)
 	Duel.RegisterEffect(e1,tp)
 end
-function s.desop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Hint(HINT_CARD,0,id)
-	local tc=e:GetLabelObject()
-	Duel.Destroy(tc,REASON_EFFECT)
-end
 function s.splimit(e,c)
 	return not (c:IsAttribute(ATTRIBUTE_DARK) and c:IsSetCard(0x8))
 end
