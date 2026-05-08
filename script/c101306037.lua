@@ -4,6 +4,7 @@ function s.initial_effect(c)
 	--fusion material
 	c:EnableReviveLimit()
 	aux.AddFusionProcFunRep(c,s.mfilter,2,true)
+	aux.AddCodeList(c,40591390)
 	--splimit
 	local e0=Effect.CreateEffect(c)
 	e0:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
@@ -62,7 +63,7 @@ function s.regop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1)
 end
 function s.hspfilter(c,tp,fc)
-	return c:IsFaceup() and c:IsFusionCode(40591390) and c:IsReleasable(REASON_MATERIAL|REASON_SPSUMMON)
+	return c:IsFusionCode(40591390) and c:IsReleasable(REASON_MATERIAL|REASON_SPSUMMON)
 		and c:IsCanBeFusionMaterial(fc,SUMMON_TYPE_SPECIAL)
 		and Duel.GetLocationCountFromEx(tp,tp,fc,c)>0
 end
@@ -94,6 +95,9 @@ function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,2,tp,LOCATION_DECK)
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
+	if not Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,2,nil) then 
+		return 
+	end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	local g=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_DECK,0,2,2,nil)
 	if g:GetCount()>0 then

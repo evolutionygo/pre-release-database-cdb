@@ -20,7 +20,7 @@ function s.initial_effect(c)
 	e2:SetOperation(s.spop)
 	e2:SetValue(SUMMON_VALUE_SELF)
 	c:RegisterEffect(e2)
-	--Burn and Search
+	--damage
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,1))
 	e3:SetCategory(CATEGORY_DAMAGE)
