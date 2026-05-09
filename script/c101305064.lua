@@ -68,7 +68,9 @@ function s.damop(e,tp,eg,ep,ev,re,r,rp)
 	local dam1=c:GetCounter(0x6e)
 	local dam2=Duel.GetMatchingGroupCount(Card.IsCode,1-p,LOCATION_GRAVE,0,nil,60600821)
 	local dam=dam1+dam2
-	Duel.Damage(p,dam*400,REASON_EFFECT)
+	if dam>0 then
+		Duel.Damage(p,dam*400,REASON_EFFECT)
+	end
 end
 function s.setcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetTurnPlayer()~=tp

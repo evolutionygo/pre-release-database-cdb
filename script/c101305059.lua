@@ -86,16 +86,20 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	local tg=g:Filter(aux.NecroValleyFilter(Card.IsRelateToChain),nil)
 	if tg:GetCount()>0 then
 		if tg:GetCount()==1 then
-			Duel.SendtoHand(tg,nil,REASON_EFFECT)
-			Duel.ConfirmCards(1-tp,tg)
+			if tg:IsExists(Card.IsAbleToHand,1,nil) then
+				Duel.SendtoHand(tg,nil,REASON_EFFECT)
+				Duel.ConfirmCards(1-tp,tg)
+			end
 		else
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 			local sg=tg:Select(tp,1,1,nil)
-			tg:Sub(sg)
-			Duel.SendtoHand(sg,nil,REASON_EFFECT)
-			Duel.ConfirmCards(1-tp,sg)
-			if sg:IsExists(Card.IsLocation,1,nil,LOCATION_HAND) then
-				Duel.SendtoDeck(tg,nil,SEQ_DECKBOTTOM,REASON_EFFECT)
+			if sg:IsExists(Card.IsAbleToHand,1,nil) then
+				tg:Sub(sg)
+				Duel.SendtoHand(sg,nil,REASON_EFFECT)
+				Duel.ConfirmCards(1-tp,sg)
+				if sg:IsExists(Card.IsLocation,1,nil,LOCATION_HAND) then
+					Duel.SendtoDeck(tg,nil,SEQ_DECKBOTTOM,REASON_EFFECT)
+				end
 			end
 		end
 	end
