@@ -49,6 +49,7 @@ function s.initial_effect(c)
 	e5:SetValue(s.val)
 	c:RegisterEffect(e5)
 end
+s.material_setcode=0xc008
 function s.mfilter(c)
 	return c:IsLevelAbove(5) and c:IsFusionSetCard(0xc008)
 end
