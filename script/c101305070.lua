@@ -72,6 +72,7 @@ function s.rmcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=e:GetLabelObject()
+	Duel.Hint(HINT_CARD,0,id)
 	Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)
 end
 function s.rmfilter(c)

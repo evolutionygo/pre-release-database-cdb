@@ -57,6 +57,7 @@ function s.cecost(e,tp,eg,ep,ev,re,r,rp,chk)
 		local g=Duel.SelectMatchingCard(tp,s.cpfilter,tp,LOCATION_HAND,0,1,1,nil)
 		Duel.ConfirmCards(1-tp,g)
 		e:SetLabelObject(g:GetFirst())
+		Duel.ShuffleHand(tp)
 	end
 end
 function s.cetg(e,tp,eg,ep,ev,re,r,rp,chk)

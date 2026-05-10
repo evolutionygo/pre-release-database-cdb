@@ -31,7 +31,7 @@ function s.initial_effect(c)
 end
 function s.rmlimit(e,c,rp,r,re)
 	local tp=e:GetHandlerPlayer()
-	return c:IsControler(tp) and c:IsLocation(LOCATION_MZONE) and c:GetSequence()==2 and c:IsFaceup()
+	return c:IsControler(tp) and c:IsLocation(LOCATION_MZONE) and c:GetSequence()==2
 		and r&REASON_EFFECT~=0 and r&REASON_REDIRECT==0 and rp==1-tp
 end
 function s.cfilter(c,tp)

@@ -12,7 +12,7 @@ function s.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_QUICK_O)
 	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetRange(LOCATION_SZONE)
-	e2:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_END_PHASE)
+	e2:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_MAIN_END)
 	e2:SetCountLimit(1,id)
 	e2:SetCondition(s.setcon)
 	e2:SetTarget(s.settg)
@@ -59,8 +59,11 @@ function s.setop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_SZONE)<=1 then return end
 	local pg=Duel.GetMatchingGroup(aux.NecroValleyFilter(s.tffilter),tp,LOCATION_HAND+LOCATION_DECK+LOCATION_GRAVE,0,nil,tp)
 	if pg:GetCount()<2 then return end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
-	local g=pg:Select(tp,2,2,nil)
+	local g=pg
+	if pg:GetCount()>2 then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
+		g=pg:Select(tp,2,2,nil)
+	end
 	for tc in aux.Next(g) do
 		Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
 	end

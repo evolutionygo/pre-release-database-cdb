@@ -6,6 +6,9 @@ function s.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
+	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
+	e1:SetHintTiming(TIMING_DAMAGE_STEP)
+	e1:SetCondition(aux.dscon)
 	c:RegisterEffect(e1)
 	--decrease atk/def
 	local e2=Effect.CreateEffect(c)
@@ -33,6 +36,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e4)
 	--to hand
 	local e5=Effect.CreateEffect(c)
+	e5:SetDescription(aux.Stringid(id,2))
 	e5:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e5:SetType(EFFECT_TYPE_QUICK_O)
 	e5:SetCode(EVENT_FREE_CHAIN)
@@ -64,6 +68,8 @@ function s.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.SelectMatchingCard(tp,s.cfilter,tp,LOCATION_HAND+LOCATION_ONFIELD,0,1,1,c,tp)
 	if g:GetFirst():IsLocation(LOCATION_HAND) then
 		Duel.ConfirmCards(1-tp,g)
+	else
+		Duel.HintSelection(g)
 	end
 	e:SetLabel(g:GetFirst():GetCode())
 	Duel.SendtoDeck(g,nil,SEQ_DECKSHUFFLE,REASON_COST)
