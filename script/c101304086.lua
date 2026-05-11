@@ -70,6 +70,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.SpecialSummonComplete()
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_CARD,0,id)
 	Duel.SendtoHand(e:GetHandler(),nil,REASON_EFFECT)
 end
 function s.tkcost(e,tp,eg,ep,ev,re,r,rp,chk)

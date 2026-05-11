@@ -45,14 +45,13 @@ function s.negop(e,tp,eg,ep,ev,re,r,rp)
 	end
 	Duel.BreakEffect()
 	local flag=g:IsExists(s.gmxfilter,1,nil)
-	if flag then
-		Duel.NegateEffect(ev)
-		Duel.SortDecktop(tp,tp,5)
-		if Duel.SelectOption(tp,aux.Stringid(id,1),aux.Stringid(id,2))==1 then
-			for i=1,5 do
-				local mg=Duel.GetDecktopGroup(tp,1)
-				Duel.MoveSequence(mg:GetFirst(),SEQ_DECKBOTTOM)
-			end
-		end
+	if flag then Duel.NegateEffect(ev) end
+	local ct=g:GetCount()
+	local op=Duel.SelectOption(tp,aux.Stringid(id,1),aux.Stringid(id,2))
+	Duel.SortDecktop(tp,tp,ct)
+	if op==0 then return end
+	for i=1,ct do
+		local mg=Duel.GetDecktopGroup(tp,1)
+		Duel.MoveSequence(mg:GetFirst(),SEQ_DECKBOTTOM)
 	end
 end
