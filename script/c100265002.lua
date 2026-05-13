@@ -69,11 +69,14 @@ function s.drop(e,tp,eg,ep,ev,re,r,rp)
 	local p=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER)
 	local g=Duel.GetMatchingGroup(s.tdfilter,p,LOCATION_HAND,0,nil)
 	Duel.Hint(HINT_SELECTMSG,p,HINTMSG_TODECK)
-	local sg=g:SelectSubGroup(p,s.gcheck,false,1,63)
+	local sg=g:SelectSubGroup(p,s.gcheck,false,1,g:GetCount())
 	if sg:GetCount()==0 then return end
 	Duel.ConfirmCards(1-p,sg)
 	Duel.SendtoDeck(sg,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)
 	Duel.ShuffleDeck(p)
-	Duel.BreakEffect()
-	Duel.Draw(p,sg:GetCount(),REASON_EFFECT)
+	local ct=sg:FilterCount(Card.IsLocation,nil,LOCATION_DECK+LOCATION_EXTRA)
+	if ct>0 then
+		Duel.BreakEffect()
+		Duel.Draw(p,ct,REASON_EFFECT)
+	end
 end
