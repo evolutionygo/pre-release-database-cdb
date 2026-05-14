@@ -41,7 +41,7 @@ function s.gcheck(g)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local g=Duel.GetMatchingGroup(s.atkfilter,tp,LOCATION_MZONE,0,nil,e)
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsController(tp) and s.atkfilter(chkc,e) end
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and s.atkfilter(chkc,e) end
 	if chk==0 then return Duel.IsExistingTarget(s.atkfilter,tp,LOCATION_MZONE,0,1,nil,e) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
 	local sg=g:SelectSubGroup(tp,s.gcheck,false,1,7)
