@@ -27,10 +27,10 @@ function s.initial_effect(c)
 	Duel.AddCustomActivityCounter(id,ACTIVITY_CHAIN,s.chainfilter)
 end
 function s.chainfilter(re,tp,cid)
-	return not (re:IsActiveType(TYPE_SPELL) and re:GetHandler():IsCode(53770666) and re:IsHasType(EFFECT_TYPE_ACTIVATE))
+	return not (re:IsActiveType(TYPE_SPELL+TYPE_TRAP) and re:GetHandler():IsCode(53770666) and re:IsHasType(EFFECT_TYPE_ACTIVATE))
 end
 function s.atkfilter(c,e)
-	return c:IsFaceup()
+	return c:IsFaceup() and c:IsCanBeEffectTarget(e)
 end
 function s.cfilter(c,g)
 	return not g:IsExists(aux.NOT(Card.IsRace),1,c,c:GetRace())
@@ -48,9 +48,8 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetTargetCard(sg)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToChain,nil,e):Filter(Card.IsFaceup,nil)
-	local sg=g:Filter(Card.IsFaceup,nil)
-	for tc in aux.Next(sg) do
+	local g=Duel.GetTargetsRelateToChain():Filter(Card.IsType,nil,TYPE_MONSTER):Filter(Card.IsFaceup,nil)
+	for tc in aux.Next(g) do
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_UPDATE_ATTACK)
