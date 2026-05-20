@@ -14,6 +14,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 	--destroy
 	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetCategory(CATEGORY_DESTROY)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_DESTROYED)
@@ -47,13 +48,8 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(aux.AND(Card.IsRelateToChain,Card.IsOnField),nil)
 	if Duel.Destroy(g,REASON_EFFECT)~=0 then
 		local og=Duel.GetOperatedGroup()
-		local ct=Duel.GetOperatedGroup():GetCount()
 		local c=e:GetHandler()
-		if Duel.GetLocationCount(tp,LOCATION_MZONE)==0 then
-			Duel.SendtoGrave(c,REASON_EFFECT)
-		end
-		if not c:IsRelateToChain() then return end
-		if Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)~=0 then
+		if c:IsRelateToChain() and Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)~=0 then
 			if og:IsExists(Card.IsType,1,nil,TYPE_MONSTER)
 				and Duel.IsPlayerCanDraw(tp,1)
 				and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
@@ -72,11 +68,11 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 				end
 			end
 			if og:IsExists(Card.IsType,1,nil,TYPE_TRAP)
-				and Duel.IsExistingMatchingCard(aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,e:GetHandler())
+				and Duel.IsExistingMatchingCard(aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,aux.ExceptThisCarde(e))
 				and Duel.SelectYesNo(tp,aux.Stringid(id,4)) then
 				Duel.BreakEffect()
 				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-				local g=Duel.SelectMatchingCard(tp,aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,e:GetHandler())
+				local g=Duel.SelectMatchingCard(tp,aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,aux.ExceptThisCarde(e))
 				Duel.HintSelection(g)
 				Duel.Destroy(g,REASON_EFFECT)
 			end
