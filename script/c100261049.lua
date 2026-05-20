@@ -34,7 +34,7 @@ function s.fselect(g,tp)
 	return Duel.GetMZoneCount(tp,g)>0
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return false end
+	if chkc then return chkc:IsOnField() and chkc:IsControler(tp) and Duel.GetMZoneCount(tp,chkc)>0 end
 	local g=Duel.GetMatchingGroup(s.desfilter1,tp,LOCATION_ONFIELD,0,nil,e)
 	if chk==0 then return g:CheckSubGroup(s.fselect,1,3,tp) and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
@@ -65,18 +65,18 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 				and Duel.SelectYesNo(tp,aux.Stringid(id,3)) then
 				Duel.BreakEffect()
 				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_POSCHANGE)
-				local cg=Duel.SelectTarget(tp,Card.IsCanChangePosition,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
+				local cg=Duel.SelectMatchingCard(tp,Card.IsCanChangePosition,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
 				if cg:GetCount()>0 then
 					Duel.HintSelection(cg)
 					Duel.ChangePosition(cg:GetFirst(),POS_FACEUP_DEFENSE,POS_FACEUP_DEFENSE,POS_FACEUP_ATTACK,POS_FACEUP_ATTACK)
 				end
 			end
 			if og:IsExists(Card.IsType,1,nil,TYPE_TRAP)
-				and Duel.IsExistingMatchingCard(aux.TURE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,e:GetHandler())
+				and Duel.IsExistingMatchingCard(aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,e:GetHandler())
 				and Duel.SelectYesNo(tp,aux.Stringid(id,4)) then
 				Duel.BreakEffect()
 				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-				local g=Duel.SelectMatchingCard(tp,aux.TURE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,e:GetHandler())
+				local g=Duel.SelectMatchingCard(tp,aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,e:GetHandler())
 				Duel.HintSelection(g)
 				Duel.Destroy(g,REASON_EFFECT)
 			end
