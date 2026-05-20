@@ -47,10 +47,13 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetTargetCard(sg)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 end
+function s.mtfilter(c,tp,e)
+	return c:IsLocation(LOCATION_MZONE) and c:IsFaceup()
+		and (c:IsControler(tp) or not c:IsImmuneToEffect(e))
+end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetTargetsRelateToChain()
-	if g:GetCount()==2 and g:IsExists(Card.IsLocation,2,nil,LOCATION_MZONE)
-		and g:IsExists(Card.IsFaceup,2,nil) then
+	if g:GetCount()==2 and g:IsExists(s.mtfilter,2,nil,tp,e) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local sg=Duel.SelectMatchingCard(tp,s.lfilter,tp,LOCATION_EXTRA,0,1,1,nil,g)
 		local lc=sg:GetFirst()
