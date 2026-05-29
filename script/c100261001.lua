@@ -70,7 +70,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 		if tc:IsAbleToHand() and (not pchk or Duel.SelectOption(tp,1190,aux.Stringid(id,3))==0) then
 			Duel.SendtoHand(tc,nil,REASON_EFFECT)
 			Duel.ConfirmCards(1-tp,tc)
-		else
+		elseif pchk then
 			if tc then
 				if tc:IsType(TYPE_CONTINUOUS) then
 					Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
