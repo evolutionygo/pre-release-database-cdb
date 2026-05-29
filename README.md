@@ -46,6 +46,19 @@ https://cdn02.moecube.com:444/ygopro-super-pre/versions/master/test-release-v2.j
 
 只需要运行，即可启用 cdb 的 git 合并和变动的操作的功能。
 
+## RC 发售卡修正
+
+CI 会自动计算已经发售的卡，并把修正后的 RC 用 cdb 放入 `tiramisu.moenext.com:8911`。
+
+自动计算结果会通过根目录的 `rc-specials/include` 和 `rc-specials/exclude` 进行修正。这两个目录用于放置 YDK 卡组：
+
+修正基准应当参照上次 GitLab CI 的 `strip_rc_databases` 结果。
+
+- `rc-specials/include`：卡组内的卡按已发售处理，不会从 RC 用 cdb 删除。
+- `rc-specials/exclude`：卡组内的卡按未发售处理，会从 RC 用 cdb 删除。
+
+脚本会读取对应目录内所有 YDK 文件，并把 `main`、`extra`、`side` 的全部卡号都算入列表。目录不存在时会直接跳过。
+
 ## 测试类型
 
 ### 超先行测试

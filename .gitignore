@@ -42,3 +42,4 @@ lerna-debug.log*
 /bin
 /ygopro
 /tests/yrp-patched
+/tests/research
