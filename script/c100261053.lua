@@ -49,7 +49,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function s.mtfilter(c,tp,e)
 	return c:IsLocation(LOCATION_MZONE) and c:IsFaceup()
-		and (c:IsControler(tp) or not c:IsImmuneToEffect(e))
+		and not c:IsImmuneToEffect(e)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetTargetsRelateToChain()
