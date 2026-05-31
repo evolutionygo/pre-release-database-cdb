@@ -34,6 +34,7 @@ const beastMaterial = 2619149;
 const secondBeastMaterial = 1371589;
 const overAtkBeast = 340002;
 const defender = 40640057;
+const macroCosmos = 30241314;
 const ashBlossom = 14558127;
 const drawCards = [28985331, 5560911, 89631139];
 
@@ -42,6 +43,9 @@ const {
   LOCATION_EXTRA,
   LOCATION_HAND,
   LOCATION_MZONE,
+  LOCATION_REMOVED,
+  LOCATION_SZONE,
+  POS_FACEUP,
   POS_FACEUP_ATTACK,
 } = OcgcoreScriptConstants;
 
@@ -336,6 +340,44 @@ describe("燦冠乗騎シックラヴィー", () => {
         });
       },
     );
+
+    it("still triggers when Macro Cosmos banishes the battle-destroyed monster", async () => {
+      await createTest({}, (ctx) => {
+        const flow = ctx.addCard([
+          {
+            code: cardCode,
+            controller: 1,
+            location: LOCATION_MZONE,
+            position: POS_FACEUP_ATTACK,
+          },
+          {
+            code: defender,
+            location: LOCATION_MZONE,
+            position: POS_FACEUP_ATTACK,
+          },
+          {
+            code: macroCosmos,
+            location: LOCATION_SZONE,
+            position: POS_FACEUP,
+          },
+        ]);
+
+        return triggerBattleDestroyEffect(goToPlayerOneBattlePhase(flow)).state(
+          YGOProMsgSelectBattleCmd,
+          () => {
+            expectCurrentMessage(ctx, YGOProMsgAddCounter, (msg) => {
+              expect(msg.counterType).toBe(crownCounter);
+              expect(msg.controller).toBe(1);
+              expect(msg.count).toBe(1);
+            });
+            const attacker = findCard(ctx, cardCode, LOCATION_MZONE, 1);
+            expect(attacker?.attack).toBe(2400);
+            expect(getCounter(attacker, crownCounter)).toBe(1);
+            expect(findCard(ctx, defender, LOCATION_REMOVED)).toBeDefined();
+          },
+        );
+      });
+    });
 
     it("returns itself to the Extra Deck and draws 3 when the predicted counter count is 3", async () => {
       await createTest({}, (ctx) => {
