@@ -55,10 +55,12 @@
   "dependencies": {
     "js-yaml": "^4.1.1",
     "jszip": "^3.10.1",
-    "koishipro-core.js": "^1.4.3",
+    "koishipro-core.js": "^1.4.6",
     "sql.js": "^1.13.0",
     "ygopro-cdb-encode": "^1.1.0",
-    "ygopro-jstest": "^1.1.4",
+    "ygopro-deck-encode": "^1.0.16",
+    "ygopro-jstest": "^1.1.5",
+    "ygopro-lflist-encode": "^1.0.3",
     "ygopro-msg-encode": "^1.2.2",
     "ygopro-yrp-encode": "^1.0.1"
   }

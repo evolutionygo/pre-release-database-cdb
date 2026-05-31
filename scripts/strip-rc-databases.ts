@@ -3,9 +3,11 @@ import fs from "node:fs";
 import path from "node:path";
 import JSZip from "jszip";
 import initSqlJs, { Database } from "sql.js";
+import YGOProDeck from "ygopro-deck-encode";
 
 const YGOCDB_API_BASE = "https://ygocdb.com/api/v0";
 const OFFICIAL_ID_LIMIT = 100000000;
+const RC_SPECIALS_DIR = "rc-specials";
 
 type CardRow = {
   id: number;
@@ -14,6 +16,12 @@ type CardRow = {
 
 type YgocdbCard = {
   id: number;
+};
+
+type RcSpecialDeckIds = {
+  ids: Set<number>;
+  fileCount: number;
+  skipped: boolean;
 };
 
 async function fetchBuffer(url: string): Promise<Buffer> {
@@ -83,6 +91,71 @@ async function fetchReleasedCardIds(): Promise<Set<number>> {
   }
 
   return releasedIds;
+}
+
+function readRcSpecialDeckIds(dirPath: string): RcSpecialDeckIds {
+  if (!fs.existsSync(dirPath)) {
+    return { ids: new Set<number>(), fileCount: 0, skipped: true };
+  }
+
+  if (!fs.statSync(dirPath).isDirectory()) {
+    throw new Error(`${dirPath} exists but is not a directory`);
+  }
+
+  const ids = new Set<number>();
+  const filePaths = fs
+    .readdirSync(dirPath, { withFileTypes: true })
+    .filter((entry) => entry.isFile())
+    .map((entry) => path.join(dirPath, entry.name))
+    .sort();
+
+  for (const filePath of filePaths) {
+    const ydkString = fs.readFileSync(filePath, "utf-8");
+    const deck = YGOProDeck.fromYdkString(ydkString);
+
+    for (const id of [...deck.main, ...deck.extra, ...deck.side]) {
+      ids.add(id);
+    }
+  }
+
+  return { ids, fileCount: filePaths.length, skipped: false };
+}
+
+function applyRcSpecials(releasedIds: Set<number>): Set<number> {
+  const includeDir = path.join(process.cwd(), RC_SPECIALS_DIR, "include");
+  const excludeDir = path.join(process.cwd(), RC_SPECIALS_DIR, "exclude");
+  const include = readRcSpecialDeckIds(includeDir);
+  const exclude = readRcSpecialDeckIds(excludeDir);
+  const adjustedReleasedIds = new Set(releasedIds);
+
+  for (const id of include.ids) {
+    adjustedReleasedIds.add(id);
+  }
+
+  for (const id of exclude.ids) {
+    adjustedReleasedIds.delete(id);
+  }
+
+  const sharedIds = [...include.ids].filter((id) => exclude.ids.has(id));
+  if (sharedIds.length > 0) {
+    console.warn(
+      `rc-specials has ${sharedIds.length} id(s) in both include and exclude; exclude was applied last`,
+    );
+  }
+
+  const describe = (name: string, decks: RcSpecialDeckIds) =>
+    decks.skipped
+      ? `${name}: skipped`
+      : `${name}: ${decks.ids.size} ids from ${decks.fileCount} file(s)`;
+
+  console.log(
+    `Applied rc-specials overrides (${describe(
+      "include",
+      include,
+    )}; ${describe("exclude", exclude)}): ${adjustedReleasedIds.size} released ids`,
+  );
+
+  return adjustedReleasedIds;
 }
 
 function queryCards(db: Database): CardRow[] {
@@ -214,6 +287,7 @@ async function main() {
 
   const releasedIds = await fetchReleasedCardIds();
   console.log(`Loaded ${releasedIds.size} released card ids from ygocdb`);
+  const adjustedReleasedIds = applyRcSpecials(releasedIds);
 
   const sqlJsDistDir = path.dirname(require.resolve("sql.js/dist/sql-wasm.js"));
   const SQL = await initSqlJs({
@@ -223,7 +297,7 @@ async function main() {
   for (const dbPath of dbPaths) {
     const db = new SQL.Database(fs.readFileSync(dbPath));
     try {
-      stripDatabase(dbPath, db, releasedIds);
+      stripDatabase(dbPath, db, adjustedReleasedIds);
     } finally {
       db.close();
     }
