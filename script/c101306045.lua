@@ -18,7 +18,7 @@ function s.initial_effect(c)
 	e1:SetDescription(aux.Stringid(id,1))
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
 	e1:SetCode(EVENT_BATTLE_DESTROYING)
-	e1:SetCondition(aux.bdogcon)
+	e1:SetCondition(s.ctcon)
 	e1:SetTarget(s.cttg)
 	e1:SetOperation(s.ctop)
 	c:RegisterEffect(e1)
@@ -29,6 +29,10 @@ end
 function s.xyzop(e,tp,chk)
 	if chk==0 then return Duel.GetFlagEffect(tp,id)==0 end
 	Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,EFFECT_FLAG_OATH,1)
+end
+function s.ctcon(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	return c:IsRelateToBattle() and c:GetBattleTarget():IsType(TYPE_MONSTER)
 end
 function s.predcat(ct)
 	if ct==1 or ct==2 then
