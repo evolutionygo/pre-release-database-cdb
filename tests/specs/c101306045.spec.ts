@@ -8,12 +8,15 @@ import {
   type YGOProTest,
 } from "ygopro-jstest";
 import {
+  IndexResponse,
   OcgcoreScriptConstants,
   YGOProMsgAddCounter,
   YGOProMsgDraw,
   YGOProMsgSelectBattleCmd,
   YGOProMsgSelectCard,
+  YGOProMsgSelectChain,
   YGOProMsgSelectIdleCmd,
+  YGOProMsgSelectOption,
   YGOProMsgSelectUnselectCard,
   YGOProMsgSpSummoned,
   YGOProMsgSpSummoning,
@@ -35,12 +38,15 @@ const secondBeastMaterial = 1371589;
 const overAtkBeast = 340002;
 const defender = 40640057;
 const macroCosmos = 30241314;
+const attackGuidanceArmor = 3103067;
+const redirectOriginalTarget = 89631139;
 const ashBlossom = 14558127;
 const drawCards = [28985331, 5560911, 89631139];
 
 const {
   LOCATION_DECK,
   LOCATION_EXTRA,
+  LOCATION_GRAVE,
   LOCATION_HAND,
   LOCATION_MZONE,
   LOCATION_REMOVED,
@@ -340,6 +346,93 @@ describe("燦冠乗騎シックラヴィー", () => {
         });
       },
     );
+
+    it("still triggers when Attack Guidance Armor moves the battle to its controller's monster", async () => {
+      await createTest({}, (ctx) => {
+        const flow = ctx.addCard([
+          {
+            code: cardCode,
+            controller: 1,
+            location: LOCATION_MZONE,
+            position: POS_FACEUP_ATTACK,
+          },
+          {
+            code: defender,
+            controller: 1,
+            location: LOCATION_MZONE,
+            sequence: 1,
+            position: POS_FACEUP_ATTACK,
+          },
+          {
+            code: redirectOriginalTarget,
+            location: LOCATION_MZONE,
+            position: POS_FACEUP_ATTACK,
+          },
+          {
+            code: attackGuidanceArmor,
+            controller: 1,
+            location: LOCATION_SZONE,
+          },
+        ]);
+
+        return goToPlayerOneBattlePhase(flow)
+          .state(YGOProMsgSelectBattleCmd, (msg) => {
+            expect(msg.player).toBe(1);
+            expect(msg.attackableCards).toContainEqual(
+              expect.objectContaining({ code: cardCode }),
+            );
+            const attacker = findCard(ctx, cardCode, LOCATION_MZONE, 1);
+            expect(attacker?.canPerformAttack()).toBe(true);
+            return attacker!.performAttack();
+          })
+          .state(YGOProMsgSelectCard, (msg) => {
+            expect(msg.cards).toContainEqual(
+              expect.objectContaining({ code: redirectOriginalTarget }),
+            );
+            return findCard(
+              ctx,
+              redirectOriginalTarget,
+              LOCATION_MZONE,
+            )!.select();
+          })
+          .state(YGOProMsgSelectChain, (msg) => {
+            expect(msg.chains).toContainEqual(
+              expect.objectContaining({ code: attackGuidanceArmor }),
+            );
+            const armor = findCard(ctx, attackGuidanceArmor, LOCATION_SZONE, 1);
+            expect(armor?.canActivate()).toBe(true);
+            return armor!.activate();
+          })
+          .state(YGOProMsgSelectOption, (msg) => {
+            expect(msg.count).toBe(2);
+            return msg.prepareResponse(IndexResponse(1));
+          })
+          .state(YGOProMsgSelectCard, (msg) => {
+            expect(msg.cards).toContainEqual(
+              expect.objectContaining({ code: defender, controller: 1 }),
+            );
+            expect(msg.cards).not.toContainEqual(
+              expect.objectContaining({ code: redirectOriginalTarget }),
+            );
+            return findCard(ctx, defender, LOCATION_MZONE, 1)!.select();
+          })
+          .advance(NoEffectAdvancor())
+          .state(YGOProMsgSelectBattleCmd, () => {
+            expectCurrentMessage(ctx, YGOProMsgAddCounter, (msg) => {
+              expect(msg.counterType).toBe(crownCounter);
+              expect(msg.controller).toBe(1);
+              expect(msg.count).toBe(1);
+            });
+            const attacker = findCard(ctx, cardCode, LOCATION_MZONE, 1);
+            expect(attacker?.attack).toBe(2400);
+            expect(getCounter(attacker, crownCounter)).toBe(1);
+            expect(findCard(ctx, defender, LOCATION_GRAVE, 1)).toBeDefined();
+            expect(
+              findCard(ctx, redirectOriginalTarget, LOCATION_MZONE),
+            ).toBeDefined();
+          });
+      });
+    });
 
     it("still triggers when Macro Cosmos banishes the battle-destroyed monster", async () => {
       await createTest({}, (ctx) => {
