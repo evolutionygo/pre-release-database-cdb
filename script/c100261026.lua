@@ -64,41 +64,41 @@ function s.cetg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		return Duel.IsExistingMatchingCard(s.cpfilter,tp,LOCATION_HAND,0,1,nil) or Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil)
 	end
-	local el1=0
-	local el2=e:GetLabel()
-	if e:GetLabel()==1 then
+	local cpel=0
+	local op=e:GetLabel()
+	if op==1 then
 		e:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND)
 		Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
-	elseif e:GetLabel()==2 then
+	elseif op==2 then
 		local te,ceg,cep,cev,cre,cr,crp=e:GetLabelObject():CheckActivateEffect(true,true,false)
 		Duel.ClearTargetCard()
 		local tg=te:GetTarget()
 		if tg then tg(e,tp,ceg,cep,cev,cre,cr,crp,1) end
-		el1=e:GetLabel()
+		cpel=e:GetLabel()
 		te:SetLabelObject(e:GetLabelObject())
 		e:SetProperty(te:GetProperty()&EFFECT_FLAG_CARD_TARGET)
 		e:SetLabelObject(te)
 		e:SetCategory(0)
 		Duel.ClearOperationInfo(0)
 	end
-	e:SetLabel(el1,el2)
+	e:SetLabel(cpel,op)
 end
 function s.ceop(e,tp,eg,ep,ev,re,r,rp)
-	local el1,el2=e:GetLabel()
-	if el2==1 then
+	local cpel,op=e:GetLabel()
+	if op==1 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 		local g=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_DECK,0,1,1,nil)
 		if g:GetCount()>0 then
 			Duel.SendtoHand(g,nil,REASON_EFFECT)
 			Duel.ConfirmCards(1-tp,g)
 		end
-	elseif el2==2 then
+	elseif op==2 then
 		local te=e:GetLabelObject()
 		if not te then return end
 		e:SetLabelObject(te:GetLabelObject())
-		local op=te:GetOperation()
-		e:SetLabel(el1)
-		if op then op(e,tp,eg,ep,ev,re,r,rp) end
+		local ope=te:GetOperation()
+		e:SetLabel(cpel)
+		if ope then ope(e,tp,eg,ep,ev,re,r,rp) end
 	end
 end
 function s.tgcon(e,tp,eg,ep,ev,re,r,rp)

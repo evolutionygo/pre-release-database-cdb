@@ -27,14 +27,14 @@ function s.initial_effect(c)
 	e2:SetOperation(s.srop)
 	c:RegisterEffect(e2)
 end
-function s.mfilter(c,tp)
+function s.mfilter(c)
 	return c:IsSetCard(0x128) and c:IsType(TYPE_MONSTER) and c:IsLevelAbove(5)
 		and c:IsFaceup()
 end
 function s.ngcon(e,tp,eg,ep,ev,re,r,rp)
 	return (re:IsHasType(EFFECT_TYPE_ACTIVATE) or re:IsActiveType(TYPE_MONSTER))
 		and Duel.IsChainNegatable(ev)
-		and Duel.IsExistingMatchingCard(s.mfilter,tp,LOCATION_MZONE,0,1,nil,tp)
+		and Duel.IsExistingMatchingCard(s.mfilter,tp,LOCATION_MZONE,0,1,nil)
 end
 function s.ngtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
@@ -59,16 +59,14 @@ end
 function s.srop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	local g=Duel.SelectMatchingCard(tp,s.srfilter,tp,LOCATION_DECK,0,1,1,nil)
-	if #g>0 then
-		if Duel.SendtoHand(g,nil,REASON_EFFECT)>0 then
-			Duel.ConfirmCards(1-tp,g)
-			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DISCARD)
-			local dg=Duel.SelectMatchingCard(tp,function(c) return c:IsDiscardable(REASON_EFFECT) end,tp,LOCATION_HAND,0,1,1,nil)
-			if #dg>0 then
-				Duel.BreakEffect()
-				Duel.ShuffleHand(tp)
-				Duel.SendtoGrave(dg,REASON_EFFECT+REASON_DISCARD)
-			end
+	if #g>0 and Duel.SendtoHand(g,nil,REASON_EFFECT)>0 and g:IsExists(Card.IsLocation,1,nil,LOCATION_HAND) then
+		Duel.ConfirmCards(1-tp,g)
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DISCARD)
+		local dg=Duel.SelectMatchingCard(tp,Card.IsDiscardable,tp,LOCATION_HAND,0,1,1,nil,REASON_EFFECT)
+		if #dg>0 then
+			Duel.BreakEffect()
+			Duel.ShuffleHand(tp)
+			Duel.SendtoGrave(dg,REASON_EFFECT+REASON_DISCARD)
 		end
 	end
 end
