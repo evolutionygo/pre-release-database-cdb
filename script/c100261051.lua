@@ -47,7 +47,6 @@ function s.tgfilter(c,g,dg)
 	return g:IsContains(c) and (dg:GetCount()>1 or not dg:IsContains(c))
 end
 function s.distg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	local c=e:GetHandler()
 	local g=eg:Filter(s.disfilter,nil,tp,e)
 	local dg=Duel.GetMatchingGroup(s.desfilter,tp,LOCATION_MZONE,0,nil)
 	if chkc then return g:IsContains(chkc) end
@@ -96,7 +95,6 @@ function s.cfilter(c)
 	return c:IsFaceup() and c:IsLinkAbove(4) and c:IsSetCard(0x130)
 end
 function s.descon(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
 	return re:GetHandler():IsOnField() and re:GetHandler():IsRelateToEffect(re) and re:IsActiveType(TYPE_MONSTER)
 		and Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_MZONE,0,1,nil)
 end
