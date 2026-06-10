@@ -49,13 +49,13 @@ function s.tkcon2(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.tfilter(c,tp)
 	return c:IsFaceupEx() and c:IsLevelAbove(1)
-		and Duel.IsPlayerCanSpecialSummonMonster(tp,id+o,0x140,TYPES_TOKEN_MONSTER,0,0,c:GetLevel(),RACE_ROCK,ATTRIBUTE_LIGHT)
+		and Duel.IsPlayerCanSpecialSummonMonster(tp,id+o,0,TYPES_TOKEN_MONSTER,0,0,c:GetLevel(),RACE_ROCK,ATTRIBUTE_LIGHT)
 end
 function s.tktg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_MZONE+LOCATION_GRAVE) and s.tfilter(chkc,tp) end
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and Duel.IsExistingTarget(s.tfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,nil,tp) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
 	aux.SelectTargetFromFieldFirst(tp,s.tfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,1,nil,tp)
 	Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,1,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,0,0)
@@ -63,7 +63,7 @@ end
 function s.tkop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToChain() and tc:IsFaceup() and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsPlayerCanSpecialSummonMonster(tp,id+o,0x140,TYPES_TOKEN_MONSTER,0,0,tc:GetLevel(),RACE_ROCK,ATTRIBUTE_LIGHT) then
+		and Duel.IsPlayerCanSpecialSummonMonster(tp,id+o,0,TYPES_TOKEN_MONSTER,0,0,tc:GetLevel(),RACE_ROCK,ATTRIBUTE_LIGHT) then
 		local token=Duel.CreateToken(tp,id+o)
 		Duel.SpecialSummonStep(token,0,tp,tp,false,false,POS_FACEUP)
 		local e1=Effect.CreateEffect(e:GetHandler())
@@ -82,7 +82,7 @@ function s.tdcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.tdtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return re:GetHandler():IsAbleToDeck() end
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,eg,1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_TODECK,eg,1,0,0)
 end
 function s.tdop(e,tp,eg,ep,ev,re,r,rp)
 	local rc=re:GetHandler()
