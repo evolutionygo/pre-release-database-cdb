@@ -86,7 +86,7 @@ function s.tdtg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.tdop(e,tp,eg,ep,ev,re,r,rp)
 	local rc=re:GetHandler()
-	if rc:IsRelateToChain() and rc:IsLocation(LOCATION_MZONE) then
+	if rc:IsRelateToEffect(re) and rc:IsLocation(LOCATION_MZONE) then
 		Duel.SendtoDeck(rc,nil,SEQ_DECKTOP,REASON_EFFECT)
 	end
 end
