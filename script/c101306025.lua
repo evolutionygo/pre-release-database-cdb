@@ -41,28 +41,29 @@ end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	local g=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_DECK,0,1,1,nil)
-	if g:GetCount()>0 then
-		Duel.HintSelection(g)
-		if Duel.SendtoHand(g,nil,REASON_EFFECT)~=0 and g:IsExists(Card.IsLocation,1,nil,LOCATION_HAND) then
+	if g:GetCount()>0 and Duel.SendtoHand(g,nil,REASON_EFFECT)~=0 then
+		Duel.ConfirmCards(1-tp,g)
+		if g:IsExists(Card.IsLocation,1,nil,LOCATION_HAND) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then
 			local sg=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_HAND,0,nil,e,tp)
-			if sg:GetCount()>0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
+			if sg:GetCount()>0 and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 				Duel.BreakEffect()
 				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 				local tg=sg:Select(tp,1,1,nil)
+				Duel.ShuffleHand(tp)
 				Duel.SpecialSummon(tg,0,tp,tp,false,false,POS_FACEUP)
 			end
 		end
 	end
 end
 function s.texfilter(c)
-	return c:IsFaceupEx() and c:IsType(TYPE_SYNCHRO) and c:IsAbleToExtra()
+	return c:IsFaceupEx() and c:IsRace(RACE_ROCK) and c:IsType(TYPE_SYNCHRO) and c:IsAbleToExtra()
 end
 function s.dttg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()
 	if chkc then return chkc:IsLocation(LOCATION_MZONE+LOCATION_GRAVE) and chkc:IsControler(tp) and s.texfilter(chkc) and chkc~=c end
 	if chk==0 then return Duel.IsExistingTarget(s.texfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,c) and c:IsAbleToDeck() end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
-	local g=Duel.SelectTarget(tp,s.texfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,1,c)
+	local g=aux.SelectTargetFromFieldFirst(tp,s.texfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,1,c)
 	Duel.SetOperationInfo(0,CATEGORY_TOEXTRA,g,1,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_TODECK,c,1,0,0)
 end
