@@ -104,7 +104,7 @@ function s.LExtraMaterialCount(mg,lc,tp)
 	for tc in aux.Next(mg) do
 		local le={tc:IsHasEffect(EFFECT_EXTRA_LINK_MATERIAL,tp)}
 		for _,te in pairs(le) do
-			local sg=mg:Filter(s.TRUE,tc)
+			local sg=mg:Filter(aux.TRUE,tc)
 			local f=te:GetValue()
 			local related,valid=f(te,lc,sg,tc,tp)
 			if related and valid then
@@ -125,7 +125,6 @@ function s.LinkCondition(f,minct,maxct,gf)
 					if minc>maxc then return false end
 				end
 				local tp=c:GetControler()
-				if not Duel.IsPlayerAffectedByEffect(tp,101306058) then return false end
 				local mg=nil
 				if og then
 					mg=og:Filter(s.LConditionFilter,nil,f,c,e)
