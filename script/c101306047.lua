@@ -13,7 +13,7 @@ function s.initial_effect(c)
 	e0:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 	e0:SetRange(LOCATION_EXTRA)
 	e0:SetCondition(s.LinkCondition(s.mfilter,2,2,nil))
-	e0:SetTarget(s.LinkTarget(s.mfilter,2,2,gf))
+	e0:SetTarget(s.LinkTarget(s.mfilter,2,2))
 	e0:SetOperation(s.LinkOperation(s.mfilter,2,2,nil))
 	e0:SetValue(SUMMON_TYPE_LINK)
 	c:RegisterEffect(e0)
@@ -29,7 +29,7 @@ function s.initial_effect(c)
 	e1:SetTarget(s.sptg)
 	e1:SetOperation(s.spop)
 	c:RegisterEffect(e1)
-	--to grave
+	--handes & draw
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,2))
 	e2:SetCategory(CATEGORY_DRAW+CATEGORY_HANDES)
@@ -37,7 +37,8 @@ function s.initial_effect(c)
 	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCountLimit(1)
-	e2:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_END_PHASE)
+	e2:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_MAIN_END)
+	e2:SetCondition(s.drcon)
 	e2:SetCost(s.drcost)
 	e2:SetTarget(s.drtg)
 	e2:SetOperation(s.drop)
@@ -46,7 +47,7 @@ end
 function s.mfilter(c)
 	return c:IsLinkAttribute(ATTRIBUTE_WATER)
 end
-function s.lcheck(g,c,tp)
+function s.glcheck(g,c,tp)
 	return Duel.IsPlayerAffectedByEffect(tp,101306058) or g:GetCount()==3
 end
 function s.LConditionFilter(c,f,lc,e)
@@ -200,6 +201,9 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.costfilter(c)
 	return c:IsFaceup() and c:IsCode(22702055) and c:IsAbleToGraveAsCost()
+end
+function s.drcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.IsMainPhase()
 end
 function s.drcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.costfilter,tp,LOCATION_ONFIELD,0,1,nil) end

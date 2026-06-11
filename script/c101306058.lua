@@ -35,17 +35,17 @@ function s.initial_effect(c)
 	e4:SetOperation(s.ftop)
 	c:RegisterEffect(e4)
 end
-function s.cfilter(c)
+function s.lvfilter(c)
 	return c:IsFaceup() and aux.IsCodeListed(c,101306058)
 end
 function s.lvcon(e)
-	return Duel.IsExistingMatchingCard(s.cfilter,e:GetHandlerPlayer(),LOCATION_MZONE,LOCATION_MZONE,1,nil)
+	return Duel.IsExistingMatchingCard(s.lvfilter,e:GetHandlerPlayer(),LOCATION_MZONE,LOCATION_MZONE,1,nil)
 end
 function s.cfilter(c)
 	return c:IsCode(22702055) and c:IsFaceup()
 end
 function s.ftcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_ONFIELD,0,1,nil)
+	return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_ONFIELD,0,1,nil) or Duel.IsEnvironment(22702055,tp)
 end
 function s.fttg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return not e:GetHandler():IsForbidden() and e:GetHandler():CheckUniqueOnField(tp) end

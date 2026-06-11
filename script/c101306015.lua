@@ -48,13 +48,8 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
 	end
 end
-function s.cfilter(c)
-	return c:IsFaceup() and c:IsCode(4796100)
-end
 function s.discon(e,tp,eg,ep,ev,re,r,rp)
-	local tgp,loc=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_CONTROLER,CHAININFO_TRIGGERING_LOCATION)
-	return tgp==1-tp and loc==LOCATION_MZONE and Duel.IsChainDisablable(ev)
-		and Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_ONFIELD,0,1,nil)
+	return not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) and rp==1-tp and re:IsActiveType(TYPE_MONSTER) and Duel.IsChainDisablable(ev)
 end
 function s.cfilter(c)
 	return c:IsCode(22702055) and c:IsAbleToGraveAsCost() and c:IsFaceup()
