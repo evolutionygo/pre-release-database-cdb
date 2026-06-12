@@ -62,8 +62,11 @@ function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.setfilter(c,e,tp)
 	return c:IsFaceupEx() and c:IsSetCard(0x2e4)
-		and (c:IsType(TYPE_MONSTER) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEDOWN)
-		or c:IsType(TYPE_TRAP) and c:IsSSetable())
+		and (c:IsAbleToHand() or (c:IsType(TYPE_MONSTER) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEDOWN)
+		or c:IsType(TYPE_TRAP) and c:IsSSetable()))
+end
+function s.cspfilter(c)
+	return c:IsType(TYPE_MONSTER) and c:IsLocation(LOCATION_GRAVE)
 end
 function s.settg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()
@@ -78,6 +81,11 @@ function s.settg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		Duel.SetOperationInfo(0,CATEGORY_TOEXTRA,c,1,0,0)
 	else
 		e:SetLabel(0)
+	end
+	if g:IsExists(s.cspfilter,1,nil) then
+		e:SetCategory(CATEGORY_SSET+CATEGORY_MSET+CATEGORY_SPECIAL_SUMMON+CATEGORY_TOHAND+CATEGORY_TOEXTRA+CATEGORY_GRAVE_SPSUMMON)
+	else
+		e:SetCategory(CATEGORY_SSET+CATEGORY_MSET+CATEGORY_SPECIAL_SUMMON+CATEGORY_TOHAND+CATEGORY_TOEXTRA)
 	end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,2,0,0)
 end

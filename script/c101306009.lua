@@ -35,6 +35,7 @@ function s.initial_effect(c)
 	e3:SetCode(EVENT_PHASE+PHASE_END)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetCountLimit(1,id+o)
+	e3:SetCondition(s.setcon2)
 	e3:SetTarget(s.settg2)
 	e3:SetOperation(s.setop2)
 	c:RegisterEffect(e3)
@@ -88,6 +89,9 @@ function s.setop(e,tp,eg,ep,ev,re,r,rp)
 	if g:GetCount()>0 then
 		Duel.ChangePosition(g,POS_FACEDOWN_DEFENSE)
 	end
+end
+function s.setcon2(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetTurnPlayer()==tp
 end
 function s.setfilter(c)
 	return c:IsSetCard(0x2e4) and c:IsType(TYPE_TRAP) and c:IsSSetable()

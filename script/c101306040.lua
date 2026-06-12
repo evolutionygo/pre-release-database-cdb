@@ -26,7 +26,7 @@ function s.initial_effect(c)
 	e2:SetCountLimit(1,id+o)
 	e2:SetCondition(s.setcon)
 	e2:SetTarget(s.settg)
-	e2:SetOperation(s.seop)
+	e2:SetOperation(s.setop)
 	c:RegisterEffect(e2)
 end
 function s.tgfilter(c)
