@@ -65,7 +65,7 @@ function s.tgfilter(c,e,tp)
 		and (c:IsAbleToHand() or s.setfilter(c,e,tp))
 end
 function s.setfilter(c,e,tp)
-	return c:IsType(TYPE_MONSTER) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEDOWN)
+	return c:IsType(TYPE_MONSTER) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEDOWN) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		or c:IsType(TYPE_TRAP) and c:IsSSetable()
 end
 function s.cspfilter(c)
@@ -143,22 +143,22 @@ function s.setop(e,tp,eg,ep,ev,re,r,rp)
 					selg:AddCard(tc)
 				end
 			end
-			local thg=sg-setg
-			if thg:GetCount()>0 then
-				Duel.SendtoHand(thg,nil,REASON_EFFECT)
-				Duel.ConfirmCards(1-tp,thg)
+		end
+		local thg=sg-setg
+		if thg:GetCount()>0 then
+			Duel.SendtoHand(thg,nil,REASON_EFFECT)
+			Duel.ConfirmCards(1-tp,thg)
+		end
+		local msg=setg:Filter(Card.IsType,nil,TYPE_MONSTER)
+		if msg:GetCount()>0 then
+			Duel.SpecialSummon(msg,0,tp,tp,false,false,POS_FACEDOWN_DEFENSE)
+			if msg:GetCount()==1 then
+				Duel.ConfirmCards(1-tp,msg)
 			end
-			local msg=setg:Filter(Card.IsType,nil,TYPE_MONSTER)
-			if msg:GetCount()>0 then
-				Duel.SpecialSummon(msg,0,tp,tp,false,false,POS_FACEDOWN_DEFENSE)
-				if msg:GetCount()==1 then
-					Duel.ConfirmCards(1-tp,msg)
-				end
-			end
-			local ssg=setg:Filter(Card.IsType,nil,TYPE_TRAP)
-			if ssg:GetCount()>0 then
-				Duel.SSet(tp,ssg)
-			end
+		end
+		local ssg=setg:Filter(Card.IsType,nil,TYPE_TRAP)
+		if ssg:GetCount()>0 then
+			Duel.SSet(tp,ssg)
 		end
 	end
 	if e:GetLabel()==1 and c:IsRelateToChain() then
