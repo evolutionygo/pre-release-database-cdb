@@ -16,7 +16,7 @@ end
 function s.cfilter(c)
 	return c:IsFaceupEx() and c:IsSetCard(0x2e4) and c:IsType(TYPE_MONSTER)
 end
-function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
+function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp) end
 	local b1=e:IsCostChecked()
 		and Duel.GetLocationCount(tp,LOCATION_MZONE)>0

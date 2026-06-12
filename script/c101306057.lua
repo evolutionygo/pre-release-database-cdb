@@ -59,20 +59,22 @@ function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,g:GetCount(),tp,LOCATION_DECK)
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
 	local g=Duel.GetMatchingGroup(s.thfilter,tp,LOCATION_DECK,0,nil)
 	local sg=Duel.GetTargetsRelateToChain():Filter(Card.IsFacedown,nil)
-	if sg:GetCount()>0 and g:GetClassCount(Card.GetCode)>=sg:GetCount() then
+	local sct=sg:GetCount()
+	if sct>0 and g:GetClassCount(Card.GetCode)>=sct then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-		local tg=g:SelectSubGroup(tp,aux.dncheck,false,sg:GetCount(),sg:GetCount())
+		local tg=g:SelectSubGroup(tp,aux.dncheck,false,sct,sct)
 		if tg:GetCount()>0 then
 			Duel.SendtoHand(tg,nil,REASON_EFFECT)
 			Duel.ConfirmCards(1-tp,tg)
-			Duel.SendtoGrave(sg,REASON_EFFECT)
+			if tg:IsExists(Card.IsLocation,1,nil,LOCATION_HAND) then
+				Duel.SendtoGrave(sg,REASON_EFFECT)
+			end
 		end
 	end
 end
-function s.cfilter(c)
+function s.filter(c)
 	return c:IsFaceup() and c:IsSetCard(0x2e4)
 end
 function s.thcon(e,tp,eg,ep,ev,re,r,rp)

@@ -57,11 +57,13 @@ function s.setfilter(c,res)
 end
 function s.settg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local res=Duel.IsExistingMatchingCard(Card.IsFacedown,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,3,nil)
-	if chkc then return chkc:IsLocation(LOCATIONLOCATION_GRAVE+LOCATION_REMOVED_GRAVE) and chkc:IsControler(tp) and s.setfilter(chkc,res) end
+	if chkc then return chkc:IsLocation(LOCATION_GRAVE+LOCATION_REMOVED) and chkc:IsControler(tp) and s.setfilter(chkc,res) end
 	if chk==0 then return Duel.IsExistingTarget(s.setfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil,res) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SET)
 	local g=Duel.SelectTarget(tp,s.setfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,1,nil,res)
-	Duel.SetOperationInfo(0,CATEGORY_LEAVE_GRAVE,g,1,0,0)
+	if g:IsExists(Card.IsLocation,1,nil,LOCATION_GRAVE) then
+		Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,g,1,0,0)
+	end
 end
 function s.setop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()

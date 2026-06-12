@@ -16,7 +16,6 @@ function s.cfilter(c)
 	return c:IsFaceupEx() and c:IsSetCard(0x2e4) and c:IsType(TYPE_MONSTER)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp) end
 	local b1=e:IsCostChecked()
 		and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and Duel.IsPlayerCanSpecialSummonMonster(tp,id,0x2e4,TYPES_NORMAL_TRAP_MONSTER+TYPE_TUNER,0,0,1,RACE_AQUA,ATTRIBUTE_WATER)
@@ -29,7 +28,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if ch>0 then
 		tsp,tse=Duel.GetChainInfo(ch,CHAININFO_TRIGGERING_PLAYER,CHAININFO_TRIGGERING_EFFECT)
 		og:AddCard(tse:GetHandler())
-		b2=tsp==1-tp and tse:IsActiveType(TYPE_SPELL+TYPE_TRAP) and Duel.IsChainDisablable(ev) 
+		b2=tsp==1-tp and tse:IsActiveType(TYPE_SPELL+TYPE_TRAP) and Duel.IsChainDisablable(ev)
 	end
 	if chk==0 then return b1 or b2 end
 	local op=0

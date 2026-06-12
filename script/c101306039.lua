@@ -62,8 +62,9 @@ function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.setfilter(c,e,tp)
 	return c:IsFaceupEx() and c:IsSetCard(0x2e4)
-		and (c:IsAbleToHand() or (c:IsType(TYPE_MONSTER) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEDOWN)
-		or c:IsType(TYPE_TRAP) and c:IsSSetable()))
+		and (c:IsAbleToHand()
+			or c:IsType(TYPE_MONSTER) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEDOWN)
+			or c:IsType(TYPE_TRAP) and c:IsSSetable())
 end
 function s.cspfilter(c)
 	return c:IsType(TYPE_MONSTER) and c:IsLocation(LOCATION_GRAVE)
@@ -82,11 +83,12 @@ function s.settg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	else
 		e:SetLabel(0)
 	end
-	if g:IsExists(s.cspfilter,1,nil) then
-		e:SetCategory(CATEGORY_SSET+CATEGORY_MSET+CATEGORY_SPECIAL_SUMMON+CATEGORY_TOHAND+CATEGORY_TOEXTRA+CATEGORY_GRAVE_SPSUMMON)
-	else
-		e:SetCategory(CATEGORY_SSET+CATEGORY_MSET+CATEGORY_SPECIAL_SUMMON+CATEGORY_TOHAND+CATEGORY_TOEXTRA)
-	end
+	local cat=0
+	if g:IsExists(Card.IsType,1,nil,TYPE_MONSTER) then cat=cat|CATEGORY_SPECIAL_SUMMON|CATEGORY_MSET end
+	if g:IsExists(Card.IsType,1,nil,TYPE_TRAP) then cat=cat|CATEGORY_SSET end
+	if g:IsExists(s.cspfilter,1,nil) then cat=cat|CATEGORY_GRAVE_SPSUMMON end
+	if g:GetCount()>=2 then cat=cat|CATEGORY_TOEXTRA end
+	e:SetCategory(cat)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,2,0,0)
 end
 function s.setop(e,tp,eg,ep,ev,re,r,rp)
@@ -95,8 +97,7 @@ function s.setop(e,tp,eg,ep,ev,re,r,rp)
 	local sg=g:Filter(aux.NecroValleyFilter(Card.IsRelateToChain),nil)
 	if sg:GetCount()>0 then
 		for tc in aux.Next(sg) do
-			local res=tc:IsType(TYPE_MONSTER)
-				and tc:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEDOWN)
+			local res=tc:IsType(TYPE_MONSTER) and tc:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEDOWN)
 				or tc:IsType(TYPE_TRAP) and tc:IsSSetable()
 			if tc:IsAbleToHand()
 				and (not res or Duel.SelectOption(tp,1190,1153)==0) then
@@ -105,6 +106,7 @@ function s.setop(e,tp,eg,ep,ev,re,r,rp)
 			else
 				if tc:IsType(TYPE_MONSTER) then
 					Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEDOWN)
+					Duel.ConfirmCards(1-tp,tc)
 				else
 					Duel.SSet(tp,tc)
 				end
