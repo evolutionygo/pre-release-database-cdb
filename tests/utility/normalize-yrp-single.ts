@@ -1,6 +1,6 @@
 import path from "path";
 import { YGOProYrp } from "ygopro-yrp-encode";
-import fs from "node:fs"
+import fs from "node:fs";
 
 export const normalizeYrpSingle = async (yrpPath: string) => {
   const yrpFilename = path.basename(yrpPath);
