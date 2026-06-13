@@ -3,7 +3,8 @@ local s,id,o=GetID()
 function s.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
-	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_DESTROY+CATEGORY_DRAW+CATEGORY_GRAVE_SPSUMMON)
+	e1:SetDescription(aux.StringId(id,0))
+	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_DESTROY+CATEGORY_DRAW+CATEGORY_GRAVE_SPSUMMON+CATEGORY_DECKDES)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetCountLimit(1,id+EFFECT_COUNT_CODE_OATH)
@@ -20,20 +21,23 @@ function s.spfilter2(c,e,tp)
 	return c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.cfilter(c)
-	return c:GetOriginalType()&TYPE_NORMAL==TYPE_NORMAL
+	if not c:IsFaceup() then return false end
+	return c:IsLocation(LOCATION_MZONE) and c:IsType(TYPE_NORMAL)
+		or not c:IsLocation(LOCATION_MZONE) and c:GetOriginalType()&TYPE_NORMAL==TYPE_NORMAL
 end
 function s.desfilter(c)
 	return c:IsType(TYPE_SPELL+TYPE_TRAP)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
+	local c=e:GetHandler()
 	local b1=Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_DECK+LOCATION_HAND+LOCATION_GRAVE,0,1,nil,e,tp)
 	local b2=Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_ONFIELD,0,1,nil)
 		and (Duel.IsExistingMatchingCard(aux.TRUE,tp,0,LOCATION_MZONE,1,nil)
-		or Duel.IsExistingMatchingCard(s.desfilter,tp,0,LOCATION_ONFIELD,1,c)
-		or Duel.IsPlayerCanDraw(tp,2)
-		or Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(s.spfilter2,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,nil,e,tp))
+			or Duel.IsExistingMatchingCard(s.desfilter,tp,0,LOCATION_ONFIELD,1,c)
+			or Duel.IsPlayerCanDraw(tp,2)
+			or Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+				and Duel.IsExistingMatchingCard(s.spfilter2,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,nil,e,tp))
 	if chk==0 then return b1 or b2 end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK)
 end
