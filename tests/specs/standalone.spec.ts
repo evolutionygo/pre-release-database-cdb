@@ -1,3 +1,4 @@
+import { resolve } from "node:path";
 import {
   SlientAdvancor,
   SummonPlaceAdvancor,
@@ -11,11 +12,16 @@ import {
   YGOProMsgSelectEffectYn,
   YGOProMsgSelectChain,
 } from "ygopro-msg-encode";
+import { createCoverage } from "../utility/create-coverage";
 import { createTest } from "../utility/create-test";
 
 describe("sample standalone spec", () => {
+  const coverageRegistry = createCoverage({
+    scriptDir: resolve(process.cwd(), "ygopro", "script"),
+  });
+
   it("Should process duel", async () => {
-    await createTest({}, (ctx) =>
+    await createTest({}, (ctx) => {
       ctx
         .addCard([
           {
@@ -140,7 +146,9 @@ describe("sample standalone spec", () => {
           );
           expect(grave).toHaveLength(2); // dragon returned to deck, and black rose and warrior at grave
           return;
-        }),
-    );
+        });
+
+      coverageRegistry.addFrom(ctx);
+    });
   });
 });
