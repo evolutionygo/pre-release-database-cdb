@@ -21,9 +21,7 @@ function s.spfilter2(c,e,tp)
 	return c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.cfilter(c)
-	if not c:IsFaceup() then return false end
-	return c:IsLocation(LOCATION_MZONE) and c:IsType(TYPE_NORMAL)
-		or not c:IsLocation(LOCATION_MZONE) and c:GetOriginalType()&TYPE_NORMAL==TYPE_NORMAL
+	return c:IsFaceup() and c:GetOriginalType()&TYPE_NORMAL==TYPE_NORMAL
 end
 function s.desfilter(c)
 	return c:IsType(TYPE_SPELL+TYPE_TRAP)
