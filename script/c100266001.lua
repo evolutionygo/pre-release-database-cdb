@@ -49,10 +49,10 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local b3=res and Duel.IsExistingMatchingCard(s.desfilter,tp,0,LOCATION_ONFIELD,1,aux.ExceptThisCard(e))
 	local b4=res and Duel.IsPlayerCanDraw(tp,2)
 	local b5=res and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(s.spfilter2,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,nil,e,tp)
+		and Duel.IsExistingMatchingCard(aux.NecroValleyFilter(s.spfilter2),tp,LOCATION_GRAVE,LOCATION_GRAVE,1,nil,e,tp)
 	if b1 and not (b2 or b3 or b4 or b5) or not Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-		local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_DECK+LOCATION_HAND+LOCATION_GRAVE,0,1,1,nil,e,tp)
+		local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.spfilter),tp,LOCATION_DECK+LOCATION_HAND+LOCATION_GRAVE,0,1,1,nil,e,tp)
 		if g:GetCount()>0 then
 			Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
 		end
@@ -72,7 +72,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			Duel.Draw(tp,2,REASON_EFFECT)
 		elseif op==4 then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-			local g=Duel.SelectMatchingCard(tp,s.spfilter2,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,1,nil,e,tp)
+			local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.spfilter2),tp,LOCATION_GRAVE,LOCATION_GRAVE,1,1,nil,e,tp)
 			if g:GetCount()>0 then
 				Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 			end
