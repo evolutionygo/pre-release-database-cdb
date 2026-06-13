@@ -1,3 +1,4 @@
+import { resolve } from "node:path";
 import {
   BattleCmdType,
   type CardHandle,
@@ -25,6 +26,7 @@ import {
   expectCurrentMessage,
   expectCurrentMessages,
 } from "../utility/current-messages";
+import { createCoverage } from "../utility/create-coverage";
 import { createTest } from "../utility/create-test";
 
 const cardCode = 101306045;
@@ -64,6 +66,23 @@ const findCard = (
 
 const getCounter = (card: CardHandle | undefined, counterType: number) =>
   card?.counters?.find((counter) => counter.type === counterType)?.count ?? 0;
+
+const expectCounterPlaced = (ctx: YGOProTest) => {
+  expectCurrentMessage(ctx, YGOProMsgAddCounter, (msg) => {
+    expect(msg.counterType).toBe(crownCounter);
+    expect(msg.controller).toBe(1);
+    expect(msg.count).toBe(1);
+  });
+};
+
+const expectCrownState = (
+  ctx: YGOProTest,
+  expected: { attack: number; counter: number },
+) => {
+  const attacker = findCard(ctx, cardCode, LOCATION_MZONE, 1);
+  expect(attacker?.attack).toBe(expected.attack);
+  expect(getCounter(attacker, crownCounter)).toBe(expected.counter);
+};
 
 const addPreCounters = (ctx: YGOProTest, player: number, count: number) => {
   if (count === 0) return;
@@ -107,9 +126,22 @@ const triggerBattleDestroyEffect = (ctx: YGOProTest) =>
     .advance(NoEffectAdvancor());
 
 describe("燦冠乗騎シックラヴィー", () => {
+  const coverageRegistry = createCoverage({
+    scriptDir: resolve(process.cwd(), "script"),
+  });
+
+  const runCoveredTest = (cb: Parameters<typeof createTest>[1]) =>
+    createTest({}, async (ctx) => {
+      try {
+        await cb(ctx);
+      } finally {
+        coverageRegistry.addFrom(ctx);
+      }
+    });
+
   describe("unit", () => {
     it("returns true and false for summon filters, target checks, and predicted categories", async () => {
-      await createTest({}, (ctx) => {
+      await runCoveredTest((ctx) => {
         ctx.addCard([
           { code: cardCode, location: LOCATION_MZONE },
           { code: beastMaterial, location: LOCATION_MZONE, sequence: 1 },
@@ -163,7 +195,7 @@ describe("燦冠乗騎シックラヴィー", () => {
 
   describe("e2e", () => {
     it("is Xyz Summoned with two Level 3 monsters", async () => {
-      await createTest({}, (ctx) =>
+      await runCoveredTest((ctx) =>
         ctx
           .addCard([
             { code: cardCode, location: LOCATION_EXTRA },
@@ -205,7 +237,7 @@ describe("燦冠乗騎シックラヴィー", () => {
     });
 
     it("is excluded from Downerd Magician materials while another Rank 3 is selectable", async () => {
-      await createTest({}, (ctx) =>
+      await runCoveredTest((ctx) =>
         ctx
           .addCard([
             { code: downerdMagician, controller: 1, location: LOCATION_EXTRA },
@@ -266,7 +298,7 @@ describe("燦冠乗騎シックラヴィー", () => {
     });
 
     it("only allows one alternative Xyz Summon per turn with two valid Beasts", async () => {
-      await createTest({}, (ctx) =>
+      await runCoveredTest((ctx) =>
         ctx
           .addCard([
             { code: cardCode, location: LOCATION_EXTRA, sequence: 0 },
@@ -315,7 +347,7 @@ describe("燦冠乗騎シックラヴィー", () => {
     ])(
       "adds the $counter crown counter and applies the ATK branch",
       async ({ before, attack, counter }) => {
-        await createTest({}, (ctx) => {
+        await runCoveredTest((ctx) => {
           const flow = ctx.addCard([
             {
               code: cardCode,
@@ -334,21 +366,15 @@ describe("燦冠乗騎シックラヴィー", () => {
           return triggerBattleDestroyEffect(
             goToPlayerOneBattlePhase(flow),
           ).state(YGOProMsgSelectBattleCmd, () => {
-            expectCurrentMessage(ctx, YGOProMsgAddCounter, (msg) => {
-              expect(msg.counterType).toBe(crownCounter);
-              expect(msg.controller).toBe(1);
-              expect(msg.count).toBe(1);
-            });
-            const attacker = findCard(ctx, cardCode, LOCATION_MZONE, 1);
-            expect(attacker?.attack).toBe(attack);
-            expect(getCounter(attacker, crownCounter)).toBe(counter);
+            expectCounterPlaced(ctx);
+            expectCrownState(ctx, { attack, counter });
           });
         });
       },
     );
 
     it("still triggers when Attack Guidance Armor moves the battle to its controller's monster", async () => {
-      await createTest({}, (ctx) => {
+      await runCoveredTest((ctx) => {
         const flow = ctx.addCard([
           {
             code: cardCode,
@@ -418,14 +444,8 @@ describe("燦冠乗騎シックラヴィー", () => {
           })
           .advance(NoEffectAdvancor())
           .state(YGOProMsgSelectBattleCmd, () => {
-            expectCurrentMessage(ctx, YGOProMsgAddCounter, (msg) => {
-              expect(msg.counterType).toBe(crownCounter);
-              expect(msg.controller).toBe(1);
-              expect(msg.count).toBe(1);
-            });
-            const attacker = findCard(ctx, cardCode, LOCATION_MZONE, 1);
-            expect(attacker?.attack).toBe(2400);
-            expect(getCounter(attacker, crownCounter)).toBe(1);
+            expectCounterPlaced(ctx);
+            expectCrownState(ctx, { attack: 2400, counter: 1 });
             expect(findCard(ctx, defender, LOCATION_GRAVE, 1)).toBeDefined();
             expect(
               findCard(ctx, redirectOriginalTarget, LOCATION_MZONE),
@@ -435,7 +455,7 @@ describe("燦冠乗騎シックラヴィー", () => {
     });
 
     it("still triggers when Macro Cosmos banishes the battle-destroyed monster", async () => {
-      await createTest({}, (ctx) => {
+      await runCoveredTest((ctx) => {
         const flow = ctx.addCard([
           {
             code: cardCode,
@@ -458,14 +478,8 @@ describe("燦冠乗騎シックラヴィー", () => {
         return triggerBattleDestroyEffect(goToPlayerOneBattlePhase(flow)).state(
           YGOProMsgSelectBattleCmd,
           () => {
-            expectCurrentMessage(ctx, YGOProMsgAddCounter, (msg) => {
-              expect(msg.counterType).toBe(crownCounter);
-              expect(msg.controller).toBe(1);
-              expect(msg.count).toBe(1);
-            });
-            const attacker = findCard(ctx, cardCode, LOCATION_MZONE, 1);
-            expect(attacker?.attack).toBe(2400);
-            expect(getCounter(attacker, crownCounter)).toBe(1);
+            expectCounterPlaced(ctx);
+            expectCrownState(ctx, { attack: 2400, counter: 1 });
             expect(findCard(ctx, defender, LOCATION_REMOVED)).toBeDefined();
           },
         );
@@ -473,7 +487,7 @@ describe("燦冠乗騎シックラヴィー", () => {
     });
 
     it("returns itself to the Extra Deck and draws 3 when the predicted counter count is 3", async () => {
-      await createTest({}, (ctx) => {
+      await runCoveredTest((ctx) => {
         const flow = ctx.addCard([
           {
             code: cardCode,
@@ -499,11 +513,7 @@ describe("燦冠乗騎シックラヴィー", () => {
         return triggerBattleDestroyEffect(goToPlayerOneBattlePhase(flow)).state(
           YGOProMsgSelectBattleCmd,
           () => {
-            expectCurrentMessage(ctx, YGOProMsgAddCounter, (msg) => {
-              expect(msg.counterType).toBe(crownCounter);
-              expect(msg.controller).toBe(1);
-              expect(msg.count).toBe(1);
-            });
+            expectCounterPlaced(ctx);
             expectCurrentMessage(ctx, YGOProMsgDraw, (msg) => {
               expect(msg.player).toBe(1);
               expect(msg.count).toBe(3);
@@ -517,7 +527,7 @@ describe("燦冠乗騎シックラヴィー", () => {
     });
 
     it("sets category to 0 and only places a counter when the predicted count is 4", async () => {
-      await createTest({}, (ctx) => {
+      await runCoveredTest((ctx) => {
         const flow = ctx.addCard([
           {
             code: cardCode,
@@ -543,14 +553,8 @@ describe("燦冠乗騎シックラヴィー", () => {
         return triggerBattleDestroyEffect(goToPlayerOneBattlePhase(flow)).state(
           YGOProMsgSelectBattleCmd,
           () => {
-            expectCurrentMessage(ctx, YGOProMsgAddCounter, (msg) => {
-              expect(msg.counterType).toBe(crownCounter);
-              expect(msg.controller).toBe(1);
-              expect(msg.count).toBe(1);
-            });
-            const attacker = findCard(ctx, cardCode, LOCATION_MZONE, 1);
-            expect(attacker?.attack).toBe(2000);
-            expect(getCounter(attacker, crownCounter)).toBe(4);
+            expectCounterPlaced(ctx);
+            expectCrownState(ctx, { attack: 2000, counter: 4 });
             expect(findCard(ctx, cardCode, LOCATION_EXTRA, 1)).toBeUndefined();
             expect(ctx.getFieldCard(1, LOCATION_HAND)).toHaveLength(0);
           },
