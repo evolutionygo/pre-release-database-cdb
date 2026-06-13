@@ -13,7 +13,6 @@ import {
   YGOProMsgSelectChain,
   YGOProMsgSelectIdleCmd,
   YGOProMsgSelectOption,
-  YGOProMsgSelectYesNo,
   YGOProMsgSpSummoned,
   YGOProMsgSpSummoning,
 } from "ygopro-msg-encode";
@@ -259,7 +258,6 @@ describe("古之秘笈", () => {
             findCard(ctx, cardCode, LOCATION_HAND)!.activate(),
           )
           .advance(SummonPlaceAdvancor(), NoEffectAdvancor())
-          .state(YGOProMsgSelectYesNo, (msg) => msg.prepareResponse(true))
           .state(YGOProMsgSelectOption, (msg) => {
             expect(msg.count).toBe(1);
             return msg.prepareResponse(IndexResponse(0));
@@ -301,7 +299,6 @@ describe("古之秘笈", () => {
             findCard(ctx, cardCode, LOCATION_HAND)!.activate(),
           )
           .advance(SummonPlaceAdvancor(), NoEffectAdvancor())
-          .state(YGOProMsgSelectYesNo, (msg) => msg.prepareResponse(true))
           .state(YGOProMsgSelectOption, (msg) => {
             expect(msg.count).toBe(1);
             return msg.prepareResponse(IndexResponse(0));
@@ -335,7 +332,6 @@ describe("古之秘笈", () => {
             findCard(ctx, cardCode, LOCATION_HAND)!.activate(),
           )
           .advance(SummonPlaceAdvancor(), NoEffectAdvancor())
-          .state(YGOProMsgSelectYesNo, (msg) => msg.prepareResponse(true))
           .state(YGOProMsgSelectOption, (msg) => {
             expect(msg.count).toBe(1);
             return msg.prepareResponse(IndexResponse(0));
@@ -383,7 +379,6 @@ describe("古之秘笈", () => {
             return msg.prepareResponse(null);
           })
           .advance(NoEffectAdvancor())
-          .state(YGOProMsgSelectYesNo, (msg) => msg.prepareResponse(true))
           .state(YGOProMsgSelectOption, (msg) => {
             expect(msg.count).toBe(1);
             return msg.prepareResponse(IndexResponse(0));
