@@ -54,7 +54,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		if g:GetCount()>0 then
 			Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
 		end
-	else
+	elseif b2 or b3 or b4 or b5 then
 		local op=aux.SelectFromOptions(tp,
 			{b2,aux.Stringid(id,2),1},
 			{b3,aux.Stringid(id,3),2},
