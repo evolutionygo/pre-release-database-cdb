@@ -215,7 +215,7 @@ describe('...', () => {
   const coverageRegistry = createCoverage({ scriptDir });
 
   it('...', async () => {
-    await createTest({ cdb, scriptPath: scriptDir }, (ctx) => {
+    await createTest({}, (ctx) => {
       ctx
         .addCard(...)
         .advance(...)
@@ -227,7 +227,9 @@ describe('...', () => {
 });
 ```
 
-- `scriptDir` 是必填项，默认测试目标是根目录 `script/`。它必须与 `createTest({ scriptPath })` 里实际优先加载的脚本目录一致；普通根目录卡片测试可直接使用 `resolve(process.cwd(), 'script')`。
+- `scriptDir` 是 coverage summary 用来读取源码行的路径，不是 `createTest` 的加载配置。普通根目录卡片测试可直接使用 `resolve(process.cwd(), 'script')`。
+- 普通 `tests/specs/c{code}.spec.ts` 不要在 `createTest` 里手动传 `cdb` 或 `scriptPath`。`createTest` 已经通过根目录加载全部根目录 `.cdb` 和 `script/` 下的 Lua 脚本。
+- 只有测试专用 fixture 或临时覆盖脚本路径时，才允许显式传 `cdb`、`scriptPath` 或 `ygoproPath`，并且要在测试里说明原因。
 - `createCoverage()` 会自动注册 `afterAll`，不要在测试里手写 `afterAll(() => logLuaCoverageSummary(...))`。
 - 每个 `it` 里如果创建了一个或多个 duel，每个 duel 流程结束后都要调用 `coverageRegistry.addFrom(ctx)`；不要手写 `ctx.getAllCoverages()` 再 `registry.add(...)`。
 - 如果某个测试显式传了 `coverage: false`，该测试不会产生 coverage；除非是非常特殊的性能或兼容性用例，否则不要关闭。
@@ -237,7 +239,7 @@ describe('...', () => {
 
 ### Unit 测试
 
-- 使用 `createTest({ cdb, scriptPath }, cb)`。
+- 普通卡片测试使用 `createTest({}, cb)`，不要手动传目标 `.cdb` 或根目录 `script/`。
 - 通过 `ctx.addCard(...)` 布置场面。
 - 用 `ctx.evaluate(...)` 只能检查不会产生交互和状态变化的 Lua 逻辑：
   - `filter`、`condition`、`value` 等纯运算辅助函数。
