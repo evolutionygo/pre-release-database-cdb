@@ -1,4 +1,4 @@
---聖なる心のバリア-マインドフォースー
+--聖なる心のバリア －マインドフォース－
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--Activate
@@ -14,30 +14,35 @@ function s.initial_effect(c)
 	local e2=e1:Clone()
 	e2:SetCode(EVENT_CHAINING)
 	e2:SetCondition(s.condition2)
-	e2:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_CHAIN_END)
 	c:RegisterEffect(e2)
-	local e3=e2:Clone()
-	e3:SetCondition(s.condition3)
-	c:RegisterEffect(e3)
 	--act in set turn
+	local e3=Effect.CreateEffect(c)
+	e3:SetDescription(aux.Stringid(id,1))
+	e3:SetType(EFFECT_TYPE_SINGLE)
+	e3:SetCode(EFFECT_TRAP_ACT_IN_SET_TURN)
+	e3:SetProperty(EFFECT_FLAG_SET_AVAILABLE)
+	e3:SetCondition(s.actcon)
+	c:RegisterEffect(e3)
+	--adjust(disablecheck)
 	local e4=Effect.CreateEffect(c)
-	e4:SetDescription(aux.Stringid(id,1))
-	e4:SetType(EFFECT_TYPE_SINGLE)
-	e4:SetCode(EFFECT_TRAP_ACT_IN_SET_TURN)
-	e4:SetProperty(EFFECT_FLAG_SET_AVAILABLE)
-	e4:SetCondition(s.actcon)
+	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e4:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e4:SetCode(EVENT_ADJUST)
+	e4:SetRange(0xff)
+	e4:SetLabelObject(e1)
+	e4:SetOperation(s.adjustop)
 	c:RegisterEffect(e4)
-	--inactivatable
-	local e5=Effect.CreateEffect(c)
-	e5:SetType(EFFECT_TYPE_FIELD)
-	e5:SetCode(EFFECT_CANNOT_INACTIVATE)
-	e5:SetRange(LOCATION_SZONE)
-	e5:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
-	e5:SetValue(s.actcon)
+	local e5=e4:Clone()
+	e5:SetLabelObject(e2)
 	c:RegisterEffect(e5)
-	local e6=e5:Clone()
-	e6:SetCode(EFFECT_CANNOT_DISEFFECT)
-	c:RegisterEffect(e6)
+end
+function s.adjustop(e,tp,eg,ep,ev,re,r,rp)
+	local e1=e:GetLabelObject()
+	if Duel.IsExistingMatchingCard(Card.IsFaceup,e:GetHandlerPlayer(),0,LOCATION_ONFIELD,5,nil) then
+		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_CANNOT_INACTIVATE+EFFECT_FLAG_CAN_FORBIDDEN)
+	else
+		e1:SetProperty(0)
+	end
 end
 function s.condition1(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(Card.IsFaceup,tp,0,LOCATION_MZONE,nil)
@@ -46,11 +51,14 @@ function s.condition1(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetTurnPlayer()~=tp and tg:IsContains(Duel.GetAttacker())
 end
 function s.condition2(e,tp,eg,ep,ev,re,r,rp)
+	return s.condition21(e,tp,eg,ep,ev,re,r,rp) or s.condition22(e,tp,eg,ep,ev,re,r,rp)
+end
+function s.condition21(e,tp,eg,ep,ev,re,r,rp)
 	if ep==tp or not re:IsActiveType(TYPE_MONSTER) then return false end
 	local ex,tg,tc=Duel.GetOperationInfo(ev,CATEGORY_DESTROY)
 	return ex and tg~=nil and tc+tg:FilterCount(Card.IsOnField,nil)-tg:GetCount()>0
 end
-function s.condition3(e,tp,eg,ep,ev,re,r,rp)
+function s.condition22(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetTurnPlayer()~=tp or ep==tp or not re:IsActiveType(TYPE_MONSTER) then return false end
 	local loc=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_LOCATION)
 	return (LOCATION_HAND+LOCATION_ONFIELD)&loc~=0
