@@ -71,6 +71,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local flag=false
 	for tc in aux.Next(g) do
 		if tc:IsCanBeDisabledByEffect(e,false) then
+			flag=true
 			Duel.NegateRelatedChain(tc,RESET_TURN_SET)
 			local e1=Effect.CreateEffect(c)
 			e1:SetType(EFFECT_TYPE_SINGLE)
