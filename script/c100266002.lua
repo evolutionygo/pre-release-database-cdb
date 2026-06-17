@@ -38,10 +38,11 @@ function s.initial_effect(c)
 end
 function s.adjustop(e,tp,eg,ep,ev,re,r,rp)
 	local e1=e:GetLabelObject()
+	local property=EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_CANNOT_INACTIVATE+EFFECT_FLAG_CAN_FORBIDDEN
 	if Duel.IsExistingMatchingCard(Card.IsFaceup,e:GetHandlerPlayer(),0,LOCATION_ONFIELD,5,nil) then
-		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_CANNOT_INACTIVATE+EFFECT_FLAG_CAN_FORBIDDEN)
+		e1:SetProperty(e1:GetProperty()|property)
 	else
-		e1:SetProperty(0)
+		e1:SetProperty(e1:GetProperty()&~property)
 	end
 end
 function s.condition1(e,tp,eg,ep,ev,re,r,rp)
