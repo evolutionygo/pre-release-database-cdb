@@ -76,9 +76,10 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 		if Duel.Destroy(g,REASON_EFFECT)~=0 then
 			if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-			local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.spfilter),tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
-			if g:GetCount()>0 then
-				Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
+			local sg=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.spfilter),tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
+			if sg:GetCount()>0 then
+				Duel.BreakEffect()
+				Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP)
 			end
 		end
 	end
