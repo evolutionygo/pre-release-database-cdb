@@ -1,4 +1,4 @@
---
+--海中戦型お手伝いロボ
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--link summon
