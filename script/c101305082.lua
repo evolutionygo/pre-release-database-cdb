@@ -56,9 +56,8 @@ end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()
 	if chk==0 then
-		if not c:IsLocation(LOCATION_HAND+LOCATION_ONFIELD) then return false end
-		if c:GetOriginalCode()==58242947 then return false end
-		if c:IsLocation(LOCATION_ONFIELD) then
+		if not c:IsLocation(LOCATION_HAND+LOCATION_SZONE) then return false end
+		if c:IsLocation(LOCATION_SZONE) then
 			local ct=c:GetColumnGroup():FilterCount(s.cfilter2,nil,tp)
 			return ct>0 and ct<=Duel.GetMZoneCount(tp,nil,tp,LOCATION_REASON_CONTROL)
 		end
