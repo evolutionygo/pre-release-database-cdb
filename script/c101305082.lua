@@ -56,11 +56,12 @@ end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()
 	if chk==0 then
+		if not c:IsLocation(LOCATION_HAND+LOCATION_ONFIELD) then return false end
 		if c:IsLocation(LOCATION_ONFIELD) then
 			local ct=c:GetColumnGroup():FilterCount(s.cfilter2,nil,tp)
 			return ct>0 and ct<=Duel.GetMZoneCount(tp,nil,tp,LOCATION_REASON_CONTROL)
 		end
-		return true
+		return Duel.IsExistingMatchingCard(Card.IsControlerCanBeChanged,tp,0,LOCATION_MZONE,1,nil)
 	end
 	local g=Duel.GetMatchingGroup(Card.IsControlerCanBeChanged,tp,0,LOCATION_MZONE,nil)
 	Duel.SetOperationInfo(0,CATEGORY_CONTROL,g,g:GetCount(),0,0)
