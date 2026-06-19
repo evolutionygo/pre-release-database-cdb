@@ -21,6 +21,7 @@ end
 function s.handcon(e)
 	local tp=e:GetHandlerPlayer()
 	return Duel.GetTurnCount(1-tp)==1 and Duel.GetTurnPlayer()==1-tp
+		and Duel.GetCurrentPhase()==PHASE_STANDBY
 end
 function s.stfilter(c,tp)
 	return c:IsSetCard(0x2e5) and c:IsType(TYPE_FIELD) and not c:IsForbidden() and c:CheckUniqueOnField(tp)
