@@ -34,14 +34,19 @@ function s.GetColumn(seq)
 end
 function s.disfilter(c,seq)
 	local seq2=s.GetColumn(c:GetSequence())
-	return aux.NegateAnyFilter(c) and math.abs(seq-seq2)==1 and not c:IsType(TYPE_FIELD)
+	if not aux.NegateAnyFilter(c) or c:IsType(TYPE_FIELD) then return false end
+	if c:IsLocation(LOCATION_MZONE) then
+		return math.abs(seq-seq2)==1
+	else
+		return seq==seq2
+	end
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONTROL)
 	local g=Duel.SelectMatchingCard(tp,s.cfilter,tp,LOCATION_MZONE,0,1,1,nil)
 	local tc=g:GetFirst()
-	if Duel.GetControl(tc,1-tp,PHASE_END,1)~=0 then
+	if tc and Duel.GetControl(tc,1-tp,PHASE_END,1)~=0 then
 		local seq=tc:GetSequence()
 		local sg=Duel.GetMatchingGroup(s.disfilter,tp,0,LOCATION_ONFIELD,nil,seq)
 		if sg:GetCount()>0 then

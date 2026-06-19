@@ -1,4 +1,4 @@
---
+--死相の冥鑑ヒュブロ
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--summon with no tribute
