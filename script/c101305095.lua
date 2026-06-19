@@ -35,7 +35,7 @@ function s.GetColumn(seq)
 end
 function s.disfilter(c,seq)
 	local seq2=s.GetColumn(c:GetSequence())
-	return aux.NegateAnyFilter(c) and math.abs(seq1-seq2)==1 and not c:IsType(TYPE_FIELD)
+	return aux.NegateAnyFilter(c) and math.abs(seq-seq2)==1 and not c:IsType(TYPE_FIELD)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
