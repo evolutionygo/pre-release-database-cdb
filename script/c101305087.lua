@@ -67,7 +67,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 				and Duel.SelectYesNo(1-tp,aux.Stringid(id,1)) then
 				Duel.BreakEffect()
 				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-				local ssg=gt:Select(tp,1,1,nil)
+				local ssg=tg:Select(tp,1,1,nil)
 				Duel.SpecialSummon(ssg,0,1-tp,1-tp,false,false,POS_FACEUP)
 			end
 		end

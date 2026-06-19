@@ -28,9 +28,6 @@ function s.initial_effect(c)
 	e3:SetOperation(s.tokenop)
 	c:RegisterEffect(e3)
 end
-function s.disfilter(c)
-	return c:IsType(TYPE_XYZ) and c:IsSetCard(0x1be) and c:IsFaceup() and c:CheckRemoveOverlayCard(c:GetControler(),1,REASON_EFFECT)
-end
 function s.tfilter(c,seq,rp)
 	if not c:IsOnField() then return false end
 	local seq2=aux.MZoneSequence(c:GetSequence())
