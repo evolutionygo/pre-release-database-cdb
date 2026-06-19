@@ -52,13 +52,16 @@ end
 function s.rmcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(Card.IsControler,1,nil,1-tp)
 end
-function s.xyzfilter(c,tp)
+function s.xyzfilter(c,tp,e)
 	return c:IsLocation(LOCATION_GRAVE) and c:IsControler(1-tp) and c:IsType(TYPE_MONSTER) and c:IsCanOverlay()
+		and c:IsCanBeEffectTarget(e)
 end
 function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	local sg=eg:Filter(s.xyzfilter,nil,tp)
+	local sg=eg:Filter(s.xyzfilter,nil,tp,e)
 	if chk==0 then return sg:GetCount()>0 end
-	Duel.SetTargetCard(sg)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
+	local g=sg:Select(tp,1,1,nil)
+	Duel.SetTargetCard(g)
 end
 function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
