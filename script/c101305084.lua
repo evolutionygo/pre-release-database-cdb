@@ -27,11 +27,11 @@ function s.cfilter(c)
 	return not c:IsRace(RACE_THUNDER)
 end
 function s.descon(e,tp,eg,ep,ev,re,r,rp)
-	return not eg:IsContains(e:GetHandler()) and eg:IsExists(s.cfilter,1,nil)
+	return not eg:IsContains(e:GetHandler()) and eg:Filter(Card.IsFaceup):IsExists(s.cfilter,1,nil)
 end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
-	local g=eg:Filter(Card.IsLocation,nil,LOCATION_MZONE):Filter(s.cfilter,nil)
+	local g=eg:Filter(Card.IsLocation,nil,LOCATION_MZONE):Filter(Card.IsFaceup):Filter(s.cfilter,nil)
 	Duel.SetTargetCard(g)
 end
 function s.desfilter(c,e)
