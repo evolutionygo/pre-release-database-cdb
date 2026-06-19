@@ -64,7 +64,7 @@ function s.xyzop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	local g=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,nil,tp)
+	local g=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,nil,e,tp)
 	local lvt={}
 	local res=false
 	for tc in aux.Next(g) do

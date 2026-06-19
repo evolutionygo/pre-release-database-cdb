@@ -45,9 +45,9 @@ function s.discon(e,tp,eg,ep,ev,re,r,rp)
 		and loc==LOCATION_MZONE and tg and tg:IsExists(s.tfilter,1,nil,seq,rp)
 end
 function s.disop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.IsExistingMatchingCard(aux.NecroValleyFilter(Card.IsAbleToRemove),tp,0,LOCATION_GRAVE,1,nil,1-tp) and Duel.SelectEffectYesNo(tp,e:GetHandler(),aux.Stringid(id,2)) then
+	if Duel.IsExistingMatchingCard(aux.NecroValleyFilter(Card.IsAbleToRemove),tp,0,LOCATION_GRAVE,1,nil,1-tp) and Duel.SelectYesNo(1-tp,aux.Stringid(id,2)) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-		local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(Card.IsAbleToRemove),tp,0,LOCATION_GRAVE,1,1,nil,tp)
+		local g=Duel.SelectMatchingCard(1-tp,aux.NecroValleyFilter(Card.IsAbleToRemove),tp,0,LOCATION_GRAVE,1,1,nil,tp)
 		if g:GetCount()>0 then
 			Duel.Remove(g,POS_FACEUP,REASON_EFFECT,1-tp)
 		end
@@ -85,6 +85,6 @@ function s.tokenop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD-RESET_TOFIELD)
 		e1:SetValue(lv)
 		tk:RegisterEffect(e1,true)
-		Duel.SpecialSummonStep(tk,0,tp,tp,false,false,POS_FACEUP)
+		Duel.SpecialSummon(tk,0,tp,tp,false,false,POS_FACEUP)
 	end
 end

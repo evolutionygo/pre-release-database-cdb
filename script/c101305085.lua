@@ -21,6 +21,7 @@ function s.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_QUICK_O)
 	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetRange(LOCATION_MZONE)
+	e2:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_MAIN_END)
 	e2:SetCountLimit(1,id+o)
 	e2:SetCondition(s.fspcon)
 	e2:SetTarget(s.fsptg)
@@ -36,11 +37,14 @@ function s.initial_effect(c)
 	e3:SetOperation(s.attop)
 	c:RegisterEffect(e3)
 end
+function s.cosfilter(c)
+	return c:IsFaceup() and c:GetAttribute()~=0x7f
+end
 function s.costg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsFaceup() end
-	if chk==0 then return Duel.IsExistingTarget(Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and s.cosfilter(chkc) end
+	if chk==0 then return Duel.IsExistingTarget(s.cosfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-	local g=Duel.SelectTarget(tp,Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
+	local g=Duel.SelectTarget(tp,s.cosfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATTRIBUTE)
 	local att=Duel.AnnounceAttribute(tp,1,ATTRIBUTE_ALL&~g:GetFirst():GetAttribute())
 	e:SetLabel(att)

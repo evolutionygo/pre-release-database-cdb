@@ -56,18 +56,18 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetCountLimit(1)
 		e1:SetLabelObject(g)
 		e1:SetReset(RESET_PHASE+PHASE_END)
-		e1:SetCondition(s.descon)
-		e1:SetOperation(s.desop)
+		e1:SetCondition(s.descon2)
+		e1:SetOperation(s.desop2)
 		Duel.RegisterEffect(e1,tp)
 	end
 end
 function s.desfilter(c)
 	return c:GetFlagEffect(id)~=0
 end
-function s.descon(e,tp,eg,ep,ev,re,r,rp)
+function s.descon2(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetLabelObject():IsExists(s.desfilter,1,nil)
 end
-function s.desop(e,tp,eg,ep,ev,re,r,rp)
+function s.desop2(e,tp,eg,ep,ev,re,r,rp)
 	local g=e:GetLabelObject()
 	local tg=g:Filter(s.desfilter,nil)
 	Duel.Destroy(tg,REASON_EFFECT)

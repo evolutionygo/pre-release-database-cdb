@@ -44,7 +44,8 @@ function s.sprcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
 	local g=Duel.GetMatchingGroup(s.sprfilter,tp,LOCATION_GRAVE,0,e:GetHandler())
-	return g:CheckSubGroup(s.gcheck,3,3)
+	return Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
+		and g:CheckSubGroup(s.gcheck,3,3)
 end
 function s.sprtg(e,tp,eg,ep,ev,re,r,rp,chk,c)
 	local g=Duel.GetMatchingGroup(s.sprfilter,tp,LOCATION_GRAVE,0,e:GetHandler())

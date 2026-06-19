@@ -66,8 +66,8 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 			if tg:GetCount()>0 and Duel.GetLocationCount(1-tp,LOCATION_MZONE)>0
 				and Duel.SelectYesNo(1-tp,aux.Stringid(id,1)) then
 				Duel.BreakEffect()
-				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-				local ssg=tg:Select(tp,1,1,nil)
+				Duel.Hint(HINT_SELECTMSG,1-tp,HINTMSG_SPSUMMON)
+				local ssg=tg:Select(1-tp,1,1,nil)
 				Duel.SpecialSummon(ssg,0,1-tp,1-tp,false,false,POS_FACEUP)
 			end
 		end
@@ -87,7 +87,7 @@ function s.retop(e,tp,eg,ep,ev,re,r,rp)
 	if tc:IsPreviousLocation(LOCATION_MZONE) then
 		Duel.ReturnToField(tc)
 	else
-		Duel.SendtoHand(tc,1-tp,REASON_EFFECT)
+		Duel.SendtoHand(tc,tp,REASON_EFFECT)
 	end
 end
 function s.macon(e)

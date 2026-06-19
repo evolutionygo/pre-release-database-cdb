@@ -92,6 +92,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 		e1:SetTargetRange(1,0)
 		e1:SetTarget(s.splimit)
+		local ct=1
 		if Duel.GetTurnPlayer()==1-tp then
 			ct=2
 		end

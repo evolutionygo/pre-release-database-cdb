@@ -1,6 +1,7 @@
 --Angelechy Bastion
 local s,id,o=GetID()
 function s.initial_effect(c)
+	aux.AddCodeList(c,101305090)
 	--Synchro summon
 	aux.AddSynchroProcedure(c,nil,aux.NonTuner(nil),1)
 	c:EnableReviveLimit()
