@@ -29,10 +29,10 @@ function s.initial_effect(c)
 	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e3:SetType(EFFECT_TYPE_IGNITION)
 	e3:SetRange(LOCATION_MZONE)
-	e3:SetCountLimit(1)
-	e3:SetCost(s.cost)
-	e3:SetTarget(s.target)
-	e3:SetOperation(s.operation)
+	e3:SetCountLimit(1,id+o)
+	e3:SetCost(s.spcost)
+	e3:SetTarget(s.sptg)
+	e3:SetOperation(s.spop)
 	c:RegisterEffect(e3)
 end
 function s.xyzcon(e,tp,eg,ep,ev,re,r,rp)
@@ -63,7 +63,7 @@ function s.xyzop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Overlay(c,Group.FromCards(tc))
 	end
 end
-function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
+function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,nil,tp)
 	local lvt={}
 	local res=false
