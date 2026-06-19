@@ -97,8 +97,8 @@ function s.efcon(e)
 end
 function s.efilter(e,te)
 	local seq1=aux.MZoneSequence(e:GetHandler():GetSequence())
-	local loc,seq=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_LOCATION,CHAININFO_TRIGGERING_SEQUENCE)
-	if loc&LOCATION_ONFIELD==0 then return false end
+	local seq=Duel.GetChainInfo(0,CHAININFO_TRIGGERING_SEQUENCE)
+	if (te:GetActivateLocation()&LOCATION_ONFIELD)==0 then return false end
 	local seq2=aux.MZoneSequence(seq)
 	return te:GetOwnerPlayer()~=e:GetHandlerPlayer() and te:IsActivated() and seq1==4-seq2
 end
