@@ -45,12 +45,26 @@ function s.setfilter(c)
 	return c:IsType(TYPE_SYNCHRO) and not c:IsForbidden()
 end
 function s.settg(e,tp,eg,ep,ev,re,r,rp,chk)
+	local res=false
+	local g=Duel.GetMatchingGroup(s.setfilter,tp,LOCATION_EXTRA+LOCATION_GRAVE,0,nil)
+	local ct=g:GetClassCount(Card.GetCode)
+	if Duel.GetLocationCount(tp,LOCATION_SZONE)<ct then ct=Duel.GetLocationCount(tp,LOCATION_SZONE) end
+	if ct>3 then ct=3 end
+	for i=1,ct do
+		if Duel.IsPlayerCanSpecialSummonMonster(tp,id+o,0,TYPES_TOKEN_MONSTER,0,0,i,RACE_MACHINE,ATTRIBUTE_LIGHT) then
+			res=true
+			break
+		end
+	end
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0
-		and Duel.IsExistingMatchingCard(s.setfilter,tp,LOCATION_EXTRA,0,1,nil)
+		and Duel.IsExistingMatchingCard(s.setfilter,tp,LOCATION_EXTRA+LOCATION_GRAVE,0,1,nil)
 		and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsPlayerCanSpecialSummonMonster(tp,id+o,0,TYPES_TOKEN_MONSTER,0,0,1,RACE_MACHINE,ATTRIBUTE_LIGHT) end
+		and res end
 	Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,1,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,0,0)
+end
+function s.gcheck(g,tp)
+	return aux.dncheck(g) and Duel.IsPlayerCanSpecialSummonMonster(tp,id+o,0,TYPES_TOKEN_MONSTER,0,0,g:GetCount(),RACE_MACHINE,ATTRIBUTE_LIGHT)
 end
 function s.setop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_SZONE)>0 then
@@ -59,7 +73,7 @@ function s.setop(e,tp,eg,ep,ev,re,r,rp)
 		local g=Duel.GetMatchingGroup(aux.NecroValleyFilter(s.setfilter),tp,LOCATION_EXTRA+LOCATION_GRAVE,0,nil)
 		if g:GetCount()>0 then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
-			local sg=g:SelectSubGroup(tp,aux.dncheck,false,1,ft)
+			local sg=g:SelectSubGroup(tp,s.gcheck,false,1,ft,tp)
 			for tc in aux.Next(sg) do
 				Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
 				local e1=Effect.CreateEffect(e:GetHandler())
