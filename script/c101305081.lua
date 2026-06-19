@@ -78,7 +78,7 @@ function s.setop(e,tp,eg,ep,ev,re,r,rp)
 				e1:SetCode(EFFECT_CHANGE_LEVEL)
 				e1:SetReset(RESET_EVENT+RESETS_STANDARD-RESET_TOFIELD)
 				e1:SetValue(sg:GetCount())
-				tk:RegisterEffect(e1,true)
+				token:RegisterEffect(e1,true)
 				Duel.SpecialSummon(token,0,tp,tp,false,false,POS_FACEUP)
 			end
 		end
