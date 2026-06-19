@@ -37,7 +37,7 @@ function s.discon(e,tp,eg,ep,ev,re,r,rp)
 	local rc=re:GetHandler()
 	return rp==1-tp and Duel.IsChainDisablable(ev) and re:IsActiveType(TYPE_MONSTER) and loc==LOCATION_MZONE
 		and rc:IsRelateToChain(ev) and rc:IsControler(rp) and rc:IsType(TYPE_MONSTER)
-		and tg and tg:IsExists(s.tfilter,1,nil,rc,ev)
+		and tg and tg:IsExists(s.tfilter,1,rc,rc,ev)
 end
 function s.disop(e,tp,eg,ep,ev,re,r,rp)
 	local res=false
