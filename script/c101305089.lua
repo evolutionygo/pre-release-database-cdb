@@ -58,7 +58,7 @@ function s.xyzfilter(c,tp,e)
 end
 function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local sg=eg:Filter(s.xyzfilter,nil,tp,e)
-	if chkc then sg:IsContains(chkc) end
+	if chkc then return sg:IsContains(chkc) end
 	if chk==0 then return sg:GetCount()>0 end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
 	local g=sg:Select(tp,1,1,nil)
@@ -66,14 +66,9 @@ function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsRelateToChain() then
-		local sg=eg:Filter(s.xyzfilter,nil,tp):Filter(aux.NecroValleyFilter(Card.IsRelateToChain),nil)
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
-		local rg=sg:Select(tp,1,1,nil)
-		if rg and rg:GetCount()>0 then
-			Duel.HintSelection(rg)
-			Duel.Overlay(c,rg)
-		end
+	local tc=Duel.GetFirstTarget()
+	if c:IsRelateToChain() and tc:IsRelateToChain() and aux.NecroValleyFilter()(tc) then
+		Duel.Overlay(c,Group.FromCards(tc))
 	end
 end
 function s.effcon(ct)
