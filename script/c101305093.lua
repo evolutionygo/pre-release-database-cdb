@@ -37,10 +37,10 @@ function s.rmfilter(c,ec,tp)
 	local seq2=s.GetColumn(ec:GetSequence())
 	local zone=0
 	if seq1>0 then
-		zone=bit.bor(zone,1<<(seq2-1))
+		zone=bit.bor(zone,1<<(seq1-1))
 	end
 	if seq1<4 then
-		zone=bit.bor(zone,1<<(seq2+1))
+		zone=bit.bor(zone,1<<(seq1+1))
 	end
 	return math.abs(4-seq1-seq2)==1 and c:IsAbleToRemove()
 		and Duel.GetMZoneCount(1-tp,c,1-tp,LOCATION_REASON_CONTROL,zone)>0
@@ -59,7 +59,7 @@ function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 	if tc:IsRelateToChain() and tc:IsType(TYPE_MONSTER)
 		and Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)~=0
 		and c:IsRelateToChain() then
-		local seq=s.GetColumn(c:GetSequence())
+		local seq=4-s.GetColumn(c:GetSequence())
 		local zone=0
 		if seq>0 then
 			zone=bit.bor(zone,1<<(seq-1))
@@ -82,7 +82,7 @@ end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then return true end
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,c:GetOwner(),LOCATION_EXTRA)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
