@@ -87,14 +87,14 @@ end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if not Duel.IsPlayerCanSpecialSummonMonster(tp,id,0,TYPES_EFFECT_TRAP_MONSTER,4000,4000,10,RACE_FIEND,ATTRIBUTE_DARK) then return end
-	c:AddMonsterAttribute(TYPE_EFFECT+TYPE_TRAP)
+	c:AddMonsterAttribute(TYPE_EFFECT)
 	Duel.SpecialSummon(c,SUMMON_VALUE_SELF,tp,tp,true,false,POS_FACEUP)
 end
 function s.efcon(e)
 	return e:GetHandler():GetSummonType()==SUMMON_TYPE_SPECIAL+SUMMON_VALUE_SELF
 end
 function s.efilter(e,te)
-	local seq1=aux.MZoneSequence(c:GetSequence())
+	local seq1=aux.MZoneSequence(e:GetHandler():GetSequence())
 	local seq2=Duel.GetChainInfo(0,CHAININFO_TRIGGERING_SEQUENCE)
 	return te:GetOwnerPlayer()~=e:GetHandlerPlayer() and te:IsActivated() and seq1==4-seq2
 end
