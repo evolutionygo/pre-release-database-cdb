@@ -91,10 +91,9 @@ function s.sfilter(c,tp)
 end
 function s.tecon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.sfilter,1,nil,tp) and not eg:IsContains(e:GetHandler())
-		and aux.bpcon(e,tp,eg,ep,ev,re,r,rp) and Duel.IsTurnPlayer(tp)
 end
 function s.tefilter(c)
-	return c:IsPreviousSetCard(0x2e5) and bit.band(c:GetOriginalType(),TYPE_MONSTER)~=0
+	return c:IsSetCard(0x2e5) and bit.band(c:GetOriginalType(),TYPE_MONSTER)~=0
 		and c:IsAbleToExtra()
 end
 function s.tetg(e,tp,eg,ep,ev,re,r,rp,chk)

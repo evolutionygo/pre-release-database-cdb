@@ -30,7 +30,7 @@ function s.setfilter(c)
 	return c:IsSetCard(0x2e5) and c:IsType(TYPE_MONSTER) and not c:IsForbidden()
 end
 function s.spfilter(c,e,tp)
-	return c:IsLevel(2) and c:IsSetCard(0x2e5) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsLevel(2,7) and c:IsSetCard(0x2e5) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 		and Duel.GetLocationCountFromEx(tp,tp,nil,c,0x60)>0
 		and Duel.IsExistingMatchingCard(s.setfilter,tp,LOCATION_EXTRA,0,1,c)
 end
