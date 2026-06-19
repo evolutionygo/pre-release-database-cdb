@@ -8,7 +8,6 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 	--negate
 	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(id,0))
 	e2:SetCategory(CATEGORY_DISABLE)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e2:SetCode(EVENT_CHAIN_SOLVING)
@@ -28,30 +27,28 @@ function s.initial_effect(c)
 	e3:SetOperation(s.tokenop)
 	c:RegisterEffect(e3)
 end
-function s.tfilter(c,seq,rp)
-	if not c:IsOnField() then return false end
-	local seq2=aux.MZoneSequence(c:GetSequence())
-	if rp==c:GetControler() then
-		return seq~=seq2
-	else
-		return seq+seq2~=4
-	end
+function s.tfilter(c,rc,ev)
+	return c:IsOnField() and c:IsRelateToChain(ev) and rc:GetColumnGroup():Contains(c)
 end
 function s.discon(e,tp,eg,ep,ev,re,r,rp)
-	local loc,seq=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_LOCATION,CHAININFO_TRIGGERING_SEQUENCE)
+	local loc=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_LOCATION)
 	if not re:IsHasProperty(EFFECT_FLAG_CARD_TARGET) then return false end
 	local tg=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)
-	return rp==1-tp and Duel.IsChainDisablable(ev) and re:IsActiveType(TYPE_MONSTER)
-		and loc==LOCATION_MZONE and tg and tg:IsExists(s.tfilter,1,nil,seq,rp)
+	local rc=re:GetHandler()
+	return rp==1-tp and Duel.IsChainDisablable(ev) and re:IsActiveType(TYPE_MONSTER) and loc==LOCATION_MZONE
+		and rc:IsRelateToChain(ev) and rc:IsControler(rp) and rc:IsType(TYPE_MONSTER)
+		and tg and tg:IsExists(s.tfilter,1,nil,rc,ev)
 end
 function s.disop(e,tp,eg,ep,ev,re,r,rp)
+	local res=false
 	if Duel.IsExistingMatchingCard(aux.NecroValleyFilter(Card.IsAbleToRemove),tp,0,LOCATION_GRAVE,1,nil,1-tp) and Duel.SelectYesNo(1-tp,aux.Stringid(id,2)) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 		local g=Duel.SelectMatchingCard(1-tp,aux.NecroValleyFilter(Card.IsAbleToRemove),tp,0,LOCATION_GRAVE,1,1,nil,tp)
-		if g:GetCount()>0 then
-			Duel.Remove(g,POS_FACEUP,REASON_EFFECT,1-tp)
+		if g:GetCount()>0 and Duel.Remove(g,POS_FACEUP,REASON_EFFECT,1-tp)>0 then
+			res=true
 		end
-	else
+	end
+	if not res then
 		Duel.Hint(HINT_CARD,0,id)
 		Duel.NegateEffect(ev)
 	end

@@ -1,14 +1,15 @@
 --Cerynemesia, Mystical Beast of the Forest
 local s,id,o=GetID()
 function s.initial_effect(c)
-	--search
+	--special summon
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
-	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_REMOVE)
+	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e1:SetCode(EVENT_SUMMON_SUCCESS)
 	e1:SetProperty(EFFECT_FLAG_DELAY)
 	e1:SetCountLimit(1,id)
+	e1:SetCost(s.cost)
 	e1:SetTarget(s.thtg)
 	e1:SetOperation(s.thop)
 	c:RegisterEffect(e1)
@@ -28,48 +29,59 @@ function s.initial_effect(c)
 	e4:SetValue(s.atklimit)
 	c:RegisterEffect(e4)
 end
+---Check whether a monster is special summoned by Tiki Peace, which should not calculate its original value after leaving the field
+---@param c Card
+---@return boolean
+function Auxiliary.covcheck(c)
+	if c:GetOriginalType()&TYPE_MONSTER~=0 then return true end
+	local se=c:GetSpecialSummonInfo(SUMMON_INFO_REASON_EFFECT)
+	return se and se:GetHandler()==c
+end
 function s.rmfilter(c,e,tp)
-	return c:IsFaceupEx() and c:IsRace(RACE_BEAST) and c:IsAbleToRemove()
-		and Duel.GetMZoneCount(tp,c)>0
-		and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil,c,e,tp)
+	return c:IsFaceupEx() and c:IsRace(RACE_BEAST) and c:IsAbleToRemoveAsCost()
+		and Duel.GetMZoneCount(tp,c)>0 and (not c:IsLocation(LOCATION_MZONE) or Auxiliary.covcheck(c))
+		and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil,e,tp,c:GetOriginalLevel())
 end
-function s.spfilter(c,ec,e,tp)
-	return c:GetOriginalLevel()<=ec:GetOriginalLevel() and c:IsAttribute(ATTRIBUTE_EARTH) and c:IsRace(RACE_BEAST) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+function s.spfilter(c,e,tp,olv)
+	return c:GetOriginalLevel()<=olv and c:IsAttribute(ATTRIBUTE_EARTH) and c:IsRace(RACE_BEAST) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
-function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
+function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.rmfilter,tp,LOCATION_HAND+LOCATION_MZONE,0,1,nil,e,tp) end
-	Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,1,tp,LOCATION_HAND+LOCATION_MZONE)
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK+LOCATION_GRAVE)
-end
-function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local g=Duel.SelectMatchingCard(tp,s.rmfilter,tp,LOCATION_HAND+LOCATION_MZONE,0,1,1,nil,e,tp)
-	if #g>0 and Duel.Remove(g,POS_FACEUP,REASON_EFFECT)~=0 then
-		local tc=g:GetFirst()
-		local fid=c:GetFieldID()
-		tc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,1,fid)
-		local e1=Effect.CreateEffect(e:GetHandler())
-		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		e1:SetCode(EVENT_PHASE+PHASE_END)
-		e1:SetCountLimit(1)
-		e1:SetLabel(fid)
-		e1:SetReset(RESET_PHASE+PHASE_END)
-		e1:SetLabelObject(tc)
-		e1:SetCondition(s.retcon)
-		e1:SetOperation(s.retop)
-		Duel.RegisterEffect(e1,tp)
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-		local sg=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.spfilter),tp,LOCATION_DECK+LOCATION_GRAVE,0,1,1,nil,tc,e,tp)
-		if sg:GetCount()>0 and Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP)~=0 then
-			local tg=Duel.GetMatchingGroup(Card.IsCanBeSpecialSummoned,tp,0,LOCATION_HAND,nil,e,0,1-tp,false,false)
-			if tg:GetCount()>0 and Duel.GetLocationCount(1-tp,LOCATION_MZONE)>0
-				and Duel.SelectYesNo(1-tp,aux.Stringid(id,1)) then
-				Duel.BreakEffect()
-				Duel.Hint(HINT_SELECTMSG,1-tp,HINTMSG_SPSUMMON)
-				local ssg=tg:Select(1-tp,1,1,nil)
-				Duel.SpecialSummon(ssg,0,1-tp,1-tp,false,false,POS_FACEUP)
-			end
+	Duel.Remove(g,POS_FACEUP,REASON_COST+REASON_TEMPORARY)
+	local tc=g:GetFirst()
+	e:SetLabel(tc:GetOriginalLevel())
+	local fid=c:GetFieldID()
+	tc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,EFFECT_FLAG_CLIENT_HINT,1,fid,aux.Stringid(id,2))
+	local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e1:SetCode(EVENT_PHASE+PHASE_END)
+	e1:SetCountLimit(1)
+	e1:SetLabel(fid)
+	e1:SetReset(RESET_PHASE+PHASE_END)
+	e1:SetLabelObject(tc)
+	e1:SetCondition(s.retcon)
+	e1:SetOperation(s.retop)
+	Duel.RegisterEffect(e1,tp)
+end
+function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return e:IsCostChecked() end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK+LOCATION_GRAVE)
+end
+function s.thop(e,tp,eg,ep,ev,re,r,rp)
+	local lv=e:GetLabel()
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	local sg=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.spfilter),tp,LOCATION_DECK+LOCATION_GRAVE,0,1,1,nil,e,tp,lv)
+	if sg:GetCount()>0 and Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP)~=0 then
+		local tg=Duel.GetMatchingGroup(Card.IsCanBeSpecialSummoned,tp,0,LOCATION_HAND,nil,e,0,1-tp,false,false)
+		if tg:GetCount()>0 and Duel.GetLocationCount(1-tp,LOCATION_MZONE)>0
+			and Duel.SelectYesNo(1-tp,aux.Stringid(id,3)) then
+			Duel.BreakEffect()
+			Duel.Hint(HINT_SELECTMSG,1-tp,HINTMSG_SPSUMMON)
+			local ssg=tg:Select(1-tp,1,1,nil)
+			Duel.SpecialSummon(ssg,0,1-tp,1-tp,false,false,POS_FACEUP)
 		end
 	end
 end
