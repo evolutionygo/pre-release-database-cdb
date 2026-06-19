@@ -39,7 +39,7 @@ function s.disfilter(c,seq)
 		if seq2<5 then
 			return math.abs(seq-seq2)==1
 		else
-			return seq2==5 and seq==1 or seq2==6 and seq==2
+			return seq2==5 and seq==1 or seq2==6 and seq==3
 		end
 	else
 		return seq==seq2
