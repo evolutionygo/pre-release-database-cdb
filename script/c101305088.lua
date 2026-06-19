@@ -69,7 +69,7 @@ function s.tokencost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Remove(tc,POS_FACEUP,REASON_COST)
 end
 function s.tokentg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:IsCostChecked() end
+	if chk==0 then return e:IsCostChecked() and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 end
 	Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,1,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,0,0)
 end
