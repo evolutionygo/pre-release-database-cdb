@@ -58,6 +58,7 @@ function s.xyzfilter(c,tp,e)
 end
 function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local sg=eg:Filter(s.xyzfilter,nil,tp,e)
+	if chkc then sg:IsContains(chkc) end
 	if chk==0 then return sg:GetCount()>0 end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
 	local g=sg:Select(tp,1,1,nil)
