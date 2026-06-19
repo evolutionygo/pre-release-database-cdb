@@ -4,7 +4,7 @@ function s.initial_effect(c)
 	--xyz summon
 	aux.AddXyzProcedure(c,nil,3,2,nil,nil,99)
 	c:EnableReviveLimit()
-	--spsummon
+	--attach
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
@@ -53,13 +53,11 @@ function s.xyztg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		and Duel.IsExistingTarget(s.filter,tp,LOCATION_REMOVED,0,1,e:GetHandler()) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
 	Duel.SelectTarget(tp,s.filter,tp,LOCATION_REMOVED,0,1,1,e:GetHandler())
-	Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
 end
 function s.xyzop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
 	if c:IsRelateToChain() and tc:IsRelateToChain() and not tc:IsImmuneToEffect(e) then
-		tc:CancelToGrave()
 		Duel.Overlay(c,Group.FromCards(tc))
 	end
 end

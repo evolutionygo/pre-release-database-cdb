@@ -22,8 +22,7 @@ function s.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE)
 	e2:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
 	e2:SetValue(1)
-	e2:SetCondition(s.effcon)
-	e2:SetLabel(2)
+	e2:SetCondition(s.effcon(2))
 	c:RegisterEffect(e2)
 	local e3=e2:Clone()
 	e3:SetCode(EFFECT_UPDATE_DEFENSE)
@@ -36,8 +35,7 @@ function s.initial_effect(c)
 	e4:SetRange(LOCATION_MZONE)
 	e4:SetTargetRange(LOCATION_GRAVE,LOCATION_GRAVE)
 	e4:SetValue(aux.tgoval)
-	e4:SetCondition(s.effcon)
-	e4:SetLabel(3)
+	e4:SetCondition(s.effcon(3))
 	c:RegisterEffect(e4)
 	--tograve
 	local e5=Effect.CreateEffect(c)
@@ -45,11 +43,10 @@ function s.initial_effect(c)
 	e5:SetCategory(CATEGORY_TOGRAVE)
 	e5:SetType(EFFECT_TYPE_IGNITION)
 	e5:SetRange(LOCATION_MZONE)
-	e5:SetCondition(s.effcon)
+	e5:SetCondition(s.effcon(4))
 	e5:SetCost(s.tgcost)
 	e5:SetTarget(s.tgtg)
 	e5:SetOperation(s.tgop)
-	e5:SetLabel(4)
 	c:RegisterEffect(e5)
 end
 function s.rmcon(e,tp,eg,ep,ev,re,r,rp)
@@ -75,8 +72,10 @@ function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 end
-function s.effcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():GetOverlayCount()>=e:GetLabel()
+function s.effcon(ct)
+	return function(e,tp,eg,ep,ev,re,r,rp)
+		return e:GetHandler():GetOverlayCount()>=ct
+	end
 end
 function s.tgcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,3,REASON_COST) end
