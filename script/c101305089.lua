@@ -25,7 +25,7 @@ function s.initial_effect(c)
 	e2:SetCondition(s.effcon(2))
 	c:RegisterEffect(e2)
 	local e3=e2:Clone()
-	e3:SetCode(EFFECT_UPDATE_DEFENSE)
+	e3:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
 	c:RegisterEffect(e3)
 	--cannot be target
 	local e4=Effect.CreateEffect(c)
