@@ -1,0 +1,93 @@
+--Imposter Shift
+local s,id,o=GetID()
+function s.initial_effect(c)
+	--Activate
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_ACTIVATE)
+	e1:SetCode(EVENT_FREE_CHAIN)
+	c:RegisterEffect(e1)
+	--negate
+	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(aux.Stringid(id,0))
+	e2:SetCategory(CATEGORY_DISABLE)
+	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e2:SetCode(EVENT_CHAIN_SOLVING)
+	e2:SetRange(LOCATION_SZONE)
+	e2:SetCondition(s.discon)
+	e2:SetOperation(s.disop)
+	c:RegisterEffect(e2)
+	--token
+	local e3=Effect.CreateEffect(c)
+	e3:SetDescription(aux.Stringid(id,1))
+	e3:SetCategory(CATEGORY_TOKEN+CATEGORY_SPECIAL_SUMMON)
+	e3:SetType(EFFECT_TYPE_IGNITION)
+	e3:SetCountLimit(1,id)
+	e3:SetRange(LOCATION_SZONE)
+	e3:SetCost(s.tokencost)
+	e3:SetTarget(s.tokentg)
+	e3:SetOperation(s.tokenop)
+	c:RegisterEffect(e3)
+end
+function s.disfilter(c)
+	return c:IsType(TYPE_XYZ) and c:IsSetCard(0x1be) and c:IsFaceup() and c:CheckRemoveOverlayCard(c:GetControler(),1,REASON_EFFECT)
+end
+function s.tfilter(c,seq,rp)
+	if not c:IsOnField() then return false end
+	local seq2=aux.MZoneSequence(c:GetSequence())
+	if rp==c:GetControler() then
+		return seq~=seq2
+	else
+		return seq+seq2~=4
+	end
+end
+function s.discon(e,tp,eg,ep,ev,re,r,rp)
+	local loc,seq=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_LOCATION,CHAININFO_TRIGGERING_SEQUENCE)
+	if not re:IsHasProperty(EFFECT_FLAG_CARD_TARGET) then return false end
+	local tg=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)
+	return rp==1-tp and Duel.IsChainDisablable(ev) and re:IsActiveType(TYPE_MONSTER)
+		and loc==LOCATION_MZONE and tg and tg:IsExists(s.tfilter,1,nil,seq,rp)
+end
+function s.disop(e,tp,eg,ep,ev,re,r,rp)
+	if Duel.IsExistingMatchingCard(aux.NecroValleyFilter(Card.IsAbleToRemove),tp,0,LOCATION_GRAVE,1,nil,1-tp) and Duel.SelectEffectYesNo(tp,e:GetHandler(),aux.Stringid(id,2)) then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+		local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(Card.IsAbleToRemove),tp,0,LOCATION_GRAVE,1,1,nil,tp)
+		if g:GetCount()>0 then
+			Duel.Remove(g,POS_FACEUP,REASON_EFFECT,1-tp)
+		end
+	else
+		Duel.Hint(HINT_CARD,0,id)
+		Duel.NegateEffect(ev)
+	end
+end
+function s.cfilter(c,tp)
+	return c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost() and c:IsLevelAbove(1) and c:IsFaceupEx()
+		and Duel.IsPlayerCanSpecialSummonMonster(tp,id+o,0,TYPES_TOKEN_MONSTER,800,800,c:GetLevel(),RACE_PSYCHO,ATTRIBUTE_EARTH)
+end
+function s.tokencost(e,tp,eg,ep,ev,re,r,rp,chk)
+	local c=e:GetHandler()
+	if chk==0 then return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_GRAVE,0,1,c,tp) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+	local tc=Duel.SelectMatchingCard(tp,s.cfilter,tp,LOCATION_GRAVE,0,1,1,c,tp):GetFirst()
+	e:SetLabel(tc:GetLevel())
+	Duel.Remove(tc,POS_FACEUP,REASON_COST)
+end
+function s.tokentg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return e:IsCostChecked() end
+	Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,0,0)
+end
+function s.tokenop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	local lv=e:GetLabel()
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and Duel.IsPlayerCanSpecialSummonMonster(tp,id+o,0,TYPES_TOKEN_MONSTER,800,800,lv,RACE_PSYCHO,ATTRIBUTE_EARTH) then
+		local tk=Duel.CreateToken(tp,id+o)
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_CHANGE_LEVEL)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD-RESET_TOFIELD)
+		e1:SetValue(lv)
+		tk:RegisterEffect(e1,true)
+		Duel.SpecialSummonStep(tk,0,tp,tp,false,false,POS_FACEUP)
+	end
+end
