@@ -33,10 +33,14 @@ function s.GetColumn(seq)
 	return seq==5 and 1 or seq==6 and 3 or seq
 end
 function s.disfilter(c,seq)
-	local seq2=s.GetColumn(c:GetSequence())
+	local seq2=c:GetSequence()
 	if not aux.NegateAnyFilter(c) or c:IsType(TYPE_FIELD) then return false end
 	if c:IsLocation(LOCATION_MZONE) then
-		return math.abs(seq-seq2)==1
+		if seq2<5 then
+			return math.abs(seq-seq2)==1
+		else
+			return seq2==5 and seq==1 or seq2==6 and seq==2
+		end
 	else
 		return seq==seq2
 	end
