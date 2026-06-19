@@ -3,6 +3,7 @@ local s,id,o=GetID()
 function s.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_CONTROL+CATEGORY_DISABLE)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
@@ -12,6 +13,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 	--search
 	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND)
 	e2:SetType(EFFECT_TYPE_QUICK_O)
 	e2:SetCode(EVENT_FREE_CHAIN)
@@ -28,9 +30,6 @@ function s.cfilter(c)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_MZONE,0,1,nil) end
-end
-function s.GetColumn(seq)
-	return seq==5 and 1 or seq==6 and 3 or seq
 end
 function s.disfilter(c,seq)
 	local seq2=c:GetSequence()
@@ -54,28 +53,28 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		local seq=tc:GetSequence()
 		local sg=Duel.GetMatchingGroup(s.disfilter,tp,0,LOCATION_ONFIELD,nil,seq)
 		if sg:GetCount()>0 then
-			for tc in aux.Next(sg) do
+			for nc in aux.Next(sg) do
 				Duel.NegateRelatedChain(tc,RESET_TURN_SET)
 				local e1=Effect.CreateEffect(c)
 				e1:SetType(EFFECT_TYPE_SINGLE)
 				e1:SetCode(EFFECT_DISABLE)
 				e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 				e1:SetReset(RESET_EVENT+RESETS_STANDARD)
-				tc:RegisterEffect(e1)
+				nc:RegisterEffect(e1)
 				local e2=Effect.CreateEffect(c)
 				e2:SetType(EFFECT_TYPE_SINGLE)
 				e2:SetCode(EFFECT_DISABLE_EFFECT)
 				e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 				e2:SetValue(RESET_TURN_SET)
 				e2:SetReset(RESET_EVENT+RESETS_STANDARD)
-				tc:RegisterEffect(e2)
+				nc:RegisterEffect(e2)
 				if tc:IsType(TYPE_TRAPMONSTER) then
 					local e3=Effect.CreateEffect(c)
 					e3:SetType(EFFECT_TYPE_SINGLE)
 					e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 					e3:SetCode(EFFECT_DISABLE_TRAPMONSTER)
 					e3:SetReset(RESET_EVENT+RESETS_STANDARD)
-					tc:RegisterEffect(e3)
+					nc:RegisterEffect(e3)
 				end
 			end
 		end

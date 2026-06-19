@@ -71,7 +71,8 @@ function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp,chk)
-	return eg:IsContains(e:GetHandler())
+	local c=e:GetHandler()
+	return eg:IsContains(c) and c:IsFaceup()
 end
 function s.spfilter(c,e,tp,cp)
 	return c:IsSetCard(0x2e5) and c:IsCanBeSpecialSummoned(e,0,cp,false,false,POS_FACEUP,cp)
@@ -86,11 +87,12 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToChain() and Duel.SendtoDeck(c,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)~=0
 		and c:IsLocation(LOCATION_EXTRA) then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-		local g=Duel.SelectMatchingCard(c:GetOwner(),s.spfilter,c:GetOwner(),LOCATION_EXTRA,0,1,1,nil,e,tp,c:GetOwner())
+		local p=c:GetOwner()
+		Duel.Hint(HINT_SELECTMSG,p,HINTMSG_SPSUMMON)
+		local g=Duel.SelectMatchingCard(p,s.spfilter,p,LOCATION_EXTRA,0,1,1,nil,e,p,p)
 		if g:GetCount()>0 then
 			Duel.BreakEffect()
-			Duel.SpecialSummon(g,0,c:GetOwner(),c:GetOwner(),false,false,POS_FACEUP)
+			Duel.SpecialSummon(g,0,p,p,false,false,POS_FACEUP)
 		end
 	end
 end
