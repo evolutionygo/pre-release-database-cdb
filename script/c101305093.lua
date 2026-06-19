@@ -65,9 +65,7 @@ function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 		if seq<4 then
 			zone=bit.bor(zone,1<<(seq+1))
 		end
-		if Duel.GetMZoneCount(1-tp,c,1-tp,LOCATION_REASON_CONTROL,zone)>0 then
-			Duel.GetControl(c,1-tp,0,0,zone)
-		end
+		Duel.GetControl(c,1-tp,0,0,zone)
 	end
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp,chk)
