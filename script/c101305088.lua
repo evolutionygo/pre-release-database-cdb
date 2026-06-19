@@ -28,7 +28,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function s.tfilter(c,rc,ev)
-	return c:IsOnField() and c:IsRelateToChain(ev) and rc:GetColumnGroup():IsContains(c)
+	return c:IsOnField() and c:IsRelateToChain(ev) and not rc:GetColumnGroup():IsContains(c)
 end
 function s.discon(e,tp,eg,ep,ev,re,r,rp)
 	local loc=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_LOCATION)
