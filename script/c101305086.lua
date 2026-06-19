@@ -67,7 +67,7 @@ function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local res=false
 	for tc in aux.Next(g) do
 		local tlv=tc:GetLevel()
-		if e:GetHandler():CheckRemoveOverlayCard(tp,tc,REASON_COST) then
+		if e:GetHandler():CheckRemoveOverlayCard(tp,tlv,REASON_COST) then
 			lvt[tlv]=tlv
 		end
 	end
