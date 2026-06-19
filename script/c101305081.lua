@@ -12,7 +12,7 @@ function s.initial_effect(c)
 	e1:SetTarget(s.sptg)
 	e1:SetOperation(s.spop)
 	c:RegisterEffect(e1)
-	--set
+	--place
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_TOKEN)
@@ -41,12 +41,13 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
 	end
 end
-function s.setfilter(c)
+function s.placefilter(c,tp)
 	return c:IsType(TYPE_SYNCHRO) and not c:IsForbidden()
+		and c:CheckUniqueOnField(tp,LOCATION_SZONE)
 end
 function s.settg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local res=false
-	local g=Duel.GetMatchingGroup(s.setfilter,tp,LOCATION_EXTRA+LOCATION_GRAVE,0,nil)
+	local g=Duel.GetMatchingGroup(s.placefilter,tp,LOCATION_EXTRA+LOCATION_GRAVE,0,nil,tp)
 	local ct=g:GetClassCount(Card.GetCode)
 	if Duel.GetLocationCount(tp,LOCATION_SZONE)<ct then ct=Duel.GetLocationCount(tp,LOCATION_SZONE) end
 	if ct>3 then ct=3 end
@@ -57,7 +58,6 @@ function s.settg(e,tp,eg,ep,ev,re,r,rp,chk)
 		end
 	end
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0
-		and Duel.IsExistingMatchingCard(s.setfilter,tp,LOCATION_EXTRA+LOCATION_GRAVE,0,1,nil)
 		and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and res end
 	Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,1,0,0)
@@ -70,7 +70,7 @@ function s.setop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_SZONE)>0 then
 		local ft=Duel.GetLocationCount(tp,LOCATION_SZONE)
 		if ft>3 then ft=3 end
-		local g=Duel.GetMatchingGroup(aux.NecroValleyFilter(s.setfilter),tp,LOCATION_EXTRA+LOCATION_GRAVE,0,nil)
+		local g=Duel.GetMatchingGroup(aux.NecroValleyFilter(s.placefilter),tp,LOCATION_EXTRA+LOCATION_GRAVE,0,nil,tp)
 		if g:GetCount()>0 then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
 			local sg=g:SelectSubGroup(tp,s.gcheck,false,1,ft,tp)
