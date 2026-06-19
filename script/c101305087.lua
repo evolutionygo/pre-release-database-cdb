@@ -72,6 +72,7 @@ function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	local lv=e:GetLabel()
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local sg=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.spfilter),tp,LOCATION_DECK+LOCATION_GRAVE,0,1,1,nil,e,tp,lv)
 	if sg:GetCount()>0 and Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP)~=0 then
