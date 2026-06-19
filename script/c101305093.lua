@@ -29,18 +29,16 @@ function s.initial_effect(c)
 	e2:SetOperation(s.spop)
 	c:RegisterEffect(e2)
 end
-function s.GetColumn(seq)
-	return seq==5 and 1 or seq==6 and 3 or seq
-end
 function s.rmfilter(c,ec,tp)
-	local seq1=s.GetColumn(c:GetSequence())
-	local seq2=s.GetColumn(ec:GetSequence())
+	local seq1=aux.MZoneSequence(c:GetSequence())
+	local seq2=aux.MZoneSequence(ec:GetSequence())
+	local seq3=4-seq2
 	local zone=0
-	if seq1>0 then
-		zone=bit.bor(zone,1<<(seq1-1))
+	if seq3>0 then
+		zone=bit.bor(zone,1<<(seq3-1))
 	end
-	if seq1<4 then
-		zone=bit.bor(zone,1<<(seq1+1))
+	if seq3<4 then
+		zone=bit.bor(zone,1<<(seq3+1))
 	end
 	return math.abs(4-seq1-seq2)==1 and c:IsAbleToRemove()
 		and Duel.GetMZoneCount(1-tp,c,1-tp,LOCATION_REASON_CONTROL,zone)>0
@@ -59,7 +57,7 @@ function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 	if tc:IsRelateToChain() and tc:IsType(TYPE_MONSTER)
 		and Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)~=0
 		and c:IsRelateToChain() then
-		local seq=4-s.GetColumn(c:GetSequence())
+		local seq=4-aux.MZoneSequence(c:GetSequence())
 		local zone=0
 		if seq>0 then
 			zone=bit.bor(zone,1<<(seq-1))
