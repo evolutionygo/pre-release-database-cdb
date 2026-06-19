@@ -56,7 +56,7 @@ function s.setop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_SZONE)>0 then
 		local ft=Duel.GetLocationCount(tp,LOCATION_SZONE)
 		if ft>3 then ft=3 end
-		local g=Duel.GetMatchingGroup(aux.NecroValleyFilter(s.setfilter),tp,LOCATION_EXTRA+LOCATION_GRAVE,0,1,nil)
+		local g=Duel.GetMatchingGroup(aux.NecroValleyFilter(s.setfilter),tp,LOCATION_EXTRA+LOCATION_GRAVE,0,nil)
 		if g:GetCount()>0 then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
 			local sg=g:SelectSubGroup(tp,aux.dncheck,false,1,ft)
