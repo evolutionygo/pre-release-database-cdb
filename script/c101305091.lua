@@ -55,7 +55,7 @@ function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)
 	end
 end
-function s.thcon(e,tp,eg,ep,ev,re,r,rp)
+function s.setcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetType()==TYPE_SPELL+TYPE_CONTINUOUS
 end
 function s.setfilter(c)
