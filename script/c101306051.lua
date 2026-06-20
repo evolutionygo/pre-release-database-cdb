@@ -34,10 +34,10 @@ end
 function s.lcheck(g)
 	return g:IsExists(Card.IsLinkRace,1,nil,RACE_DINOSAUR)
 end
----检查怪兽是否仍应计算原本数值（兼容特殊召唤后离场等情况）
+---Check whether a monster is special summoned by Tiki Peace, which should not calculate its original value after leaving the field
 ---@param c Card
 ---@return boolean
-function s.covcheck(c)
+function Auxiliary.covcheck(c)
 	if c:GetOriginalType()&TYPE_MONSTER~=0 then return true end
 	local se=c:GetSpecialSummonInfo(SUMMON_INFO_REASON_EFFECT)
 	return se and se:GetHandler()==c
@@ -49,7 +49,7 @@ function s.valcheck(e,c)
 	local g=c:GetMaterial()
 	local atk=0
 	for tc in aux.Next(g) do
-		if tc:IsLinkRace(RACE_DINOSAUR) and s.covcheck(tc) then
+		if tc:IsLinkRace(RACE_DINOSAUR) and Auxiliary.covcheck(tc) then
 			local tatk=tc:GetTextAttack()
 			if tatk>0 then atk=atk+tatk end
 		end
@@ -69,9 +69,6 @@ function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_DISABLE)
 	c:RegisterEffect(e1)
 end
-function s.filter0(c)
-	return c:IsOnField() and c:IsAbleToRemove()
-end
 function s.filter1(c,e)
 	return c:IsOnField() and c:IsAbleToRemove() and not c:IsImmuneToEffect(e)
 end
@@ -85,7 +82,7 @@ end
 function s.fsptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		local chkf=tp
-		local mg1=Duel.GetFusionMaterial(tp):Filter(s.filter0,nil)
+		local mg1=Duel.GetFusionMaterial(tp):Filter(s.filter1,nil)
 		local mg2=Duel.GetMatchingGroup(s.filter3,tp,LOCATION_GRAVE,0,nil)
 		mg1:Merge(mg2)
 		local res=Duel.IsExistingMatchingCard(s.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,mg1,nil,chkf)
