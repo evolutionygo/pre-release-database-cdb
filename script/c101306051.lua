@@ -82,7 +82,7 @@ end
 function s.fsptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		local chkf=tp
-		local mg1=Duel.GetFusionMaterial(tp):Filter(s.filter1,nil)
+		local mg1=Duel.GetFusionMaterial(tp):Filter(s.filter1,nil,e)
 		local mg2=Duel.GetMatchingGroup(s.filter3,tp,LOCATION_GRAVE,0,nil)
 		mg1:Merge(mg2)
 		local res=Duel.IsExistingMatchingCard(s.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,mg1,nil,chkf)
