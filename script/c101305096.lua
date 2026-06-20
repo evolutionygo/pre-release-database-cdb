@@ -21,7 +21,7 @@ function s.initial_effect(c)
 end
 function s.handcon(e)
 	local tp=e:GetHandlerPlayer()
-	return Duel.GetTurnCount(1-tp)==1 and Duel.GetTurnPlayer()==1-tp
+	return Duel.GetTurnCount()==1 and Duel.GetTurnPlayer()==1-tp
 		and Duel.GetCurrentPhase()==PHASE_STANDBY
 end
 function s.stfilter(c,tp)
