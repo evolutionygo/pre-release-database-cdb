@@ -229,8 +229,8 @@ describe("解層竜ストラティアエ", () => {
           local dino=Duel.GetFieldCard(0,LOCATION_MZONE,0)
           local other=Duel.GetFieldCard(0,LOCATION_MZONE,1)
           return {
-            c${cardCode}.covcheck(dino),
-            c${cardCode}.covcheck(other),
+            Auxiliary.covcheck(dino),
+            Auxiliary.covcheck(other),
             dino:GetTextAttack(),
             other:GetTextAttack()
           }
