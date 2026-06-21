@@ -18,6 +18,7 @@ function s.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_QUICK_O)
 	e2:SetCode(EVENT_CHAINING)
 	e2:SetRange(LOCATION_GRAVE)
+	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
 	e2:SetCountLimit(1,id)
 	e2:SetCondition(s.ngcon)
 	e2:SetCost(aux.bfgcost)
@@ -50,7 +51,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.ngfilter(c)
-	return (not c:IsType(TYPE_EFFECT) and c:IsFaceup()) or c:IsFacedown()
+	return not c:IsType(TYPE_EFFECT) and c:IsFaceup() or c:IsFacedown()
 end
 function s.ngcon(e,tp,eg,ep,ev,re,r,rp)
 	return rp~=tp and re:IsActiveType(TYPE_MONSTER) and Duel.IsChainNegatable(ev)
@@ -64,7 +65,7 @@ function s.ngtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 end
 function s.ngop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToEffect(re) then
+	if Duel.NegateActivation(ev) and re:GetHandler():IsRelatedToChain(ev) then
 		Duel.Destroy(eg,REASON_EFFECT)
 	end
 end
