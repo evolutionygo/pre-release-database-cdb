@@ -66,7 +66,7 @@ end
 function s.ctop2(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local lp=math.abs(Duel.GetLP(tp)-Duel.GetLP(1-tp))>0
-	local ct=Math.floor(lp)
+	local ct=math.floor(lp)
 	if c:IsRelateToChain() and c:IsFaceup() and ct>0 then
 		c:AddCounter(0x78,ct)
 	end
