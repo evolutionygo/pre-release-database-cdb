@@ -16,7 +16,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 	--counter 2
 	local e2=Effect.CreateEffect(c)
-	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e2:SetCategory(CATEGORY_COUNTER)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCountLimit(1)
@@ -79,7 +79,7 @@ function s.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return c:IsReason(REASON_BATTLE+REASON_EFFECT) and not c:IsReason(REASON_REPLACE)
 		and c:IsCanRemoveCounter(tp,0x78,1,REASON_EFFECT)
 	end
-	return Duel.SelectEffectYesNo(tp,c,96)
+	return true
 end
 function s.repop(e,tp,eg,ep,ev,re,r,rp)
 	e:GetHandler():RemoveCounter(tp,0x78,1,REASON_EFFECT)
