@@ -61,7 +61,7 @@ end
 function s.cttg2(e,tp,eg,ep,ev,re,r,rp,chk)
 	local lp=math.abs(Duel.GetLP(tp)-Duel.GetLP(1-tp))
 	local ct=math.floor(lp/1000)
-	if chk==0 then return ct>0 and e:GetHandler():IsCanAddCounter(0x78,lp) end
+	if chk==0 then return ct>0 and e:GetHandler():IsCanAddCounter(0x78,ct) end
 end
 function s.ctop2(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
