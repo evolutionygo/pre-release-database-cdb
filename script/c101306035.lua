@@ -18,7 +18,7 @@ function s.initial_effect(c)
 	local e2=Effect.CreateEffect(c)
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetType(EFFECT_TYPE_IGNITION)
-	e2:SetRange(LOCATION_HAND)
+	e2:SetRange(LOCATION_MZONE)
 	e2:SetCountLimit(1)
 	e2:SetTarget(s.cttg2)
 	e2:SetOperation(s.ctop2)
@@ -59,13 +59,13 @@ function s.ctop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.cttg2(e,tp,eg,ep,ev,re,r,rp,chk)
-	local lp=math.abs(Duel.GetLP(tp)-Duel.GetLP(1-tp))>0
+	local lp=math.abs(Duel.GetLP(tp)-Duel.GetLP(1-tp))
 	local ct=math.floor(lp)
 	if chk==0 then return ct>0 and e:GetHandler():IsCanAddCounter(0x78,lp) end
 end
 function s.ctop2(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local lp=math.abs(Duel.GetLP(tp)-Duel.GetLP(1-tp))>0
+	local lp=math.abs(Duel.GetLP(tp)-Duel.GetLP(1-tp))
 	local ct=math.floor(lp)
 	if c:IsRelateToChain() and c:IsFaceup() and ct>0 then
 		c:AddCounter(0x78,ct)
