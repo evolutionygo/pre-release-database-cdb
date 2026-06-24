@@ -31,15 +31,16 @@ function s.initial_effect(c)
 	e4:SetRange(0xff)
 	e4:SetLabelObject(e1)
 	e4:SetOperation(s.adjustop)
-	c:RegisterEffect(e4)
+	Duel.RegisterEffect(e4,0)
 	local e5=e4:Clone()
 	e5:SetLabelObject(e2)
-	c:RegisterEffect(e5)
+	Duel.RegisterEffect(e5,0)
 end
 function s.adjustop(e,tp,eg,ep,ev,re,r,rp)
 	local e1=e:GetLabelObject()
 	local property=EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_CANNOT_INACTIVATE+EFFECT_FLAG_CAN_FORBIDDEN
-	if Duel.IsExistingMatchingCard(Card.IsFaceup,e:GetHandlerPlayer(),0,LOCATION_ONFIELD,5,nil) then
+	local ct=Duel.GetMatchingGroupCount(Card.IsFaceup,e1:GetHandlerPlayer(),0,LOCATION_ONFIELD,nil)
+	if ct>=5 then
 		e1:SetProperty(e1:GetProperty()|property)
 	else
 		e1:SetProperty(e1:GetProperty()&~property)

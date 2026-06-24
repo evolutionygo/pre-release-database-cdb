@@ -40,6 +40,7 @@ lerna-debug.log*
 
 /test-release.cdb
 /bin
+/wasm-bin
 /ygopro
 /ref
 /tests/yrp-patched
