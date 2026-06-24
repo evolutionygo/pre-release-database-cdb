@@ -34,7 +34,7 @@ https://cdn02.moecube.com:444/ygopro-super-pre/versions/master/test-release-v2.j
 - 地址 `mygo.superpre.pro` `mygo2.superpre.pro`
 - 超先行端口 `888`
   - 主程序，内核为 ygopro 正式版本
-  - 脚本为正式版本 + `ygopro-scripts-888`
+  - 脚本为正式版本 + `ygopro-scripts-888` 的 `no-mc` 分支
   - 有先行卡
 - 内核测试端口 `8888`
   - 主程序，内核，脚本均为各库 `develop` 分支
@@ -81,12 +81,14 @@ CI 会自动计算已经发售的卡，并把修正后的 RC 用 cdb 放入 `tir
 
 - （可选但建议）在 https://github.com/Fluorohydride/ygopro-scripts 提交相关的脚本 PR。
 - 把 PR 的分支合并到 https://code.moenext.com/mycard/ygopro-scripts-888 内。
+  - `master`：会进入 MyCard 服务器。
+  - `no-mc`：不会进入 MyCard 服务器，但是会进入 888 服务器和用户安装的超先行包。
 - 在本仓库创建 `script-fix-xxx.cdb` 列出正在测试的卡。
 - 如果需要修改提示文本等，请在 `test-update-xxx.cdb` 列出正在测试的卡。
 
-完成上述步骤后，`ygopro-scripts-888` 分支和正式脚本库的差异部分，会自动更新到 888 服务器。
+完成上述步骤后，`ygopro-scripts-888` 的 `no-mc` 分支和正式脚本库的差异部分，会自动更新到 888 服务器和用户安装的超先行包。`master` 分支用于需要进入 MyCard 服务器的脚本机制测试。
 
-每次 YGOPro 正式更新，需要把 `ygopro-scripts-888` 仓库 reset 到最新的正式脚本版本。
+每次 YGOPro 正式更新，需要把 `ygopro-scripts-888` 仓库的 `master` 和 `no-mc` 分支 reset 到最新的正式脚本版本。
 
 本方法测试的 BUG 进度在表格的「内核更新测试记录」标签页追踪。
 
