@@ -36,18 +36,30 @@ merge_databases:
       - test-release.cdb
       - test-update.cdb
 
-prepare_jest_env:
+.prepare_jest_env:
   stage: prepare
   dependencies: []
   tags:
     - linux
+  variables:
+    YGOPRO_SCRIPTS_888_BRANCH: master
   script:
     - mkdir ygopro
-    - git clone --depth=1 https://code.moenext.com/mycard/ygopro-scripts-888 ygopro/script
+    - ./scripts/prepare-ygopro-scripts-888.sh ygopro/script "$YGOPRO_SCRIPTS_888_BRANCH" 1
     - wget https://code.moenext.com/mycard/ygopro-database/-/raw/master/locales/zh-CN/cards.cdb -O ygopro/test.cdb
   artifacts:
     paths:
       - ygopro
+
+prepare_jest_env_master:
+  extends: .prepare_jest_env
+  variables:
+    YGOPRO_SCRIPTS_888_BRANCH: master
+
+prepare_jest_env_no_mc:
+  extends: .prepare_jest_env
+  variables:
+    YGOPRO_SCRIPTS_888_BRANCH: no-mc
 
 npm_ci:
   stage: prepare
@@ -74,13 +86,15 @@ strip_rc_databases:
       - test-release.cdb
       - test-update.cdb
 
-add_script_diff:
+.add_script_diff:
   stage: prepare
   dependencies: []
   tags:
     - linux
+  variables:
+    YGOPRO_SCRIPTS_888_BRANCH: master
   script:
-    - git clone https://code.moenext.com/mycard/ygopro-scripts-888
+    - ./scripts/prepare-ygopro-scripts-888.sh ygopro-scripts-888 "$YGOPRO_SCRIPTS_888_BRANCH"
     - cd ygopro-scripts-888
     - git remote add stable https://github.com/mycard/ygopro-scripts
     - git fetch stable refs/heads/master
@@ -115,6 +129,16 @@ add_script_diff:
   artifacts:
     paths:
       - script
+
+add_script_diff_master:
+  extends: .add_script_diff
+  variables:
+    YGOPRO_SCRIPTS_888_BRANCH: master
+
+add_script_diff_no_mc:
+  extends: .add_script_diff
+  variables:
+    YGOPRO_SCRIPTS_888_BRANCH: no-mc
 
 prepare_server_lflist:
   stage: prepare
@@ -193,10 +217,20 @@ json2:
 #     # if there are any lines in redtext.txt fail the job
 #     - exit $(wc -l < redtext.txt)
 
-jest:
+jest_master:
   stage: prepare2
   dependencies:
-    - prepare_jest_env
+    - prepare_jest_env_master
+    - npm_ci
+  tags:
+    - linux
+  script:
+    - npm run test
+
+jest_no_mc:
+  stage: prepare2
+  dependencies:
+    - prepare_jest_env_no_mc
     - npm_ci
   tags:
     - linux
@@ -225,7 +259,7 @@ pack:
   stage: pack
   dependencies:
     - merge_databases
-    - add_script_diff
+    - add_script_diff_no_mc
     - json
     - json2
   tags: 
@@ -261,7 +295,7 @@ server:
   stage: pack
   dependencies:
     - merge_databases
-    - add_script_diff
+    - add_script_diff_no_mc
   tags: 
     - linux
   script:
@@ -287,7 +321,7 @@ server_rc:
   extends: server
   dependencies:
     - strip_rc_databases
-    - add_script_diff
+    - add_script_diff_master
 
 .minio:
   stage: deploy
