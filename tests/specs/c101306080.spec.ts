@@ -12,6 +12,7 @@ import {
   YGOProMsgSelectChain,
   YGOProMsgSelectIdleCmd,
   YGOProMsgSelectOption,
+  YGOProMsgSelectYesNo,
 } from "ygopro-msg-encode";
 import { expectCurrentMessage } from "../utility/current-messages";
 import { createCoverage } from "../utility/create-coverage";
@@ -25,13 +26,16 @@ const valkyrie = 12493482;
 const mammoth = 40374923;
 const ashBlossom = 14558127;
 const stardustDragon = 44508094;
+const starlightRoad = 58120309;
 const mirrorForce = 44095762;
 const trapHole = 4206964;
 const bottomless = 29401950;
 const compulsory = 5795980;
+const darkHole = 53129443;
 
 const {
   LOCATION_DECK,
+  LOCATION_EXTRA,
   LOCATION_GRAVE,
   LOCATION_HAND,
   LOCATION_MZONE,
@@ -123,6 +127,14 @@ const fillSpellTrapRow = (ctx: YGOProTest, codes: number[], controller = 0) => {
   });
 };
 
+const chainOpponentStarlightIfAvailable = (ctx: YGOProTest) => {
+  const starlight = findCard(ctx, starlightRoad, LOCATION_SZONE, 1, 1);
+  if (starlight?.canActivate()) {
+    return starlight.activate();
+  }
+  return undefined;
+};
+
 describe("宾果卡", () => {
   const coverageRegistry = createCoverage({
     scriptDir: resolve(process.cwd(), "script"),
@@ -132,12 +144,16 @@ describe("宾果卡", () => {
     it("checks column and row availability filters", async () => {
       await createTest({}, (ctx) => {
         fillColumn(ctx, 2, blueEyes, darkMagician, mirrorForce, trapHole);
-        ctx.addCard({
-          code: cardCode,
-          location: LOCATION_SZONE,
-          sequence: 0,
-          position: POS_FACEDOWN,
-        });
+        ctx.addCard([
+          {
+            code: cardCode,
+            location: LOCATION_SZONE,
+            sequence: 0,
+            position: POS_FACEDOWN,
+          },
+          { code: darkMagician, location: LOCATION_DECK },
+          { code: summonedSkull, controller: 1, location: LOCATION_DECK },
+        ]);
         ctx.advance(SlientAdvancor());
 
         const result = ctx.evaluate(`
@@ -187,6 +203,31 @@ describe("宾果卡", () => {
       });
     });
 
+    it("returns false when either player cannot draw", async () => {
+      await createTest({}, (ctx) => {
+        fillColumn(ctx, 2, blueEyes, darkMagician, mirrorForce, trapHole);
+        ctx.addCard({
+          code: cardCode,
+          location: LOCATION_SZONE,
+          sequence: 0,
+          position: POS_FACEDOWN,
+        });
+        ctx.advance(SlientAdvancor());
+
+        const result = ctx.evaluate(`
+          local c=Duel.GetFieldCard(0,LOCATION_SZONE,0)
+          local e=c:GetActivateEffect()
+          return {
+            Duel.IsPlayerCanDraw(0,1) and Duel.IsPlayerCanDraw(1,1),
+            c${cardCode}.actg(e,0,nil,0,0,nil,0,0,0)
+          }
+        `);
+
+        expect(result).toEqual([false, false]);
+        coverageRegistry.addFrom(ctx);
+      });
+    });
+
     it("detects a full main monster row", async () => {
       await createTest({}, (ctx) => {
         fillMainMonsterRow(ctx, [
@@ -196,17 +237,22 @@ describe("宾果卡", () => {
           valkyrie,
           mammoth,
         ]);
-        ctx.addCard({ code: cardCode, location: LOCATION_GRAVE });
+        ctx.addCard([
+          { code: cardCode, location: LOCATION_GRAVE },
+          { code: trapHole, location: LOCATION_DECK },
+          { code: bottomless, location: LOCATION_DECK, sequence: 1 },
+        ]);
 
         const result = ctx.evaluate(`
           return {
             c${cardCode}.fullmzone(0),
             c${cardCode}.fullszone(0),
+            c${cardCode}.fullmzone(0) or c${cardCode}.fullszone(0),
             c${cardCode}.canrow(0)
           }
         `);
 
-        expect(result).toEqual([true, false, true]);
+        expect(result).toEqual([true, false, true, true]);
         coverageRegistry.addFrom(ctx);
       });
     });
@@ -321,12 +367,14 @@ describe("宾果卡", () => {
           trapHole,
           bottomless,
           compulsory,
-          cardCode,
+          darkHole,
         ]);
         ctx
           .addCard([
             { code: cardCode, location: LOCATION_GRAVE },
             { code: summonedSkull, location: LOCATION_DECK },
+            { code: trapHole, location: LOCATION_DECK, sequence: 1 },
+            { code: bottomless, location: LOCATION_DECK, sequence: 2 },
           ])
           .advance(SlientAdvancor())
           .state(YGOProMsgSelectIdleCmd, () => {
@@ -351,7 +399,7 @@ describe("宾果卡", () => {
               findCard(ctx, mirrorForce, LOCATION_SZONE, 0, 0),
             ).toBeUndefined();
             expect(
-              findCard(ctx, cardCode, LOCATION_SZONE, 0, 4),
+              findCard(ctx, darkHole, LOCATION_SZONE, 0, 4),
             ).toBeUndefined();
             expect(findCard(ctx, cardCode, LOCATION_REMOVED)).toBeDefined();
             expect(
@@ -445,6 +493,126 @@ describe("宾果卡", () => {
           .state(YGOProMsgSelectIdleCmd, () => {
             expect(findCard(ctx, blueEyes, LOCATION_MZONE, 0, 2)).toBeDefined();
             expect(findCard(ctx, ashBlossom, LOCATION_GRAVE, 1)).toBeDefined();
+          });
+
+        coverageRegistry.addFrom(ctx);
+      });
+    });
+
+    it("allows Starlight Road to chain when 2 or more of its controller cards would be destroyed", async () => {
+      await createTest({}, (ctx) => {
+        fillColumn(ctx, 2, blueEyes, darkMagician, mirrorForce, trapHole);
+        ctx
+          .addCard([
+            {
+              code: cardCode,
+              location: LOCATION_SZONE,
+              sequence: 0,
+              position: POS_FACEDOWN,
+            },
+            { code: darkMagician, location: LOCATION_DECK },
+            { code: summonedSkull, controller: 1, location: LOCATION_DECK },
+            {
+              code: starlightRoad,
+              controller: 1,
+              location: LOCATION_SZONE,
+              sequence: 1,
+              position: POS_FACEDOWN,
+            },
+            {
+              code: stardustDragon,
+              controller: 1,
+              location: LOCATION_EXTRA,
+            },
+          ])
+          .advance(SlientAdvancor())
+          .state(YGOProMsgSelectIdleCmd, () =>
+            findCard(ctx, cardCode, LOCATION_SZONE, 0, 0)!.activate(),
+          )
+          .state(YGOProMsgSelectChain, (msg) => {
+            expect(msg.chains).toContainEqual(
+              expect.objectContaining({ code: starlightRoad }),
+            );
+            return chainOpponentStarlightIfAvailable(ctx);
+          })
+          .advance(NoEffectAdvancor())
+          .state(YGOProMsgSelectYesNo, (msg) => msg.prepareResponse(false))
+          .advance(NoEffectAdvancor())
+          .state(YGOProMsgSelectIdleCmd, () => {
+            expect(findCard(ctx, blueEyes, LOCATION_MZONE, 0, 2)).toBeDefined();
+            expect(
+              findCard(ctx, darkMagician, LOCATION_MZONE, 1, 2),
+            ).toBeDefined();
+            expect(
+              findCard(ctx, starlightRoad, LOCATION_GRAVE, 1),
+            ).toBeDefined();
+            expect(findCard(ctx, cardCode, LOCATION_GRAVE, 0)).toBeDefined();
+          });
+
+        coverageRegistry.addFrom(ctx);
+      });
+    });
+
+    it("does not allow Starlight Road to chain when only the opponent row is destroyed", async () => {
+      await createTest({}, (ctx) => {
+        fillSpellTrapRow(
+          ctx,
+          [mirrorForce, trapHole, bottomless, compulsory, cardCode],
+          1,
+        );
+        ctx
+          .addCard([
+            { code: cardCode, location: LOCATION_GRAVE },
+            {
+              code: starlightRoad,
+              location: LOCATION_SZONE,
+              sequence: 0,
+              position: POS_FACEDOWN,
+            },
+            {
+              code: stardustDragon,
+              location: LOCATION_EXTRA,
+            },
+            { code: blueEyes, controller: 1, location: LOCATION_DECK },
+            {
+              code: darkMagician,
+              controller: 1,
+              location: LOCATION_DECK,
+              sequence: 1,
+            },
+          ])
+          .advance(SlientAdvancor())
+          .state(YGOProMsgSelectIdleCmd, () => {
+            const trap = findCard(ctx, cardCode, LOCATION_GRAVE);
+            expect(trap?.canActivate()).toBe(true);
+            return trap!.activate();
+          })
+          .state(YGOProMsgSelectOption, (msg) => {
+            expect(msg.count).toBe(1);
+            return msg.prepareResponse(IndexResponse(0));
+          })
+          .state(YGOProMsgSelectChain, (msg) => {
+            expect(msg.chains).not.toContainEqual(
+              expect.objectContaining({ code: starlightRoad }),
+            );
+            const starlight = findCard(
+              ctx,
+              starlightRoad,
+              LOCATION_SZONE,
+              0,
+              0,
+            );
+            expect(starlight?.canActivate()).toBe(false);
+            return undefined;
+          })
+          .advance(NoEffectAdvancor())
+          .state(YGOProMsgSelectIdleCmd, () => {
+            expect(
+              findCard(ctx, mirrorForce, LOCATION_SZONE, 1, 0),
+            ).toBeUndefined();
+            expect(
+              findCard(ctx, starlightRoad, LOCATION_SZONE, 0, 0),
+            ).toBeDefined();
           });
 
         coverageRegistry.addFrom(ctx);
