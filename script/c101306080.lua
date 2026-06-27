@@ -44,8 +44,14 @@ function s.canrow(p)
 end
 function s.actg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.colfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,nil,1,PLAYER_ALL,LOCATION_ONFIELD)
-	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,1,PLAYER_ALL,1)
+	local g=Group.CreateGroup()
+	local rg=Duel.GetMatchingGroup(s.colfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
+	for tc in aux.Next(rg) do
+		g:Merge(tc:GetColumnGroup())
+		g:AddCard(tc)
+	end
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,g:GetCount(),0,0)
+	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,2,PLAYER_ALL,1)
 end
 function s.acop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
@@ -54,6 +60,7 @@ function s.acop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=g:GetFirst()
 	Duel.HintSelection(g)
 	local dg=tc:GetColumnGroup()
+	dg:Merge(g)
 	if dg:GetCount()>0 and Duel.Destroy(dg,REASON_EFFECT)>0 then
 		Duel.Draw(tp,1,REASON_EFFECT)
 		Duel.Draw(1-tp,1,REASON_EFFECT)
