@@ -61,6 +61,57 @@ const findCard = (
         (sequence === undefined || card.sequence === sequence),
     );
 
+const fillExtraMonsterColumn = (
+  ctx: YGOProTest,
+  extraMonsterCode: number,
+  mainMonsterCode: number,
+  enemyMonsterCode: number,
+  spellCode: number,
+  enemySpellCode: number,
+  controller = 0,
+) => {
+  const emSequence = controller === 0 ? 5 : 6;
+  const mainSequence = controller === 0 ? 1 : 3;
+  const enemySequence = controller === 0 ? 3 : 1;
+  ctx.addCard([
+    {
+      code: extraMonsterCode,
+      controller,
+      location: LOCATION_MZONE,
+      sequence: emSequence,
+      position: POS_FACEUP_ATTACK,
+    },
+    {
+      code: mainMonsterCode,
+      controller,
+      location: LOCATION_MZONE,
+      sequence: mainSequence,
+      position: POS_FACEUP_ATTACK,
+    },
+    {
+      code: enemyMonsterCode,
+      controller: 1 - controller,
+      location: LOCATION_MZONE,
+      sequence: enemySequence,
+      position: POS_FACEUP_ATTACK,
+    },
+    {
+      code: spellCode,
+      controller,
+      location: LOCATION_SZONE,
+      sequence: mainSequence,
+      position: POS_FACEUP,
+    },
+    {
+      code: enemySpellCode,
+      controller: 1 - controller,
+      location: LOCATION_SZONE,
+      sequence: enemySequence,
+      position: POS_FACEUP,
+    },
+  ]);
+};
+
 const fillColumn = (
   ctx: YGOProTest,
   sequence: number,
@@ -228,6 +279,32 @@ describe("宾果卡", () => {
       });
     });
 
+    it("detects a full extra monster zone column", async () => {
+      await createTest({}, (ctx) => {
+        fillExtraMonsterColumn(
+          ctx,
+          blueEyes,
+          darkMagician,
+          summonedSkull,
+          mirrorForce,
+          trapHole,
+        );
+        ctx.addCard({ code: cardCode, location: LOCATION_HAND });
+
+        const result = ctx.evaluate(`
+          local tc=Duel.GetFieldCard(0,${LOCATION_MZONE},5)
+          return {
+            tc:IsAllColumn(),
+            c${cardCode}.colfilter(tc),
+            tc:GetColumnGroupCount()
+          }
+        `);
+
+        expect(result).toEqual([false, true, 4]);
+        coverageRegistry.addFrom(ctx);
+      });
+    });
+
     it("detects a full main monster row", async () => {
       await createTest({}, (ctx) => {
         fillMainMonsterRow(ctx, [
@@ -259,6 +336,60 @@ describe("宾果卡", () => {
   });
 
   describe("e2e", () => {
+    it("destroys a full extra monster zone column", async () => {
+      await createTest({}, (ctx) => {
+        fillExtraMonsterColumn(
+          ctx,
+          blueEyes,
+          darkMagician,
+          summonedSkull,
+          mirrorForce,
+          trapHole,
+        );
+        ctx
+          .addCard([
+            {
+              code: cardCode,
+              location: LOCATION_SZONE,
+              sequence: 0,
+              position: POS_FACEDOWN,
+            },
+            { code: valkyrie, location: LOCATION_DECK },
+            { code: mammoth, controller: 1, location: LOCATION_DECK },
+          ])
+          .advance(SlientAdvancor())
+          .state(YGOProMsgSelectIdleCmd, () => {
+            const trap = findCard(ctx, cardCode, LOCATION_SZONE, 0, 0);
+            expect(trap?.canActivate()).toBe(true);
+            return trap!.activate();
+          })
+          .state(YGOProMsgSelectChain, () => undefined)
+          .advance(NoEffectAdvancor())
+          .state(YGOProMsgSelectCard, (msg) => {
+            expect(msg.cards).toContainEqual(
+              expect.objectContaining({ code: blueEyes }),
+            );
+            return findCard(ctx, blueEyes, LOCATION_MZONE, 0, 5)!.select();
+          })
+          .state(YGOProMsgSelectChain, () => undefined)
+          .advance(NoEffectAdvancor())
+          .state(YGOProMsgSelectIdleCmd, () => {
+            expect(
+              findCard(ctx, blueEyes, LOCATION_MZONE, 0, 5),
+            ).toBeUndefined();
+            expect(
+              findCard(ctx, darkMagician, LOCATION_MZONE, 0, 1),
+            ).toBeUndefined();
+            expect(
+              findCard(ctx, summonedSkull, LOCATION_MZONE, 1, 3),
+            ).toBeUndefined();
+            expect(findCard(ctx, cardCode, LOCATION_GRAVE, 0)).toBeDefined();
+          });
+
+        coverageRegistry.addFrom(ctx);
+      });
+    });
+
     it("destroys a full column and makes both players draw", async () => {
       await createTest({}, (ctx) => {
         fillColumn(ctx, 2, blueEyes, darkMagician, mirrorForce, trapHole);

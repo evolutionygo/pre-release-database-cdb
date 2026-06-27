@@ -25,7 +25,12 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function s.colfilter(c)
-	return c:IsLocation(LOCATION_MZONE) and c:IsType(TYPE_MONSTER) and c:IsAllColumn()
+	if not (c:IsLocation(LOCATION_MZONE) and c:IsType(TYPE_MONSTER)) then return false end
+	-- there're bugs in IsAllColumn, when the column is full, it returns false
+	if c:GetSequence()>=5 then
+		return c:GetColumnGroupCount()==4
+	end
+	return c:IsAllColumn()
 end
 function s.zonefilter(c)
 	return c:GetSequence()<5
