@@ -27,23 +27,31 @@ end
 function s.colfilter(c)
 	return c:IsLocation(LOCATION_MZONE) and c:IsType(TYPE_MONSTER) and c:IsAllColumn()
 end
-function s.mzonefilter(c)
-	return c:IsLocation(LOCATION_MZONE) and c:GetSequence()<5
-end
-function s.szonefilter(c)
-	return c:IsLocation(LOCATION_SZONE) and c:GetSequence()<5
+function s.zonefilter(c)
+	return c:GetSequence()<5
 end
 function s.fullmzone(p)
-	return Duel.GetMatchingGroup(s.mzonefilter,p,LOCATION_MZONE,0,nil):GetCount()==5
+	return Duel.GetMatchingGroup(s.zonefilter,p,LOCATION_MZONE,0,nil):GetCount()==5
 end
 function s.fullszone(p)
-	return Duel.GetMatchingGroup(s.szonefilter,p,LOCATION_SZONE,0,nil):GetCount()==5
+	return Duel.GetMatchingGroup(s.zonefilter,p,LOCATION_SZONE,0,nil):GetCount()==5
 end
 function s.canrow(p)
-	return s.fullmzone(p) or s.fullszone(p)
+	return (s.fullmzone(p) or s.fullszone(p)) and Duel.IsPlayerCanDraw(p,2)
+end
+function s.rowdesgroup(p)
+	local g=Group.CreateGroup()
+	if s.fullmzone(p) then
+		g:Merge(Duel.GetMatchingGroup(s.zonefilter,p,LOCATION_MZONE,0,nil))
+	end
+	if s.fullszone(p) then
+		g:Merge(Duel.GetMatchingGroup(s.zonefilter,p,LOCATION_SZONE,0,nil))
+	end
+	return g
 end
 function s.actg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.colfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.colfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil)
+		and Duel.IsPlayerCanDraw(tp,1) and Duel.IsPlayerCanDraw(1-tp,1) end
 	local g=Group.CreateGroup()
 	local rg=Duel.GetMatchingGroup(s.colfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 	for tc in aux.Next(rg) do
@@ -51,7 +59,7 @@ function s.actg(e,tp,eg,ep,ev,re,r,rp,chk)
 		g:AddCard(tc)
 	end
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,g:GetCount(),0,0)
-	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,2,PLAYER_ALL,1)
+	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,PLAYER_ALL,1)
 end
 function s.acop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
@@ -62,6 +70,7 @@ function s.acop(e,tp,eg,ep,ev,re,r,rp)
 	local dg=tc:GetColumnGroup()
 	dg:Merge(g)
 	if dg:GetCount()>0 and Duel.Destroy(dg,REASON_EFFECT)>0 then
+		Duel.BreakEffect()
 		Duel.Draw(tp,1,REASON_EFFECT)
 		Duel.Draw(1-tp,1,REASON_EFFECT)
 	end
@@ -75,8 +84,9 @@ function s.gytg(e,tp,eg,ep,ev,re,r,rp,chk)
 		{b2,aux.Stringid(id,3),2})
 	e:SetLabel(op)
 	local p=op==1 and tp or 1-tp
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,nil,5,p,LOCATION_ONFIELD)
-	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,2,p,1)
+	local g=s.rowdesgroup(p)
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,5,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,p,2)
 end
 function s.gyop(e,tp,eg,ep,ev,re,r,rp)
 	local p=e:GetLabel()==1 and tp or 1-tp
@@ -91,11 +101,12 @@ function s.gyop(e,tp,eg,ep,ev,re,r,rp)
 	else return end
 	local g=Group.CreateGroup()
 	if zop==1 then
-		g=Duel.GetMatchingGroup(s.mzonefilter,p,LOCATION_MZONE,0,nil)
+		g=Duel.GetMatchingGroup(s.zonefilter,p,LOCATION_MZONE,0,nil)
 	else
-		g=Duel.GetMatchingGroup(s.szonefilter,p,LOCATION_SZONE,0,nil)
+		g=Duel.GetMatchingGroup(s.zonefilter,p,LOCATION_SZONE,0,nil)
 	end
 	if g:GetCount()>0 and Duel.Destroy(g,REASON_EFFECT)==5 then
+		Duel.BreakEffect()
 		Duel.Draw(p,2,REASON_EFFECT)
 	end
 end
