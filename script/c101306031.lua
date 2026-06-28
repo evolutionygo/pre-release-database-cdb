@@ -79,7 +79,7 @@ end
 function s.thcon2(e,tp,eg,ep,ev,re,r,rp)
 	local fid=e:GetLabel()
 	local tc=e:GetLabelObject()
-	return Duel.GetTurnPlayer()==tp and tc:GetFlagEffectLabel(id)==fid
+	return tc:GetFlagEffectLabel(id)==fid
 end
 function s.thop2(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_CARD,0,id)
