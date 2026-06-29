@@ -36,7 +36,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		ct=Duel.AnnounceNumber(tp,table.unpack(st))
 	end
 	if Duel.DiscardDeck(tp,ct,REASON_EFFECT)~=0 then
-		local sg=Duel.GetOperatedGroup():Filter(Card.IsLocation,nil,LOCATION_GRAVE)
+		local sg=Duel.GetOperatedGroup():Filter(aux.NecroValleyFilter(Card.IsLocation),nil,LOCATION_GRAVE)
 		if sg:GetCount()>0 then
 			Duel.AdjustAll()
 			local b1=Duel.GetLocationCount(tp,LOCATION_MZONE)>0
