@@ -12,7 +12,7 @@ function s.initial_effect(c)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsPlayerCanDiscardDeck(tp,1) end
-	Duel.SetOperationInfo(0,CATEGORY_DECKDES,nil,0,tp,ct)
+	Duel.SetOperationInfo(0,CATEGORY_DECKDES,nil,0,tp,1)
 end
 function s.spfilter(c,e,tp)
 	return c:IsCanBeSpecialSummoned(e,0,tp,false,false)
