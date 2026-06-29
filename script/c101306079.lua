@@ -4,7 +4,7 @@ function s.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
-	e1:SetCategory(CATEGORY_TOGRAVE+CATEGORY_SPECIAL_SUMMON+CATEGORY_GRAVE_SPSUMMON)
+	e1:SetCategory(CATEGORY_DECKDES+CATEGORY_TOGRAVE+CATEGORY_SPECIAL_SUMMON+CATEGORY_GRAVE_SPSUMMON+CATEGORY_SSET)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetTarget(s.target)
@@ -13,7 +13,7 @@ function s.initial_effect(c)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsPlayerCanDiscardDeck(tp,1) end
-	Duel.SetOperationInfo(0,CATEGORY_DECKDES,nil,0,tp,1)
+	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_DECK)
 end
 function s.spfilter(c,e,tp)
 	return c:IsCanBeSpecialSummoned(e,0,tp,false,false)
@@ -67,9 +67,9 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 						e1:SetType(EFFECT_TYPE_SINGLE)
 						e1:SetProperty(EFFECT_FLAG_SET_AVAILABLE)
 						if tc:IsType(TYPE_TRAP) then
-							e1:SetCode(EFFECT_QP_ACT_IN_SET_TURN)
-						else
 							e1:SetCode(EFFECT_TRAP_ACT_IN_SET_TURN)
+						else
+							e1:SetCode(EFFECT_QP_ACT_IN_SET_TURN)
 						end
 						e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 						tc:RegisterEffect(e1)
