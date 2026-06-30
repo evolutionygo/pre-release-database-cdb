@@ -56,6 +56,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Group.FromCards(c,sc)
 	local fg=g:Filter(Card.IsRelateToChain,nil)
 	if not Duel.IsPlayerAffectedByEffect(tp,59822133)
+		and Duel.GetLocationCount(tp,LOCATION_MZONE)>=2
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and sc:IsCanBeSpecialSummoned(e,0,tp,false,false)
 		and fg:GetCount()==2 then
 		Duel.SpecialSummon(fg,0,tp,tp,false,false,POS_FACEUP)
