@@ -92,7 +92,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetTargetRange(1,0)
 		e1:SetTarget(s.splimit)
 		local ct=1
-		if Duel.GetTurnPlayer()==1-tp then
+		if Duel.GetTurnPlayer()==tp then
 			ct=2
 		end
 		e1:SetReset(RESET_PHASE+PHASE_END+RESET_SELF_TURN,ct)
