@@ -1,4 +1,4 @@
---ダーク・アームド・ドラゴン・パニッシャー
+--ダーク・アームド・ドラゴン・バニッシャー
 local s,id,o=GetID()
 function s.initial_effect(c)
 	c:EnableReviveLimit()
