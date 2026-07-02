@@ -41,13 +41,13 @@ function s.sumcon(e)
 	return not Duel.IsExistingMatchingCard(aux.TRUE,e:GetHandlerPlayer(),LOCATION_MZONE,0,1,nil)
 end
 function s.sumtg(e,c)
-	return c~=e:GetHandler() and c:IsFaceupEx() and c:IsType(TYPE_MONSTER)
+	return c~=e:GetHandler() and c:IsType(TYPE_MONSTER)
 end
 function s.discon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local loc=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_LOCATION)
 	return not c:IsStatus(STATUS_BATTLE_DESTROYED) and Duel.IsChainDisablable(ev)
-		and c:IsSummonType(SUMMON_TYPE_NORMAL) and ep==1-tp and re:IsActiveType(TYPE_MONSTER)
+		and c:IsSummonType(SUMMON_TYPE_NORMAL) and ep==1-tp
 		and loc and bit.band(loc,LOCATION_HAND+LOCATION_GRAVE+LOCATION_REMOVED)~=0
 end
 function s.distg(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -63,12 +63,11 @@ function s.disop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.cpcon(e,tp,eg,ep,ev,re,r,rp)
-	local ph=Duel.GetCurrentPhase()
-	return ph>=PHASE_BATTLE_START and ph<=PHASE_BATTLE
+	return Duel.IsBattlePhase()
 end
 function s.cpcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return not Duel.IsExistingMatchingCard(Card.IsPublic,tp,LOCATION_HAND,0,1,nil) end
 	local g=Duel.GetFieldGroup(tp,LOCATION_HAND,0)
+	if chk==0 then return g:GetCount()>0 and not Duel.IsExistingMatchingCard(Card.IsPublic,tp,LOCATION_HAND,0,1,nil) end
 	Duel.ConfirmCards(1-tp,g)
 	Duel.ShuffleHand(tp)
 end
