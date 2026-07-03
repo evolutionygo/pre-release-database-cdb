@@ -11,20 +11,14 @@ function s.initial_effect(c)
 	e1:SetOperation(s.activate)
 	c:RegisterEffect(e1)
 end
-s.has_text_counter={0x1}
-function Auxiliary.HasTextCounter(c,counter)
-	if not c.has_text_counter then
-		return false
-	end
-	for _,v in ipairs(c.has_text_counter) do
-		if v==counter then
-			return true
-		end
-	end
-	return false
+s.mentioned_counter={
+	[0x1]=true,
+}
+function Auxiliary.HasMentionedCounter(c,counter)
+	return c.mentioned_counter and c.mentioned_counter[counter] or false
 end
 function s.thfilter(c)
-	return not c:IsCode(id) and Auxiliary.HasTextCounter(c,0x1) and c:IsAbleToHand()
+	return not c:IsCode(id) and Auxiliary.HasMentionedCounter(c,0x1) and c:IsAbleToHand()
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil) end
