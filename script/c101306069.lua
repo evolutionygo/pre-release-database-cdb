@@ -13,7 +13,6 @@ function s.initial_effect(c)
 end
 s.has_text_counter={0x1}
 function Auxiliary.HasTextCounter(c,counter)
-	Debug.Message(c:GetCode())
 	if not c.has_text_counter then
 		return false
 	end
@@ -32,7 +31,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK+LOCATION_GRAVE)
 end
 function s.cfilter(c)
-	return c:IsFaceupEx() and c:IsSetCard(0x12a) and c:GetOriginalType()&TYPE_MONSTER>0 and c:IsAbleToHand()
+	return c:IsFaceupEx() and c:IsSetCard(0x12a) and c:GetOriginalType()&TYPE_MONSTER>0
 		and (c:IsType(TYPE_MONSTER) and c:IsLevelAbove(7)
 		or not c:IsType(TYPE_MONSTER) and c:GetOriginalLevel()>=7)
 end
@@ -47,13 +46,6 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			and Duel.IsExistingMatchingCard(aux.NegateAnyFilter,tp,0,LOCATION_ONFIELD,1,nil)
 			and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
 			local ct=Duel.GetMatchingGroupCount(aux.NegateAnyFilter,tp,0,LOCATION_ONFIELD,nil)
-			local ctt={}
-			local tc=g:GetFirst()
-			while tc do
-				local tlv=tc:GetLevel()
-				ctt[tlv]=tlv
-				tc=g:GetNext()
-			end
 			local pc=1
 			for i=1,ct do
 				if Duel.IsCanRemoveCounter(tp,1,0,0x1,i,REASON_EFFECT) then ctt[i]=nil ctt[pc]=i pc=pc+1 end
@@ -63,7 +55,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			local rt=Duel.AnnounceNumber(tp,table.unpack(ctt))
 			Duel.RemoveCounter(tp,1,0,0x1,rt,REASON_EFFECT)
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DISABLE)
-			local sg=Duel.SelectMatchingCard(tp,aux.NegateAnyFilter,tp,0,LOCATION_ONFIELD,1,rt,nil)
+			local sg=Duel.SelectMatchingCard(tp,aux.NegateAnyFilter,tp,0,LOCATION_ONFIELD,rt,rt,nil)
 			if sg:GetCount()>0 then
 				Duel.HintSelection(sg)
 				local flag=false
