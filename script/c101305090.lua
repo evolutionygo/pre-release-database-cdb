@@ -89,7 +89,7 @@ function s.flagop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if not c:IsLocation(LOCATION_SZONE) or not c:GetType()==TYPE_SPELL+TYPE_CONTINUOUS then return end
 	if Duel.GetCurrentChain()>0 then
-		c:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD+RESET_CHAIN,0,1)
+		c:RegisterFlagEffect(id+o,RESET_EVENT+RESETS_STANDARD+RESET_CHAIN,0,1)
 	else
 		Duel.RaiseSingleEvent(c,EVENT_CUSTOM+id,e,0,tp,tp,0)
 	end
@@ -97,7 +97,7 @@ end
 function s.raiseop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if not c:GetType()==TYPE_SPELL+TYPE_CONTINUOUS then return end
-	if c:GetFlagEffect(id)~=0 then
+	if c:GetFlagEffect(id+o)~=0 then
 		Duel.RaiseSingleEvent(c,EVENT_CUSTOM+id,e,0,tp,tp,0)
 	end
 end
