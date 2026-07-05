@@ -82,24 +82,21 @@ function s.raceop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.filter0(c,e)
-	return c:IsFaceup() and c:IsCanBeFusionMaterial()
+	return c:IsFaceup() and c:IsCanBeFusionMaterial() and not c:IsImmuneToEffect(e)
 end
 function s.filter1(c,e)
-	return c:IsFaceup() and c:IsCanBeFusionMaterial() and not c:IsImmuneToEffect(e)
+	return not c:IsImmuneToEffect(e) and c:IsOnField()
 end
 function s.filter2(c,e,tp,m,f,gc,chkf)
 	return c:IsType(TYPE_FUSION) and (not f or f(c))
 		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) and c:CheckFusionMaterial(m,gc,chkf)
 end
-function s.filter3(c,e)
-	return not c:IsImmuneToEffect(e) and c:IsOnField()
-end
 function s.fsptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then
 		local chkf=tp
-		local mg1=Duel.GetFusionMaterial(tp):Filter(Card.IsOnField,nil)
-		local mg2=Duel.GetMatchingGroup(s.filter0,tp,0,LOCATION_MZONE,nil)
+		local mg1=Duel.GetFusionMaterial(tp):Filter(s.filter1,nil,e)
+		local mg2=Duel.GetMatchingGroup(s.filter0,tp,0,LOCATION_MZONE,nil,e)
 		if mg2:GetCount()>0 then
 			mg1:Merge(mg2)
 		end
@@ -120,9 +117,10 @@ end
 function s.fspop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local chkf=tp
+	if Duel.GetCurrentPhase()&(PHASE_DAMAGE+PHASE_DAMAGE_CAL)~=0 then return end
 	if not c:IsRelateToEffect(e) or c:IsImmuneToEffect(e) then return end
-	local mg1=Duel.GetFusionMaterial(tp):Filter(s.filter3,nil,e)
-	local mg2=Duel.GetMatchingGroup(s.filter1,tp,0,LOCATION_MZONE,nil,e)
+	local mg1=Duel.GetFusionMaterial(tp):Filter(s.filter1,nil,e)
+	local mg2=Duel.GetMatchingGroup(s.filter0,tp,0,LOCATION_MZONE,nil)
 	if mg2:GetCount()>0 then
 		mg1:Merge(mg2)
 	end
