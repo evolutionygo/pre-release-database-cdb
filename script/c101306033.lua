@@ -24,7 +24,7 @@ function s.initial_effect(c)
 	e2:SetTarget(s.destg)
 	e2:SetOperation(s.desop)
 	c:RegisterEffect(e2)
-	--xyz
+	--detach
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,2))
 	e3:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_GRAVE_SPSUMMON)
@@ -56,14 +56,11 @@ end
 function s.cfilter2(c)
 	return c:IsType(TYPE_XYZ)
 end
-function s.gcheck(g)
-	return g:GetClassCount(Card.GetRank)==g:GetCount()
-end
 function s.descost(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local g=Duel.GetMatchingGroup(s.cfilter2,tp,LOCATION_EXTRA,0,nil)
 	if chk==0 then return g:GetClassCount(Card.GetRank)>2 end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONFIRM)
-	local sg=g:SelectSubGroup(tp,s.gcheck,false,3,3)
+	local sg=g:SelectSubGroup(tp,aux.drkcheck,false,3,3)
 	Duel.ConfirmCards(1-tp,sg)
 end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
@@ -79,7 +76,7 @@ end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if c:IsRelateToChain() and tc:IsRelateToChain() then
+	if c:IsRelateToChain() and tc:IsRelateToChain() and tc:IsOnField() then
 		local g=Group.FromCards(c,tc)
 		Duel.Destroy(g,REASON_EFFECT)
 	end
