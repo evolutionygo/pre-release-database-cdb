@@ -94,7 +94,7 @@ end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local chkf=tp
 	local mg1=Group.CreateGroup()
-	local mg2=Group.CreateGroup()
+	local sg1=Group.CreateGroup()
 	if e:GetLabel()==1 then
 		mg1=Duel.GetFusionMaterial(tp):Filter(s.fmfilter1,nil,e)
 		local mg2=Duel.GetMatchingGroup(s.dmfilter,tp,LOCATION_DECK,0,nil)
@@ -115,7 +115,11 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		local fgroup=ce:GetTarget()
 		mg2=fgroup(ce,e,tp)
 		local mf=ce:GetValue()
-		sg2=Duel.GetMatchingGroup(s.filter2,tp,LOCATION_EXTRA,0,nil,e,tp,mg2,mf,chkf)
+		if e:GetLabel()==1 then
+			sg2=Duel.GetMatchingGroup(s.fspfilter1,tp,LOCATION_EXTRA,0,nil,e,tp,mg2,mf,chkf)
+		elseif e:GetLabel()==2 then
+			sg2=Duel.GetMatchingGroup(s.fspfilter2,tp,LOCATION_EXTRA,0,nil,e,tp,mg2,mf,chkf)
+		end
 	end
 	if sg1:GetCount()>0 or (sg2~=nil and sg2:GetCount()>0) then
 		local sg=sg1:Clone()
@@ -124,6 +128,11 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		local tg=sg:Select(tp,1,1,nil)
 		local tc=tg:GetFirst()
 		if sg1:IsContains(tc) and (sg2==nil or not sg2:IsContains(tc) or not Duel.SelectYesNo(tp,ce:GetDescription())) then
+			if e:GetLabel()==1 then
+				aux.FCheckAdditional=s.fcheck1
+			elseif e:GetLabel()==2 then
+				aux.FCheckAdditional=s.fcheck2
+			end
 			local mat1=Duel.SelectFusionMaterial(tp,tc,mg1,nil,chkf)
 			aux.FCheckAdditional=nil
 			tc:SetMaterial(mat1)

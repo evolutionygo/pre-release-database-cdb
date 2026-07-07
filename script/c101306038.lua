@@ -40,7 +40,7 @@ function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 			{b1,aux.Stringid(id,2),1},
 			{b2,aux.Stringid(id,3),2})
 	e:SetLabel(op)
-	if sel==0 then
+	if op==0 then
 		local g=Duel.GetMatchingGroup(Card.IsSummonLocation,tp,0,LOCATION_MZONE,nil,LOCATION_EXTRA)
 		Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,g:GetCount(),0,0)
 	else
