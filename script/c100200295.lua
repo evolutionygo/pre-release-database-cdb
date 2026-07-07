@@ -86,14 +86,14 @@ function s.dcop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local dc=Duel.TossDice(tp,1)
 	if dc>=1 and dc<=4 then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_OPERATECARD)
 		local g=Duel.SelectMatchingCard(tp,aux.TRUE,tp,0,LOCATION_MZONE,1,1,nil)
 		local tc=g:GetFirst()
 		if g:GetCount()>0 then
 			Duel.HintSelection(g)
 			if not tc:IsControlerCanBeChanged() or not Duel.SelectYesNo(tp,aux.Stringid(id,3)) then
 				Duel.Destroy(g,REASON_EFFECT)
-			else
+			elseif tc:IsControlerCanBeChanged() then
 				Duel.GetControl(tc,tp)
 			end
 		end
