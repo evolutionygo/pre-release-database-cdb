@@ -100,13 +100,11 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		local mg2=Duel.GetMatchingGroup(s.dmfilter,tp,LOCATION_DECK,0,nil)
 		mg1:Merge(mg2)
 		sg1=Duel.GetMatchingGroup(s.fspfilter1,tp,LOCATION_EXTRA,0,nil,e,tp,mg1,nil,chkf)
-		aux.FCheckAdditional=s.fcheck1
 	elseif e:GetLabel()==2 then
 		mg1=Duel.GetFusionMaterial(tp):Filter(s.fmfilter2,nil,e)
 		local mg2=Duel.GetMatchingGroup(s.cmfilter,tp,0,LOCATION_MZONE,nil,e)
 		mg1:Merge(mg2)
 		sg1=Duel.GetMatchingGroup(s.fspfilter2,tp,LOCATION_EXTRA,0,nil,e,tp,mg1,nil,chkf)
-		aux.FCheckAdditional=s.fcheck2
 	end
 	local mg2=nil
 	local sg2=nil
