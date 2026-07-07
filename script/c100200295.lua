@@ -92,7 +92,7 @@ function s.dcop(e,tp,eg,ep,ev,re,r,rp)
 		if g:GetCount()>0 then
 			Duel.HintSelection(g)
 			if not tc:IsControlerCanBeChanged() or not Duel.SelectYesNo(tp,aux.Stringid(id,3)) then
-				Duel.Destroy(g,REASON_EFFECT)
+				Duel.Destroy(tc,REASON_EFFECT)
 			elseif tc:IsControlerCanBeChanged() then
 				Duel.GetControl(tc,tp)
 			end
