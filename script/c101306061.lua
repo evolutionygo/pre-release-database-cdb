@@ -1,10 +1,5 @@
 --無垢なる芸術－「黄昏の変幻」
 local s,id,o=GetID()
-Auxiliary.quick_effect_filter=Auxiliary.quick_effect_filter or {}
-Auxiliary.quick_effect_filter[id]=Auxiliary.ArsMagnaFilter
-function Auxiliary.ArsMagnaFilter(c)
-	return c:IsOriginalSetCard(0x2e6)
-end
 function s.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
@@ -55,3 +50,8 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.ConfirmCards(1-tp,g)
 	end
 end
+-- Auxiliary.quick_effect_filter=Auxiliary.quick_effect_filter or {}
+-- Auxiliary.quick_effect_filter[id]=Auxiliary.ArsMagnaFilter
+-- function Auxiliary.ArsMagnaFilter(c)
+-- 	return c:IsOriginalSetCard(0x2e6)
+-- end
