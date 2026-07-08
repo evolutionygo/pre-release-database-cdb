@@ -43,7 +43,7 @@ function s.lcheck(g,lc)
 end
 function s.lmcon(ct)
 	return function(e,tp,eg,ep,ev,re,r,rp)
-		return e:GetHandler():GetLinkedGroupCount()==ct
+		return e:GetHandler():GetLinkedGroupCount()>=ct
 	end
 end
 function s.distg(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -69,6 +69,9 @@ function s.disop(e,tp,eg,ep,ev,re,r,rp)
 		e2:SetValue(RESET_TURN_SET)
 		e2:SetReset(RESET_EVENT+RESETS_STANDARD)
 		tc:RegisterEffect(e2)
+	end
+	Duel.AdjustInstantly()
+	for tc in aux.Next(g) do
 		local atk=tc:GetAttack()
 		local e3=Effect.CreateEffect(c)
 		e3:SetType(EFFECT_TYPE_SINGLE)
