@@ -30,7 +30,7 @@ function s.cfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0x1ce)
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_ONFIELD,0,1,nil)
+	return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
@@ -64,7 +64,7 @@ function s.thfilter(c)
 	return c:IsSetCard(0x2e6) and c:IsAbleToHand()
 end
 function s.spfilter(c,e,tp,mc)
-	return c:IsType(TYPE_FUSION) and c:IsSetCard(0x2e7)
+	return c:IsSetCard(0x2e7)
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and Duel.GetLocationCountFromEx(tp,tp,mc,c)>0
 end
 function s.tstg(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -77,7 +77,7 @@ function s.tstg(e,tp,eg,ep,ev,re,r,rp,chk)
 			{b1,aux.Stringid(id,3),1},
 			{b2,aux.Stringid(id,4),2})
 	e:SetLabel(op)
-	if sel==0 then
+	if op==0 then
 		e:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND)
 		Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 	else
@@ -101,6 +101,6 @@ function s.tsop(e,tp,eg,ep,ev,re,r,rp)
 		local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_EXTRA,0,1,1,nil,e,tp,nil)
 		local tc=g:GetFirst()
 		if not tc then return end
-		Duel.SpecialSummon(tc,SUMMON_TYPE_FUSION,tp,tp,false,false,POS_FACEUP)
+		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
 	end
 end

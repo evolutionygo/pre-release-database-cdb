@@ -78,9 +78,7 @@ end
 function s.atktg(e,c)
 	return c:IsSetCard(0x1ce) and c:IsType(TYPE_LINK)
 end
-function s.atkval(e,c)
-	return c:GetBaseAttack()*3
-end
+
 function s.cfilter(c,tp,se)
 	return c:IsFaceup() and c:IsType(TYPE_SYNCHRO+TYPE_LINK)
 end
