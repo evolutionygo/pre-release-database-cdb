@@ -70,7 +70,6 @@ end
 function s.filter2(c,e,tp,m,f,gc,chkf)
 	return c:IsType(TYPE_FUSION) and (not f or f(c))
 		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) and c:CheckFusionMaterial(m,gc,chkf)
-		and Duel.GetLocationCountFromEx(tp,tp,nil,c)>0
 end
 function s.fsptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
