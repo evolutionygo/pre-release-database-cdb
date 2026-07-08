@@ -99,6 +99,7 @@ function s.confilter(c)
 end
 function s.rmcon1(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsPlayerAffectedByEffect(tp,101306061)==nil
+		or not e:GetHandler():IsOriginalSetCard(0x2e6)
 		or not Duel.IsExistingMatchingCard(s.confilter,tp,LOCATION_MZONE,0,1,nil)
 end
 function s.rmcon2(e,tp,eg,ep,ev,re,r,rp)
