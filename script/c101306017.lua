@@ -77,10 +77,10 @@ function s.tstg(e,tp,eg,ep,ev,re,r,rp,chk)
 			{b1,aux.Stringid(id,3),1},
 			{b2,aux.Stringid(id,4),2})
 	e:SetLabel(op)
-	if op==0 then
+	if op==1 then
 		e:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND)
 		Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
-	else
+	elseif op==2 then
 		e:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_REMOVE)
 		Duel.SetOperationInfo(0,CATEGORY_REMOVE,c,1,0,0)
 		Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
