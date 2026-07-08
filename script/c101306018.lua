@@ -102,6 +102,7 @@ function s.rmcon1(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.rmcon2(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsPlayerAffectedByEffect(tp,101306061)~=nil
+		and e:GetHandler():IsOriginalSetCard(0x2e6)
 		and Duel.IsExistingMatchingCard(s.confilter,tp,LOCATION_MZONE,0,1,nil)
 end
 function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
