@@ -38,7 +38,7 @@ function s.initial_effect(c)
 	local e4=e3:Clone()
 	e4:SetType(EFFECT_TYPE_QUICK_O)
 	e4:SetCode(EVENT_FREE_CHAIN)
-	e4:SetHintTiming(TIMING_DAMAGE_STEP,TIMING_DAMAGE_STEP+TIMINGS_CHECK_MONSTER)
+	e4:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_END_PHASE)
 	e4:SetCondition(s.rmcon2)
 	c:RegisterEffect(e4)
 end
@@ -57,7 +57,7 @@ end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	local g=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_DECK,0,1,1,nil)
-	if g then
+	if g and g:GetCount()>0 then
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,g)
 	end
@@ -94,10 +94,10 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.confilter(c)
-	return c:IsSetCard(0x1ce) and c:IsType(TYPE_LINK)
+	return c:IsSetCard(0x1ce) and c:IsType(TYPE_LINK) and c:IsFaceup()
 end
 function s.rmcon1(e,tp,eg,ep,ev,re,r,rp)
-	return not Duel.IsPlayerAffectedByEffect(tp,101306061)~=nil
+	return Duel.IsPlayerAffectedByEffect(tp,101306061)==nil
 		and Duel.IsExistingMatchingCard(s.confilter,tp,LOCATION_MZONE,0,1,nil)
 end
 function s.rmcon2(e,tp,eg,ep,ev,re,r,rp)

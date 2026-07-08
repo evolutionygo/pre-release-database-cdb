@@ -1,4 +1,4 @@
---無垢なる芸術-「黄昏の変幻」
+--無垢なる芸術－「黄昏の変幻」
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--Activate
@@ -15,7 +15,7 @@ function s.initial_effect(c)
 	e2:SetTargetRange(1,0)
 	e2:SetCondition(s.recon)
 	c:RegisterEffect(e2)
-	--special summon
+	--search
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,1))
 	e3:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND)
@@ -37,8 +37,9 @@ function s.thfilter(c)
 	return c:IsSetCard(0x2e6,0x2e8) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil) end
-	e:GetHandler():RegisterFlagEffect(0,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id,2))
+	local c=e:GetHandler()
+	if chk==0 then return c:GetFlagEffect(id)~=0 and Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil) end
+	c:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id,2))
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)

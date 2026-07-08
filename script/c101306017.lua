@@ -60,7 +60,7 @@ end
 function s.tscon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.cfilter2,1,nil,tp)
 end
-function s.thfilter(c)
+function s.thfilter2(c)
 	return c:IsSetCard(0x2e6) and c:IsAbleToHand()
 end
 function s.spfilter(c,e,tp,mc)
@@ -69,7 +69,7 @@ function s.spfilter(c,e,tp,mc)
 end
 function s.tstg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-	local b1=Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil)
+	local b1=Duel.IsExistingMatchingCard(s.thfilter2,tp,LOCATION_DECK,0,1,nil)
 	local b2=c:IsAbleToRemove()
 		and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp,c)
 	if chk==0 then return b1 or b2 end
@@ -89,7 +89,7 @@ end
 function s.tsop(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetLabel()==1 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-		local g=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_DECK,0,1,1,nil)
+		local g=Duel.SelectMatchingCard(tp,s.thfilter2,tp,LOCATION_DECK,0,1,1,nil)
 		if g:GetCount()>0 then
 			Duel.SendtoHand(g,nil,REASON_EFFECT)
 			Duel.ConfirmCards(1-tp,g)

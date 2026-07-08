@@ -38,7 +38,7 @@ function s.initial_effect(c)
 	local e4=e3:Clone()
 	e4:SetType(EFFECT_TYPE_QUICK_O)
 	e4:SetCode(EVENT_FREE_CHAIN)
-	e4:SetHintTiming(TIMING_DAMAGE_STEP,TIMING_DAMAGE_STEP+TIMINGS_CHECK_MONSTER)
+	e4:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_END_PHASE)
 	e4:SetCondition(s.rmcon2)
 	c:RegisterEffect(e4)
 end
@@ -62,8 +62,9 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.ConfirmCards(1-tp,g)
 	end
 	local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetDescription(aux.Stringid(id,3))
 	e1:SetType(EFFECT_TYPE_FIELD)
-	e1:SetProperty(EFFECT_FLAG_SET_AVAILABLE)
+	e1:SetProperty(EFFECT_FLAG_SET_AVAILABLE+EFFECT_FLAG_CLIENT_HINT)
 	e1:SetCode(EFFECT_INDESTRUCTABLE_COUNT)
 	e1:SetTargetRange(LOCATION_MZONE,0)
 	e1:SetTarget(s.atktg)
@@ -97,11 +98,10 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.confilter(c)
-	return c:IsSetCard(0x1ce) and c:IsType(TYPE_LINK)
+	return c:IsSetCard(0x1ce) and c:IsType(TYPE_LINK) and c:IsFaceup()
 end
 function s.rmcon1(e,tp,eg,ep,ev,re,r,rp)
-	return not Duel.IsPlayerAffectedByEffect(tp,101306061)~=nil
-		and Duel.IsExistingMatchingCard(s.confilter,tp,LOCATION_MZONE,0,1,nil)
+	return Duel.IsPlayerAffectedByEffect(tp,101306061)==nil
 end
 function s.rmcon2(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsPlayerAffectedByEffect(tp,101306061)~=nil
@@ -111,15 +111,16 @@ function s.rmfilter(c)
 	return c:IsAbleToRemove() and c:IsType(TYPE_SPELL+TYPE_TRAP)
 end
 function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	local ct=Duel.GetMatchingGroupCount(s.confilter,tp,LOCATION_MZONE,0,nil)
 	if chkc then return chkc:IsLocation(LOCATION_ONFIELD) and s.rmfilter(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(s.rmfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) end
+	if chk==0 then return ct>0 and Duel.IsExistingTarget(s.rmfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectTarget(tp,s.rmfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
+	local g=Duel.SelectTarget(tp,s.rmfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,ct,nil)
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,1,0,0)
 end
 function s.rmop(e,tp,eg,ep,ev,re,r,rp)
-	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToChain() then
-		Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)
+	local tg=Duel.GetTargetsRelateToChain():Filter(Card.IsOnField,nil)
+	if tg:GetCount()>0 then
+		Duel.Remove(tg,POS_FACEUP,REASON_EFFECT)
 	end
 end

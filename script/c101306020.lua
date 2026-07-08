@@ -1,7 +1,7 @@
 --結合と乖離のアルス＝マグナ
 local s,id,o=GetID()
 function s.initial_effect(c)
-	--search
+	--special summon
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
@@ -25,7 +25,7 @@ function s.initial_effect(c)
 	e2:SetTarget(s.sptg2)
 	e2:SetOperation(s.spop2)
 	c:RegisterEffect(e2)
-	--remove
+	--draw
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,2))
 	e3:SetCategory(CATEGORY_DRAW)
@@ -40,7 +40,7 @@ function s.initial_effect(c)
 	local e4=e3:Clone()
 	e4:SetType(EFFECT_TYPE_QUICK_O)
 	e4:SetCode(EVENT_FREE_CHAIN)
-	e4:SetHintTiming(TIMING_DAMAGE_STEP,TIMING_DAMAGE_STEP+TIMINGS_CHECK_MONSTER)
+	e4:SetHintTiming(0,TIMING_DRAW_PHASE+TIMING_END_PHASE)
 	e4:SetCondition(s.rmcon2)
 	c:RegisterEffect(e4)
 end
@@ -100,7 +100,7 @@ function s.confilter(c)
 end
 function s.rmcon1(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsPlayerAffectedByEffect(tp,101306061)==nil
-		and Duel.IsExistingMatchingCard(s.confilter,tp,LOCATION_MZONE,0,1,nil)
+		or not Duel.IsExistingMatchingCard(s.confilter,tp,LOCATION_MZONE,0,1,nil)
 end
 function s.rmcon2(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsPlayerAffectedByEffect(tp,101306061)~=nil
