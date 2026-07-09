@@ -110,7 +110,6 @@ end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetLabel()==1 then
 		local ch=Duel.GetCurrentChain()
-		local tse=Duel.GetChainInfo(ch-1,CHAININFO_TRIGGERING_EFFECT)
 		Duel.NegateEffect(ch-1)
 	elseif e:GetLabel()==2 then
 		if Duel.DiscardHand(tp,nil,1,1,REASON_EFFECT+REASON_DISCARD)~=0 then
@@ -123,7 +122,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		end
 	elseif e:GetLabel()==3 then
 		local tc=Duel.GetFirstTarget()
-		if tc:IsRelateToChain() then
+		if tc:IsRelateToChain() and tc:IsOnField() then
 			Duel.Destroy(tc,REASON_EFFECT)
 		end
 	end
