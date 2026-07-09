@@ -96,9 +96,8 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		e:SetProperty(0)
 		Duel.SetOperationInfo(0,CATEGORY_DISABLE,og,1,0,0)
 	elseif op==2 then
-		e:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
+		e:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH+CATEGORY_HANDES_SELF)
 		e:SetProperty(0)
-		Duel.SetOperationInfo(0,CATEGORY_HANDES,nil,0,tp,1)
 		Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 	elseif op==3 then
 		e:SetCategory(CATEGORY_DESTROY)
