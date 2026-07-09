@@ -81,8 +81,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	end
 	local b2=Duel.GetFieldGroupCount(tp,LOCATION_HAND,0)>0
 		and Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil)
-	local b3=Duel.IsExistingMatchingCard(s.costfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,3,nil)
-		and Duel.IsExistingTarget(aux.TRUE,tp,0,LOCATION_ONFIELD,1,nil)
+	local b3=Duel.IsExistingTarget(aux.TRUE,tp,0,LOCATION_ONFIELD,1,nil)
 	if chk==0 then return b1 or ((b2 or b3) and not e:IsCostChecked()) or e:IsCostChecked() end
 	local op,el=e:GetLabel()
 	if el==0 then
