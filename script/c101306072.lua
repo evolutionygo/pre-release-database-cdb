@@ -53,7 +53,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		local g=Duel.SelectMatchingCard(tp,s.xyzfilter,tp,LOCATION_MZONE,0,1,1,nil,e,tp)
 		local xc=g:GetFirst()
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
-		local mg=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.mtfilter),tp,LOCATION_MZONE+LOCATION_GRAVE,LOCATION_MZONE+LOCATION_GRAVE,1,1,sc,e)
+		local mg=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.mtfilter),tp,LOCATION_MZONE+LOCATION_GRAVE,LOCATION_MZONE+LOCATION_GRAVE,1,1,xc,e)
 		if mg:GetCount()>0 then
 			Duel.Overlay(xc,mg)
 		end
@@ -70,7 +70,7 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<2 or Duel.IsPlayerAffectedByEffect(tp,59822133)
-		or Duel.GetMatchingGroupCount(s.ffilter,tp,LOCATION_GRAVE,0,nil,e,tp)<2 then return end
+		or Duel.GetMatchingGroupCount(aux.NecroValleyFilter(s.ffilter),tp,LOCATION_GRAVE,0,nil,e,tp)<2 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,s.ffilter,tp,LOCATION_GRAVE,0,2,2,nil,e,tp)
 	Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
