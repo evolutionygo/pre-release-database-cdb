@@ -54,8 +54,11 @@ function s.efop(e,tp,eg,ep,ev,re,r,rp)
 	local e1=Effect.CreateEffect(rc)
 	e1:SetDescription(aux.Stringid(id,2))
 	e1:SetCategory(CATEGORY_REMOVE)
-	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
+	-- Under Duel.SpecialSummon(SUMMON_TYPE_XYZ), BE_MATERIAL fires after the single SPSUMMON_SUCCESS;
+	-- use FIELD so it can catch the following field EVENT_SPSUMMON_SUCCESS (e.g. RUM - The Seventh One)
+	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e1:SetRange(LOCATION_MZONE)
 	e1:SetCondition(s.rmcon)
 	e1:SetTarget(s.rmtg)
 	e1:SetOperation(s.rmop)
@@ -71,7 +74,7 @@ function s.efop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.rmcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():IsSummonType(SUMMON_TYPE_XYZ)
+	return eg:IsContains(e:GetHandler()) and e:GetHandler():IsSummonType(SUMMON_TYPE_XYZ)
 end
 function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
@@ -87,13 +90,24 @@ function s.gcheck(g)
 	if sg:GetCount()~=4 then return false end
 	return aux.dabcheck(sg)
 end
+function s.rmgcheck(g)
+	if g:FilterCount(Card.IsType,nil,TYPE_SPELL)>1 then return false end
+	local sg=g:Filter(Card.IsType,nil,TYPE_MONSTER)
+	if #sg>4 then return false end
+	return aux.dabcheck(sg)
+end
 function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(s.rmfilter,tp,0,LOCATION_DECK,nil,1-tp)
+	aux.GCheckAdditional=s.rmgcheck
 	if g:CheckSubGroup(s.gcheck,5,5) and Duel.SelectYesNo(1-tp,aux.Stringid(id,3)) then
 		Duel.Hint(HINT_SELECTMSG,1-tp,HINTMSG_REMOVE)
 		local sg=g:SelectSubGroup(1-tp,s.gcheck,false,5,5)
-		Duel.Remove(sg,POS_FACEUP,REASON_EFFECT)
+		aux.GCheckAdditional=nil
+		if sg then
+			Duel.Remove(sg,POS_FACEUP,REASON_EFFECT)
+		end
 	else
+		aux.GCheckAdditional=nil
 		local sg=Duel.GetDecktopGroup(1-tp,10)
 		if #sg<=0 then return end
 		Duel.DisableShuffleCheck()
