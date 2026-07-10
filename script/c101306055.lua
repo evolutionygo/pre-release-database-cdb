@@ -19,13 +19,9 @@ function s.initial_effect(c)
 	e3:SetRange(LOCATION_FZONE)
 	e3:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
 	e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-	e3:SetCondition(s.nspcon1)
-	e3:SetTargetRange(1,0)
+	e3:SetTargetRange(1,1)
+	e3:SetTarget(s.splimit)
 	c:RegisterEffect(e3)
-	local e4=e3:Clone()
-	e4:SetCondition(s.nspcon2)
-	e4:SetTargetRange(0,1)
-	c:RegisterEffect(e4)
 	--to hand
 	local e5=Effect.CreateEffect(c)
 	e5:SetDescription(aux.Stringid(id,1))
@@ -59,11 +55,9 @@ function s.count(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 end
-function s.nspcon1(e)
-	return e:GetHandler():GetFlagEffect(id+e:GetHandlerPlayer()*100)>1
-end
-function s.nspcon2(e)
-	return e:GetHandler():GetFlagEffect(id+(1-e:GetHandlerPlayer())*100)>1
+function s.splimit(e,c,sump,sumtype,sumpos,targetp,se)
+	return c:IsLocation(LOCATION_EXTRA) and not c:IsSetCard(0x48)
+		and e:GetHandler():GetFlagEffect(id+sump*100)>1
 end
 function s.thfilter(c)
 	return c:IsSetCard(0x87) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()

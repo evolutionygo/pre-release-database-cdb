@@ -51,14 +51,11 @@ end
 function s.efop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local rc=c:GetReasonCard()
-	local eid=EVENT_CUSTOM+id+c:GetFieldID()
 	local e1=Effect.CreateEffect(rc)
 	e1:SetDescription(aux.Stringid(id,2))
 	e1:SetCategory(CATEGORY_REMOVE)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
-	e1:SetProperty(EFFECT_FLAG_DELAY)
-	e1:SetCode(eid)
-	e1:SetLabelObject(c)
+	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e1:SetCondition(s.rmcon)
 	e1:SetTarget(s.rmtg)
 	e1:SetOperation(s.rmop)
@@ -72,13 +69,14 @@ function s.efop(e,tp,eg,ep,ev,re,r,rp)
 		e2:SetReset(RESET_EVENT+RESETS_STANDARD)
 		rc:RegisterEffect(e2,true)
 	end
-	Duel.RaiseSingleEvent(rc,eid,re,r,rp,ep,ev)
 end
 function s.rmcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_XYZ)
 end
 function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():GetOverlayGroup():IsContains(e:GetLabelObject()) end
+	if chk==0 then return true end
+	Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
+	Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,1,1-tp,LOCATION_DECK)
 end
 function s.rmfilter(c,tp)
 	return c:IsType(TYPE_MONSTER+TYPE_SPELL) and c:IsAbleToRemove(tp)
@@ -92,9 +90,9 @@ end
 function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(s.rmfilter,tp,0,LOCATION_DECK,nil,1-tp)
 	if g:CheckSubGroup(s.gcheck,5,5) and Duel.SelectYesNo(1-tp,aux.Stringid(id,3)) then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+		Duel.Hint(HINT_SELECTMSG,1-tp,HINTMSG_REMOVE)
 		local sg=g:SelectSubGroup(1-tp,s.gcheck,false,5,5)
-		Duel.Remove(sg,POS_FACEUP,REASON_EFFECT+1-tp)
+		Duel.Remove(sg,POS_FACEUP,REASON_EFFECT)
 	else
 		local sg=Duel.GetDecktopGroup(1-tp,10)
 		if #sg<=0 then return end
