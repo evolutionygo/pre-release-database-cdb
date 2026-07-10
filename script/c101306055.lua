@@ -61,10 +61,10 @@ function s.count(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.nspcon1(e)
-	return e:GetHandler():GetFlagEffect(id+tp)>1
+	return e:GetHandler():GetFlagEffect(id+e:GetHandlerPlayer())>1
 end
 function s.nspcon2(e)
-	return e:GetHandler():GetFlagEffect(id+1-tp)>1
+	return e:GetHandler():GetFlagEffect(id+1-e:GetHandlerPlayer())>1
 end
 function s.thfilter(c)
 	return c:IsSetCard(0x87) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
