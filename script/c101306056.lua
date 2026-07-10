@@ -30,7 +30,7 @@ function s.cfilter1(c,lv)
 	return c:IsFaceup() and c:IsSetCard(0x87)
 		and c:IsLevelAbove(1) and not c:IsLevel(lv)
 end
-function s.cfilter2(c)
+function s.cfilter2(c,tp)
 	return c:IsFaceup() and c:IsSetCard(0x87)
 		and c:IsLevelAbove(1)
 		and Duel.IsExistingMatchingCard(s.cfilter1,tp,LOCATION_MZONE,0,1,nil,c:GetLevel())
@@ -46,11 +46,11 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=g:GetFirst()
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	if tc and Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)~=0
-		and Duel.IsExistingMatchingCard(s.cfilter2,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,nil)
+		and Duel.IsExistingMatchingCard(s.cfilter2,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,nil,tp)
 		and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 		Duel.BreakEffect()
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-		local sg=Duel.SelectMatchingCard(tp,s.cfilter2,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,1,nil)
+		local sg=Duel.SelectMatchingCard(tp,s.cfilter2,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,1,nil,tp)
 		local lv=sg:GetFirst():GetLevel()
 		local tg=Duel.GetMatchingGroup(s.cfilter1,tp,LOCATION_MZONE,0,nil,lv)
 		for lc in aux.Next(tg) do
