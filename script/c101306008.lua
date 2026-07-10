@@ -64,7 +64,7 @@ function s.actop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RegisterEffect(e1,tp)
 end
 function s.splimit(e,c)
-	return not c:IsType(TYPE_SYNCHRO) and c:IsLocation(LOCATION_EXTRA)
+	return not c:IsType(TYPE_XYZ) and c:IsLocation(LOCATION_EXTRA)
 end
 function s.cfilter(c,tp,se)
 	return c:IsType(TYPE_XYZ)
