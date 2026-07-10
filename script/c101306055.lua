@@ -53,17 +53,17 @@ function s.cfilter(c,tp)
 	return not c:IsSetCard(0x48) and c:IsSummonPlayer(tp) and c:IsSummonLocation(LOCATION_EXTRA)
 end
 function s.count(e,tp,eg,ep,ev,re,r,rp)
-	for i=0,1 do
-		if eg:IsExists(s.cfilter,1,nil,i) then
-			e:GetHandler():RegisterFlagEffect(id+i,RESET_EVENT+0x3ff0000+RESET_PHASE+PHASE_END,0,1)
+	for p=0,1 do
+		if eg:IsExists(s.cfilter,1,nil,p) then
+			e:GetHandler():RegisterFlagEffect(id+p*100,RESET_EVENT+0x3ff0000+RESET_PHASE+PHASE_END,0,1)
 		end
 	end
 end
 function s.nspcon1(e)
-	return e:GetHandler():GetFlagEffect(id+e:GetHandlerPlayer())>1
+	return e:GetHandler():GetFlagEffect(id+e:GetHandlerPlayer()*100)>1
 end
 function s.nspcon2(e)
-	return e:GetHandler():GetFlagEffect(id+1-e:GetHandlerPlayer())>1
+	return e:GetHandler():GetFlagEffect(id+(1-e:GetHandlerPlayer())*100)>1
 end
 function s.thfilter(c)
 	return c:IsSetCard(0x87) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
@@ -92,7 +92,6 @@ function s.damtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,PLAYER_ALL,dam)
 end
 function s.damop(e,tp,eg,ep,ev,re,r,rp)
-	local p=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER)
 	local dam=Duel.GetMatchingGroupCount(s.damfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)*400
 	Duel.Damage(tp,dam,REASON_EFFECT,true)
 	Duel.Damage(1-tp,dam,REASON_EFFECT,true)
