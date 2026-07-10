@@ -8,8 +8,10 @@ function s.initial_effect(c)
 	e1:SetCategory(CATEGORY_DESTROY+CATEGORY_ATKCHANGE+CATEGORY_DISABLE)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
-	e1:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_END_PHASE)
+	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
+	e1:SetHintTiming(TIMING_DAMAGE_STEP,TIMING_DAMAGE_STEP+TIMINGS_CHECK_MONSTER+TIMING_END_PHASE)
 	e1:SetCountLimit(1,id+EFFECT_COUNT_CODE_OATH)
+	e1:SetCondition(aux.dscon)
 	e1:SetTarget(s.target)
 	e1:SetOperation(s.activate)
 	c:RegisterEffect(e1)
@@ -36,7 +38,8 @@ function s.disfilter(c)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return e:GetLabel()==2 and chkc:IsControler(1-tp) and chkc:IsLocation(LOCATION_MZONE) and s.disfilter(chkc) end
-	local b1=Duel.IsExistingMatchingCard(s.desfilter,tp,0,LOCATION_ONFIELD,1,nil)
+	local b1=Duel.GetCurrentPhase()~=PHASE_DAMAGE
+		and Duel.IsExistingMatchingCard(s.desfilter,tp,0,LOCATION_ONFIELD,1,nil)
 	local b2=Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,nil)
 		and Duel.IsExistingTarget(s.disfilter,tp,0,LOCATION_MZONE,1,nil)
 	if chk==0 then return b1 or b2 end
@@ -46,12 +49,12 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	e:SetLabel(op)
 	if op==1 then
 		e:SetCategory(CATEGORY_DESTROY)
-		e:SetProperty(0)
+		e:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
 		local g=Duel.GetMatchingGroup(s.desfilter,tp,0,LOCATION_ONFIELD,nil)
 		Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,#g,0,0)
 	else
 		e:SetCategory(CATEGORY_ATKCHANGE+CATEGORY_DISABLE)
-		e:SetProperty(EFFECT_FLAG_CARD_TARGET)
+		e:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DAMAGE_STEP)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
 		local g=Duel.SelectTarget(tp,s.disfilter,tp,0,LOCATION_MZONE,1,1,nil)
 		Duel.SetOperationInfo(0,CATEGORY_DISABLE,g,1,0,0)
@@ -103,7 +106,12 @@ function s.descon(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetFieldGroupCount(tp,0,LOCATION_ONFIELD+LOCATION_HAND)>0 end
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,nil,1,1-tp,LOCATION_ONFIELD+LOCATION_HAND)
+	if Duel.GetFieldGroupCount(tp,0,LOCATION_HAND)>0 then
+		Duel.SetOperationInfo(0,CATEGORY_DESTROY,nil,1,1-tp,LOCATION_ONFIELD+LOCATION_HAND)
+	else
+		local g=Duel.GetFieldGroup(tp,0,LOCATION_ONFIELD)
+		Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,LOCATION_ONFIELD)
+	end
 end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local hg=Duel.GetFieldGroup(tp,0,LOCATION_HAND)
