@@ -50,7 +50,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e6)
 end
 function s.cfilter(c,tp)
-	return c:IsSummonPlayer(tp) and c:IsSummonLocation(LOCATION_EXTRA)
+	return not c:IsSetCard(0x48) and c:IsSummonPlayer(tp) and c:IsSummonLocation(LOCATION_EXTRA)
 end
 function s.count(e,tp,eg,ep,ev,re,r,rp)
 	for i=0,1 do
