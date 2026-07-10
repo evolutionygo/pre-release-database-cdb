@@ -15,8 +15,9 @@ function s.initial_effect(c)
 	e1:SetOperation(s.actop)
 	c:RegisterEffect(e1)
 	--special summon
-	local e2=Effect.CreateEffect(c)
 	local e0=aux.AddThisCardInGraveAlreadyCheck(c)
+	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e2:SetProperty(EFFECT_FLAG_DELAY)
@@ -51,9 +52,10 @@ function s.actop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.MoveToField(tc,tp,tp,LOCATION_FZONE,POS_FACEUP,true)
 	end
 	local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetDescription(aux.Stringid(id,2))
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
-	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CLIENT_HINT)
 	e1:SetTargetRange(1,0)
 	e1:SetTarget(s.splimit)
 	if Duel.GetTurnPlayer()==tp then
@@ -66,13 +68,13 @@ end
 function s.splimit(e,c)
 	return not c:IsType(TYPE_XYZ) and c:IsLocation(LOCATION_EXTRA)
 end
-function s.cfilter(c,tp,se)
-	return c:IsType(TYPE_XYZ)
+function s.cfilter(c,se)
+	return c:IsType(TYPE_XYZ) and c:IsFaceup()
 		and (se==nil or c:GetReasonEffect()~=se)
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	local se=e:GetLabelObject():GetLabelObject()
-	return eg:IsExists(s.cfilter,1,nil,tp,se)
+	return eg:IsExists(s.cfilter,1,nil,se)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
