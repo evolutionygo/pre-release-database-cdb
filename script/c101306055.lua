@@ -55,7 +55,6 @@ end
 function s.count(e,tp,eg,ep,ev,re,r,rp)
 	for i=0,1 do
 		if eg:IsExists(s.cfilter,1,nil,i) then
-			Debug.Message(i)
 			e:GetHandler():RegisterFlagEffect(id+i,RESET_EVENT+0x3ff0000+RESET_PHASE+PHASE_END,0,1)
 		end
 	end
