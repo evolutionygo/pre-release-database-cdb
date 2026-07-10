@@ -95,7 +95,7 @@ function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 		local sg=g:SelectSubGroup(1-tp,s.gcheck,false,5,5)
 		Duel.Remove(sg,POS_FACEUP,REASON_EFFECT+1-tp)
 	else
-		local sg=Duel.GetDecktopGroup(tp,3)
+		local sg=Duel.GetDecktopGroup(1-tp,10)
 		if #sg<=0 then return end
 		Duel.DisableShuffleCheck()
 		Duel.Remove(sg,POS_FACEUP,REASON_EFFECT)
