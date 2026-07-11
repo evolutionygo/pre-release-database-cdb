@@ -60,7 +60,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 				if g:GetCount()>0 and Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP,0x60)~=0 then
 					if Duel.GetLocationCount(tp,LOCATION_SZONE)>0 then
 						Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
-						local sg=Duel.SelectMatchingCard(tp,s.setfilter,tp,LOCATION_EXTRA,0,1,1,nil)
+						local sg=Duel.SelectMatchingCard(tp,s.setfilter,tp,LOCATION_EXTRA,0,1,1,nil,tp)
 						local sc=sg:GetFirst()
 						if sc then
 							Duel.MoveToField(sc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
