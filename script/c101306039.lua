@@ -91,7 +91,10 @@ function s.settg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if g:IsExists(s.cspfilter,1,nil) then cat=cat|CATEGORY_GRAVE_SPSUMMON end
 	if g:GetCount()>=2 then cat=cat|CATEGORY_TOEXTRA end
 	e:SetCategory(cat)
-	Duel.SetOperationInfo(0,CATEGORY_LEAVE_GRAVE,g,2,0,0)
+	local gg=g:Filter(Card.IsLocation,nil,LOCATION_GRAVE)
+	if gg:GetCount()>0 then
+		Duel.SetOperationInfo(0,CATEGORY_LEAVE_GRAVE,gg,gg:GetCount(),0,0)
+	end
 end
 function s.setop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
