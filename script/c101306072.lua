@@ -58,6 +58,10 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		local mg=aux.SelectCardFromFieldFirst(tp,aux.NecroValleyFilter(s.mtfilter),tp,LOCATION_MZONE+LOCATION_GRAVE,LOCATION_MZONE+LOCATION_GRAVE,1,1,xc,e)
 		if mg:GetCount()>0 then
 			Duel.HintSelection(mg)
+			local og=mg:GetFirst():GetOverlayGroup()
+			if og:GetCount()>0 then
+				Duel.SendtoGrave(og,REASON_RULE)
+			end
 			Duel.Overlay(xc,mg)
 		end
 	end
