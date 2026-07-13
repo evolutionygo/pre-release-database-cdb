@@ -21,7 +21,7 @@ function s.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_FIELD)
 	e2:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
 	e2:SetRange(LOCATION_SZONE)
-	e2:SetTargetRange(LOCATION_ONFIELD,0)
+	e2:SetTargetRange(LOCATION_ONFIELD,LOCATION_ONFIELD)
 	e2:SetCondition(s.setcon)
 	e2:SetTarget(s.indtg)
 	e2:SetValue(aux.indoval)
@@ -66,7 +66,7 @@ end
 function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToChain() then
+	if tc:IsRelateToChain() and tc:IsOnField() then
 		Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)
 	end
 end
