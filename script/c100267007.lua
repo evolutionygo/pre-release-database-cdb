@@ -75,4 +75,16 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		tc:RegisterEffect(e1)
 	end
 	Duel.SpecialSummonComplete()
+	local e2=Effect.CreateEffect(e:GetHandler())
+	e2:SetType(EFFECT_TYPE_FIELD)
+	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e2:SetCode(EFFECT_CANNOT_ACTIVATE)
+	e2:SetTargetRange(1,0)
+	e2:SetValue(s.actlimit)
+	e2:SetReset(RESET_PHASE+PHASE_END)
+	Duel.RegisterEffect(e2,tp)
+end
+function s.actlimit(e,re,rp)
+	local rc=re:GetHandler()
+	return re:IsActiveType(TYPE_MONSTER) and not rc:IsRace(RACE_CYBERSE)
 end
