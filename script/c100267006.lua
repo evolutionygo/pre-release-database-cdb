@@ -43,8 +43,10 @@ function s.spfilter(c,e,tp,m)
 	if c.mat_filter then
 		m=m:Filter(c.mat_filter,nil,tp)
 	end
-	return m:CheckWithSumGreater(s.getrlv,c:GetLevel(),c)
-		 and Duel.GetMZoneCount(tp,m)>0 and aux.dncheck(m)
+	aux.GCheckAdditional=aux.dncheck
+	local res=m:CheckWithSumGreater(s.getrlv,c:GetLevel(),c) and Duel.GetMZoneCount(tp,m)>0
+	aux.GCheckAdditional=nil
+	return res
 end
 function s.matfilter(c)
 	return (c:IsType(TYPE_NORMAL) or bit.band(c:GetOriginalType(),TYPE_NORMAL)~=0)
@@ -61,8 +63,13 @@ function s.eqfilter(c,tp)
 	return c:IsType(TYPE_NORMAL) and c:CheckUniqueOnField(tp) and not c:IsForbidden()
 end
 function s.gcheckf(tc,lv)
-	return function(sg)
-		return sg:GetSum(Card.GetRitualLevel,tc)<=lv
+	return function(sg,ec)
+		if not aux.dncheck(sg) then return false end
+		if ec then
+			return sg:GetSum(s.getrlv,tc)-s.getrlv(ec,tc)<=lv
+		else
+			return true
+		end
 	end
 end
 function s.RitualCheckGreater(g,c,lv)
