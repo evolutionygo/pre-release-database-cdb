@@ -53,7 +53,7 @@ function s.setop(e,tp,eg,ep,ev,re,r,rp)
 	if ft>=2 then ft=2 end
 	local g=Duel.GetMatchingGroup(s.setfilter,tp,LOCATION_DECK,0,nil)
 	local cg=Duel.GetMatchingGroup(s.chkfilter,tp,LOCATION_HAND+LOCATION_GRAVE+LOCATION_ONFIELD+LOCATION_DECK,0,nil)
-	local ct=math.min(2,g:GetCount(),cg:GetCount())
+	local ct=math.min(ft,g:GetCount(),cg:GetCount())
 	if ct==0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONFIRM)
 	local rg=cg:Select(tp,1,ct,nil)
