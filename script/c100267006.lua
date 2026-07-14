@@ -37,14 +37,30 @@ function s.getrlv(c,rc)
 		return c:GetOriginalLevel()
 	end
 end
+function s.gcheckf(tc,lv)
+	return function(sg,ec)
+		if not aux.dncheck(sg) then return false end
+		if ec then
+			return sg:GetSum(s.getrlv,tc)-s.getrlv(ec,tc)<=lv
+		else
+			return true
+		end
+	end
+end
+function s.RitualCheckGreater(g,c,lv,tp)
+	if Duel.GetMZoneCount(tp,g)<=0 then return false end
+	Duel.SetSelectedCard(g)
+	return g:CheckWithSumGreater(s.getrlv,lv,c)
+end
 function s.spfilter(c,e,tp,m)
 	if bit.band(c:GetType(),0x81)~=0x81 or not c:IsSetCard(0x2ea)
 		or not c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_RITUAL,tp,false,true) then return false end
 	if c.mat_filter then
 		m=m:Filter(c.mat_filter,nil,tp)
 	end
-	aux.GCheckAdditional=aux.dncheck
-	local res=m:CheckWithSumGreater(s.getrlv,c:GetLevel(),c) and Duel.GetMZoneCount(tp,m)>0
+	local lv=c:GetLevel()
+	aux.GCheckAdditional=s.gcheckf(c,lv)
+	local res=m:CheckSubGroup(s.RitualCheckGreater,1,lv,c,lv,tp)
 	aux.GCheckAdditional=nil
 	return res
 end
@@ -62,20 +78,6 @@ end
 function s.eqfilter(c,tp)
 	return c:IsType(TYPE_NORMAL) and c:CheckUniqueOnField(tp) and not c:IsForbidden()
 end
-function s.gcheckf(tc,lv)
-	return function(sg,ec)
-		if not aux.dncheck(sg) then return false end
-		if ec then
-			return sg:GetSum(s.getrlv,tc)-s.getrlv(ec,tc)<=lv
-		else
-			return true
-		end
-	end
-end
-function s.RitualCheckGreater(g,c,lv)
-	Duel.SetSelectedCard(g)
-	return g:CheckWithSumGreater(s.getrlv,lv,c)
-end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	::cancel::
 	local mg=Duel.GetMatchingGroup(s.matfilter,tp,LOCATION_DECK+LOCATION_HAND+LOCATION_ONFIELD,0,nil)
@@ -89,7 +91,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		local lv=tc:GetLevel()
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
 		aux.GCheckAdditional=s.gcheckf(tc,lv)
-		local mat=mg:SelectSubGroup(tp,s.RitualCheckGreater,true,1,99,tc,lv)
+		local mat=mg:SelectSubGroup(tp,s.RitualCheckGreater,true,1,lv,tc,lv,tp)
 		aux.GCheckAdditional=nil
 		if not mat then goto cancel end
 		tc:SetMaterial(mat)
