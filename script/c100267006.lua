@@ -30,24 +30,29 @@ function s.initial_effect(c)
 	e3:SetOperation(s.drop)
 	c:RegisterEffect(e3)
 end
+function s.getrlv(c,rc)
+	if c:IsType(TYPE_MONSTER) then
+		return c:GetRitualLevel(rc)
+	else
+		return c:GetOriginalLevel()
+	end
+end
 function s.spfilter(c,e,tp,m)
 	if bit.band(c:GetType(),0x81)~=0x81 or not c:IsSetCard(0x2ea)
 		or not c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_RITUAL,tp,false,true) then return false end
 	if c.mat_filter then
 		m=m:Filter(c.mat_filter,nil,tp)
 	end
-	return m:CheckWithSumGreater(Card.GetRitualLevel,c:GetLevel(),c)
+	return m:CheckWithSumGreater(s.getrlv,c:GetLevel(),c)
 		 and Duel.GetMZoneCount(tp,m)>0 and aux.dncheck(m)
 end
 function s.matfilter(c)
 	return (c:IsType(TYPE_NORMAL) or bit.band(c:GetOriginalType(),TYPE_NORMAL)~=0)
-		and c:IsFaceupEx() and c:IsAbleToGrave() and bit.band(c:GetType(),TYPE_MONSTER)~=0
+		and c:IsFaceupEx() and c:IsAbleToGrave() and bit.band(c:GetOriginalType(),TYPE_MONSTER)~=0
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
-		local mg=Duel.GetRitualMaterial(tp):Filter(s.matfilter,nil)
-		local mg2=Duel.GetMatchingGroup(s.matfilter,tp,LOCATION_DECK+LOCATION_SZONE,0,nil)
-		mg:Merge(mg2)
+		local mg=Duel.GetMatchingGroup(s.matfilter,tp,LOCATION_DECK+LOCATION_HAND+LOCATION_ONFIELD,0,nil)
 		return Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,nil,e,tp,mg)
 	end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND+LOCATION_GRAVE)
@@ -55,11 +60,18 @@ end
 function s.eqfilter(c,tp)
 	return c:IsType(TYPE_NORMAL) and c:CheckUniqueOnField(tp) and not c:IsForbidden()
 end
+function s.gcheckf(tc,lv)
+	return function(sg)
+		return sg:GetSum(Card.GetRitualLevel,tc)<=lv
+	end
+end
+function s.RitualCheckGreater(g,c,lv)
+	Duel.SetSelectedCard(g)
+	return g:CheckWithSumGreater(s.getrlv,lv,c)
+end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	::cancel::
-	local mg=Duel.GetRitualMaterial(tp):Filter(s.matfilter,nil)
-	local mg2=Duel.GetMatchingGroup(s.matfilter,tp,LOCATION_DECK+LOCATION_SZONE,0,nil)
-	mg:Merge(mg2)
+	local mg=Duel.GetMatchingGroup(s.matfilter,tp,LOCATION_DECK+LOCATION_HAND+LOCATION_ONFIELD,0,nil)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local tg=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.spfilter),tp,LOCATION_HAND+LOCATION_GRAVE,0,1,1,nil,e,tp,mg)
 	if tg:GetCount()>0 then
@@ -69,8 +81,8 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		end
 		local lv=tc:GetLevel()
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-		aux.GCheckAdditional=function(sg) return sg:GetSum(Card.GetRitualLevel,tc)<=lv end
-		local mat=mg:SelectSubGroup(tp,aux.RitualCheckGreater,true,1,99,tc,lv)
+		aux.GCheckAdditional=s.gcheckf(tc,lv)
+		local mat=mg:SelectSubGroup(tp,s.RitualCheckGreater,true,1,99,tc,lv)
 		aux.GCheckAdditional=nil
 		if not mat then goto cancel end
 		tc:SetMaterial(mat)
