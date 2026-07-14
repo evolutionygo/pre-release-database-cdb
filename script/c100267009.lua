@@ -23,7 +23,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function s.spfilter(c,e,tp,m)
-	if bit.band(c:GetType(),0x81)~=0x81
+	if bit.band(c:GetType(),0x81)~=0x81 or not c:IsSetCard(0x2ea)
 		or not c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_RITUAL,tp,false,true) then return false end
 	if c.mat_filter then
 		m=m:Filter(c.mat_filter,nil,tp)
