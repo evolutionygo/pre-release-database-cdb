@@ -64,8 +64,8 @@ function s.efilter(e,te)
 	return te:GetOwnerPlayer()~=e:GetHandlerPlayer() and te:IsActivated()
 end
 function s.cfilter(c)
-	return c:IsFaceup() and c:IsAbleToGraveAsCost()
-		and (c:IsAllTypes(TYPE_NORMAL+TYPE_MONSTER) or not c:IsType(TYPE_MONSTER) and bit.band(c:GetOriginalType(),TYPE_NORMAL)~=0)
+	return c:IsFaceup() and c:IsAbleToGraveAsCost() and c:GetOriginalType()&TYPE_MONSTER~=0
+		and (not c:IsType(TYPE_MONSTER) and c:GetOriginalType()&TYPE_NORMAL~=0 or c:IsAllTypes(TYPE_NORMAL+TYPE_MONSTER))
 end
 function s.poscost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_ONFIELD,0,1,nil) end

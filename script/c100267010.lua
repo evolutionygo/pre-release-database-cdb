@@ -3,9 +3,10 @@ local s,id,o=GetID()
 function s.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
-	e1:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_MAIN_END)
+	e1:SetHintTiming(0,TIMINGS_CHECK_MONSTER)
 	e1:SetCountLimit(1,id)
 	e1:SetTarget(s.target)
 	e1:SetOperation(s.activate)
@@ -19,7 +20,7 @@ function s.initial_effect(c)
 	e2:SetRange(LOCATION_GRAVE)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e2:SetCountLimit(1,id+o)
-	e2:SetHintTiming(0,TIMING_END_PHASE)
+	e2:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_END_PHASE)
 	e2:SetCondition(s.tgcon)
 	e2:SetCost(aux.bfgcost)
 	e2:SetTarget(s.tgtg)
@@ -30,7 +31,6 @@ function s.cfilter(c)
 	return c:IsFaceup() and (c:IsType(TYPE_NORMAL) or c:IsSetCard(0x2ea) and c:IsType(TYPE_RITUAL))
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	local fdzone=0
 	local ct=Duel.GetMatchingGroupCount(s.cfilter,tp,LOCATION_MZONE,0,nil)
 	if chk==0 then return ct>0 end
 	local diss={}
@@ -70,7 +70,8 @@ function s.negop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.NegateEffect(ev,true)
 end
 function s.csfilter(c)
-	return c:IsFaceup() and (c:IsType(TYPE_NORMAL) or bit.band(c:GetOriginalType(),TYPE_NORMAL)~=0)
+	return c:IsFaceup() and c:GetOriginalType()&TYPE_MONSTER~=0
+		and (not c:IsType(TYPE_MONSTER) and c:GetOriginalType()&TYPE_NORMAL~=0 or c:IsAllTypes(TYPE_NORMAL+TYPE_MONSTER))
 end
 function s.getatk(c)
 	if c:IsType(TYPE_MONSTER) then
@@ -81,7 +82,7 @@ function s.getatk(c)
 end
 function s.tgcon(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(s.csfilter,tp,LOCATION_ONFIELD,0,nil)
-	return g:GetSum(s.GetAttack)>3000
+	return g:GetSum(s.getatk)>3000
 end
 function s.tgtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(1-tp) and chkc:IsLocation(LOCATION_MZONE) end

@@ -40,10 +40,13 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if re:GetHandler():IsRelateToEffect(re) then Duel.SetOperationInfo(0,CATEGORY_DESTROY,eg,1,0,0) end
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToEffect(re) then Duel.Destroy(eg,REASON_EFFECT) end
+	if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToChain(ev) then
+		Duel.Destroy(eg,REASON_EFFECT)
+	end
 end
 function s.csfilter(c)
-	return c:IsFaceup() and (c:IsType(TYPE_NORMAL) or bit.band(c:GetOriginalType(),TYPE_NORMAL)~=0)
+	return c:IsFaceup() and c:GetOriginalType()&TYPE_MONSTER~=0
+		and (not c:IsType(TYPE_MONSTER) and c:GetOriginalType()&TYPE_NORMAL~=0 or c:IsAllTypes(TYPE_NORMAL+TYPE_MONSTER))
 end
 function s.getatk(c)
 	if c:IsType(TYPE_MONSTER) then
@@ -54,18 +57,17 @@ function s.getatk(c)
 end
 function s.setcon(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(s.csfilter,tp,LOCATION_ONFIELD,0,nil)
-	return g:GetSum(s.GetAttack)>3000
+	return g:GetSum(s.getatk)>3000
 end
 function s.setfilter(c)
 	return not c:IsCode(id) and c:IsSetCard(0x2ea) and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsSSetable()
 end
 function s.settg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0
-		and Duel.IsExistingMatchingCard(s.setfilter,tp,LOCATION_DECK,0,1,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.setfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil) end
 end
 function s.setop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SET)
-	local g=Duel.SelectMatchingCard(tp,s.setfilter,tp,LOCATION_DECK,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.setfilter),tp,LOCATION_DECK+LOCATION_GRAVE,0,1,1,nil)
 	if #g>0 then
 		Duel.SSet(tp,g)
 	end
