@@ -29,6 +29,7 @@ function s.initial_effect(c)
 	e3:SetType(EFFECT_TYPE_QUICK_O)
 	e3:SetCode(EVENT_FREE_CHAIN)
 	e3:SetRange(LOCATION_MZONE)
+	e3:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_END_PHASE)
 	e3:SetCountLimit(1,id+o)
 	e3:SetCost(s.poscost)
 	e3:SetTarget(s.postg)
@@ -63,7 +64,8 @@ function s.efilter(e,te)
 	return te:GetOwnerPlayer()~=e:GetHandlerPlayer() and te:IsActivated()
 end
 function s.cfilter(c)
-	return c:IsFaceup() and (c:IsType(TYPE_NORMAL) or bit.band(c:GetOriginalType(),TYPE_NORMAL)~=0) and c:IsAbleToGraveAsCost()
+	return c:IsFaceup() and c:IsAbleToGraveAsCost()
+		and (c:IsAllTypes(TYPE_NORMAL+TYPE_MONSTER) or not c:IsType(TYPE_MONSTER) and bit.band(c:GetOriginalType(),TYPE_NORMAL)~=0)
 end
 function s.poscost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_ONFIELD,0,1,nil) end

@@ -1,4 +1,4 @@
---セネトの啓示者-アメンポテプ
+--セネトの啓示者－アメンホテプ
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--set
@@ -16,11 +16,13 @@ function s.initial_effect(c)
 	local e2=e1:Clone()
 	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
 	c:RegisterEffect(e2)
-	--spsummon
+	--todeck
 	local e3=Effect.CreateEffect(c)
+	e3:SetDescription(aux.Stringid(id,1))
 	e3:SetCategory(CATEGORY_TODECK)
 	e3:SetType(EFFECT_TYPE_IGNITION)
 	e3:SetRange(LOCATION_GRAVE)
+	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e3:SetCountLimit(1,id+o)
 	e3:SetCost(aux.bfgcost)
 	e3:SetTarget(s.tdtg)
@@ -32,7 +34,7 @@ function s.setcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SendtoGrave(e:GetHandler(),REASON_COST)
 end
 function s.chkfilter(c)
-	return c:IsFaceupEx() and c:GetOriginalType()&TYPE_NORMAL~=0
+	return c:IsFaceupEx() and (not c:IsOnField() and c:GetOriginalType()&TYPE_NORMAL~=0 or c:IsOnField() and c:IsType(TYPE_NORMAL))
 end
 function s.setfilter(c)
 	return c:IsSetCard(0x2ea) and c:IsSSetable() and c:IsType(TYPE_TRAP)
@@ -49,17 +51,17 @@ function s.setop(e,tp,eg,ep,ev,re,r,rp)
 	if ft<=0 then return end
 	if ft>=2 then ft=2 end
 	local g=Duel.GetMatchingGroup(s.setfilter,tp,LOCATION_DECK,0,nil)
-	local sg=Duel.GetMatchingGroup(s.chkfilter,tp,LOCATION_HAND+LOCATION_GRAVE+LOCATION_ONFIELD+LOCATION_DECK,0,nil)
-	local ct=math.min(2,math.min(g:GetCount(),sg:GetCount()))
+	local cg=Duel.GetMatchingGroup(s.chkfilter,tp,LOCATION_HAND+LOCATION_GRAVE+LOCATION_ONFIELD+LOCATION_DECK,0,nil)
+	local ct=math.min(2,g:GetCount(),cg:GetCount())
 	if ct==0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONFIRM)
-	local rg=sg:Select(tp,1,ct,nil)
+	local rg=cg:Select(tp,1,ct,nil)
 	if rg:GetCount()>0 then
-		local hg=rg:Filter(Card.IsLocation,nil,LOCATION_HAND)
+		local hg=rg:Filter(Card.IsLocation,nil,LOCATION_HAND+LOCATION_DECK)
 		local og=rg-hg
 		Duel.ConfirmCards(1-tp,hg)
 		Duel.HintSelection(og)
-		if hg:GetCount()>=1 then
+		if hg:FilterCount(Card.IsLocation,nil,LOCATION_HAND)>0 then
 			Duel.ShuffleHand(tp)
 		end
 		if g:GetCount()>0 then

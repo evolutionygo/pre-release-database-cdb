@@ -1,4 +1,4 @@
---セネトの啓示者-ネフェルタリ
+--セネトの啓示者－ネフェルタリ
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--set
@@ -16,13 +16,15 @@ function s.initial_effect(c)
 	local e2=e1:Clone()
 	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
 	c:RegisterEffect(e2)
-	--spsummon
+	--equip
 	local e3=Effect.CreateEffect(c)
+	e3:SetDescription(aux.Stringid(id,1))
 	e3:SetType(EFFECT_TYPE_QUICK_O)
 	e3:SetCode(EVENT_FREE_CHAIN)
 	e3:SetRange(LOCATION_GRAVE)
 	e3:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_END_PHASE)
 	e3:SetCountLimit(1,id+o)
+	e3:SetCondition(s.eqcon)
 	e3:SetCost(aux.bfgcost)
 	e3:SetTarget(s.eqtg)
 	e3:SetOperation(s.eqop)
@@ -33,7 +35,7 @@ function s.setcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SendtoGrave(e:GetHandler(),REASON_COST)
 end
 function s.chkfilter(c)
-	return c:IsFaceupEx() and c:GetOriginalType()&TYPE_NORMAL~=0
+	return c:IsFaceupEx() and (not c:IsOnField() and c:GetOriginalType()&TYPE_NORMAL~=0 or c:IsOnField() and c:IsType(TYPE_NORMAL))
 end
 function s.setfilter(c)
 	return c:IsSetCard(0x2ea) and c:IsSSetable() and c:IsType(TYPE_SPELL)
@@ -48,20 +50,23 @@ function s.gcheck(g,ft)
 end
 function s.setop(e,tp,eg,ep,ev,re,r,rp)
 	local ft=Duel.GetLocationCount(tp,LOCATION_SZONE)
-	if ft<=0 then return end
 	if ft>=2 then ft=2 end
 	local g=Duel.GetMatchingGroup(s.setfilter,tp,LOCATION_DECK,0,nil)
-	local sg=Duel.GetMatchingGroup(s.chkfilter,tp,LOCATION_HAND+LOCATION_GRAVE+LOCATION_ONFIELD+LOCATION_DECK,0,nil)
-	local ct=math.min(2,math.min(g:GetCount(),sg:GetCount()))
+	if g:GetCount()==0 then return end
+	local mct=ft
+	if g:IsExists(Card.IsType,1,nil,TYPE_FIELD) then mct=mct+1 end
+	if mct>2 then mct=2 end
+	local cg=Duel.GetMatchingGroup(s.chkfilter,tp,LOCATION_HAND+LOCATION_GRAVE+LOCATION_ONFIELD+LOCATION_DECK,0,nil)
+	local ct=math.min(mct,g:GetCount(),cg:GetCount())
 	if ct==0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONFIRM)
-	local rg=sg:Select(tp,1,ct,nil)
+	local rg=cg:Select(tp,1,ct,nil)
 	if rg:GetCount()>0 then
-		local hg=rg:Filter(Card.IsLocation,nil,LOCATION_HAND)
+		local hg=rg:Filter(Card.IsLocation,nil,LOCATION_HAND+LOCATION_DECK)
 		local og=rg-hg
 		Duel.ConfirmCards(1-tp,hg)
 		Duel.HintSelection(og)
-		if hg:GetCount()>=1 then
+		if hg:FilterCount(Card.IsLocation,nil,LOCATION_HAND)>0 then
 			Duel.ShuffleHand(tp)
 		end
 		if g:GetCount()>0 then
@@ -72,6 +77,9 @@ function s.setop(e,tp,eg,ep,ev,re,r,rp)
 			end
 		end
 	end
+end
+function s.eqcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetTurnPlayer()~=tp
 end
 function s.eqfilter(c,tp)
 	return  c:IsType(TYPE_NORMAL) and c:CheckUniqueOnField(tp) and not c:IsForbidden()
@@ -88,7 +96,7 @@ end
 function s.eqop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_SZONE)>0 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EQUIP)
-		local ec=Duel.SelectMatchingCard(tp,s.eqfilter,tp,LOCATION_GRAVE,0,1,1,nil,tp):GetFirst()
+		local ec=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.eqfilter),tp,LOCATION_GRAVE,0,1,1,nil,tp):GetFirst()
 		if ec then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EQUIP)
 			local tc=Duel.SelectMatchingCard(tp,s.eqtgfilter,tp,LOCATION_MZONE,0,1,1,nil):GetFirst()

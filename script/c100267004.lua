@@ -2,7 +2,7 @@
 local s,id,o=GetID()
 function s.initial_effect(c)
 	c:EnableReviveLimit()
-	--search
+	--tograve
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_TOGRAVE)
@@ -29,6 +29,7 @@ function s.initial_effect(c)
 	e3:SetType(EFFECT_TYPE_QUICK_O)
 	e3:SetCode(EVENT_FREE_CHAIN)
 	e3:SetRange(LOCATION_MZONE)
+	e3:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_END_PHASE)
 	e3:SetCountLimit(1,id+o)
 	e3:SetCost(s.thcost)
 	e3:SetTarget(s.thtg)
@@ -59,11 +60,12 @@ function s.eqcon(e)
 	return c:GetEquipCount()>0
 end
 function s.cfilter(c)
-	return c:IsFaceup() and (c:IsType(TYPE_NORMAL) or bit.band(c:GetOriginalType(),TYPE_NORMAL)~=0) and c:IsAbleToGraveAsCost()
+	return c:IsFaceup() and c:IsAbleToGraveAsCost()
+		and (c:IsAllTypes(TYPE_NORMAL+TYPE_MONSTER) or not c:IsType(TYPE_MONSTER) and bit.band(c:GetOriginalType(),TYPE_NORMAL)~=0)
 end
 function s.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_ONFIELD,0,1,nil) end
-	local rt=Duel.GetTargetCount(nil,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)
+	local rt=Duel.GetTargetCount(Card.IsAbleToHand,tp,0,LOCATION_ONFIELD,nil)
 	if rt>3 then rt=3 end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
 	local g=Duel.SelectMatchingCard(tp,s.cfilter,tp,LOCATION_ONFIELD,0,1,rt,nil)
@@ -71,18 +73,18 @@ function s.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:SetLabel(g:GetCount())
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsOnField() end
-	if chk==0 then return Duel.IsExistingTarget(nil,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) end
+	if chkc then return chkc:IsOnField() and chkc:IsAbleToHand() and chkc:IsControler(1-tp) end
+	if chk==0 then return Duel.IsExistingTarget(Card.IsAbleToHand,tp,0,LOCATION_ONFIELD,1,nil) end
 	local ct=e:GetLabel()
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local tg=Duel.SelectTarget(tp,nil,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,ct,ct,nil)
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,tg,ct,0,0)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
+	local tg=Duel.SelectTarget(tp,Card.IsAbleToHand,tp,0,LOCATION_ONFIELD,ct,ct,nil)
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,tg,ct,0,0)
 end
 function s.spfilter(c,e,tp)
 	return c:IsType(TYPE_NORMAL) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e)
+	local g=Duel.GetTargetsRelateToChain()
 	if g:GetCount()>0 and Duel.SendtoHand(g,nil,REASON_EFFECT)~=0
 		and g:IsExists(Card.IsLocation,1,nil,LOCATION_HAND)
 		and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
