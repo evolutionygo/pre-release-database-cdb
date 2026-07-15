@@ -62,7 +62,7 @@ function s.rmcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local te=tc:IsHasEffect(18319762,tp)
 	if te then
 		te:UseCountLimit(tp)
-		Duel.Remove(tc,POS_FACEUP,REASON_EFFECT+REASON_REPLACE)
+		Duel.Remove(tc,POS_FACEUP,REASON_COST+REASON_REPLACE)
 	else
 		Duel.SendtoGrave(tc,REASON_COST+REASON_DISCARD)
 	end
