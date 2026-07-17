@@ -66,13 +66,17 @@ function s.ctop(e,tp,eg,ep,ev,re,r,rp)
 		c:AddCounter(0x76,ct)
 	end
 end
+function s.mfilter(c)
+	return c:IsOnField() and c:IsFaceup() and c:IsType(TYPE_MONSTER)
+		and (not c:GetAttack()==0 or not c:IsDisabled())
+end
 function s.atkcon(e,tp,eg,ep,ev,re,r,rp)
 	local a=Duel.GetAttacker()
-	return a:IsControler(1-tp)
+	return a:IsControler(1-tp) and s.mfilter(a)
 end
 function s.atkcon2(e,tp,eg,ep,ev,re,r,rp)
 	local rc=re:GetHandler()
-	return ep==1-tp and re:IsActiveType(TYPE_MONSTER) and rc:IsOnField() and rc:IsRelateToEffect(re)
+	return ep==1-tp and re:IsActiveType(TYPE_MONSTER) and rc:IsOnField() and rc:IsRelateToEffect(re) and s.mfilter(rc)
 end
 function s.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x76,1,REASON_COST) end
