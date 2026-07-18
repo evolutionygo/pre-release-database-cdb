@@ -51,7 +51,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.ngfilter(c)
-	return not c:IsType(TYPE_EFFECT) and c:IsFaceup() or c:IsFacedown()
+	return not c:IsType(TYPE_EFFECT) and c:IsFaceup()
 end
 function s.ngcon(e,tp,eg,ep,ev,re,r,rp)
 	return rp~=tp and re:IsActiveType(TYPE_MONSTER) and Duel.IsChainNegatable(ev)
