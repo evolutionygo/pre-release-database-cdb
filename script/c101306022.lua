@@ -45,7 +45,7 @@ function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 		e1:SetCode(EVENT_PHASE+PHASE_STANDBY)
-		if Duel.GetCurrentPhase()<=PHASE_STANDBY then
+		if Duel.GetCurrentPhase()==PHASE_STANDBY then
 			e1:SetReset(RESET_PHASE+PHASE_STANDBY,2)
 		else
 			e1:SetReset(RESET_PHASE+PHASE_STANDBY)

@@ -38,21 +38,21 @@ function s.filter1(c,tp)
 	return c:IsType(TYPE_MONSTER) and Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil,c) and c:IsLevel(4)
 end
 function s.thfilter(c,tc)
-	return c:IsType(TYPE_MONSTER) and c:IsAbleToHand() and c:IsRace(tc:GetRace()) and c:IsAttribute(tc:GetAttribute()) and not c:IsCode(tc:GetCode())
+	return c:IsType(TYPE_MONSTER) and c:IsAbleToHand() and c:IsRace(tc:GetRace()) and c:IsAttribute(tc:GetAttribute()) and not c:IsCode(tc:GetCode()) and c:IsLevel(4)
 end
 function s.filter2(c)
 	return c:IsCanOverlay()
 end
 function s.target1(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then
-		if e:GetLabel()==0 then
+		if e:GetLabel()==1 then
 			return false
 		else
 			return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp) and s.filter2(chkc)
 		end
 	end
 	local ct=e:GetLabelObject()
-	local b1=Duel.IsExistingTarget(s.filter1,tp,LOCATION_GRAVE,0,1,ct,tp)
+	local b1=Duel.IsExistingMatchingCard(s.filter1,tp,LOCATION_GRAVE,0,1,ct,tp)
 	local b2=Duel.IsExistingTarget(s.filter2,tp,0,LOCATION_MZONE,1,nil)
 	if chk==0 then return b1 or b2 end
 	local op=aux.SelectFromOptions(tp,
