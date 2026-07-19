@@ -108,7 +108,7 @@ function s.setop(e,tp,eg,ep,ev,re,r,rp)
 			and (not set or Duel.SelectOption(tp,1190,1153)==0) then
 			Duel.SendtoHand(tc,nil,REASON_EFFECT)
 			Duel.ConfirmCards(1-tp,tc)
-		else
+		elseif set then
 			if tc:IsType(TYPE_MONSTER) then
 				Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEDOWN_DEFENSE)
 				Duel.ConfirmCards(1-tp,tc)
@@ -165,7 +165,8 @@ function s.setop(e,tp,eg,ep,ev,re,r,rp)
 			Duel.SSet(tp,ssg)
 		end
 	end
-	if e:GetLabel()==1 and c:IsRelateToChain() then
+	if e:GetLabel()==1 and sg:GetCount()>0 and c:IsRelateToChain() then
+		Duel.BreakEffect()
 		Duel.SendtoDeck(c,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)
 	end
 end
