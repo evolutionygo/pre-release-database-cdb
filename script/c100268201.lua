@@ -42,8 +42,9 @@ function s.initial_effect(c)
 	local e5=Effect.CreateEffect(c)
 	e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e5:SetCode(EVENT_DESTROYED)
+	e5:SetRange(LOCATION_MZONE)
 	e5:SetOperation(s.checkop)
-	Duel.RegisterEffect(e5,0)
+	c:RegisterEffect(e5)
 end
 function s.mfilter(c)
 	return c:IsLevelAbove(7)
@@ -71,6 +72,7 @@ function s.disop(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.checkop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=eg:GetFirst()
+	local res=false
 	while tc do
 		if tc:IsLocation(LOCATION_GRAVE) and (tc:GetReasonCard()==e:GetHandler() or (tc:IsReason(REASON_EFFECT) and re:GetHandler()== e:GetHandler()))
 		and tc:IsReason(REASON_DESTROY) then
@@ -81,7 +83,11 @@ function s.checkop(e,tp,eg,ep,ev,re,r,rp)
 			e1:SetCode(EFFECT_CANNOT_TRIGGER)
 			e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 			tc:RegisterEffect(e1,true)
+			res=true
 		end
 		tc=eg:GetNext()
+	end
+	if res then
+		Duel.Hint(HINT_CARD,0,id)
 	end
 end
