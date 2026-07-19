@@ -43,7 +43,7 @@ function s.target1(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		if e:GetLabel()==0 then
 			return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and s.filter1(chkc)
 		else
-			return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and s.filter2(chkc,e,tp)
+			return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp) and s.filter2(chkc)
 		end
 	end
 	local b1=Duel.IsExistingTarget(s.filter1,tp,LOCATION_GRAVE,0,1,nil,tp)
