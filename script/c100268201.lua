@@ -43,7 +43,7 @@ function s.initial_effect(c)
 	e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e5:SetCode(EVENT_DESTROYED)
 	e5:SetOperation(s.checkop)
-	Duel.RegisterEffect(e5,0)
+	Duel.RegisterEffect(e5)
 end
 function s.mfilter(c)
 	return c:IsLevelAbove(7)
