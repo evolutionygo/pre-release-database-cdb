@@ -54,7 +54,8 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.cfilter2(c,tp)
-	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:GetPreviousTypeOnField()&TYPE_MONSTER~=0
+	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and not c:IsPreviousLocation(LOCATION_SZONE)
+		and (c:IsPreviousLocation(LOCATION_MZONE) or c:GetOriginalType()&TYPE_MONSTER~=0)
 end
 function s.tscon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.cfilter2,1,nil,tp)
