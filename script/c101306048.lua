@@ -24,7 +24,7 @@ function s.initial_effect(c)
 	e2:SetCondition(s.lmcon(2))
 	e2:SetValue(s.efilter)
 	c:RegisterEffect(e2)
-	--multiatk
+	--remove
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,1))
 	e3:SetCategory(CATEGORY_REMOVE)

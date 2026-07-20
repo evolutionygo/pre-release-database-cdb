@@ -33,7 +33,7 @@ function s.xyzop(e,tp,chk)
 end
 function s.ctcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	return c:IsRelateToBattle() and c:GetBattleTarget():IsType(TYPE_MONSTER)
+	return c:IsFaceup() and c:IsRelateToBattle()
 end
 function s.predcat(ct)
 	if ct==1 or ct==2 then

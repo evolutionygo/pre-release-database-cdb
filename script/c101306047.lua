@@ -224,7 +224,8 @@ end
 function s.drop(e,tp,eg,ep,ev,re,r,rp)
 	local h=Duel.GetFieldGroupCount(tp,0,LOCATION_HAND)
 	local g=Duel.GetFieldGroup(tp,0,LOCATION_HAND)
-	Duel.SendtoGrave(g,REASON_EFFECT+REASON_DISCARD)
-	Duel.BreakEffect()
-	Duel.Draw(1-tp,h,REASON_EFFECT)
+	if Duel.SendtoGrave(g,REASON_EFFECT+REASON_DISCARD)>0 then
+		Duel.BreakEffect()
+		Duel.Draw(1-tp,h,REASON_EFFECT)
+	end
 end

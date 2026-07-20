@@ -56,23 +56,23 @@ end
 function s.mtop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local g=Duel.GetDecktopGroup(1-tp,2)
-	if c:IsRelateToChain() and g:GetCount()==2 then
-		local g1=Group.CreateGroup()
-		local g2=Group.CreateGroup()
+	if c:IsRelateToChain() and g:GetCount()>0 then
+		local og=Group.CreateGroup()
+		local sg=Group.CreateGroup()
 		for tc in aux.Next(g) do
 			if tc:IsCanOverlay() then
-				g1:AddCard(tc)
+				og:AddCard(tc)
 			else
-				g2:AddCard(tc)
+				sg:AddCard(tc)
 			end
 		end
-		if g1:GetCount()>0 then
+		if og:GetCount()>0 then
 			Duel.DisableShuffleCheck()
-			Duel.Overlay(c,g1)
+			Duel.Overlay(c,og)
 		end
-		if g2:GetCount()>0 then
+		if sg:GetCount()>0 then
 			Duel.DisableShuffleCheck()
-			Duel.SendtoGrave(g2,REASON_RULE)
+			Duel.SendtoGrave(sg,REASON_RULE)
 		end
 	end
 end
