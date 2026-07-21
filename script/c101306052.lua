@@ -43,11 +43,17 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 		Duel.SetOperationInfo(0,CATEGORY_COIN,nil,0,tp,1)
 	end
 end
-function s.calfilter(c)
-	if c:GetTextAttack()<0 then return false end
+---Check whether a monster is special summoned by Tiki Peace, which should not calculate its original value after leaving the field
+---@param c Card
+---@return boolean
+function Auxiliary.covcheck(c)
 	if c:GetOriginalType()&TYPE_MONSTER~=0 then return true end
 	local se=c:GetSpecialSummonInfo(SUMMON_INFO_REASON_EFFECT)
 	return se and se:GetHandler()==c
+end
+function s.calfilter(c)
+	if c:GetTextAttack()<0 then return false end
+	return Auxiliary.covcheck(c)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetLabel()==1 then

@@ -51,7 +51,7 @@ end
 function s.count(e,tp,eg,ep,ev,re,r,rp)
 	for p=0,1 do
 		if eg:IsExists(s.cfilter,1,nil,p) then
-			e:GetHandler():RegisterFlagEffect(id+p*100,RESET_EVENT+0x3ff0000+RESET_PHASE+PHASE_END,0,1)
+			e:GetHandler():RegisterFlagEffect(id+p*100,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,1)
 		end
 	end
 end
@@ -72,7 +72,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	if g:GetCount()>0 and Duel.SendtoHand(g,nil,REASON_EFFECT)~=0 and g:GetFirst():IsLocation(LOCATION_HAND) then
 		Duel.ConfirmCards(1-tp,g)
 		Duel.BreakEffect()
-		local dg=Duel.SelectMatchingCard(tp,aux.TRUE,tp,LOCATION_HAND,0,1,1,nil)
+		local dg=Duel.SelectMatchingCard(tp,Card.IsDiscardable,tp,LOCATION_HAND,0,1,1,nil,REASON_EFFECT)
 		Duel.ShuffleHand(tp)
 		Duel.SendtoGrave(dg,REASON_EFFECT+REASON_DISCARD)
 	end
