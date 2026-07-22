@@ -39,7 +39,7 @@ const {
   HINT_SELECTMSG,
   HINTMSG_CONFIRM,
   HINTMSG_DESTROY,
-  HINTMSG_FACEUP,
+  HINTMSG_DISABLE,
   LOCATION_GRAVE,
   LOCATION_HAND,
   LOCATION_MZONE,
@@ -363,7 +363,7 @@ describe("魔法效果之剑", () => {
             expectCurrentHint(ctx, {
               type: HINT_SELECTMSG,
               player: 0,
-              desc: HINTMSG_FACEUP,
+              desc: HINTMSG_DISABLE,
             });
             expect(msg.cards).toContainEqual(
               expect.objectContaining({
