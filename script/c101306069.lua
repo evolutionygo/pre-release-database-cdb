@@ -54,10 +54,10 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			local sg=Duel.SelectMatchingCard(tp,aux.NegateAnyFilter,tp,0,LOCATION_ONFIELD,rt,rt,nil)
 			if sg:GetCount()>0 then
 				Duel.HintSelection(sg)
-				local flag=false
+				local ng=Group.CreateGroup()
 				for tc in aux.Next(sg) do
 					if tc:IsCanBeDisabledByEffect(e,false) then
-						flag=true
+						ng:AddCard(tc)
 						Duel.NegateRelatedChain(tc,RESET_TURN_SET)
 						local e1=Effect.CreateEffect(c)
 						e1:SetType(EFFECT_TYPE_SINGLE)
@@ -83,8 +83,8 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 					end
 				end
 				Duel.AdjustInstantly()
-				if flag and sg:GetCount()>0 then
-					Duel.Destroy(sg,REASON_EFFECT)
+				if ng:GetCount()>0 then
+					Duel.Destroy(ng,REASON_EFFECT)
 				end
 			end
 		end

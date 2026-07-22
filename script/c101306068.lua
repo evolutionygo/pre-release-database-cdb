@@ -30,8 +30,8 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			local og=Duel.GetOperatedGroup()
 			local gs={}
 			for p in aux.TurnPlayers() do
-				local g=Group.CreateGroup()
-				gs[p]=g
+				local etg=Group.CreateGroup()
+				gs[p]=etg
 				if og:IsExists(s.cfilter,1,nil,p) then
 					local ct=og:FilterCount(s.cfilter,nil,p)
 					Duel.Hint(HINT_SELECTMSG,p,HINTMSG_TODECK)

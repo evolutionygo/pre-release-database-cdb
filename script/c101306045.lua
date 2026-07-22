@@ -24,6 +24,9 @@ function s.initial_effect(c)
 	e1:SetOperation(s.ctop)
 	c:RegisterEffect(e1)
 end
+s.mentioned_counter={
+	[0x77]=true,
+}
 function s.ovfilter(c)
 	return c:IsFaceup() and c:IsRace(RACE_BEAST) and c:IsAttackBelow(2000)
 end

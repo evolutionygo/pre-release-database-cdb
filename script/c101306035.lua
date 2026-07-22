@@ -46,6 +46,9 @@ function s.initial_effect(c)
 	e5:SetOperation(s.repop)
 	c:RegisterEffect(e5)
 end
+s.mentioned_counter={
+	[0x78]=true,
+}
 function s.ctcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.CheckLPCost(tp,100) end
 	Duel.PayLPCost(tp,100)
