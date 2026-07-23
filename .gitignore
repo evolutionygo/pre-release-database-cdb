@@ -39,6 +39,7 @@ lerna-debug.log*
 /config.yaml
 
 /test-release.cdb
+/pre-release-code2name.json
 /bin
 /wasm-bin
 /ygopro

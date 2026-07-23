@@ -6,6 +6,7 @@
     "lint": "eslint --fix .",
     "prepare:ygopro": "ts-node scripts/prepare-ygopro.ts",
     "prepare:ref": "ts-node scripts/prepare-ref.ts",
+    "generate:pre-release-code2name": "ts-node scripts/generate-pre-release-code2name.ts",
     "check:redtext": "ts-node scripts/check-redtext.ts",
     "test": "jest --passWithNoTests",
     "freeze-yrp": "ts-node tests/tools/freeze-yrp.ts"

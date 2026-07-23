@@ -232,6 +232,18 @@ json2:
     paths:
       - test-release-v2.json
 
+pre_release_code2name:
+  stage: prepare2
+  dependencies:
+    - npm_ci
+  tags:
+    - linux
+  script:
+    - npm run generate:pre-release-code2name
+  artifacts:
+    paths:
+      - pre-release-code2name.json
+
 # redtext:
 #   stage: prepare2
 #   dependencies:
@@ -299,6 +311,7 @@ pack:
     - add_script_diff_no_mc
     - json
     - json2
+    - pre_release_code2name
   tags: 
     - linux
   script:
@@ -312,6 +325,7 @@ pack:
     - mv *.ini data/
     - mv test-release.json data/
     - mv test-release-v2.json data/
+    - mv pre-release-code2name.json data/
     - git show -s --format=%ct $CI_COMMIT_SHA > data/version.txt
     # 仅在 tag 构建时写入 latest-tag.txt
     - |
@@ -399,6 +413,7 @@ upload_version_json:
     - aws s3 --endpoint=https://minio.moenext.com:9000 cp data/version.txt s3://mycard/ygopro-super-pre/versions/$CI_COMMIT_REF_NAME/version.txt
     - aws s3 --endpoint=https://minio.moenext.com:9000 cp data/test-release.json s3://mycard/ygopro-super-pre/versions/$CI_COMMIT_REF_NAME/test-release.json
     - aws s3 --endpoint=https://minio.moenext.com:9000 cp data/test-release-v2.json s3://mycard/ygopro-super-pre/versions/$CI_COMMIT_REF_NAME/test-release-v2.json
+    - aws s3 --endpoint=https://minio.moenext.com:9000 cp data/pre-release-code2name.json s3://mycard/ygopro-super-pre/versions/$CI_COMMIT_REF_NAME/pre-release-code2name.json
   only:
     - tags
     - master

@@ -29,6 +29,10 @@ https://cdn02.moecube.com:444/ygopro-super-pre/archive/ygopro-super-pre.ypk
 https://cdn02.moecube.com:444/ygopro-super-pre/versions/master/version.txt
 https://cdn02.moecube.com:444/ygopro-super-pre/versions/master/test-release-v2.json
 
+#### 超先行卡 ID => 卡名映射文件
+
+https://cdn02.moecube.com:444/ygopro-super-pre/versions/master/pre-release-code2name.json
+
 ### 服务器
 
 - 地址 `mygo.superpre.pro` `mygo2.superpre.pro`
