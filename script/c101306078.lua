@@ -32,7 +32,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return Duel.IsExistingTarget(aux.TRUE,tp,LOCATION_MZONE,0,1,nil) and Duel.IsExistingTarget(aux.NegateAnyFilter,tp,0,LOCATION_ONFIELD,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 	local g1=Duel.SelectTarget(tp,aux.TRUE,tp,LOCATION_MZONE,0,1,1,nil)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DISABLE)
 	local g2=Duel.SelectTarget(tp,aux.NegateAnyFilter,tp,0,LOCATION_ONFIELD,1,1,nil)
 	e:SetLabelObject(g1:GetFirst())
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g1,1,0,0)
@@ -42,10 +42,10 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local g=Duel.GetTargetsRelateToChain()
 	local tc1=e:GetLabelObject()
-	if not g:IsContains(tc1) or not tc1:IsControler(tp) then return end
+	if not g:IsContains(tc1) or not tc1:IsControler(tp) or not tc1:IsType(TYPE_MONSTER) then return end
 	if Duel.Destroy(tc1,REASON_EFFECT)~=0 then
 		local tc2=g:Filter(aux.NegateAnyFilter,tc1):GetFirst()
-		if tc2 and tc2:IsControler(1-tp) then
+		if tc2 and tc2:IsControler(1-tp) and tc2:IsCanBeDisabledByEffect(e,false) then
 			Duel.NegateRelatedChain(tc2,RESET_TURN_SET)
 			local e1=Effect.CreateEffect(c)
 			e1:SetType(EFFECT_TYPE_SINGLE)

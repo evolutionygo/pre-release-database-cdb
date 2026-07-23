@@ -51,6 +51,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			Duel.BreakEffect()
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DISABLE)
 			local sg=Duel.SelectMatchingCard(tp,aux.NegateAnyFilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,ct,aux.ExceptThisCard(e))
+			Duel.HintSelection(sg)
 			for tc in aux.Next(sg) do
 				Duel.NegateRelatedChain(tc,RESET_TURN_SET)
 				local e1=Effect.CreateEffect(c)
