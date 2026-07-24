@@ -29,7 +29,6 @@ function s.initial_effect(c)
 	e4:SetCode(EVENT_FLIP_SUMMON_SUCCESS)
 	c:RegisterEffect(e4)
 end
-s.toss_coin=true
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return not e:GetHandler():IsPublic() end
 end
@@ -73,17 +72,17 @@ function s.coinop(e,tp,eg,ep,ev,re,r,rp)
 		local b1=Duel.IsExistingMatchingCard(aux.TRUE,tp,LOCATION_MZONE,0,1,nil)
 		local b2=Duel.IsExistingMatchingCard(aux.TRUE,tp,0,LOCATION_MZONE,1,nil)
 		if b1 and not b2 then
-			Duel.Hint(HINT_OPSELECTED,1-tp,60)
+			Duel.Hint(HINT_OPSELECTED,1-tp,SELECT_HEADS)
 			res=1
 		end
 		if b2 and not b1 then
-			Duel.Hint(HINT_OPSELECTED,1-tp,61)
+			Duel.Hint(HINT_OPSELECTED,1-tp,SELECT_TAILS)
 			res=0
 		end
 		if b1 and b2 then
 			res=aux.SelectFromOptions(tp,
-				{b1,60,1},
-				{b2,61,0})
+				{b1,SELECT_HEADS,1},
+				{b2,SELECT_TAILS,0})
 		end
 	else
 		res=Duel.TossCoin(tp,1)
