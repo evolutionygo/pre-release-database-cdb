@@ -92,8 +92,8 @@ function s.atktg(e,tp,eg,ep,ev,re,r,rp,chk)
 		local c=e:GetHandler()
 		local a=Duel.GetAttacker()
 		local at=Duel.GetAttackTarget()
-		return ((a==c and at and at:IsFaceup() and at:GetAttack()>0) or (at==c and a:GetAttack()>0))
-			and not e:GetHandler():IsStatus(STATUS_CHAINING)
+		return (a==c and at or at==c)
+			and not c:IsStatus(STATUS_CHAINING)
 	end
 	Duel.SetTargetCard(e:GetHandler():GetBattleTarget())
 end
