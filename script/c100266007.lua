@@ -1,4 +1,4 @@
---月女神的至天
+--月女神の至天
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--activate
@@ -17,7 +17,6 @@ function s.condition(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_ONFIELD) and aux.NegateAnyFilter(chkc) and chkc~=e:GetHandler() end
-	local ch=Duel.GetCurrentChain()
 	local b1=Duel.CheckLPCost(tp,800)
 		and e:IsCostChecked() and Duel.IsExistingTarget(aux.NegateAnyFilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,e:GetHandler())
 		and Duel.IsExistingMatchingCard(Card.IsFaceup,tp,0,LOCATION_MZONE,1,nil)
