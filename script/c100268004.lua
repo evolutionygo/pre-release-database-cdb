@@ -18,7 +18,7 @@ function s.initial_effect(c)
 	e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
 	e2:SetCode(EFFECT_IMMUNE_EFFECT)
 	e2:SetRange(LOCATION_MZONE)
-	e2:SetCondition(s.ritcon)
+	e2:SetCondition(s.eitcon)
 	e2:SetValue(s.efilter)
 	c:RegisterEffect(e2)
 	--extra attack
@@ -42,7 +42,7 @@ function s.initial_effect(c)
 	e4:SetOperation(s.desop)
 	c:RegisterEffect(e4)
 end
-function s.ritcon(e)
+function s.eitcon(e)
 	return Duel.GetTurnPlayer()==1-e:GetHandlerPlayer()
 end
 function s.efilter(e,te)
