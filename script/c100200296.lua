@@ -34,8 +34,8 @@ function s.initial_effect(c)
 	e3:SetOperation(s.thop)
 	c:RegisterEffect(e3)
 end
-function s.spfilter(c,e,tp)
-	return c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_ATTACK)
+function s.spfilter(c,e,p)
+	return c:IsCanBeSpecialSummoned(e,0,p,false,false,POS_FACEUP_ATTACK)
 end
 function s.spfilter2(c,e,tp)
 	return c:IsPublic() and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_ATTACK)
@@ -116,7 +116,6 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.thcon(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
 	return Duel.GetTurnPlayer()==1-tp
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
