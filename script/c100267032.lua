@@ -12,7 +12,7 @@ function s.initial_effect(c)
 	e1:SetTarget(s.sptg)
 	e1:SetOperation(s.spop)
 	c:RegisterEffect(e1)
-	--summon
+	--remove
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetCategory(CATEGORY_REMOVE)
@@ -57,11 +57,14 @@ function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local dg=Duel.GetDecktopGroup(tp,2)
 	if chk==0 then return true end
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,dg,dg:GetCount(),0,0)
+	Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
 end
 function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 	local dg=Duel.GetDecktopGroup(tp,2)
-	Duel.DisableShuffleCheck()
-	Duel.Remove(dg,POS_FACEDOWN,REASON_EFFECT)
+	if dg and dg:GetCount()>0 then
+		Duel.DisableShuffleCheck()
+		Duel.Remove(dg,POS_FACEDOWN,REASON_EFFECT)
+	end
 end
 function s.thfilter(c)
 	return c:IsFacedown() and c:IsSetCard(0x2ec) and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToHand()
@@ -69,6 +72,7 @@ end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_REMOVED,0,1,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_REMOVED)
+	Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(s.thfilter,tp,LOCATION_REMOVED,0,nil)

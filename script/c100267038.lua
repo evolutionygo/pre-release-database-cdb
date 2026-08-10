@@ -30,6 +30,7 @@ function s.initial_effect(c)
 	e4:SetCode(EVENT_FREE_CHAIN)
 	e4:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e4:SetRange(LOCATION_MZONE)
+	e4:SetHintTiming(TIMING_END_PHASE,TIMINGS_CHECK_MONSTER+TIMING_MAIN_END+TIMING_END_PHASE)
 	e4:SetCountLimit(1)
 	e4:SetCondition(s.recon(20))
 	e4:SetTarget(s.destg)
@@ -61,11 +62,14 @@ function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local dg=Duel.GetDecktopGroup(tp,8)
 	if chk==0 then return true end
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,dg,dg:GetCount(),0,0)
+	Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
 end
 function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 	local dg=Duel.GetDecktopGroup(tp,8)
-	Duel.DisableShuffleCheck()
-	Duel.Remove(dg,POS_FACEDOWN,REASON_EFFECT)
+	if dg and dg:GetCount()>0 then
+		Duel.DisableShuffleCheck()
+		Duel.Remove(dg,POS_FACEDOWN,REASON_EFFECT)
+	end
 end
 function s.recon(ct)
 	return function(e,tp,eg,ep,ev,re,r,rp)
@@ -81,7 +85,7 @@ function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToChain() then
+	if tc:IsRelateToChain() and tc:IsOnField() then
 		Duel.Destroy(tc,REASON_EFFECT)
 	end
 end
@@ -99,7 +103,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	local g=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_REMOVED,0,1,1,nil)
 	if g:GetCount()>0 then
+		Duel.HintSelection(g)
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
-		Duel.ConfirmCards(1-tp,g)
 	end
 end

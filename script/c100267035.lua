@@ -12,7 +12,7 @@ function s.initial_effect(c)
 	e1:SetTarget(s.thtg)
 	e1:SetOperation(s.thop)
 	c:RegisterEffect(e1)
-	--summon
+	--remove
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetCategory(CATEGORY_REMOVE)
@@ -56,7 +56,6 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 		local g=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_REMOVED,0,1,1,nil)
 		if g:GetCount()>0 then
-			Duel.BreakEffect()
 			Duel.SendtoHand(g,nil,REASON_EFFECT)
 			Duel.ConfirmCards(1-tp,g)
 		end
@@ -66,11 +65,14 @@ function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local dg=Duel.GetDecktopGroup(tp,5)
 	if chk==0 then return true end
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,dg,dg:GetCount(),0,0)
+	Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
 end
 function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 	local dg=Duel.GetDecktopGroup(tp,5)
-	Duel.DisableShuffleCheck()
-	Duel.Remove(dg,POS_FACEDOWN,REASON_EFFECT)
+	if dg and dg:GetCount()>0 then
+		Duel.DisableShuffleCheck()
+		Duel.Remove(dg,POS_FACEDOWN,REASON_EFFECT)
+	end
 end
 function s.negcon(e,tp,eg,ep,ev,re,r,rp)
 	return rp==1-tp and re:IsActiveType(TYPE_MONSTER) and not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) and Duel.IsChainNegatable(ev)
@@ -81,17 +83,23 @@ end
 function s.negtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local att=re:GetHandler():GetAttribute()
 	if chk==0 then return Duel.IsExistingMatchingCard(s.disfilter,tp,LOCATION_REMOVED,0,1,nil,att) end
-	e:SetLabel(att)
 	Duel.SetOperationInfo(0,CATEGORY_NEGATE,eg,1,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_TOEXTRA,nil,1,tp,LOCATION_REMOVED)
+	Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
 end
 function s.negop(e,tp,eg,ep,ev,re,r,rp)
+	local rc=re:GetHandler()
+	if rc:IsRelateToChain(ev) and rc:IsFacedown() then return end
+	local att=rc:GetAttribute()
+	if not rc:IsRelateToChain(ev) then att=rc:GetOriginalAttribute() end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-	local g=Duel.SelectMatchingCard(tp,s.disfilter,tp,LOCATION_REMOVED,0,1,1,nil,e:GetLabel())
-	Duel.HintSelection(g)
-	Duel.ConfirmCards(1-tp,g)
-	if Duel.SendtoDeck(g,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)~=0
-		and g:IsExists(Card.IsLocation,1,nil,LOCATION_DECK+LOCATION_EXTRA) then
-		Duel.NegateActivation(ev)
+	local g=Duel.SelectMatchingCard(tp,s.disfilter,tp,LOCATION_REMOVED,0,1,1,nil,att)
+	if #g>0 then
+		Duel.HintSelection(g)
+		Duel.ConfirmCards(1-tp,g)
+		if Duel.SendtoDeck(g,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)~=0
+			and g:IsExists(Card.IsLocation,1,nil,LOCATION_DECK+LOCATION_EXTRA) then
+			Duel.NegateActivation(ev)
+		end
 	end
 end

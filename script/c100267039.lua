@@ -1,4 +1,4 @@
---異解△領域-ヴァルヴォルス
+--異解△領域－ヴァルヴォルス
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--Activate

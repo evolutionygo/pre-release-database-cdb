@@ -1,7 +1,7 @@
 --葬嶺異解△ヴェルヘイム
 local s,id,o=GetID()
 function s.initial_effect(c)
-	--search
+	--special summon
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_REMOVE+CATEGORY_SPECIAL_SUMMON)
@@ -12,7 +12,7 @@ function s.initial_effect(c)
 	e1:SetTarget(s.sptg)
 	e1:SetOperation(s.spop)
 	c:RegisterEffect(e1)
-	--summon
+	--remove
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetCategory(CATEGORY_REMOVE)
@@ -73,9 +73,12 @@ function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local dg=Duel.GetDecktopGroup(tp,6)
 	if chk==0 then return true end
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,dg,dg:GetCount(),0,0)
+	Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
 end
 function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 	local dg=Duel.GetDecktopGroup(tp,6)
-	Duel.DisableShuffleCheck()
-	Duel.Remove(dg,POS_FACEDOWN,REASON_EFFECT)
+	if dg and dg:GetCount()>0 then
+		Duel.DisableShuffleCheck()
+		Duel.Remove(dg,POS_FACEDOWN,REASON_EFFECT)
+	end
 end
