@@ -29,23 +29,23 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	local ct=Duel.GetMatchingGroupCount(Card.IsAbleToRemoveAsCost,tp,LOCATION_DECK,0,nil,POS_FACEDOWN)
-	if chk==0 then return ct>=5 or ct<5 and Duel.IsExistingMatchingCard(Card.IsAbleToRemoveAsCost,tp,LOCATION_GRAVE,0,5-ct,nil,POS_FACEDOWN) end
-	if ct>5 then ct=5 end
+	local dct=Duel.GetMatchingGroupCount(Card.IsAbleToRemoveAsCost,tp,LOCATION_DECK,0,nil,POS_FACEDOWN)
+	if chk==0 then return dct>=5 or dct<5 and Duel.IsExistingMatchingCard(Card.IsAbleToRemoveAsCost,tp,LOCATION_GRAVE,0,5-dct,nil,POS_FACEDOWN) end
+	if dct>5 then dct=5 end
 	local sg=Group.CreateGroup()
-	if ct>=5 and Duel.IsExistingMatchingCard(Card.IsAbleToRemoveAsCost,tp,LOCATION_GRAVE,0,1,nil,POS_FACEDOWN)
+	if dct>=5 and Duel.IsExistingMatchingCard(Card.IsAbleToRemoveAsCost,tp,LOCATION_GRAVE,0,1,nil,POS_FACEDOWN)
 		and Duel.SelectYesNo(tp,aux.Stringid(id,0))
-		or ct<5 then
-		local st=ct
+		or dct<5 then
+		local st=dct
 		if st==5 then st=4 end
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 		sg=Duel.SelectMatchingCard(tp,Card.IsAbleToRemoveAsCost,tp,LOCATION_GRAVE,0,5-st,5,nil,POS_FACEDOWN)
 	end
 	if sg:GetCount()>0 then
-		ct=ct-sg:GetCount()
+		dct=dct-sg:GetCount()
 	end
-	local g=Duel.GetDecktopGroup(tp,ct)
-	if ct<5 then
+	local g=Duel.GetDecktopGroup(tp,dct)
+	if dct<5 then
 		g:Merge(sg)
 	end
 	Duel.DisableShuffleCheck()
@@ -70,5 +70,7 @@ function s.cfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0x2ec) and c:IsLevelAbove(5)
 end
 function s.limcon(e)
-	return Duel.IsExistingMatchingCard(s.cfilter,e:GetHandlerPlayer(),LOCATION_MZONE,0,1,nil) and Duel.GetMatchingGroupCount(aux.TRUE,e:GetHandlerPlayer(),LOCATION_DECK,0,nil)==0
+	return Duel.IsExistingMatchingCard(s.cfilter,e:GetHandlerPlayer(),LOCATION_MZONE,0,1,nil)
+		and Duel.GetMatchingGroupCount(aux.TRUE,e:GetHandlerPlayer(),LOCATION_DECK,0,nil)==0
+		and Duel.IsTurnPlayer(e:GetHandlerPlayer())
 end

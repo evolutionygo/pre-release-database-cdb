@@ -73,7 +73,7 @@ function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.recon(ct)
 	return function(e,tp,eg,ep,ev,re,r,rp)
-			return Duel.GetMatchingGroupCount(Card.IsFacedown,e:GetHandlerPlayer(),LOCATION_REMOVED,0,nil)>=ct
+			return Duel.GetMatchingGroupCount(Card.IsFacedown,e:GetHandlerPlayer(),LOCATION_REMOVED,LOCATION_REMOVED,nil)>=ct
 		end
 end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)

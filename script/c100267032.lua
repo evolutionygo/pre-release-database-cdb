@@ -81,7 +81,6 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	if tg then
 		Duel.SendtoHand(tg,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,tg)
-		Duel.ShuffleHand(tp)
 	end
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_FIELD)
