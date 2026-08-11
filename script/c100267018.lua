@@ -51,7 +51,7 @@ end
 function s.checkop(e,tp,eg,ep,ev,re,r,rp)
 	for tc in aux.Next(eg) do
 		if not tc:IsReason(REASON_DRAW) and tc:IsPreviousLocation(LOCATION_DECK) then
-			Duel.RegisterFlagEffect(tc:GetControler(),id,RESET_PHASE+PHASE_END,0,1)
+			Duel.RegisterFlagEffect(rp,id,RESET_PHASE+PHASE_END,0,1)
 		end
 	end
 end
