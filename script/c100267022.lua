@@ -15,7 +15,7 @@ function s.initial_effect(c)
 	e2:SetCode(EFFECT_CANNOT_BE_FUSION_MATERIAL)
 	e2:SetValue(s.fuslimit)
 	c:RegisterEffect(e2)
-	local e3=e2:Clone()
+	local e3=e1:Clone()
 	e3:SetCode(EFFECT_CANNOT_BE_LINK_MATERIAL)
 	c:RegisterEffect(e3)
 	--immune

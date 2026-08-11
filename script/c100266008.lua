@@ -63,6 +63,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DISCARD)
 		local dg=Duel.SelectMatchingCard(tp,Card.IsDiscardable,tp,LOCATION_HAND,0,1,1,nil,REASON_DISCARD+REASON_EFFECT)
 		if dg:GetCount()>0 then
+			Duel.BreakEffect()
 			Duel.ShuffleHand(tp)
 			Duel.SendtoGrave(dg,REASON_EFFECT+REASON_DISCARD)
 		end
