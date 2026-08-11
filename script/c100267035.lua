@@ -89,7 +89,7 @@ function s.negtg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.negop(e,tp,eg,ep,ev,re,r,rp)
 	local rc=re:GetHandler()
-	if rc:IsRelateToChain(ev) and rc:IsFacedown() then return end
+	if rc:IsRelateToChain(ev) and not rc:IsFaceupEx() then return end
 	local att=rc:GetAttribute()
 	if not rc:IsRelateToChain(ev) then att=rc:GetOriginalAttribute() end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
