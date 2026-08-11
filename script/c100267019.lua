@@ -29,6 +29,7 @@ function s.initial_effect(c)
 	e3:SetCategory(CATEGORY_DRAW)
 	e3:SetType(EFFECT_TYPE_IGNITION)
 	e3:SetRange(LOCATION_HAND)
+	e3:SetCountLimit(1,id)
 	e3:SetCost(s.drcost)
 	e3:SetTarget(s.drtg)
 	e3:SetOperation(s.drop)
@@ -71,7 +72,7 @@ function s.tdfilter(c)
 	return c:IsAbleToDeck()
 end
 function s.tdtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsOnField() and chkc:IsControler(1-tp) and s.tdfilter(chkc) end
+	if chkc then return chkc:IsType(TYPE_MONSTER) and chkc:IsControler(1-tp) and s.tdfilter(chkc) end
 	if chk==0 then return Duel.IsExistingTarget(s.tdfilter,tp,0,LOCATION_MZONE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
 	local g=Duel.SelectTarget(tp,s.tdfilter,tp,0,LOCATION_MZONE,1,1,nil)
