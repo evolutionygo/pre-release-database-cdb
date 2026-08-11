@@ -1,4 +1,4 @@
---レイズ・ムーンの朔 スクイーズ-ジャックポット
+--レイズ・ムーンの望 スクィーズ－ジャックポット
 local s,id,o=GetID()
 function s.initial_effect(c)
 	c:EnableReviveLimit()
@@ -9,10 +9,9 @@ function s.initial_effect(c)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetTargetRange(0,LOCATION_MZONE)
 	e1:SetCode(EFFECT_CANNOT_SELECT_BATTLE_TARGET)
-	e1:SetCondition(s.atcon)
 	e1:SetValue(s.atlimit)
 	c:RegisterEffect(e1)
-	--attach
+	--todeck
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetCategory(CATEGORY_TODECK)
@@ -30,7 +29,7 @@ function s.initial_effect(c)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetCondition(s.tdcon2)
 	c:RegisterEffect(e3)
-	--mt
+	--attach
 	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(id,2))
 	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
@@ -41,9 +40,6 @@ function s.initial_effect(c)
 	e4:SetTarget(s.mttg)
 	e4:SetOperation(s.mtop)
 	c:RegisterEffect(e4)
-end
-function s.atcon(e)
-	return e:GetHandler():IsDefensePos()
 end
 function s.atlimit(e,c)
 	return c~=e:GetHandler()
@@ -62,11 +58,14 @@ function s.tdtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToDeck,tp,0,LOCATION_ONFIELD,1,nil) end
 	local g=Duel.GetMatchingGroup(Card.IsAbleToDeck,tp,0,LOCATION_ONFIELD,nil)
 	Duel.SetOperationInfo(0,CATEGORY_TODECK,g,e:GetLabel(),0,0)
+	Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
 end
 function s.tdop(e,tp,eg,ep,ev,re,r,rp)
 	local ct=e:GetLabel()
+	local tg=Duel.GetMatchingGroup(Card.IsAbleToDeck,tp,0,LOCATION_ONFIELD,nil)
+	if tg:GetCount()<ct then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-	local g=Duel.SelectMatchingCard(tp,Card.IsAbleToDeck,tp,0,LOCATION_ONFIELD,ct,ct,nil)
+	local g=tg:Select(tp,ct,ct,nil)
 	if g:GetCount()>0 then
 		Duel.HintSelection(g)
 		aux.PlaceCardsOnDeckBottom(tp,g)
@@ -84,11 +83,12 @@ function s.mtcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.mttg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsType(TYPE_XYZ) and Duel.GetFieldGroupCount(1-tp,LOCATION_DECK,0)>0 end
+	Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
 end
 function s.mtop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local g=Duel.GetDecktopGroup(1-tp,1)
-	if c:IsRelateToEffect(e) and g:GetCount()==1 then
+	if c:IsRelateToChain() and g:GetCount()==1 then
 		local tc=g:GetFirst()
 		Duel.DisableShuffleCheck()
 		if tc:IsCanOverlay() then

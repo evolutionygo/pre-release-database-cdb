@@ -1,4 +1,4 @@
---レイズ・ムーンの天 シエロ-ノーモアベット
+--レイズ・ムーンの天 シエロ－ノーモアベット
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--xyz summon
@@ -44,15 +44,16 @@ function s.initial_effect(c)
 	e6:SetType(EFFECT_TYPE_QUICK_O)
 	e6:SetCode(EVENT_FREE_CHAIN)
 	e6:SetRange(LOCATION_MZONE)
+	e6:SetHintTiming(TIMING_DRAW_PHASE,TIMING_DRAW_PHASE+TIMING_CHAIN_END)
 	e6:SetCountLimit(1)
 	e6:SetCondition(s.imcon)
 	e6:SetCost(s.drcost2)
 	e6:SetTarget(s.drtg2)
 	e6:SetOperation(s.drop2)
 	c:RegisterEffect(e6)
-	--spsummon
+	--draw
 	local e7=Effect.CreateEffect(c)
-	e7:SetDescription(aux.Stringid(id,2))
+	e7:SetDescription(aux.Stringid(id,3))
 	e7:SetCategory(CATEGORY_DRAW)
 	e7:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e7:SetCode(EVENT_TO_GRAVE)

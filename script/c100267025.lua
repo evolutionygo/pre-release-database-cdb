@@ -1,4 +1,4 @@
---眠らないの街の『レイズ・ムーン』
+--眠らない街の『レイズ・ムーン』
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--Activate
@@ -15,7 +15,7 @@ function s.initial_effect(c)
 	e2:SetTarget(s.indtg)
 	e2:SetValue(s.indct)
 	c:RegisterEffect(e2)
-	--set
+	--activate
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,0))
 	e3:SetCategory(CATEGORY_DRAW+CATEGORY_TODECK)
@@ -25,14 +25,14 @@ function s.initial_effect(c)
 	e3:SetTarget(s.drtg)
 	e3:SetOperation(s.drop)
 	c:RegisterEffect(e3)
-	--spsummon
+	--todeck
 	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(id,3))
 	e4:SetCategory(CATEGORY_TODECK)
 	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
 	e4:SetCode(EVENT_PHASE+PHASE_END)
 	e4:SetRange(LOCATION_SZONE)
-	e4:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e4:SetCountLimit(1)
 	e4:SetTarget(s.tdtg)
 	e4:SetOperation(s.tdop)
 	c:RegisterEffect(e4)
@@ -51,10 +51,8 @@ end
 function s.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local b1=Duel.IsExistingMatchingCard(Card.IsAbleToDeck,tp,LOCATION_HAND,0,1,nil)
 		and Duel.IsPlayerCanDraw(tp,1)
-		and (not e:IsCostChecked() or Duel.GetFlagEffect(tp,id)==0)
 	local b2=Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_MZONE,0,1,nil)
 		and Duel.IsPlayerCanDraw(tp,1)
-		and (not e:IsCostChecked() or Duel.GetFlagEffect(tp,id+o)==0)
 	if chk==0 then return b1 or b2 end
 	local op=aux.SelectFromOptions(tp,
 			{b1,aux.Stringid(id,1),1},
@@ -63,13 +61,11 @@ function s.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if op==1 then
 		if e:IsCostChecked() then
 			e:SetCategory(CATEGORY_DRAW+CATEGORY_TODECK)
-			Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1)
 		end
 		Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
 	elseif op==2 then
 		if e:IsCostChecked() then
 			e:SetCategory(CATEGORY_DRAW)
-			Duel.RegisterFlagEffect(tp,id+o,RESET_PHASE+PHASE_END,0,1)
 		end
 		Duel.SetTargetPlayer(tp)
 		Duel.SetTargetParam(1)
@@ -87,7 +83,7 @@ function s.drop(e,tp,eg,ep,ev,re,r,rp)
 			else
 				res=Duel.SendtoDeck(g,nil,SEQ_DECKBOTTOM,REASON_EFFECT)
 			end
-			if res~=0 then
+			if res~=0 and g:IsExists(Card.IsLocation,1,nil,LOCATION_DECK) then
 				Duel.BreakEffect()
 				Duel.Draw(tp,1,REASON_EFFECT)
 			end
@@ -98,7 +94,7 @@ function s.drop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.tdfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x2ed)
+	return c:IsFaceup() and c:IsSetCard(0x2ed) and c:IsAbleToDeck()
 end
 function s.tdtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
