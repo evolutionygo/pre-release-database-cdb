@@ -10,19 +10,28 @@ function s.initial_effect(c)
 	e1:SetCountLimit(1,id+EFFECT_COUNT_CODE_OATH)
 	e1:SetOperation(s.activate)
 	c:RegisterEffect(e1)
-	--If a die result is 1, that player chooses 1 effect (each player once per chain)
+	--watch every dice roll; re-raise a custom event explicitly attributed to
+	--whichever side's dice contained a 1, since EVENT_TOSS_DICE itself only
+	--carries a single event_player (the primary Duel.TossDice caller) even
+	--when both players roll in one call (count1/count2)
 	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(id,1))
-	e2:SetCategory(0)
-	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e2:SetCode(EVENT_TOSS_DICE)
-	e2:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_BOTH_SIDE)
 	e2:SetRange(LOCATION_SZONE)
-	e2:SetCountLimit(1,EFFECT_COUNT_CODE_CHAIN)
-	e2:SetCondition(s.dicecon)
-	e2:SetTarget(s.dicetg)
-	e2:SetOperation(s.diceop)
+	e2:SetOperation(s.checkdice)
 	c:RegisterEffect(e2)
+	--If a die result is 1, that player chooses 1 effect (each player once per chain)
+	local e3=Effect.CreateEffect(c)
+	e3:SetDescription(aux.Stringid(id,1))
+	e3:SetCategory(0)
+	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e3:SetCode(EVENT_CUSTOM+id)
+	e3:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_BOTH_SIDE+EFFECT_FLAG_EVENT_PLAYER)
+	e3:SetRange(LOCATION_SZONE)
+	e3:SetCountLimit(1,EFFECT_COUNT_CODE_CHAIN)
+	e3:SetTarget(s.dicetg)
+	e3:SetOperation(s.diceop)
+	c:RegisterEffect(e3)
 end
 --filter: card with a dice rolling effect
 function s.thfilter(c)
@@ -41,21 +50,27 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 end
---condition: the activating player's dice rolled a 1
-function s.dicecon(e,tp,eg,ep,ev,re,r,rp)
-	local ct1=bit.band(ev,0xffff)
-	local ct2=bit.rshift(ev,16)
-	local dc={Duel.GetDiceResult()}
-	local start,finish
-	if tp==ep then
-		start,finish=1,ct1
-	else
-		start,finish=ct1+1,ct1+ct2
-	end
-	for i=start,finish do
+--detect which side(s) actually rolled a 1 this event, and re-raise a
+--custom event with the correct event_player for each qualifying side
+--(ep alone can't distinguish this: it's always the primary TossDice caller,
+--even when count2 dice belong to the other player)
+function s.hasone(dc,from,to)
+	for i=from,to do
 		if dc[i]==1 then return true end
 	end
 	return false
+end
+function s.checkdice(e,tp,eg,ep,ev,re,r,rp)
+	local ct1=bit.band(ev,0xffff)
+	local ct2=bit.rshift(ev,16)
+	local dc={Duel.GetDiceResult()}
+	local c=e:GetHandler()
+	if s.hasone(dc,1,ct1) then
+		Duel.RaiseEvent(Group.FromCards(c),EVENT_CUSTOM+id,re,r,rp,ep,0)
+	end
+	if ct2>0 and s.hasone(dc,ct1+1,ct1+ct2) then
+		Duel.RaiseEvent(Group.FromCards(c),EVENT_CUSTOM+id,re,r,rp,1-ep,0)
+	end
 end
 --filter: opponent's monster (destroy)
 function s.desfilter(c)
