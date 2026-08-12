@@ -54,6 +54,7 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,c)
 	if sg and sg:GetCount()>0 then
 		sg:AddCard(c)
 		e:SetLabelObject(sg)
+		sg:KeepAlive()
 		return true
 	else return false end
 end
