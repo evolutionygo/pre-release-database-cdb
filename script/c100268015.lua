@@ -1,4 +1,4 @@
---Super Critical
+--スーパークリティカル
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--Activate: add 1 card with a dice rolling effect from Deck to hand
@@ -83,22 +83,10 @@ function s.dicetg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local b3=Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp)
 	if chk==0 then return b1 or b2 or b3 end
-	local ops={}
-	local opval={}
-	if b1 then
-		table.insert(ops,aux.Stringid(id,3))
-		table.insert(opval,1)
-	end
-	if b2 then
-		table.insert(ops,aux.Stringid(id,4))
-		table.insert(opval,2)
-	end
-	if b3 then
-		table.insert(ops,aux.Stringid(id,5))
-		table.insert(opval,3)
-	end
-	local sel=Duel.SelectOption(tp,table.unpack(ops))
-	local op=opval[sel+1]
+	local op=aux.SelectFromOptions(tp,
+		{b1,aux.Stringid(id,3),1},
+		{b2,aux.Stringid(id,4),2},
+		{b3,aux.Stringid(id,5),3})
 	--use chain info to avoid label conflict when both players activate via BOTH_SIDE
 	Duel.SetTargetParam(op)
 	if op==1 then
@@ -122,6 +110,7 @@ function s.diceop(e,tp,eg,ep,ev,re,r,rp)
 		if #g>0 then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 			local sg=g:Select(tp,1,math.min(#g,3),nil)
+			Duel.HintSelection(sg)
 			Duel.Destroy(sg,REASON_EFFECT)
 		end
 	elseif op==2 then
@@ -139,20 +128,22 @@ function s.diceop(e,tp,eg,ep,ev,re,r,rp)
 			if Duel.Destroy(sg,REASON_EFFECT)>0 then
 				local dg=Duel.GetMatchingGroup(s.disfilter,tp,0,LOCATION_MZONE,nil)
 				if #dg>0 then
-					Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_NEGATE)
+					Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DISABLE)
 					local tc=dg:Select(tp,1,1,nil):GetFirst()
-					Duel.NegateRelatedChain(tc,RESET_TURN_SET)
-					local e1=Effect.CreateEffect(e:GetHandler())
-					e1:SetType(EFFECT_TYPE_SINGLE)
-					e1:SetCode(EFFECT_DISABLE)
-					e1:SetReset(RESET_EVENT+RESETS_STANDARD)
-					tc:RegisterEffect(e1)
-					local e2=Effect.CreateEffect(e:GetHandler())
-					e2:SetType(EFFECT_TYPE_SINGLE)
-					e2:SetCode(EFFECT_DISABLE_EFFECT)
-					e2:SetValue(RESET_TURN_SET)
-					e2:SetReset(RESET_EVENT+RESETS_STANDARD)
-					tc:RegisterEffect(e2)
+					if tc:IsCanBeDisabledByEffect(e,true) then
+						Duel.NegateRelatedChain(tc,RESET_TURN_SET)
+						local e1=Effect.CreateEffect(e:GetHandler())
+						e1:SetType(EFFECT_TYPE_SINGLE)
+						e1:SetCode(EFFECT_DISABLE)
+						e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+						tc:RegisterEffect(e1)
+						local e2=Effect.CreateEffect(e:GetHandler())
+						e2:SetType(EFFECT_TYPE_SINGLE)
+						e2:SetCode(EFFECT_DISABLE_EFFECT)
+						e2:SetValue(RESET_TURN_SET)
+						e2:SetReset(RESET_EVENT+RESETS_STANDARD)
+						tc:RegisterEffect(e2)
+					end
 				end
 			end
 		end
