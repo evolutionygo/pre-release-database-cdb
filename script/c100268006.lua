@@ -56,7 +56,7 @@ function s.discon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsMainPhase()
 end
 function s.disfilter(c)
-	return aux.NegateEffectMonsterFilter(c)
+	return aux.NegateEffectMonsterFilter(c) and c:IsAbleToChangeControler()
 end
 function s.distg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(1-tp) and chkc:IsLocation(LOCATION_MZONE) and s.disfilter(chkc) end

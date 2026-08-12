@@ -9,6 +9,7 @@ function s.initial_effect(c)
 	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetCountLimit(1,id+EFFECT_COUNT_CODE_OATH)
+	e1:SetCondition(s.damcon)
 	e1:SetTarget(s.damtg)
 	e1:SetOperation(s.damop)
 	c:RegisterEffect(e1)
@@ -28,6 +29,9 @@ function s.checkop(e,tp,eg,ep,ev,re,r,rp)
 			Duel.RegisterFlagEffect(rp,id,RESET_PHASE+PHASE_END,0,1)
 		end
 	end
+end
+function s.damcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetFlagEffect(1-tp,id)>0
 end
 function s.damtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local dam=Duel.GetMatchingGroupCount(aux.TRUE,tp,0,LOCATION_HAND,nil)
