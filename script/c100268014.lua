@@ -1,4 +1,4 @@
---魔の龍札-金龍
+--魔の龍札－金龍
 local s,id,o=GetID()
 function s.initial_effect(c)
 	c:EnableReviveLimit()
@@ -50,24 +50,24 @@ function s.spcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
 	return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(s.spcfilter,tp,LOCATION_HAND,0,2,nil)
+		and Duel.IsExistingMatchingCard(s.spcfilter,tp,LOCATION_HAND,0,2,c)
 		and c:IsAttribute(ATTRIBUTE_LIGHT) and not c:IsPublic()
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,c)
-	local g=Duel.GetMatchingGroup(s.spcfilter,tp,LOCATION_HAND,0,nil)
+	local g=Duel.GetMatchingGroup(s.spcfilter,tp,LOCATION_HAND,0,c)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONFIRM)
-	local tc=g:SelectUnselect(nil,tp,false,true,2,2)
-	if tc then
-		e:SetLabelObject(tc)
+	local sg=g:CancelableSelect(tp,2,2,c)
+	if sg and sg:GetCount()>0 then
+		sg:AddCard(c)
+		e:SetLabelObject(sg)
 		return true
 	else return false end
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp,c)
 	local g=e:GetLabelObject()
-	g:AddCard(c)
 	Duel.ConfirmCards(1-tp,g)
-	g:DeleteGroup()
 	Duel.ShuffleHand(tp)
+	g:DeleteGroup()
 end
 function s.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return not e:GetHandler():IsPublic() end
@@ -88,6 +88,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.ConfirmCards(1-tp,g)
 		local dg=Duel.SelectMatchingCard(tp,Card.IsDiscardable,tp,LOCATION_HAND,0,1,1,nil,REASON_DISCARD+REASON_EFFECT)
 		if dg:GetCount()>0 then
+			Duel.BreakEffect()
 			Duel.ShuffleHand(tp)
 			Duel.SendtoGrave(dg,REASON_EFFECT+REASON_DISCARD)
 		end

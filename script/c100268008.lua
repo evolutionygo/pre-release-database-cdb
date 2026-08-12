@@ -1,4 +1,4 @@
---稲妻の戦士-ギルフォード・ザ・ライトニング
+--稲妻の戦士－ギルフォード・ザ・ライトニング
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--special summon
@@ -17,7 +17,7 @@ function s.initial_effect(c)
 	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e2:SetOperation(s.limop)
 	c:RegisterEffect(e2)
-	--negate
+	--tograve
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,1))
 	e3:SetCategory(CATEGORY_TOGRAVE)
@@ -27,7 +27,7 @@ function s.initial_effect(c)
 	e3:SetTarget(s.tgtg)
 	e3:SetOperation(s.tgop)
 	c:RegisterEffect(e3)
-	--
+	--search
 	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(id,2))
 	e4:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
@@ -60,12 +60,12 @@ end
 function s.spop(e,tp,eg,ep,ev,re,r,rp,c)
 	local g=e:GetLabelObject()
 	Duel.Release(g,REASON_SPSUMMON)
-	g:DeleteGroup()
 	if g:IsExists(s.cfilter,1,nil,tp) then
 		c:RegisterFlagEffect(id,RESET_EVENT+0xff0000,0,1,1)
 	else
 		c:RegisterFlagEffect(id,RESET_EVENT+0xff0000,0,1,0)
 	end
+	g:DeleteGroup()
 end
 function s.limop(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetHandler():GetFlagEffectLabel(id)==1 then
@@ -91,7 +91,7 @@ function s.tgop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SendtoGrave(g,REASON_RULE,1-tp)
 	end
 end
-function s.thtg(e,tp,eg,ep,ev,re,r,rp)
+function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e1:SetCode(EVENT_PHASE+PHASE_END)

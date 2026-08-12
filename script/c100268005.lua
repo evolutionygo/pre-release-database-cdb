@@ -1,4 +1,4 @@
---機械龍-リボルバー・ドラゴン
+--機械龍－リボルバー・ドラゴン
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--summon
@@ -8,7 +8,7 @@ function s.initial_effect(c)
 	e1:SetCode(EFFECT_SUMMON_PROC)
 	e1:SetCondition(s.ntcon)
 	c:RegisterEffect(e1)
-	--to hand
+	--search
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
@@ -19,24 +19,26 @@ function s.initial_effect(c)
 	e2:SetOperation(s.thop)
 	c:RegisterEffect(e2)
 	--to grave
-	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
-	e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-	e2:SetCode(EVENT_TO_GRAVE)
-	e2:SetOperation(s.regop)
-	c:RegisterEffect(e2)
-	--to hand/set
 	local e3=Effect.CreateEffect(c)
-	e3:SetDescription(aux.Stringid(id,2))
-	e3:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_DESTROY+CATEGORY_COIN)
-	e3:SetType(EFFECT_TYPE_QUICK_O)
-	e3:SetCode(EVENT_FREE_CHAIN)
-	e3:SetRange(LOCATION_GRAVE)
-	e3:SetCountLimit(1,id+o)
-	e3:SetCondition(s.spcon)
-	e3:SetTarget(s.sptg)
-	e3:SetOperation(s.spop)
+	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+	e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+	e3:SetCode(EVENT_TO_GRAVE)
+	e3:SetCondition(s.regcon)
+	e3:SetOperation(s.regop)
 	c:RegisterEffect(e3)
+	--special summon
+	local e4=Effect.CreateEffect(c)
+	e4:SetDescription(aux.Stringid(id,2))
+	e4:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_DESTROY+CATEGORY_COIN)
+	e4:SetType(EFFECT_TYPE_QUICK_O)
+	e4:SetCode(EVENT_FREE_CHAIN)
+	e4:SetRange(LOCATION_GRAVE)
+	e4:SetCountLimit(1,id+o)
+	e4:SetHintTiming(TIMING_BATTLE_START+TIMING_BATTLE_END)
+	e4:SetCondition(s.spcon)
+	e4:SetTarget(s.sptg)
+	e4:SetOperation(s.spop)
+	c:RegisterEffect(e4)
 end
 function s.ntcon(e,c,minc)
 	if c==nil then return true end

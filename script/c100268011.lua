@@ -1,8 +1,9 @@
---罰ゲーム「GREED-欲望の幻像-」
+--罰ゲーム「GREED－欲望の幻像－」
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--damage
 	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_DAMAGE+CATEGORY_REMOVE)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
@@ -24,7 +25,7 @@ function s.checkop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetCurrentPhase()==PHASE_DRAW then return end
 	for tc in aux.Next(eg) do
 		if tc:IsPreviousLocation(LOCATION_DECK) then
-			Duel.RegisterFlagEffect(tc:GetControler(),id,RESET_PHASE+PHASE_END,0,1)
+			Duel.RegisterFlagEffect(rp,id,RESET_PHASE+PHASE_END,0,1)
 		end
 	end
 end

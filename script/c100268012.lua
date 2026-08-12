@@ -11,7 +11,8 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 	--equal
 	local e2=Effect.CreateEffect(c)
-	e2:SetCategory(CATEGORY_DESTROY)
+	e2:SetDescription(aux.Stringid(id,1))
+	e2:SetCategory(CATEGORY_EQUIP+CATEGORY_DESTROY)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_BATTLE_DESTROYED)
 	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
@@ -61,6 +62,7 @@ function s.eqtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0
 		and rc:IsOnField() and rc:IsFaceup() end
 	Duel.SetTargetCard(rc)
+	Duel.SetOperationInfo(0,CATEGORY_LEAVE_GRAVE,e:GetHandler(),1,0,0)
 end
 function s.eqop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
