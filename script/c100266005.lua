@@ -51,7 +51,7 @@ function s.costfilter(c,e,tp)
 	if c:IsLocation(LOCATION_HAND) then
 		return c:IsDiscardable()
 	else
-		return e:GetHandler():IsSetCard(0x2f) and c:IsAbleToRemove() and c:IsHasEffect(18319762,tp)
+		return e:GetHandler():IsSetCard(0x2f) and c:IsAbleToRemoveAsCost() and c:IsHasEffect(18319762,tp)
 	end
 end
 function s.rmcost(e,tp,eg,ep,ev,re,r,rp,chk)
