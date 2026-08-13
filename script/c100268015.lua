@@ -24,7 +24,7 @@ function s.initial_effect(c)
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,1))
 	e3:SetCategory(0)
-	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e3:SetCode(EVENT_CUSTOM+id)
 	e3:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_BOTH_SIDE+EFFECT_FLAG_EVENT_PLAYER)
 	e3:SetRange(LOCATION_SZONE)
@@ -66,10 +66,10 @@ function s.checkdice(e,tp,eg,ep,ev,re,r,rp)
 	local dc={Duel.GetDiceResult()}
 	local c=e:GetHandler()
 	if s.hasone(dc,1,ct1) then
-		Duel.RaiseEvent(Group.FromCards(c),EVENT_CUSTOM+id,re,r,rp,ep,0)
+		Duel.RaiseSingleEvent(e:GetHandler(),EVENT_CUSTOM+id,re,r,rp,ep,0)
 	end
 	if ct2>0 and s.hasone(dc,ct1+1,ct1+ct2) then
-		Duel.RaiseEvent(Group.FromCards(c),EVENT_CUSTOM+id,re,r,rp,1-ep,0)
+		Duel.RaiseSingleEvent(e:GetHandler(),EVENT_CUSTOM+id,re,r,rp,1-ep,0)
 	end
 end
 --filter: opponent's monster (destroy)
