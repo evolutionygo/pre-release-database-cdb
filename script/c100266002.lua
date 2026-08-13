@@ -35,6 +35,13 @@ function s.initial_effect(c)
 	local e5=e4:Clone()
 	e5:SetLabelObject(e2)
 	Duel.RegisterEffect(e5,0)
+	--cannot disable
+	local e6=Effect.CreateEffect(c)
+	e6:SetType(EFFECT_TYPE_SINGLE)
+	e6:SetCode(EFFECT_CANNOT_DISABLE)
+	e6:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e6:SetCondition(s.nbcon)
+	c:RegisterEffect(e6)
 end
 function s.adjustop(e,tp,eg,ep,ev,re,r,rp)
 	local e1=e:GetLabelObject()
@@ -45,6 +52,9 @@ function s.adjustop(e,tp,eg,ep,ev,re,r,rp)
 	else
 		e1:SetProperty(e1:GetProperty()&~property)
 	end
+end
+function s.nbcon(e)
+	return Duel.IsExistingMatchingCard(Card.IsFaceup,e:GetHandlerPlayer(),0,LOCATION_ONFIELD,5,nil)
 end
 function s.condition1(e,tp,eg,ep,ev,re,r,rp)
 	if ep==tp or not re:IsActiveType(TYPE_MONSTER) then return false end
