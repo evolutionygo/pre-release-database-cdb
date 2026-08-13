@@ -53,19 +53,20 @@ function s.initial_effect(c)
 	e6:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
 	e6:SetCode(EVENT_CHAIN_SOLVED)
 	e6:SetRange(LOCATION_MZONE)
-	e6:SetCondition(s.rcon1)
-	e6:SetOperation(s.rop1)
+	e6:SetCondition(s.rcon)
+	e6:SetOperation(s.rop)
 	c:RegisterEffect(e6)
 	local e7=e6:Clone()
 	e7:SetCode(EVENT_BREAK_EFFECT)
 	c:RegisterEffect(e7)
-	--trigger attach
+	--triggered attach
 	local e8=Effect.CreateEffect(c)
 	e8:SetDescription(aux.Stringid(id,2))
 	e8:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e8:SetProperty(EFFECT_FLAG_DELAY)
 	e8:SetCode(EVENT_CUSTOM+id)
 	e8:SetRange(LOCATION_MZONE)
+	e8:SetCondition(s.mtcon)
 	e8:SetTarget(s.mttg)
 	e8:SetOperation(s.mtop)
 	c:RegisterEffect(e8)
@@ -119,12 +120,16 @@ end
 function s.ldop2(e,tp,eg,ep,ev,re,r,rp)
 	e:GetHandler():RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD+RESET_CHAIN,0,1)
 end
-function s.rcon1(e,tp,eg,ep,ev,re,r,rp)
+function s.rcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetFlagEffect(id)>0
 end
-function s.rop1(e,tp,eg,ep,ev,re,r,rp)
+function s.rop(e,tp,eg,ep,ev,re,r,rp)
 	e:GetHandler():ResetFlagEffect(id)
 	Duel.RaiseEvent(e:GetHandler(),EVENT_CUSTOM+id,e,0,tp,tp,0)
+end
+function s.mtcon(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	return eg:IsContains(c)
 end
 function s.mttg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsType(TYPE_XYZ) and Duel.GetFieldGroupCount(1-tp,LOCATION_DECK,0)>0 end
