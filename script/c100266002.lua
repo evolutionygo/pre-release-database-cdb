@@ -23,38 +23,33 @@ function s.initial_effect(c)
 	e3:SetProperty(EFFECT_FLAG_SET_AVAILABLE)
 	e3:SetCondition(s.actcon)
 	c:RegisterEffect(e3)
-	--adjust(disablecheck)
-	local e4=Effect.CreateEffect(c)
-	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e4:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
-	e4:SetCode(EVENT_ADJUST)
-	e4:SetRange(0xff)
-	e4:SetLabelObject(e1)
-	e4:SetOperation(s.adjustop)
-	Duel.RegisterEffect(e4,0)
-	local e5=e4:Clone()
-	e5:SetLabelObject(e2)
-	Duel.RegisterEffect(e5,0)
 	--cannot disable
-	local e6=Effect.CreateEffect(c)
-	e6:SetType(EFFECT_TYPE_SINGLE)
-	e6:SetCode(EFFECT_CANNOT_DISABLE)
-	e6:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
-	e6:SetCondition(s.nbcon)
-	c:RegisterEffect(e6)
-end
-function s.adjustop(e,tp,eg,ep,ev,re,r,rp)
-	local e1=e:GetLabelObject()
-	local property=EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_CANNOT_INACTIVATE+EFFECT_FLAG_CAN_FORBIDDEN
-	local ct=Duel.GetMatchingGroupCount(Card.IsFaceup,e1:GetHandlerPlayer(),0,LOCATION_ONFIELD,nil)
-	if ct>=5 then
-		e1:SetProperty(e1:GetProperty()|property)
-	else
-		e1:SetProperty(e1:GetProperty()&~property)
-	end
+	local e4=Effect.CreateEffect(c)
+	e4:SetType(EFFECT_TYPE_SINGLE)
+	e4:SetCode(EFFECT_CANNOT_DISABLE)
+	e4:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e4:SetCondition(s.nbcon)
+	c:RegisterEffect(e4)
+	--cannot negate
+	local e5=Effect.CreateEffect(c)
+	e5:SetType(EFFECT_TYPE_FIELD)
+	e5:SetCode(EFFECT_CANNOT_INACTIVATE)
+	e5:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e5:SetValue(s.efilter)
+	Duel.RegisterEffect(e5,0)
+	local e6=e5:Clone()
+	e6:SetCode(EFFECT_CANNOT_DISEFFECT)
+	Duel.RegisterEffect(e6,0)
 end
 function s.nbcon(e)
 	return Duel.IsExistingMatchingCard(Card.IsFaceup,e:GetHandlerPlayer(),0,LOCATION_ONFIELD,5,nil)
+end
+function s.efilter(e,ct)
+	local te,tp=Duel.GetChainInfo(ct,CHAININFO_TRIGGERING_EFFECT,CHAININFO_TRIGGERING_PLAYER)
+	if not te then return false end
+	if te:GetOwner()~=e:GetOwner() then return false end
+	if not te:IsHasType(EFFECT_TYPE_ACTIVATE) then return false end
+	return Duel.IsExistingMatchingCard(Card.IsFaceup,tp,0,LOCATION_ONFIELD,5,nil)
 end
 function s.condition1(e,tp,eg,ep,ev,re,r,rp)
 	if ep==tp or not re:IsActiveType(TYPE_MONSTER) then return false end
