@@ -58,11 +58,15 @@ end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.cfilter,1,nil,tp)
 end
+function s.trfilter(c)
+	return c:IsSetCard(0x2ef) and c:IsFaceup()
+end
 function s.thfiltr(c)
 	return c:IsAbleToHand() or c:IsAbleToExtra()
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and Duel.IsExistingMatchingCard(s.trfilter,tp,LOCATION_ONFIELD,0,1,nil)
 		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false)
 		and Duel.IsExistingMatchingCard(s.thfiltr,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
