@@ -28,6 +28,7 @@ function s.initial_effect(c)
 	e3:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
+	e3:SetCondition(s.condition)
 	e3:SetValue(1)
 	c:RegisterEffect(e3)
 end
@@ -47,7 +48,7 @@ function s.condition(e)
 	return e:GetHandler():GetSummonType()==SUMMON_TYPE_SPECIAL+SUMMON_VALUE_SELF
 end
 function s.thfilter(c)
-	return c:IsSetCard(0x2e0) and c:IsAbleToHand()
+	return c:IsSetCard(0x2ef) and c:IsAbleToHand()
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil) end
@@ -60,10 +61,10 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	if g:GetCount()>0 then
 		Duel.SendtoHand(tc,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,tc)
-		if Duel.GetTurnPlayer()==1-tp and dc:IsCanBeSpecialSummoned(e,0,tp,false,false)
+		if Duel.GetTurnPlayer()==1-tp and tc:IsCanBeSpecialSummoned(e,0,tp,false,false)
 			and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 			Duel.BreakEffect()
-			Duel.SpecialSummon(dc,0,tp,tp,false,false,POS_FACEUP)
+			Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
 		end
 	end
 end

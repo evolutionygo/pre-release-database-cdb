@@ -19,7 +19,7 @@ function s.initial_effect(c)
 	e2:SetCategory(CATEGORY_RECOVER)
 	e2:SetType(EFFECT_TYPE_QUICK_O)
 	e2:SetCode(EVENT_FREE_CHAIN)
-	e2:SetRange(LOCATION_SZONE)
+	e2:SetRange(LOCATION_GRAVE)
 	e2:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_END_PHASE)
 	e2:SetCountLimit(1,id+o)
 	e2:SetCost(s.reccost)
@@ -41,9 +41,9 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local b1=not Duel.IsPlayerAffectedByEffect(tp,59822133)
 		and Duel.GetLocationCount(tp,LOCATION_MZONE)>=2
 		and g:GetClassCount(Card.GetControler)>=2
+	local sg=Duel.GetMatchingGroup(s.cnfilter,tp,0,LOCATION_MZONE,nil)
 	local b2=Duel.IsExistingMatchingCard(s.cfilter2,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil)
 		 and sg:GetCount()>0
-	local sg=Duel.GetMatchingGroup(s.cnfilter,tp,0,LOCATION_MZONE,nil)
 	if chk==0 then
 		return b1 or b2
 	end
