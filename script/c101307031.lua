@@ -67,7 +67,7 @@ function s.sprfilter(c,sc)
 	return c:IsCanBeFusionMaterial(sc,SUMMON_TYPE_SPECIAL) and c:IsAbleToGraveAsCost()
 end
 function s.fselect(g,tp,sc)
-	return g:IsExists(s.cmfilter,1,nil,sc,nil,g)
+	return g:IsExists(s.cmfilter,1,nil,sc,nil,g) and Duel.GetLocationCountFromEx(1-tp,tp,g,sc,0xf)>0
 end
 function s.sprcon(e,c)
 	if c==nil then return true end
