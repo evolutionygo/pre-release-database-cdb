@@ -22,7 +22,7 @@ function s.initial_effect(c)
 	--draw
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,1))
-	e3:SetCategory(CATEGORY_DAMAGE)
+	e3:SetCategory(CATEGORY_DAMAGE+CATEGORY_RECOVER)
 	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
 	e3:SetCode(EVENT_BATTLE_DESTROYED)
 	e3:SetRange(LOCATION_SZONE)
@@ -60,20 +60,42 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.ConfirmCards(1-tp,g)
 	end
 end
+function s.calfilter(c,p)
+	return c:GetTextAttack()>0 and c:IsType(TYPE_MONSTER) and c:IsControler(p)
+end
 function s.damcon(e,tp,eg,ep,ev,re,r,rp)
-	local tc=eg:GetFirst()
-	return #eg==1 and tc:IsType(TYPE_MONSTER) and tc:IsReason(REASON_BATTLE)
+	return eg:IsExists(Card.IsType,1,nil,TYPE_MONSTER)
 end
 function s.damtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	local bc=eg:GetFirst()
-	if chk==0 then return bc:GetBaseAttack()>0 end
-	Duel.SetTargetCard(bc)
-	e:SetLabel(bc:GetPreviousControler())
-	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,bc:GetBaseAttack())
+	if chk==0 then return true end
+	local tg,pct,player=eg:Filter(Card.IsType,nil,TYPE_MONSTER),0,0
+	local map={}
+	for p in aux.TurnPlayers() do
+		local dmg=0
+		local dg=tg:Filter(s.calfilter,nil,p)
+		if dg:GetCount()>0 then
+			dmg=dg:GetSum(Card.GetTextAttack)
+			pct=pct+1
+			player=p
+		end
+		map[p]=dmg
+	end
+	e:SetLabel(map[tp],map[1-tp])
+	if pct==2 then player=PLAYER_ALL end
+	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,player,map[tp]+map[1-tp])
 end
 function s.damop(e,tp,eg,ep,ev,re,r,rp)
-	local bc=Duel.GetFirstTarget()
-	if bc:IsRelateToChain() and Duel.Damage(e:GetLabel(),bc:GetBaseAttack(),REASON_EFFECT) and Duel.IsExistingMatchingCard(Card.IsCode,tp,LOCATION_GRAVE,0,1,nil,10000010) then
+	local dmg1,dmg2=e:GetLabel()
+	local map={[tp]=dmg1,[1-tp]=dmg2}
+	for p in aux.TurnPlayers() do
+		if map[p]>0 then
+			Duel.Damage(p,map[p],REASON_EFFECT,true)
+		end
+	end
+	if dmg1>0 or dmg2>0 then
+		Duel.RDComplete()
+	end
+	if Duel.IsExistingMatchingCard(Card.IsCode,tp,LOCATION_GRAVE,0,1,nil,10000010) then
 		Duel.BreakEffect()
 		Duel.Recover(tp,1000,REASON_EFFECT)
 	end
