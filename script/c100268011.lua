@@ -26,7 +26,11 @@ function s.checkop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetCurrentPhase()==PHASE_DRAW then return end
 	for tc in aux.Next(eg) do
 		if tc:IsPreviousLocation(LOCATION_DECK) then
-			Duel.RegisterFlagEffect(rp,id,RESET_PHASE+PHASE_END,0,1)
+			if tc:IsReason(REASON_DRAW) then
+				Duel.RegisterFlagEffect(tc:GetControler(),id,RESET_PHASE+PHASE_END,0,1)
+			else
+				Duel.RegisterFlagEffect(rp,id,RESET_PHASE+PHASE_END,0,1)
+			end
 		end
 	end
 end
