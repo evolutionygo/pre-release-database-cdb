@@ -61,7 +61,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.calfilter(c,p)
-	return c:GetTextAttack()>0 and c:IsType(TYPE_MONSTER) and c:IsControler(p)
+	return c:GetTextAttack()>0 and c:IsType(TYPE_MONSTER) and c:IsPreviousControler(p)
 end
 function s.damcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(Card.IsType,1,nil,TYPE_MONSTER)
