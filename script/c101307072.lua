@@ -45,7 +45,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local b1=not Duel.IsPlayerAffectedByEffect(tp,59822133)
 		and Duel.GetLocationCount(tp,LOCATION_MZONE)>=2
 		and sg:GetClassCount(Card.GetControler)>=2
-	local b2=Duel.IsExistingMatchingCard(s.cfilter2,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil)
+	local b2=Duel.IsExistingMatchingCard(s.cfilter2,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil)
 		 and mg:GetCount()>0
 	if chk==0 then
 		return b1 or b2
@@ -67,14 +67,14 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local res=false
 	if not Duel.IsPlayerAffectedByEffect(tp,59822133)
 		and Duel.GetLocationCount(tp,LOCATION_MZONE)>=2 then
-		local g=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_GRAVE,LOCATION_GRAVE,nil,e,tp)
+		local g=Duel.GetMatchingGroup(aux.NecroValleyFilter(s.spfilter),tp,LOCATION_GRAVE,LOCATION_GRAVE,nil,e,tp)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local sg=g:SelectSubGroup(tp,s.cgheck,false,2,2)
 		if sg:GetCount()>1 and Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP)~=0 then
 			res=true
 		end
 	end
-	if Duel.IsExistingMatchingCard(s.cfilter2,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) then
+	if Duel.IsExistingMatchingCard(s.cfilter2,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) then
 		if res then
 			Duel.BreakEffect()
 		end

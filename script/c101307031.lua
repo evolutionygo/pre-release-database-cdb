@@ -77,7 +77,7 @@ function s.sprcon(e,c)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,c)
 	local g=Duel.GetMatchingGroup(s.sprfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil,c)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
 	local sg=g:SelectSubGroup(tp,s.fselect,true,3,3,tp,c)
 	if sg then
 		sg:KeepAlive()
