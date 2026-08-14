@@ -48,7 +48,7 @@ function s.condition(e)
 	return e:GetHandler():GetSummonType()==SUMMON_TYPE_SPECIAL+SUMMON_VALUE_SELF
 end
 function s.thfilter(c)
-	return c:IsSetCard(0x2e0) and c:IsAbleToHand()
+	return c:IsSetCard(0x2ef) and c:IsAbleToHand()
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil) end
