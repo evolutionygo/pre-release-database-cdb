@@ -1,4 +1,4 @@
---太陽神の鉄檻-ラヴァ・ゴーレム
+--太陽神の鉄檻－ラヴァ・ゴーレム
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--fusion material
@@ -9,7 +9,7 @@ function s.initial_effect(c)
 	e0:SetType(EFFECT_TYPE_SINGLE)
 	e0:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 	e0:SetCode(EFFECT_SPSUMMON_CONDITION)
-	e0:SetValue(aux.fuslimit)
+	e0:SetValue(s.ssplimit)
 	c:RegisterEffect(e0)
 	--cannot fusion material
 	local e1=Effect.CreateEffect(c)
@@ -18,7 +18,7 @@ function s.initial_effect(c)
 	e1:SetCode(EFFECT_CANNOT_BE_FUSION_MATERIAL)
 	e1:SetValue(1)
 	c:RegisterEffect(e1)
-	--special summon rule
+	--special summon process
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD)
 	e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SPSUM_PARAM)
@@ -30,18 +30,29 @@ function s.initial_effect(c)
 	e2:SetOperation(s.sprop)
 	e2:SetValue(s.spval)
 	c:RegisterEffect(e2)
-	--damage
+	--splimit
 	local e3=Effect.CreateEffect(c)
-	e3:SetDescription(aux.Stringid(id,1))
-	e3:SetCategory(CATEGORY_DAMAGE)
-	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
-	e3:SetCode(EVENT_PHASE+PHASE_STANDBY)
-	e3:SetRange(LOCATION_MZONE)
-	e3:SetCountLimit(1)
-	e3:SetCondition(s.damcon)
-	e3:SetTarget(s.damtg)
-	e3:SetOperation(s.damop)
+	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+	e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e3:SetCondition(s.condition)
+	e3:SetOperation(s.regop)
 	c:RegisterEffect(e3)
+	--damage
+	local e4=Effect.CreateEffect(c)
+	e4:SetDescription(aux.Stringid(id,1))
+	e4:SetCategory(CATEGORY_DAMAGE)
+	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
+	e4:SetCode(EVENT_PHASE+PHASE_STANDBY)
+	e4:SetRange(LOCATION_MZONE)
+	e4:SetCountLimit(1)
+	e4:SetCondition(s.damcon)
+	e4:SetTarget(s.damtg)
+	e4:SetOperation(s.damop)
+	c:RegisterEffect(e4)
+end
+function s.ssplimit(e,se,sp,st)
+	return bit.band(st,SUMMON_TYPE_FUSION)==SUMMON_TYPE_FUSION and Duel.GetFlagEffect(sp,id)==0
 end
 function s.mfilter(c,fc,sub,mg,sg)
 	return c:IsControler(fc:GetControler()) and c:IsFusionSetCard(0x2ef)
@@ -49,12 +60,14 @@ end
 function s.mfilter2(c,fc,sub,mg,sg)
 	return c:IsFaceup() and c:IsOnField()
 end
+function s.cmfilter(c,fc,sub,mg,sg)
+	return s.mfilter(c,fc) and mg:IsExists(Card.IsFaceup,2,c)
+end
 function s.sprfilter(c,sc)
 	return c:IsCanBeFusionMaterial(sc,SUMMON_TYPE_SPECIAL) and c:IsAbleToGraveAsCost()
 end
 function s.fselect(g,tp,sc)
-	return g:IsExists(s.mfilter,1,nil,sc)
-		and g:Filter(Card.IsControler,nil,1-tp):IsExists(s.mfilter2,2,nil,sc)
+	return g:IsExists(s.cmfilter,1,nil,sc,nil,g)
 end
 function s.sprcon(e,c)
 	if c==nil then return true end
@@ -73,6 +86,7 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,c)
 	else return false end
 end
 function s.sprop(e,tp,eg,ep,ev,re,r,rp,c)
+	e:GetHandler():RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD-RESET_TOFIELD+RESET_PHASE+PHASE_END,0,1)
 	local g=e:GetLabelObject()
 	c:SetMaterial(g)
 	Duel.SendtoGrave(g,REASON_SPSUMMON)
@@ -107,6 +121,13 @@ function s.countval(e,re,tp)
 end
 function s.spval(e,c)
 	return 0,0x1f
+end
+function s.condition(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	return c:IsSummonType(SUMMON_TYPE_FUSION) or c:GetFlagEffect(id)>0
+end
+function s.regop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1)
 end
 function s.damcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetTurnPlayer()==tp

@@ -1,4 +1,4 @@
---太陽神の処刑人-マキュラ
+--太陽神の処刑人－マキュラ
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddCodeList(c,101307051)
@@ -59,9 +59,6 @@ function s.setfilter(c)
 end
 function s.settg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.setfilter,tp,LOCATION_DECK+LOCATION_HAND,0,1,nil) end
-end
-function s.checkfilter(c,tp)
-	return c:IsPreviousLocation(LOCATION_DECK)
 end
 function s.setop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()

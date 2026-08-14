@@ -24,7 +24,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function s.spfilter(c,e,tp)
-	return c:IsSetCard(0x2f0) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
+	return c:IsSetCard(0x2f0) and c:IsCanBeSpecialSummoned(e,0,tp,true,false) and c:IsFaceup()
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
@@ -41,6 +41,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.spfilter),tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,1,nil,e,tp)
 	local tc=g:GetFirst()
 	if g:GetCount()>0 and Duel.SpecialSummon(tc,0,tp,tp,true,false,POS_FACEUP)~=0 then
+		local fsc=tc
 		if tc:IsCode(10000010)
 			and tc:IsAbleToGrave()
 			and Duel.IsExistingMatchingCard(s.spfilter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,tc)
@@ -52,34 +53,22 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 				local sc=sg:GetFirst()
 				if sc then
 					Duel.SpecialSummon(sc,0,tp,tp,false,false,POS_FACEUP)
+					fsc=sc
 				end
-				local fid=e:GetHandler():GetFieldID()
-				sc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,0,1,fid)
-				local e1=Effect.CreateEffect(e:GetHandler())
-				e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-				e1:SetCode(EVENT_PHASE+PHASE_END)
-				e1:SetCountLimit(1)
-				e1:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
-				e1:SetLabel(fid)
-				e1:SetLabelObject(sc)
-				e1:SetCondition(s.tgcon)
-				e1:SetOperation(s.tgop)
-				Duel.RegisterEffect(e1,tp)
 			end
-		else
-			local fid=e:GetHandler():GetFieldID()
-			tc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,0,1,fid)
-			local e1=Effect.CreateEffect(e:GetHandler())
-			e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-			e1:SetCode(EVENT_PHASE+PHASE_END)
-			e1:SetCountLimit(1)
-			e1:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
-			e1:SetLabel(fid)
-			e1:SetLabelObject(tc)
-			e1:SetCondition(s.tgcon)
-			e1:SetOperation(s.tgop)
-			Duel.RegisterEffect(e1,tp)
 		end
+		local fid=e:GetHandler():GetFieldID()
+		fsc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,0,1,fid)
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		e1:SetCode(EVENT_PHASE+PHASE_END)
+		e1:SetCountLimit(1)
+		e1:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
+		e1:SetLabel(fid)
+		e1:SetLabelObject(fsc)
+		e1:SetCondition(s.tgcon)
+		e1:SetOperation(s.tgop)
+		Duel.RegisterEffect(e1,tp)
 	end
 end
 function s.tgcon(e,tp,eg,ep,ev,re,r,rp)

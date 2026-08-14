@@ -1,4 +1,4 @@
---暗黒の太陽神-ラーの翼神竜
+--暗黒の太陽神－ラーの翼神竜
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--fusion
@@ -12,7 +12,7 @@ function s.initial_effect(c)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetValue(s.efilter)
 	c:RegisterEffect(e1)
-	--destroy
+	--tograve
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,0))
 	e2:SetCategory(CATEGORY_TOGRAVE)
@@ -86,7 +86,6 @@ function s.tgtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,g,g:GetCount(),0,0)
 end
 function s.tgop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
 	local dis=e:GetLabel()
 	local g=Duel.GetMatchingGroup(s.tgfilter2,tp,0,LOCATION_MZONE,nil,dis)
 	if g:GetCount()>0 then

@@ -1,4 +1,4 @@
---太陽神の拷問具-バイサー・デス・ショック
+--太陽神の拷問具－バイサー・デス・ショック
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddCodeList(c,101307051)
@@ -9,7 +9,7 @@ function s.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e1:SetCode(EVENT_TO_GRAVE)
 	e1:SetRange(LOCATION_HAND)
-	e1:SetProperty(EFFECT_FLAG_DELAY)
+	e1:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
 	e1:SetCountLimit(1,id)
 	e1:SetCondition(s.spcon)
 	e1:SetTarget(s.sptg)
@@ -74,9 +74,11 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	if c:IsRelateToChain() and Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)~=0 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
 		local g=Duel.SelectMatchingCard(tp,s.thfiltr,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,c)
-		if g:GetCount()>0 and Duel.SendtoHand(g,nil,REASON_EFFECT)~=0
-			and g:IsExists(Card.IsLocation,1,nil,LOCATION_HAND+LOCATION_EXTRA) then
-			Duel.Damage(1-tp,800,REASON_EFFECT)
+		if g:GetCount()>0 then
+			Duel.HintSelection(g)
+			if Duel.SendtoHand(g,nil,REASON_EFFECT)~=0 and g:IsExists(Card.IsLocation,1,nil,LOCATION_HAND+LOCATION_EXTRA) then
+				Duel.Damage(1-tp,800,REASON_EFFECT)
+			end
 		end
 	end
 end

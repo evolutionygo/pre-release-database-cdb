@@ -5,7 +5,7 @@ function s.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
-	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_CONTROL)
+	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_CONTROL+CATEGORY_GRAVE_SPSUMMON)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetCountLimit(1,id)
@@ -36,14 +36,17 @@ end
 function s.spfilter(c,e,tp)
 	return c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP)
 end
+function s.cfilter2(c)
+	return c:IsFaceup() and c:IsCode(10000010)
+end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	local g=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_GRAVE,LOCATION_GRAVE,nil,e,tp)
+	local sg=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_GRAVE,LOCATION_GRAVE,nil,e,tp)
+	local mg=Duel.GetMatchingGroup(s.cnfilter,tp,0,LOCATION_MZONE,nil)
 	local b1=not Duel.IsPlayerAffectedByEffect(tp,59822133)
 		and Duel.GetLocationCount(tp,LOCATION_MZONE)>=2
-		and g:GetClassCount(Card.GetControler)>=2
+		and sg:GetClassCount(Card.GetControler)>=2
 	local b2=Duel.IsExistingMatchingCard(s.cfilter2,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil)
-		 and sg:GetCount()>0
-	local sg=Duel.GetMatchingGroup(s.cnfilter,tp,0,LOCATION_MZONE,nil)
+		 and mg:GetCount()>0
 	if chk==0 then
 		return b1 or b2
 	end
@@ -56,9 +59,6 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.cgheck(c)
 	return c:GetClassCount(Card.GetControler)==2
-end
-function s.cfilter2(c)
-	return c:IsFaceup() and c:IsCode(10000010)
 end
 function s.cnfilter(c)
 	return c:IsControlerCanBeChanged(true)
