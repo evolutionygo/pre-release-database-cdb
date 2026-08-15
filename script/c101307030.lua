@@ -54,7 +54,7 @@ end
 function s.tgcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.tgfilter,tp,0,LOCATION_MZONE,1,e:GetHandler())
 		and Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_HAND,0,1,nil) end
-	local rt=Duel.GetTargetCount(s.tgfilter,tp,0,LOCATION_MZONE,e:GetHandler())
+	local rt=Duel.GetMatchingGroupCount(s.tgfilter,tp,0,LOCATION_MZONE,e:GetHandler())
 	local ct=Duel.DiscardHand(tp,s.cfilter,1,rt,REASON_COST+REASON_DISCARD,nil)
 	e:SetLabel(ct)
 end
