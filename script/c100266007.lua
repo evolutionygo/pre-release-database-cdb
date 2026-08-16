@@ -17,10 +17,9 @@ function s.condition(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_ONFIELD) and aux.NegateAnyFilter(chkc) and chkc~=e:GetHandler() end
-	local b1=Duel.CheckLPCost(tp,800)
-		and Duel.IsExistingTarget(aux.NegateAnyFilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,e:GetHandler())
+	local b1=Duel.IsExistingTarget(aux.NegateAnyFilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,e:GetHandler())
 		and Duel.IsExistingMatchingCard(Card.IsFaceup,tp,0,LOCATION_MZONE,1,nil)
-		and (not e:IsCostChecked() or Duel.GetFlagEffect(tp,id)==0)
+		and (not e:IsCostChecked() or Duel.GetFlagEffect(tp,id)==0 and Duel.CheckLPCost(tp,800))
 	local b2=false
 	local og=Group.CreateGroup()
 	local ch=Duel.GetCurrentChain()
