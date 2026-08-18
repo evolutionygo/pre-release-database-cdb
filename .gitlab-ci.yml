@@ -488,6 +488,13 @@ deploy_to_hanasame:
     SERVER_USER: root
     SERVER_PATH: /root/nginx/srvpro2/expansions
 
+deploy_to_jwyxym:
+  extends: .deploy_to_server
+  variables:
+    SERVER_HOST: ygo.ygopro3.cn
+    SERVER_USER: root
+    SERVER_PATH: /root/servers/ygopro/cards-pre
+
 deploy_to_koishi_clear:
   extends: deploy_to_koishi
   dependencies:
