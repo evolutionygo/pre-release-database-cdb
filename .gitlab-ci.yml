@@ -488,7 +488,7 @@ deploy_to_hanasame:
     SERVER_USER: root
     SERVER_PATH: /root/nginx/srvpro2/expansions
 
-deploy_to_ygopro3:
+deploy_to_jwyxym:
   extends: .deploy_to_server
   variables:
     SERVER_HOST: ygo.ygopro3.cn
