@@ -1,8 +1,9 @@
---光帰の旅-『セネト』
+--光帰の旅－『セネト』
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_DECKDES+CATEGORY_GRAVE_SPSUMMON+CATEGORY_DRAW)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
@@ -15,7 +16,7 @@ function s.chkfilter(c)
 	return c:IsFaceupEx() and (c:IsType(TYPE_NORMAL) or bit.band(c:GetOriginalType(),TYPE_NORMAL)~=0)
 end
 function s.spfilter(c,e,tp)
-	return c:IsType(TYPE_FUSION) and not c:IsType(TYPE_EFFECT)
+	return c:IsType(TYPE_FUSION) and not c:IsType(TYPE_EFFECT) and c:IsLevelBelow(8)
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and Duel.GetLocationCountFromEx(tp,tp,nil,c)>0
 end
 function s.spfilter2(c,e,tp)
@@ -37,7 +38,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local sg=Duel.GetMatchingGroup(s.chkfilter,tp,LOCATION_HAND+LOCATION_GRAVE+LOCATION_ONFIELD+LOCATION_DECK,0,nil)
 	local b1=sg:GetCount()>=2 and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp)
 	local b2=sg:GetCount()>=3 and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(s.spfilter2,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil,e,tp)
+		and Duel.IsExistingMatchingCard(aux.NecroValleyFilter(s.spfilter2),tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil,e,tp)
 	local ct1=2
 	if not b1 then ct1=3 end
 	local ct2=3
@@ -70,12 +71,12 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SpecialSummonComplete()
 	elseif rg:GetCount()==3 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-		local g=Duel.SelectMatchingCard(tp,s.spfilter2,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,1,nil,e,tp)
+		local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.spfilter2),tp,LOCATION_DECK+LOCATION_GRAVE,0,1,1,nil,e,tp)
 		if g:GetCount()>0 then
 			Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 		end
 	end
-	if rg:IsExists(Card.IsLocation,1,nil,LOCATION_HAND) then
+	if rg:IsExists(Card.IsLocation,1,nil,LOCATION_HAND) and Duel.IsPlayerCanDraw(tp) and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
 		Duel.BreakEffect()
 		Duel.Draw(tp,1,REASON_EFFECT)
 	end
