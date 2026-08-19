@@ -73,7 +73,7 @@ function s.sprcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
 	local g=Duel.GetMatchingGroup(s.sprfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil,c)
-	return g:CheckSubGroup(s.fselect,3,3,tp,c)
+	return g:CheckSubGroup(s.fselect,3,3,tp,c) and Duel.GetFlagEffect(tp,id)==0
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,c)
 	local g=Duel.GetMatchingGroup(s.sprfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil,c)
@@ -127,7 +127,7 @@ function s.condition(e,tp,eg,ep,ev,re,r,rp)
 	return c:IsSummonType(SUMMON_TYPE_FUSION) or c:GetFlagEffect(id)>0
 end
 function s.regop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1)
+	Duel.RegisterFlagEffect(e:GetHandler():GetSummonPlayer(),id,RESET_PHASE+PHASE_END,0,1)
 end
 function s.damcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetTurnPlayer()==tp
