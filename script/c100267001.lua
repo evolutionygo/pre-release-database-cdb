@@ -46,9 +46,8 @@ function s.settg(e,tp,eg,ep,ev,re,r,rp,chk)
 		and Duel.IsExistingMatchingCard(s.setfilter,tp,LOCATION_DECK,0,1,nil) end
 end
 function s.gcheck(g,ft,res)
-	return g:FilterCount(aux.NOT(Card.IsType),nil,TYPE_FIELD)<=ft-1
+	return (g:FilterCount(aux.NOT(Card.IsType),nil,TYPE_FIELD)<=ft-1 or res)
 		and g:FilterCount(Card.IsType,nil,TYPE_FIELD)<=1
-		or res
 end
 function s.setop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(s.setfilter,tp,LOCATION_DECK,0,nil)
