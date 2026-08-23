@@ -55,7 +55,7 @@ function s.ssplimit(e,se,sp,st)
 	return bit.band(st,SUMMON_TYPE_FUSION)==SUMMON_TYPE_FUSION and Duel.GetFlagEffect(sp,id)==0
 end
 function s.mfilter(c,fc,sub,mg,sg)
-	return c:IsControler(fc:GetControler()) and c:IsFusionSetCard(0x2ef)
+	return c:IsControler(fc:GetControler()) and c:IsFusionSetCard(0x2ef) and c:IsOnField()
 end
 function s.mfilter2(c,fc,sub,mg,sg)
 	return c:IsFaceup() and c:IsOnField()
