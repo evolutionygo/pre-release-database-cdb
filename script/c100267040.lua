@@ -52,7 +52,7 @@ function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Remove(dg,POS_FACEDOWN,REASON_COST)
 end
 function s.rmfilter(c,tp)
-	return c:IsFaceupEx() and c:IsSetCard(0x2ec) and c:IsLevelBelow(4) and Duel.GetMZoneCount(tp,c)>0 and c:IsAbleToRemove(tp,POS_FACEDOWN)
+	return c:IsFaceupEx() and c:IsSetCard(0x2ec) and c:GetOriginalLevel()<=4 and Duel.GetMZoneCount(tp,c)>0 and c:IsAbleToRemove(tp,POS_FACEDOWN)
 end
 function s.spfilter(c,e,tp)
 	return c:IsFacedown() and c:IsSetCard(0x2ec) and c:IsLevelAbove(5)
