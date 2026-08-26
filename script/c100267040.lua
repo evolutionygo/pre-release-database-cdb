@@ -51,25 +51,28 @@ function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.DisableShuffleCheck()
 	Duel.Remove(dg,POS_FACEDOWN,REASON_COST)
 end
-function s.rmfilter(c,tp)
-	return c:IsFaceupEx() and c:IsSetCard(0x2ec) and c:GetOriginalLevel()<=4 and Duel.GetMZoneCount(tp,c)>0 and c:IsAbleToRemove(tp,POS_FACEDOWN)
+function s.rmfilter(c,tp,chk)
+	return c:IsFaceupEx() and c:IsSetCard(0x2ec) and c:GetOriginalLevel()>0 and c:GetOriginalLevel()<=4
+		and c:IsAbleToRemove(tp,POS_FACEDOWN) and (not chk or Duel.GetMZoneCount(tp,c)>0)
 end
 function s.spfilter(c,e,tp)
 	return c:IsFacedown() and c:IsSetCard(0x2ec) and c:IsLevelAbove(5)
 		and Duel.IsPlayerCanSpecialSummonMonster(tp,c:GetCode(),0x2ec,TYPE_MONSTER+TYPE_EFFECT,c:GetAttack(),c:GetDefense(),c:GetLevel(),c:GetRace(),c:GetAttribute())
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.rmfilter,tp,LOCATION_MZONE,0,1,nil,tp)
+	if chk==0 then return Duel.IsExistingMatchingCard(s.rmfilter,tp,LOCATION_MZONE,0,1,nil,tp,true)
 		and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_REMOVED,0,1,nil,e,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,1,tp,LOCATION_MZONE)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_REMOVED)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetMatchingGroup(s.rmfilter,tp,LOCATION_MZONE,0,nil,tp)
+	local g=Duel.GetMatchingGroup(s.rmfilter,tp,LOCATION_MZONE,0,nil,tp,true)
+	if #g==0 then g=Duel.GetMatchingGroup(s.rmfilter,tp,LOCATION_MZONE,0,nil,tp,false) end
 	if #g==0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local dg=g:Select(tp,1,1,nil)
-	if Duel.Remove(dg,POS_FACEDOWN,REASON_EFFECT)~=0 then
+	Duel.HintSelection(dg)
+	if Duel.Remove(dg,POS_FACEDOWN,REASON_EFFECT)~=0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local sg=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_REMOVED,0,1,1,nil,e,tp)
 		if sg:GetCount()>0 then
