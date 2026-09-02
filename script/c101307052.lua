@@ -19,7 +19,7 @@ function s.initial_effect(c)
 	e2:SetTarget(s.thtg)
 	e2:SetOperation(s.thop)
 	c:RegisterEffect(e2)
-	--draw
+	--damage
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,1))
 	e3:SetCategory(CATEGORY_DAMAGE+CATEGORY_RECOVER)
@@ -94,9 +94,9 @@ function s.damop(e,tp,eg,ep,ev,re,r,rp)
 	end
 	if dmg1>0 or dmg2>0 then
 		Duel.RDComplete()
-	end
-	if Duel.IsExistingMatchingCard(Card.IsCode,tp,LOCATION_GRAVE,0,1,nil,10000010) then
-		Duel.BreakEffect()
-		Duel.Recover(tp,1000,REASON_EFFECT)
+		if Duel.IsExistingMatchingCard(Card.IsCode,tp,LOCATION_GRAVE,0,1,nil,10000010) then
+			Duel.BreakEffect()
+			Duel.Recover(tp,1000,REASON_EFFECT)
+		end
 	end
 end
