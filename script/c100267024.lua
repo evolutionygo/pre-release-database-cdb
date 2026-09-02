@@ -1,7 +1,6 @@
 --レイズ・ムーンの星々
 local s,id,o=GetID()
 function s.initial_effect(c)
-	aux.AddCodeList(c,10000020)
 	--Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
@@ -28,7 +27,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_DECK,0,1,nil) end
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,3))
+	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,2))
 	local g=Duel.SelectMatchingCard(tp,s.cfilter,tp,LOCATION_DECK,0,1,1,nil)
 	local tc=g:GetFirst()
 	if tc then
@@ -67,8 +66,8 @@ function s.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
 		and Duel.IsPlayerCanDraw(tp,1)
 	if chk==0 then return b1 or b2 end
 	local op=aux.SelectFromOptions(tp,
-			{b1,aux.Stringid(id,2),1},
-			{b2,aux.Stringid(id,3),2})
+			{b1,aux.Stringid(id,3),1},
+			{b2,aux.Stringid(id,4),2})
 	e:SetLabel(op)
 	if op==1 then
 		Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,PLAYER_ALL,1)
@@ -80,8 +79,8 @@ function s.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.drop(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetLabel()==1 then
-		local d1=Duel.Draw(tp,1,REASON_EFFECT)
-		local d2=Duel.Draw(1-tp,1,REASON_EFFECT)
+		Duel.Draw(tp,1,REASON_EFFECT)
+		Duel.Draw(1-tp,1,REASON_EFFECT)
 	elseif e:GetLabel()==2 then
 		local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 		Duel.Draw(p,d,REASON_EFFECT)
