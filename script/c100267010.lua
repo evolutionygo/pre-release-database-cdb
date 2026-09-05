@@ -62,12 +62,13 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.negcon(e,tp,eg,ep,ev,re,r,rp)
-	local loc,seq=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_LOCATION,CHAININFO_TRIGGERING_SEQUENCE)
-	return rp~=tp and re:IsActiveType(TYPE_MONSTER) and loc==LOCATION_MZONE and seq==e:GetLabel()
+	local rc=re:GetHandler()
+	return rp==1-tp and re:IsActiveType(TYPE_MONSTER) and rc:IsRelateToChain(ev)
+		and rc:IsControler(1-tp) and rc:IsLocation(LOCATION_MZONE) and rc:GetSequence()==e:GetLabel()
 end
 function s.negop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_CARD,0,id)
-	Duel.NegateEffect(ev,true)
+	Duel.NegateEffect(ev)
 end
 function s.csfilter(c)
 	return c:IsFaceup() and c:GetOriginalType()&TYPE_MONSTER~=0
