@@ -1,6 +1,6 @@
 --光器の瀑布
 local s,id,o=GetID()
-local IsCardType = Card.IsCardType or function(c,tpe)
+local IsAllCardType = Card.IsAllCardType or function(c,tpe)
 	return c:GetOriginalType()&tpe==tpe or c:GetFlagEffect(100267007)>0
 end
 function s.initial_effect(c)
@@ -74,7 +74,7 @@ function s.negop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.NegateEffect(ev)
 end
 function s.csfilter(c)
-	return c:IsFaceup() and IsCardType(c,TYPE_NORMAL+TYPE_MONSTER)
+	return c:IsFaceup() and IsAllCardType(c,TYPE_NORMAL+TYPE_MONSTER)
 end
 function s.getatk(c)
 	if c:IsType(TYPE_MONSTER) then

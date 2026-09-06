@@ -1,6 +1,6 @@
 --光帰葬魂の儀
 local s,id,o=GetID()
-local IsCardType = Card.IsCardType or function(c,tpe)
+local IsAllCardType = Card.IsAllCardType or function(c,tpe)
 	return c:GetOriginalType()&tpe==tpe or c:GetFlagEffect(100267007)>0
 end
 function s.initial_effect(c)
@@ -68,7 +68,7 @@ function s.spfilter(c,e,tp,m)
 	return res
 end
 function s.matfilter(c)
-	return IsCardType(c,TYPE_NORMAL+TYPE_MONSTER)
+	return IsAllCardType(c,TYPE_NORMAL+TYPE_MONSTER)
 		and c:IsFaceupEx() and c:IsAbleToGrave()
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)

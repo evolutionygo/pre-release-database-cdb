@@ -1,7 +1,7 @@
 --光帰の旅－『セネト』
 local s,id,o=GetID()
 EFFECT_ADD_CARD_TYPE=377
-local IsCardType = Card.IsCardType or function(c,tpe)
+local IsAllCardType = Card.IsAllCardType or function(c,tpe)
 	return c:GetOriginalType()&tpe==tpe or c:GetFlagEffect(100267007)>0
 end
 function s.initial_effect(c)
@@ -17,7 +17,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function s.chkfilter(c)
-	return c:IsFaceupEx() and IsCardType(c,TYPE_NORMAL+TYPE_MONSTER)
+	return c:IsFaceupEx() and IsAllCardType(c,TYPE_NORMAL+TYPE_MONSTER)
 end
 function s.spfilter(c,e,tp)
 	return c:IsType(TYPE_FUSION) and not c:IsType(TYPE_EFFECT) and c:IsLevelBelow(8)
@@ -65,7 +65,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_EXTRA,0,1,1,nil,e,tp)
 		local tc=g:GetFirst()
 		if tc and Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP)~=0 then
-			if Card.IsCardType then
+			if Card.IsAllCardType then
 				local e1=Effect.CreateEffect(c)
 				e1:SetDescription(aux.Stringid(id,2))
 				e1:SetType(EFFECT_TYPE_SINGLE)
