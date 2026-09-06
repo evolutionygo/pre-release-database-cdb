@@ -1,5 +1,8 @@
 --光器還魂の儀
 local s,id,o=GetID()
+local IsCardType = Card.IsCardType or function(c,tpe)
+	return c:GetOriginalType()&tpe==tpe or c:GetFlagEffect(100267007)>0
+end
 function s.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
@@ -57,8 +60,8 @@ function s.spfilter(c,e,tp,m)
 	return res
 end
 function s.matfilter(c)
-	return (c:IsType(TYPE_NORMAL) or bit.band(c:GetOriginalType(),TYPE_NORMAL)~=0)
-		and c:IsFaceupEx() and c:IsAbleToGrave() and bit.band(c:GetOriginalType(),TYPE_MONSTER)~=0
+	return IsCardType(c,TYPE_NORMAL+TYPE_MONSTER)
+		and c:IsFaceupEx() and c:IsAbleToGrave()
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
@@ -114,8 +117,7 @@ function s.eqlimit(e,c)
 	return c==e:GetLabelObject()
 end
 function s.repfilter(c,tp)
-	return c:IsFaceupEx() and c:GetOriginalType()&TYPE_MONSTER~=0
-		and (not c:IsType(TYPE_MONSTER) and c:GetOriginalType()&TYPE_NORMAL~=0 or c:IsAllTypes(TYPE_NORMAL+TYPE_MONSTER))
+	return c:IsFaceupEx() and IsCardType(c,TYPE_NORMAL+TYPE_MONSTER)
 		and c:IsControler(tp) and c:IsReason(REASON_EFFECT+REASON_BATTLE) and not c:IsReason(REASON_REPLACE)
 end
 function s.reptg(e,tp,eg,ep,ev,re,r,rp,chk)

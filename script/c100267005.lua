@@ -1,5 +1,8 @@
 --セネトメス・ネクベト
 local s,id,o=GetID()
+local IsCardType = Card.IsCardType or function(c,tpe)
+	return c:GetOriginalType()&tpe==tpe or c:GetFlagEffect(100267007)>0
+end
 function s.initial_effect(c)
 	c:EnableReviveLimit()
 	--tohand
@@ -59,7 +62,7 @@ function s.eqcon(e)
 	return c:GetEquipCount()>0
 end
 function s.spfilter(c,e,tp)
-	return c:IsFaceup() and bit.band(c:GetOriginalType(),TYPE_NORMAL)~=0
+	return c:IsFaceup() and IsCardType(c,TYPE_NORMAL+TYPE_MONSTER)
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and Duel.GetSZoneCount(tp,c)>0
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
