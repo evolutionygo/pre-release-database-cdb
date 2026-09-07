@@ -40,7 +40,7 @@ function s.eqop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if c:IsRelateToChain() then
 		if Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 or tc:IsFacedown() or not tc:IsRelateToChain() or not tc:IsLocation(LOCATION_MZONE) then
-			Duel.SendtoGrave(c,REASON_EFFECT)
+			Duel.SendtoGrave(c,REASON_RULE)
 			return
 		end
 		if not Duel.Equip(tp,c,tc) then return end

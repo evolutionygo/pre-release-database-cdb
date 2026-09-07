@@ -78,7 +78,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=g:GetFirst()
 	if g:GetCount()>0 and Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)~=0
 		and Duel.GetLocationCount(tp,LOCATION_SZONE)>0
-		and c:IsRelateToChain() then
+		and c:IsRelateToChain() and c:IsControler(tp) then
 		Duel.BreakEffect()
 		if not Duel.Equip(tp,c,tc) then return end
 		local e1=Effect.CreateEffect(c)
