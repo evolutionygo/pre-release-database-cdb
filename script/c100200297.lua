@@ -72,7 +72,7 @@ function s.atkcon(e)
 	return Duel.GetLP(e:GetHandlerPlayer())<=4000
 end
 function s.disfilter(c)
-	return c:IsEffectProperty(aux.EffectPropertyFilter(EFFECT_FLAG_DICE))
+	return c:IsFaceup() and c:IsEffectProperty(aux.EffectPropertyFilter(EFFECT_FLAG_DICE))
 end
 function s.discon(e,tp,eg,ep,ev,re,r,rp)
 	return rp==1-tp and Duel.IsChainDisablable(ev)
