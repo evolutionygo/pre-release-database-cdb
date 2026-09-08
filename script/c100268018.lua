@@ -28,7 +28,8 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 	--destroy
 	local e4=Effect.CreateEffect(c)
-	e4:SetCategory(CATEGORY_DESTROY+CATEGORY_DAMAGE)
+	e4:SetDescription(aux.Stringid(id,1))
+	e4:SetCategory(CATEGORY_DESTROY)
 	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e4:SetCode(EVENT_ATTACK_ANNOUNCE)
 	e4:SetRange(LOCATION_MZONE)
@@ -38,6 +39,7 @@ function s.initial_effect(c)
 	e4:SetOperation(s.desop)
 	c:RegisterEffect(e4)
 	local e5=e4:Clone()
+	e5:SetDescription(aux.Stringid(id,1))
 	e5:SetType(EFFECT_TYPE_QUICK_O)
 	e5:SetCode(EVENT_CHAINING)
 	e5:SetCondition(s.descon2)
@@ -72,30 +74,28 @@ end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local tc=Duel.GetAttacker()
 	if chk==0 then return tc:IsDestructable() end
+	Duel.SetTargetCard(tc)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,tc,1,0,0)
-	if tc:GetTextAttack()>0 then
-		Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,tc:GetTextAttack())
-	end
 end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetAttacker()
-	if tc:IsRelateToBattle() then
+	if tc:IsRelateToChain() and tc:IsType(TYPE_MONSTER) then
 		Duel.Destroy(tc,REASON_EFFECT)
 	end
 end
 function s.descon2(e,tp,eg,ep,ev,re,r,rp)
+	local atk=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_ATTACK)
 	return rp~=tp and re:GetHandler():IsOnField() and re:GetHandler():IsRelateToEffect(re) and re:IsActiveType(TYPE_MONSTER)
-		and not re:GetHandler():IsAttackAbove(e:GetHandler():GetAttack())
+		and e:GetHandler():GetAttack()<atk
 end
 function s.destg2(e,tp,eg,ep,ev,re,r,rp,chk)
 	local tc=re:GetHandler()
 	if chk==0 then return tc:IsDestructable() end
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,tc,1,0,0)
-	if math.max(0,tc:GetTextAttack())>0 then Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,0) end
 end
 function s.desop2(e,tp,eg,ep,ev,re,r,rp)
 	local tc=re:GetHandler()
-	if tc:IsRelateToEffect(re) and tc:IsLocation(LOCATION_MZONE) then
+	if tc:IsRelateToChain(ev) and tc:IsLocation(LOCATION_MZONE) then
 		Duel.Destroy(tc,REASON_EFFECT)
 	end
 end
