@@ -20,7 +20,7 @@ function s.initial_effect(c)
 	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
-	e2:SetCode(EVENT_BATTLE_DESTROYING)
+	e2:SetCode(EVENT_BATTLE_DESTROYED)
 	e2:SetRange(LOCATION_GRAVE)
 	e2:SetCountLimit(1,id+o)
 	e2:SetCondition(s.spcon)
@@ -60,9 +60,15 @@ function s.drop(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetReset(RESET_PHASE+PHASE_END)
 	Duel.RegisterEffect(e1,tp)
 end
+function s.bdfilter(c,tp)
+	if c:IsRace(RACE_FIEND) and c:IsPreviousControler(tp) then return true end
+	local rc=c:GetBattleTarget()
+	return rc:IsRace(RACE_FIEND)
+		and (not rc:IsLocation(LOCATION_MZONE) and rc:IsPreviousControler(tp)
+			or rc:IsLocation(LOCATION_MZONE) and rc:IsControler(tp))
+end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
-	local rc=eg:GetFirst()
-	return rc:IsRelateToBattle() and rc:IsFaceup() and rc:IsRace(RACE_FIEND) and rc:IsControler(tp)
+	return not eg:IsContains(e:GetHandler()) and eg:IsExists(s.bdfilter,1,nil,tp)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0

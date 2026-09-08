@@ -17,11 +17,13 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,0,LOCATION_HAND,1,nil) end
 	local c=e:GetHandler()
 	e:SetLabel(0)
-	if e:IsCostChecked() then
-		if not c:IsStatus(STATUS_ACT_FROM_HAND) and c:IsHasType(EFFECT_TYPE_ACTIVATE) then
+	if not c:IsStatus(STATUS_ACT_FROM_HAND) and e:IsHasType(EFFECT_TYPE_ACTIVATE) then
+		if e:IsCostChecked() then
 			e:SetCategory(CATEGORY_REMOVE+CATEGORY_SEARCH+CATEGORY_TOHAND)
-			e:SetLabel(1)
-		else
+		end
+		e:SetLabel(1)
+	else
+		if e:IsCostChecked() then
 			e:SetCategory(CATEGORY_REMOVE)
 		end
 	end

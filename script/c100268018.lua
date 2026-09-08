@@ -69,7 +69,7 @@ function s.dcon(e)
 	return Duel.IsExistingMatchingCard(Card.IsFacedown,e:GetHandlerPlayer(),LOCATION_ONFIELD,0,1,nil)
 end
 function s.descon(e,tp,eg,ep,ev,re,r,rp)
-	return tp~=Duel.GetTurnPlayer() and not eg:GetFirst():IsAttackAbove(e:GetHandler():GetAttack())
+	return not eg:GetFirst():IsAttackAbove(e:GetHandler():GetAttack())
 end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local tc=Duel.GetAttacker()
@@ -85,8 +85,8 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.descon2(e,tp,eg,ep,ev,re,r,rp)
 	local atk=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_ATTACK)
-	return rp~=tp and re:GetHandler():IsOnField() and re:GetHandler():IsRelateToEffect(re) and re:IsActiveType(TYPE_MONSTER)
-		and e:GetHandler():GetAttack()<atk
+	return re:GetHandler():IsOnField() and re:GetHandler():IsRelateToEffect(re) and re:IsActiveType(TYPE_MONSTER)
+		and e:GetHandler():GetAttack()>atk
 end
 function s.destg2(e,tp,eg,ep,ev,re,r,rp,chk)
 	local tc=re:GetHandler()
