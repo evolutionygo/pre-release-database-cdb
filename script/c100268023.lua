@@ -20,7 +20,7 @@ function s.initial_effect(c)
 	e2:SetCategory(CATEGORY_DESTROY+CATEGORY_SEARCH+CATEGORY_TOHAND)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_MZONE)
-	e2:SetCountLimit(1)
+	e2:SetCountLimit(1,id+o)
 	e2:SetTarget(s.destg)
 	e2:SetOperation(s.desop)
 	c:RegisterEffect(e2)
@@ -54,11 +54,11 @@ function s.eqfilter(c,tp)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.GetLocationCount(tp,LOCATION_SZONE)>0
 		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false)
 		and Duel.IsExistingMatchingCard(s.eqfilter,tp,LOCATION_GRAVE,0,1,nil,tp)
 		and Duel.GetLocationCount(tp,LOCATION_SZONE)>0 end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_LEAVE_GRAVE,nil,1,tp,LOCATION_GRAVE)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -92,8 +92,8 @@ function s.deqfilter(c,ec)
 end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-	if chk==0 then return Duel.IsExistingMatchingCard(s.deqfilter,tp,LOCATION_SZONE,0,1,nil,c) end
-	local g=Duel.GetMatchingGroup(s.deqfilter,tp,LOCATION_SZONE,0,nil,c)
+	if chk==0 then return Duel.IsExistingMatchingCard(s.deqfilter,tp,LOCATION_SZONE,LOCATION_SZONE,1,nil,c) end
+	local g=Duel.GetMatchingGroup(s.deqfilter,tp,LOCATION_SZONE,LOCATION_SZONE,nil,c)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,g:GetCount(),0,0)
 end
 function s.ckfilter(c,rc)
@@ -106,7 +106,7 @@ end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToChain() and c:IsFaceup() then
-		local g=Duel.GetMatchingGroup(s.deqfilter,tp,LOCATION_SZONE,0,nil,c)
+		local g=Duel.GetMatchingGroup(s.deqfilter,tp,LOCATION_SZONE,LOCATION_SZONE,nil,c)
 		if Duel.Destroy(g,REASON_EFFECT)~=0 then
 			local og=Duel.GetOperatedGroup():Filter(Card.IsType,nil,TYPE_MONSTER)
 			if Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil,og)

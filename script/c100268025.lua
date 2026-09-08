@@ -66,7 +66,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			local sg=Duel.GetMatchingGroup(s.tgfilter,tp,0,LOCATION_MZONE,nil)
 			if sg:GetCount()>0 and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-				local tg=sg:SelectSubGroup(tp,s.gcheck,false,1,6)
+				local tg=sg:SelectSubGroup(tp,s.gcheck,false,1,sg:GetCount())
 				Duel.HintSelection(tg)
 				Duel.BreakEffect()
 				Duel.SendtoGrave(tg,REASON_EFFECT)

@@ -21,7 +21,7 @@ function s.initial_effect(c)
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_BATTLE_DESTROYING)
-	e2:SetRange(LOCATION_FZONE)
+	e2:SetRange(LOCATION_GRAVE)
 	e2:SetCountLimit(1,id+o)
 	e2:SetCondition(s.spcon)
 	e2:SetTarget(s.sptg)
@@ -62,8 +62,7 @@ function s.drop(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	local rc=eg:GetFirst()
-	return rc:IsRelateToBattle() and rc:IsStatus(STATUS_OPPO_BATTLE)
-		and rc:IsFaceup() and rc:IsRace(RACE_FIEND) and rc:IsControler(tp)
+	return rc:IsRelateToBattle() and rc:IsFaceup() and rc:IsRace(RACE_FIEND) and rc:IsControler(tp)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
