@@ -1,4 +1,4 @@
---暗黒魔族ギルファー・デーモン-暗黒魔炎葬
+--暗黒魔族ギルファー・デーモン－暗黒魔炎葬
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--draw
@@ -17,6 +17,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 	--special summon
 	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_BATTLE_DESTROYING)
@@ -44,9 +45,12 @@ end
 function s.drop(e,tp,eg,ep,ev,re,r,rp)
 	local p=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER)
 	if Duel.Draw(p,1,REASON_EFFECT)~=0 then
-		Duel.ShuffleHand(tp)
-		Duel.BreakEffect()
-		Duel.DiscardHand(tp,nil,1,1,REASON_EFFECT+REASON_DISCARD)
+		local dg=Duel.SelectMatchingCard(p,Card.IsDiscardable,tp,LOCATION_HAND,0,1,1,nil,REASON_DISCARD+REASON_EFFECT)
+		if dg:GetCount()>0 then
+			Duel.BreakEffect()
+			Duel.ShuffleHand(p)
+			Duel.SendtoGrave(dg,REASON_EFFECT+REASON_DISCARD)
+		end
 	end
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_FIELD)

@@ -3,10 +3,11 @@ local s,id,o=GetID()
 function s.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_REMOVE)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
-	e1:SetHintTiming(0,TIMING_END_PHASE)
+	e1:SetHintTiming(0,TIMING_DRAW_PHASE+TIMING_END_PHASE)
 	e1:SetCountLimit(1,id+EFFECT_COUNT_CODE_OATH)
 	e1:SetTarget(s.target)
 	e1:SetOperation(s.activate)
@@ -14,6 +15,16 @@ function s.initial_effect(c)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,0,LOCATION_HAND,1,nil) end
+	local c=e:GetHandler()
+	e:SetLabel(0)
+	if e:IsCostChecked() then
+		if not c:IsStatus(STATUS_ACT_FROM_HAND) and c:IsHasType(EFFECT_TYPE_ACTIVATE) then
+			e:SetCategory(CATEGORY_REMOVE+CATEGORY_SEARCH+CATEGORY_TOHAND)
+			e:SetLabel(1)
+		else
+			e:SetCategory(CATEGORY_REMOVE)
+		end
+	end
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,1,1-tp,LOCATION_HAND)
 end
 function s.rmfilter(c,code)
@@ -32,7 +43,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetFieldGroup(1-tp,LOCATION_HAND,0)
 	local rc=g:RandomSelect(1-tp,1):GetFirst()
 	if Duel.Remove(rc,POS_FACEUP,REASON_EFFECT)>0 then
-		rc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,0,1)
+		rc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id,1))
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 		e1:SetCode(EVENT_PHASE+PHASE_STANDBY)
@@ -43,13 +54,12 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetCondition(s.retcon)
 		e1:SetOperation(s.retop)
 		Duel.RegisterEffect(e1,tp)
-		if not c:IsStatus(STATUS_ACT_FROM_HAND) and c:IsLocation(LOCATION_SZONE)
-			and rc:IsType(TYPE_MONSTER) then
+		if e:GetLabel()==1 and rc:IsType(TYPE_MONSTER) then
 			if rc:IsLevelBelow(4)
-				and (Duel.IsExistingMatchingCard(s.rmfilter,tp,0,LOCATION_GRAVE,1,nil,rc:GetCode())
+				and (Duel.IsExistingMatchingCard(aux.NecroValleyFilter(s.rmfilter),tp,0,LOCATION_GRAVE,1,nil,rc:GetCode())
 				or Duel.IsExistingMatchingCard(s.rmfilter2,tp,0,LOCATION_HAND+LOCATION_DECK,1,nil,rc:GetCode()))
 				and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
-				local rg=Duel.GetMatchingGroup(s.rmfilter,tp,0,LOCATION_GRAVE+LOCATION_HAND+LOCATION_DECK,nil,rc:GetCode())
+				local rg=Duel.GetMatchingGroup(aux.NecroValleyFilter(s.rmfilter),tp,0,LOCATION_GRAVE+LOCATION_HAND+LOCATION_DECK,nil,rc:GetCode())
 				if rg:GetCount()>0 then
 					Duel.BreakEffect()
 					Duel.Remove(rg,POS_FACEUP,REASON_EFFECT)

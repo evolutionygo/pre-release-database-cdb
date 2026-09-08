@@ -1,13 +1,15 @@
---マジックカード『エネミーコントローラー』
+--マジックカード「エネミーコントローラー」
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddCodeList(c,id)
 	--Activate
 	local e1=Effect.CreateEffect(c)
-	e1:SetCategory(CATEGORY_DESTROY+CATEGORY_SUMMON)
+	e1:SetDescription(aux.Stringid(id,0))
+	e1:SetCategory(CATEGORY_DESTROY+CATEGORY_SUMMON+CATEGORY_MSET)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetCode(EVENT_FREE_CHAIN)
+	e1:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_END_PHASE)
 	e1:SetCountLimit(1,id)
 	e1:SetCost(s.cost)
 	e1:SetTarget(s.target)
@@ -15,6 +17,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 	--to hand
 	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_GRAVE)

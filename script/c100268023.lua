@@ -16,6 +16,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 	--destroy
 	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetCategory(CATEGORY_DESTROY+CATEGORY_SEARCH+CATEGORY_TOHAND)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_MZONE)
@@ -47,22 +48,23 @@ end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetFlagEffect(tp,id)>0
 end
-function s.eqfilter(c,tc,tp)
+function s.eqfilter(c,tp)
 	return c:IsType(TYPE_MONSTER)
 		and c:CheckUniqueOnField(tp) and not c:IsForbidden()
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and Duel.GetLocationCount(tp,LOCATION_SZONE)>0
 		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false)
-		and Duel.IsExistingMatchingCard(s.eqfilter,tp,LOCATION_GRAVE,0,1,nil,c,tp)
+		and Duel.IsExistingMatchingCard(s.eqfilter,tp,LOCATION_GRAVE,0,1,nil,tp)
 		and Duel.GetLocationCount(tp,LOCATION_SZONE)>0 end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsRelateToChain() and Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)~=0 then
+	if c:IsRelateToChain() and Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)~=0 and Duel.GetLocationCount(tp,LOCATION_SZONE)>0 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EQUIP)
-		local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.eqfilter),tp,LOCATION_GRAVE,0,1,1,nil,c,tp)
+		local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.eqfilter),tp,LOCATION_GRAVE,0,1,1,nil,tp)
 		local sc=g:GetFirst()
 		if sc and Duel.Equip(tp,sc,c) then
 			local e1=Effect.CreateEffect(c)
@@ -85,22 +87,26 @@ end
 function s.eqlimit(e,c)
 	return c==e:GetLabelObject()
 end
-function s.eqfilter(c,ec)
+function s.deqfilter(c,ec)
 	return c:GetEquipTarget()==ec
 end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.eqfilter,tp,LOCATION_SZONE,0,1,nil,c) end
-	local g=Duel.GetMatchingGroup(s.eqfilter,tp,LOCATION_SZONE,0,nil,c)
+	local c=e:GetHandler()
+	if chk==0 then return Duel.IsExistingMatchingCard(s.deqfilter,tp,LOCATION_SZONE,0,1,nil,c) end
+	local g=Duel.GetMatchingGroup(s.deqfilter,tp,LOCATION_SZONE,0,nil,c)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,g:GetCount(),0,0)
 end
-function s.thfilter(c,g)
+function s.ckfilter(c,rc)
 	return c:IsAttribute(rc:GetAttribute()) and c:IsRace(rc:GetRace())
-		and not c:IsLevel(rc:GetLevel()) and c:IsAbleToHand()
+		and not c:IsLevel(rc:GetLevel())
+end
+function s.thfilter(c,g)
+	return g:IsExists(s.ckfilter,1,nil,c) and c:IsAbleToHand()
 end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToChain() and c:IsFaceup() then
-		local g=Duel.GetMatchingGroup(s.eqfilter,tp,LOCATION_SZONE,0,nil,c:GetAttack())
+		local g=Duel.GetMatchingGroup(s.deqfilter,tp,LOCATION_SZONE,0,nil,c)
 		if Duel.Destroy(g,REASON_EFFECT)~=0 then
 			local og=Duel.GetOperatedGroup():Filter(Card.IsType,nil,TYPE_MONSTER)
 			if Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil,og)

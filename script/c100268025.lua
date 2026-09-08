@@ -14,6 +14,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 	--to hand
 	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetCategory(CATEGORY_TOHAND+CATEGORY_SUMMON)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_REMOVE)
@@ -66,8 +67,9 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			if sg:GetCount()>0 and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
 				local tg=sg:SelectSubGroup(tp,s.gcheck,false,1,6)
+				Duel.HintSelection(tg)
 				Duel.BreakEffect()
-				Duel.SendtoGrave(tg,nil,REASON_EFFECT)
+				Duel.SendtoGrave(tg,REASON_EFFECT)
 			end
 		end
 	end
@@ -81,7 +83,7 @@ function s.sumfilter(c,e)
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsRelateToChain() and aux.NecroValleyFilter()(c) then
+	if c:IsRelateToChain() then
 		Duel.SendtoHand(c,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,c)
 		if Duel.IsExistingMatchingCard(s.sumfilter,tp,LOCATION_HAND,0,1,nil,e)
@@ -92,7 +94,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 			if sg:GetCount()>0 then
 				Duel.Summon(tp,sg:GetFirst(),true,e:GetLabelObject())
 			end
-		end
+		end	
 	end
 end
 function s.ntcon(e,c,minc)
