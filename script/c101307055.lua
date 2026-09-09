@@ -48,10 +48,10 @@ function s.gcheck(g,mg)
 	local lv=g:GetSum(Card.GetLevel)
 	for tc in aux.Next(g) do
 		if mg:CheckWithSumGreater(Card.GetRitualLevel,lv,tc) then
-			res=true
+			return true
 		end
 	end
-	return res
+	return false
 end
 function s.rsgcheck(g,sg)
 	local res=false
@@ -59,10 +59,10 @@ function s.rsgcheck(g,sg)
 	for tc in aux.Next(sg) do
 		Duel.SetSelectedCard(g)
 		if g:CheckWithSumGreater(Card.GetRitualLevel,lv,tc) then
-			res=true
+			return true
 		end
 	end
-	return res
+	return false
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	::cancel::
