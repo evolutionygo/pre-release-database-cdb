@@ -30,7 +30,8 @@ function s.initial_effect(c)
 end
 function s.negcon(e,tp,eg,ep,ev,re,r,rp)
 	local loc=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_LOCATION)
-	return e:GetHandler():IsSummonType(SUMMON_TYPE_RITUAL) and ep==1-tp and (loc&LOCATION_ONFIELD+LOCATION_GRAVE)~=0 and re:IsActiveType(TYPE_MONSTER) and Duel.IsChainNegatable(ev)
+	return e:GetHandler():IsSummonType(SUMMON_TYPE_RITUAL) and ep==1-tp and loc&(LOCATION_ONFIELD+LOCATION_GRAVE)~=0
+		and re:IsActiveType(TYPE_MONSTER) and Duel.IsChainNegatable(ev)
 end
 function s.negtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
@@ -45,21 +46,22 @@ function s.gcheck(g)
 end
 function s.negop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local g=Duel.GetMatchingGroup(s.tdfiter,tp,0,LOCATION_MZONE+LOCATION_GRAVE,nil)
+	local g=Duel.GetMatchingGroup(aux.NecroValleyFilter(s.tdfiter),tp,0,LOCATION_MZONE+LOCATION_GRAVE,nil)
 	if Duel.NegateActivation(ev) and g:CheckSubGroup(s.gcheck,2,2)
 		and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
 		local sg=g:SelectSubGroup(tp,s.gcheck,false,2,2)
 		if sg:GetCount()>0 then
+			Duel.HintSelection(sg)
+			local flag=sg:FilterCount(aux.AND(Card.IsFaceup,Card.IsRace),nil,RACE_DRAGON)>0
 			Duel.BreakEffect()
 			Duel.SendtoDeck(sg,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)
-			if sg:IsExists(Card.IsRace,1,nil,RACE_DRAGON) 
-				and c:IsRelateToChain() and c:IsFaceup() then
+			if flag and c:IsRelateToChain() and c:IsFaceup() then
 				local e1=Effect.CreateEffect(c)
 				e1:SetType(EFFECT_TYPE_SINGLE)
 				e1:SetCode(EFFECT_SET_ATTACK_FINAL)
 				e1:SetValue(c:GetAttack()*2)
-				e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+				e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_DISABLE)
 				c:RegisterEffect(e1)
 			end
 		end
