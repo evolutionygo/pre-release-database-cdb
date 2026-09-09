@@ -42,7 +42,7 @@ end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(s.tgfilter,tp,LOCATION_DECK,0,nil)
 	if g:CheckSubGroup(s.tgcheck,2) then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
 		local tg=g:SelectSubGroup(tp,s.tgcheck,false,2,2)
 		if tg:GetCount()>0 then
 			Duel.SendtoGrave(tg,nil,REASON_EFFECT)

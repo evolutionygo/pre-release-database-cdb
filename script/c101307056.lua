@@ -40,7 +40,7 @@ function s.effectfilter(e,ct)
 	local p=e:GetHandlerPlayer()
 	local te,tp=Duel.GetChainInfo(ct,CHAININFO_TRIGGERING_EFFECT,CHAININFO_TRIGGERING_PLAYER)
 	local tc=te:GetHandler()
-	return tc:IsSetCard(0x2f1) and te:IsActiveType(TYPE_MONSTER)  and p==tp
+	return tc:IsSetCard(0x2f1) and te:IsActiveType(TYPE_MONSTER) and p==tp
 end
 function s.cfilter(c,tp)
 	return c:IsFaceupEx() and c:IsType(TYPE_MONSTER) and c:IsAbleToGraveAsCost()
