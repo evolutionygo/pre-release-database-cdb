@@ -52,7 +52,7 @@ end
 function s.rscon(e,tp,eg,ep,ev,re,r,rp)
 	return not e:GetHandler():IsReason(REASON_BATTLE)
 end
-function s.rfilter(c,e,tp)
+function s.rfilter(c)
 	return c:IsRace(RACE_INSECT)
 end
 function s.mfilter(c)
