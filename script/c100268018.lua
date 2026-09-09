@@ -1,7 +1,7 @@
 --闇魔導の覇王
 local s,id,o=GetID()
 function s.initial_effect(c)
-	aux.IsCodeListed(c,59197169)
+	aux.AddCodeList(c,59197169)
 	--special summon
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
