@@ -32,7 +32,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,2,tp,LOCATION_DECK)
 end
 function s.cfilter(c)
-	return c:IsFaceupEx() and c:IsRace(RACE_DRAGON)
+	return c:IsFaceupEx() and c:IsFaceupEx() and c:IsRace(RACE_DRAGON)
 end
 function s.thfilter2(c)
 	return c:IsRace(RACE_INSECT) and c:IsAbleToHand()
