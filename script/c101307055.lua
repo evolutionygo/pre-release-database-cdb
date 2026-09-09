@@ -25,7 +25,7 @@ function s.mfilter(c)
 	return c:GetLevel()>0 and c:IsRace(RACE_INSECT+RACE_DRAGON) and c:IsAbleToDeck()
 end
 function s.rfilter(c,e,tp,mg)
-	if not c:IsRace(RACE_INSECT)
+	if not c:IsRace(RACE_INSECT) or not c:IsType(TYPE_RITUAL)
 		or not c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_RITUAL,tp,false,true) then return false end
 	local mg2=mg:Clone()
 	if c.mat_filter then

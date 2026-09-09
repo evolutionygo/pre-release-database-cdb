@@ -34,7 +34,7 @@ end
 function s.cfilter(c)
 	return c:IsFaceupEx() and c:IsRace(RACE_DRAGON)
 end
-function s.thfilter(c)
+function s.thfilter2(c)
 	return c:IsRace(RACE_INSECT) and c:IsAbleToHand()
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
