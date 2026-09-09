@@ -3,6 +3,7 @@ local s,id,o=GetID()
 function s.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH+CATEGORY_HANDES_SELF+CATEGORY_GRAVE_ACTION)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
@@ -10,7 +11,7 @@ function s.initial_effect(c)
 	e1:SetTarget(s.target)
 	e1:SetOperation(s.activate)
 	c:RegisterEffect(e1)
-	--set
+	--place
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
@@ -31,7 +32,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,2,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,2,tp,LOCATION_DECK)
 end
-function s.cfilter(c)
+function s.omfilter(c)
 	return c:IsFaceupEx() and c:IsFaceupEx() and c:IsRace(RACE_DRAGON)
 end
 function s.thfilter2(c)
@@ -51,7 +52,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			if Duel.SendtoGrave(dg,REASON_EFFECT+REASON_DISCARD)~=0
 				and dg:IsExists(Card.IsLocation,1,nil,LOCATION_GRAVE) then
 				local gg=Duel.GetMatchingGroup(aux.NecroValleyFilter(s.thfilter2),tp,LOCATION_GRAVE,0,nil)
-				if Duel.IsExistingMatchingCard(s.cfilter,tp,0,LOCATION_MZONE+LOCATION_GRAVE,1,nil) and gg:GetCount()>0 and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
+				if Duel.IsExistingMatchingCard(s.omfilter,tp,0,LOCATION_MZONE+LOCATION_GRAVE,1,nil) and gg:GetCount()>0 and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 					Duel.BreakEffect()
 					Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 					local sg=gg:Select(tp,1,1,nil)

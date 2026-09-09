@@ -30,7 +30,7 @@ function s.cfilter1(c)
 	return c:IsFaceup() and c:GetOriginalLevel()>=8 and c:IsSetCard(0x2f1)
 end
 function s.cfilter2(c)
-	return c:IsRace(RACE_DRAGON)
+	return c:IsFaceupEx() and c:IsRace(RACE_DRAGON)
 end
 function s.nadcon(e)
 	return Duel.IsExistingMatchingCard(s.cfilter1,e:GetHandlerPlayer(),LOCATION_MZONE,0,1,nil)

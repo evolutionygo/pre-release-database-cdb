@@ -27,15 +27,15 @@ function s.filter(c)
 	return c:IsFaceup() and c:IsSetCard(0x2f1)
 end
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_MZONE,0,1,nil) and (re:IsActiveType(TYPE_MONSTER)
-		or re:IsHasType(EFFECT_TYPE_ACTIVATE)) and Duel.IsChainNegatable(ev)
+	return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_MZONE,0,1,nil) and Duel.IsChainNegatable(ev)
+		and (re:IsActiveType(TYPE_MONSTER) or re:IsHasType(EFFECT_TYPE_ACTIVATE))
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	Duel.SetOperationInfo(0,CATEGORY_NEGATE,eg,1,0,0)
 end
 function s.tgfilter(c)
-	return c:IsRace(RACE_INSECT) and c:IsAbleToGrave()
+	return c:IsRace(RACE_INSECT) and c:IsAbleToGrave() and c:IsFaceup()
 end
 function s.thfilter(c)
 	return c:IsSetCard(0x2f1) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
@@ -51,6 +51,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			Duel.ConfirmCards(1-tp,sg)
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
 			local tg=Duel.SelectMatchingCard(tp,s.tgfilter,tp,LOCATION_MZONE,0,1,1,nil)
+			Duel.HintSelection(tg)
 			Duel.SendtoGrave(tg,REASON_EFFECT)
 		end
 	end
@@ -67,5 +68,8 @@ function s.repval(e,c)
 	return s.repfilter(c,e:GetHandlerPlayer())
 end
 function s.repop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.SendtoDeck(e:GetHandler(),nil,SEQ_DECKBOTTOM,REASON_EFFECT)
+	Duel.Hint(HINT_CARD,0,id)
+	local c=e:GetHandler()
+	Duel.HintSelection(c)
+	Duel.SendtoDeck(c,nil,SEQ_DECKBOTTOM,REASON_EFFECT)
 end
