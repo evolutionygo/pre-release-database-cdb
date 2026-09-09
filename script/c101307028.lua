@@ -30,7 +30,7 @@ function s.initial_effect(c)
 end
 function s.negcon(e,tp,eg,ep,ev,re,r,rp)
 	local loc=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_LOCATION)
-	return e:GetHandler():IsSummonType(SUMMON_TYPE_RITUAL) and ep==1-tp and loc==LOCATION_HAND and re:IsActiveType(TYPE_MONSTER) and Duel.IsChainNegatable(ev)
+	return e:GetHandler():IsSummonType(SUMMON_TYPE_RITUAL) and ep==1-tp and (loc&LOCATION_ONFIELD+LOCATION_GRAVE)~=0 and re:IsActiveType(TYPE_MONSTER) and Duel.IsChainNegatable(ev)
 end
 function s.negtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
@@ -45,7 +45,7 @@ function s.gcheck(g)
 end
 function s.negop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local g=Duel.GetMatchingGroup(s.tdfiter,tp,0,LOCATION_MZONE+LOCATION_GRAVE,1,nil)
+	local g=Duel.GetMatchingGroup(s.tdfiter,tp,0,LOCATION_MZONE+LOCATION_GRAVE,nil)
 	if Duel.NegateActivation(ev) and g:CheckSubGroup(s.gcheck,2,2)
 		and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
