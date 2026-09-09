@@ -1,7 +1,8 @@
---
+--邪心教典
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddCodeList(c,48130397)
+	c:EnableCounterPermit(0x79)
 	--Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
@@ -22,17 +23,17 @@ function s.initial_effect(c)
 	--counter
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e2:SetCode(EVENT_ATTACK_ANNOUNCE)
+	e3:SetCode(EVENT_ATTACK_ANNOUNCE)
 	e3:SetRange(LOCATION_SZONE)
 	e3:SetOperation(s.ctop)
 	c:RegisterEffect(e3)
-	--tohand
+	--special summon
 	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(id,1))
 	e4:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH+CATEGORY_SPECIAL_SUMMON)
 	e4:SetType(EFFECT_TYPE_IGNITION)
 	e4:SetRange(LOCATION_SZONE)
-	e2:SetCountLimit(1,id+o)
+	e4:SetCountLimit(1,id+o)
 	e4:SetCondition(s.spcon)
 	e4:SetCost(s.spcost)
 	e4:SetTarget(s.sptg)
@@ -58,9 +59,12 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_DECK,0,1,1,nil)
 	if g:GetCount()>0 and Duel.SendtoHand(g,nil,REASON_EFFECT)~=0 and g:GetFirst():IsLocation(LOCATION_HAND) then
 		Duel.ConfirmCards(1-tp,g)
-		Duel.ShuffleHand(tp)
-		Duel.BreakEffect()
-		Duel.DiscardHand(tp,Card.IsRace,1,1,REASON_EFFECT+REASON_DISCARD,nil,RACE_FIEND)
+		local dg=Duel.SelectMatchingCard(p,Card.IsDiscardable,tp,LOCATION_HAND,0,1,1,nil,REASON_DISCARD+REASON_EFFECT)
+		if dg:GetCount()>0 then
+			Duel.BreakEffect()
+			Duel.ShuffleHand(p)
+			Duel.SendtoGrave(dg,REASON_EFFECT+REASON_DISCARD)
+		end
 	end
 end
 function s.ctop(e,tp,eg,ep,ev,re,r,rp)
@@ -69,7 +73,7 @@ function s.ctop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():GetCounter(0x79)>=3
+	return e:GetHandler():GetCounter(0x79)>=4
 end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToGraveAsCost() end

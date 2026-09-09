@@ -70,6 +70,6 @@ end
 function s.repop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_CARD,0,id)
 	local c=e:GetHandler()
-	Duel.HintSelection(c)
+	Duel.HintSelection(Group.FromCards(c))
 	Duel.SendtoDeck(c,nil,SEQ_DECKBOTTOM,REASON_EFFECT)
 end
