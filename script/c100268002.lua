@@ -63,7 +63,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 		and Duel.IsExistingMatchingCard(Card.IsRace,tp,LOCATION_GRAVE,0,1,nil,RACE_INSECT)
 		and c:IsRelateToChain() and c:IsFaceup() then
 		Duel.BreakEffect()
-		local atk=Duel.GetMatchingGroupCount(tp,Card.IsRace,tp,LOCATION_GRAVE,0,nil,RACE_INSECT)
+		local atk=Duel.GetMatchingGroupCount(Card.IsRace,tp,LOCATION_GRAVE,0,nil,RACE_INSECT)
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_UPDATE_ATTACK)
