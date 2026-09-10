@@ -66,7 +66,13 @@ function s.indtg(e,c)
 	return c:IsSetCard(0x119) and c:IsFaceup()
 end
 function s.efilter(e,re)
-	return e:GetHandlerPlayer()~=re:GetOwnerPlayer() and re:IsActivated() and re:IsActiveType(TYPE_MONSTER) and re:GetHandler():IsAttribute(ATTRIBUTE_FIRE)
+	if re:GetOwnerPlayer()==e:GetHandlerPlayer() or not re:IsActivated() or not re:IsActiveType(TYPE_MONSTER) then return false end
+	local ct=Duel.GetCurrentChain()
+	for i=1,ct do
+		local ce,attr=Duel.GetChainInfo(i,CHAININFO_TRIGGERING_EFFECT,CHAININFO_TRIGGERING_ATTRIBUTE)
+		if ce==re then return attr and attr&ATTRIBUTE_FIRE~=0 end
+	end
+	return re:GetHandler():IsAttribute(ATTRIBUTE_FIRE)
 end
 function s.tdfilter(c)
 	return c:IsSetCard(0x119) and c:IsAbleToDeck()
