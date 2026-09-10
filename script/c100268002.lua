@@ -20,7 +20,7 @@ function s.initial_effect(c)
 	--to hand
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,0))
-	e3:SetCategory(CATEGORY_TODECK+CATEGORY_ATKCHANGE)
+	e3:SetCategory(CATEGORY_TOHAND+CATEGORY_ATKCHANGE)
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e3:SetProperty(EFFECT_FLAG_DELAY)
 	e3:SetCode(EVENT_SPSUMMON_SUCCESS)

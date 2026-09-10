@@ -125,7 +125,7 @@ function s.cfilter2(c)
 	return c:IsFaceup() and c:IsType(TYPE_FUSION) and c:IsSetCard(0x9)
 end
 function s.discon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_MZONE,0,1,nil,tp)
+	return Duel.IsExistingMatchingCard(s.cfilter2,tp,LOCATION_MZONE,0,1,nil,tp)
 end
 function s.distg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() and chkc:IsControler(1-tp) and aux.NegateAnyFilter(chkc) end

@@ -38,19 +38,29 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
+function s.lvfilter(c)
+	return c:IsFaceup() and c:IsLevelAbove(1)
+end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToChain() and Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)~=0
-		and c:IsLevelAbove(1) and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
+		and Duel.IsExistingMatchingCard(s.lvfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil)
+		and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
+		Duel.BreakEffect()
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_OPERATECARD)
+		local tg=Duel.SelectMatchingCard(tp,s.lvfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
+		Duel.HintSelection(tg)
+		local tc=tg:GetFirst()
 		local op=aux.SelectFromOptions(tp,
 			{true,aux.Stringid(id,3),1},
-			{c:IsLevelAbove(2),aux.Stringid(id,4),-1})
+			{tc:IsLevelAbove(2),aux.Stringid(id,4),-1})
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_UPDATE_LEVEL)
-		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_DISABLE)
+		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 		e1:SetValue(op)
-		c:RegisterEffect(e1)
+		tc:RegisterEffect(e1)
 	end
 end
 function s.cfilter2(c,tp)
