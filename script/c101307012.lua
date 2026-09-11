@@ -11,10 +11,9 @@ function s.initial_effect(c)
 	e1:SetCondition(s.spcon)
 	e1:SetOperation(s.spop)
 	c:RegisterEffect(e1)
-	--spsummon
+	--place
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,0))
-	e2:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_MSET)
 	e2:SetType(EFFECT_TYPE_QUICK_O)
 	e2:SetCode(EVENT_CHAINING)
 	e2:SetRange(LOCATION_MZONE)
@@ -26,19 +25,21 @@ function s.initial_effect(c)
 	e2:SetOperation(s.mvop)
 	c:RegisterEffect(e2)
 end
-function s.spfilter(c)
-	return c:IsFaceup() and c:IsLevel(1) and c:IsAttribute(ATTRIBUTE_FIRE) and c:IsAbleToDeckAsCost() and Duel.GetMZoneCount(tp,c)>0
+function s.spfilter(c,tp)
+	return c:IsFaceup() and c:GetOriginalLevel()==1 and c:GetOriginalAttribute()&ATTRIBUTE_FIRE==ATTRIBUTE_FIRE
+		and c:GetOriginalType()&TYPE_MONSTER==TYPE_MONSTER
+		and c:IsAbleToDeckAsCost() and Duel.GetMZoneCount(tp,c)>0
 end
 function s.spcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
-	return Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,nil)
+	return Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_ONFIELD+LOCATION_GRAVE,0,1,nil,tp)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp,c)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-	local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_ONFIELD+LOCATION_GRAVE,0,1,1,nil,tp)
 	Duel.HintSelection(g)
-	Duel.SendtoDeck(g,nil,1,REASON_COST)
+	Duel.SendtoDeck(g,nil,1,REASON_SPSUMMON)
 end
 function s.mvcon(e,tp,eg,ep,ev,re,r,rp)
 	return rp==1-tp
