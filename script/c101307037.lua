@@ -47,7 +47,7 @@ function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc,exc)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,g:GetCount(),0,0)
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToChain,nil)
+	local g=Duel.GetTargetsRelateToChain():Filter(Card.IsOnField,nil)
 	if g:GetCount()>0 then
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 	end
@@ -72,7 +72,7 @@ function s.thcon2(e)
 	return e:GetHandler():IsPreviousLocation(LOCATION_EXTRA)
 end
 function s.thfilter2(c)
-	return c:IsSetCard(0x107) and not c:IsCode(1061200) and c:IsAbleToHand()
+	return c:IsSetCard(0x2f2) and c:IsAbleToHand()
 end
 function s.thtg2(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter2,tp,LOCATION_GRAVE,0,1,nil) end
