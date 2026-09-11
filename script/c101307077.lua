@@ -8,12 +8,13 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 	--select effect
 	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(id,0))
+	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_FUSION_SUMMON+CATEGORY_DISABLE)
 	e2:SetType(EFFECT_TYPE_QUICK_O)
 	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetRange(LOCATION_SZONE)
-	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e2:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_END_PHASE)
+	e2:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_FUSION_SUMMON)
 	e2:SetCountLimit(1,id)
 	e2:SetTarget(s.efftg)
 	e2:SetOperation(s.effop)
@@ -25,6 +26,9 @@ end
 function s.mfilter1(c,e)
 	return c:IsSetCard(0x2f2) and c:IsType(TYPE_MONSTER)
 		and not c:IsImmuneToEffect(e)
+end
+function s.filter0(c,e)
+	return c:IsCanBeFusionMaterial() and c:IsSetCard(0x2f2) and c:IsType(TYPE_MONSTER) and not c:IsImmuneToEffect(e)
 end
 function s.mfilter2(c)
 	return c:IsSetCard(0x2f2) and c:IsType(TYPE_MONSTER) and c:IsCanBeFusionMaterial() and c:IsAbleToGrave()
@@ -49,7 +53,7 @@ function s.efftg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	aux.FCheckAdditional=s.fcheck
 	aux.GCheckAdditional=s.fcheck
 	local mg1=Duel.GetFusionMaterial(tp):Filter(s.mfilter1,nil,e)
-	local mg2=Duel.GetMatchingGroup(s.filter0,tp,LOCATION_EXTRA,0,nil)
+	local mg2=Duel.GetMatchingGroup(s.filter0,tp,LOCATION_EXTRA,0,nil,e)
 	mg1:Merge(mg2)
 	local res2=Duel.IsExistingMatchingCard(s.fspfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp,mg1,nil,chkf)
 	aux.FCheckAdditional=nil
@@ -69,7 +73,7 @@ function s.efftg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local op=aux.SelectFromOptions(tp,
 			{res1,aux.Stringid(id,2),1},
 			{res2,aux.Stringid(id,3),2},
-			{res2,aux.Stringid(id,4),3})
+			{res3,aux.Stringid(id,4),3})
 	e:SetLabel(op)
 	if op==1 then
 		e:SetCategory(CATEGORY_SPECIAL_SUMMON)
@@ -100,7 +104,7 @@ function s.effop(e,tp,eg,ep,ev,re,r,rp)
 	elseif e:GetLabel()==2 then
 		local chkf=tp
 		local mg1=Duel.GetFusionMaterial(tp):Filter(s.mfilter1,nil,e)
-		local mg2=Duel.GetMatchingGroup(s.filter0,tp,LOCATION_EXTRA,0,nil)
+		local mg2=Duel.GetMatchingGroup(s.filter0,tp,LOCATION_EXTRA,0,nil,e)
 		mg1:Merge(mg2)
 		aux.FCheckAdditional=s.fcheck
 		aux.GCheckAdditional=s.fcheck
