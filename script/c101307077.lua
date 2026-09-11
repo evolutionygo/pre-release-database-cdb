@@ -38,7 +38,7 @@ function s.fspfilter(c,e,tp,m,f,chkf)
 		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) and c:CheckFusionMaterial(m,nil,chkf)
 end
 function s.fcheck(tp,sg,fc)
-	return sg:FilterCount(Card.IsLocation,nil,LOCATION_HAND)<=1
+	return sg and sg:FilterCount(Card.IsLocation,nil,LOCATION_HAND)<=1
 		and sg:FilterCount(Card.IsLocation,nil,LOCATION_EXTRA)<=1
 		and sg:FilterCount(Card.IsLocation,nil,LOCATION_ONFIELD)<=1
 end
