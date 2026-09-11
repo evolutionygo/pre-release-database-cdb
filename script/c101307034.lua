@@ -29,7 +29,6 @@ function s.initial_effect(c)
 	--cannot fusion material
 	local e4=Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_SINGLE)
-	e4:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 	e4:SetCode(EFFECT_CANNOT_BE_FUSION_MATERIAL)
 	e4:SetValue(1)
 	e4:SetCondition(s.nfcon)
@@ -60,7 +59,7 @@ function s.mvop(e,tp,eg,ep,ev,re,r,rp)
 		local sg=g:SelectSubGroup(tp,s.gcheck,false,1,g:GetCount(),tp,ft1,ft2)
 		Duel.HintSelection(sg)
 		for tc in aux.Next(sg) do
-			Duel.MoveToField(tc,tp,tp:GetOwner(),LOCATION_SZONE,POS_FACEUP,true)
+			Duel.MoveToField(tc,tp,tc:GetOwner(),LOCATION_SZONE,POS_FACEUP,true)
 			local e1=Effect.CreateEffect(e:GetHandler())
 			e1:SetCode(EFFECT_CHANGE_TYPE)
 			e1:SetType(EFFECT_TYPE_SINGLE)
@@ -71,9 +70,9 @@ function s.mvop(e,tp,eg,ep,ev,re,r,rp)
 		end
 		if sg:IsExists(Card.IsLocation,1,nil,LOCATION_SZONE) then
 			local ct=Duel.GetMatchingGroupCount(Card.IsType,tp,LOCATION_ONFIELD,0,nil,TYPE_SPELL+TYPE_TRAP)
-			if ct>0 and Duel.IsExistingMatchingCard(Card.IsAbleToHand,tp,LOCATION_ONFIELD,0,1,nil) and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
+			if ct>0 and Duel.IsExistingMatchingCard(Card.IsAbleToHand,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
-				local hg=Duel.SelectMatchingCard(tp,Card.IsAbleToHand,tp,LOCATION_ONFIELD,0,1,ct,nil)
+				local hg=Duel.SelectMatchingCard(tp,Card.IsAbleToHand,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,ct,nil)
 				if #hg>0 then
 					Duel.BreakEffect()
 					Duel.HintSelection(hg)
@@ -87,7 +86,7 @@ function s.atkfilter(c)
 	return c:IsType(TYPE_SPELL+TYPE_TRAP)
 end
 function s.atkval(e,c)
-	return Duel.GetMatchingGroupCount(s.atkfilter,c:GetControler(),LOCATION_ONFIELD,0,nil)*700
+	return Duel.GetMatchingGroupCount(s.atkfilter,c:GetControler(),LOCATION_ONFIELD,LOCATION_ONFIELD,nil)*700
 end
 function s.nfcon(e)
 	local c=e:GetHandler()

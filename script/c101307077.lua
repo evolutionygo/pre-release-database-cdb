@@ -27,9 +27,6 @@ function s.mfilter1(c,e)
 	return c:IsSetCard(0x2f2) and c:IsType(TYPE_MONSTER)
 		and not c:IsImmuneToEffect(e)
 end
-function s.filter0(c,e)
-	return c:IsCanBeFusionMaterial() and c:IsSetCard(0x2f2) and c:IsType(TYPE_MONSTER) and not c:IsImmuneToEffect(e)
-end
 function s.mfilter2(c)
 	return c:IsSetCard(0x2f2) and c:IsType(TYPE_MONSTER) and c:IsCanBeFusionMaterial() and c:IsAbleToGrave()
 end
@@ -50,11 +47,11 @@ function s.efftg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local res1=Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,nil,e,tp)
 	local chkf=tp
+	local mg1=Duel.GetFusionMaterial(tp):Filter(s.mfilter1,nil,e)
+	local mg2=Duel.GetMatchingGroup(s.mfilter2,tp,LOCATION_EXTRA,0,nil,e)
+	mg1:Merge(mg2)
 	aux.FCheckAdditional=s.fcheck
 	aux.GCheckAdditional=s.fcheck
-	local mg1=Duel.GetFusionMaterial(tp):Filter(s.mfilter1,nil,e)
-	local mg2=Duel.GetMatchingGroup(s.filter0,tp,LOCATION_EXTRA,0,nil,e)
-	mg1:Merge(mg2)
 	local res2=Duel.IsExistingMatchingCard(s.fspfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp,mg1,nil,chkf)
 	aux.FCheckAdditional=nil
 	aux.GCheckAdditional=nil
@@ -104,7 +101,7 @@ function s.effop(e,tp,eg,ep,ev,re,r,rp)
 	elseif e:GetLabel()==2 then
 		local chkf=tp
 		local mg1=Duel.GetFusionMaterial(tp):Filter(s.mfilter1,nil,e)
-		local mg2=Duel.GetMatchingGroup(s.filter0,tp,LOCATION_EXTRA,0,nil,e)
+		local mg2=Duel.GetMatchingGroup(s.mfilter2,tp,LOCATION_EXTRA,0,nil,e)
 		mg1:Merge(mg2)
 		aux.FCheckAdditional=s.fcheck
 		aux.GCheckAdditional=s.fcheck
