@@ -35,7 +35,12 @@ function s.fspfilter(c,e,tp,m,f,chkf)
 		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) and c:CheckFusionMaterial(m,nil,chkf)
 end
 function s.fcheck(tp,sg,fc)
-	return sg and sg:FilterCount(Card.IsLocation,nil,LOCATION_HAND)<=1
+	return sg:FilterCount(Card.IsLocation,nil,LOCATION_HAND)<=1
+		and sg:FilterCount(Card.IsLocation,nil,LOCATION_EXTRA)<=1
+		and sg:FilterCount(Card.IsLocation,nil,LOCATION_ONFIELD)<=1
+end
+function s.gcheck(sg)
+	return sg:FilterCount(Card.IsLocation,nil,LOCATION_HAND)<=1
 		and sg:FilterCount(Card.IsLocation,nil,LOCATION_EXTRA)<=1
 		and sg:FilterCount(Card.IsLocation,nil,LOCATION_ONFIELD)<=1
 end
@@ -51,7 +56,7 @@ function s.efftg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local mg2=Duel.GetMatchingGroup(s.mfilter2,tp,LOCATION_EXTRA,0,nil,e)
 	mg1:Merge(mg2)
 	aux.FCheckAdditional=s.fcheck
-	aux.GCheckAdditional=s.fcheck
+	aux.GCheckAdditional=s.gcheck
 	local res2=Duel.IsExistingMatchingCard(s.fspfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp,mg1,nil,chkf)
 	aux.FCheckAdditional=nil
 	aux.GCheckAdditional=nil
@@ -104,7 +109,7 @@ function s.effop(e,tp,eg,ep,ev,re,r,rp)
 		local mg2=Duel.GetMatchingGroup(s.mfilter2,tp,LOCATION_EXTRA,0,nil,e)
 		mg1:Merge(mg2)
 		aux.FCheckAdditional=s.fcheck
-		aux.GCheckAdditional=s.fcheck
+		aux.GCheckAdditional=s.gcheck
 		local sg1=Duel.GetMatchingGroup(s.fspfilter,tp,LOCATION_EXTRA,0,nil,e,tp,mg1,nil,chkf)
 		aux.FCheckAdditional=nil
 		aux.GCheckAdditional=nil
@@ -124,7 +129,7 @@ function s.effop(e,tp,eg,ep,ev,re,r,rp)
 			local tc=sg:Select(tp,1,1,nil):GetFirst()
 			if sg1:IsContains(tc) and (sg2==nil or not sg2:IsContains(tc) or ce and not Duel.SelectYesNo(tp,ce:GetDescription())) then
 				aux.FCheckAdditional=s.fcheck
-				aux.GCheckAdditional=s.fcheck
+				aux.GCheckAdditional=s.gcheck
 				local mat=Duel.SelectFusionMaterial(tp,tc,mg1,nil,chkf)
 				aux.FCheckAdditional=nil
 				aux.GCheckAdditional=nil
