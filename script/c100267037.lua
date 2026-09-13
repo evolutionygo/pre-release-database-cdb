@@ -61,6 +61,7 @@ function s.drop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local sc=e:GetLabelObject()
 	local g=Group.FromCards(c,sc)
+	Duel.ShuffleHand(tp)
 	local fg=g:Filter(Card.IsRelateToChain,nil)
 	if fg:FilterCount(Card.IsAbleToRemove,nil,tp,POS_FACEDOWN,REASON_EFFECT)==2
 		and Duel.Remove(fg,POS_FACEDOWN,REASON_EFFECT)~=0 then

@@ -42,7 +42,7 @@ function s.spfilter(c,e,tp,ec,ft)
 		and (c:IsAbleToHand() or (ft>0 and c:IsCanBeSpecialSummoned(e,0,tp,false,false)))
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return eg:IsContains(chkc) and s.tgfilter(chkc,e,tp,true) end
+	if chkc then return eg:IsContains(chkc) and s.tgfilter(chkc,e,tp,false) end
 	local g=eg:Filter(s.tgfilter,nil,e,tp,false)
 	if chk==0 then return g:GetCount()>0 end
 	if g:GetCount()==1 then
@@ -54,15 +54,15 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	end
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToChain() and tc:IsFaceup() then
+	if tc:IsRelateToChain() and tc:IsFaceup() and tc:IsType(TYPE_MONSTER) then
 		local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_OPERATECARD)
 		local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_REMOVED,0,1,1,nil,e,tp,tc,ft)
 		if #g>0 then
 			local sc=g:GetFirst()
 			if sc then
+				local att=sc:GetAttribute()
 				local flag=ft>0 and sc:IsCanBeSpecialSummoned(e,0,tp,false,false)
 				if sc:IsAbleToHand() and (not flag or Duel.SelectOption(tp,1190,1152)==0) then
 					Duel.SendtoHand(sc,nil,REASON_EFFECT)
@@ -72,9 +72,9 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 				end
 				local label=Duel.GetFlagEffectLabel(tp,id)
 				if label then
-					Duel.SetFlagEffectLabel(tp,id,label|sc:GetAttribute())
+					Duel.SetFlagEffectLabel(tp,id,label|att)
 				else
-					Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1,sc:GetAttribute())
+					Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1,att)
 				end
 			end
 		end
