@@ -64,6 +64,11 @@ function s.drop(e,tp,eg,ep,ev,re,r,rp)
 	local fg=g:Filter(Card.IsRelateToChain,nil)
 	if fg:FilterCount(Card.IsAbleToRemove,nil,tp,POS_FACEDOWN,REASON_EFFECT)==2
 		and Duel.Remove(fg,POS_FACEDOWN,REASON_EFFECT)~=0 then
+		for tc in aux.Next(fg) do
+			if tc:IsFacedown() and tc:IsLocation(LOCATION_REMOVED) then
+				tc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id,5))
+			end
+		end
 		Duel.Draw(tp,2,REASON_EFFECT)
 	end
 end
@@ -77,7 +82,13 @@ function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 	local dg=Duel.GetDecktopGroup(tp,7)
 	if dg and dg:GetCount()>0 then
 		Duel.DisableShuffleCheck()
-		Duel.Remove(dg,POS_FACEDOWN,REASON_EFFECT)
+		if Duel.Remove(dg,POS_FACEDOWN,REASON_EFFECT)~=0 then
+			for tc in aux.Next(dg) do
+				if tc:IsFacedown() and tc:IsLocation(LOCATION_REMOVED) then
+					tc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id,6))
+				end
+			end
+		end
 	end
 end
 function s.tdfilter(c)

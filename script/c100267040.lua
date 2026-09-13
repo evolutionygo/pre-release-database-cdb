@@ -49,7 +49,13 @@ function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 		dg:Merge(gg)
 	end
 	Duel.DisableShuffleCheck()
-	Duel.Remove(dg,POS_FACEDOWN,REASON_COST)
+	if Duel.Remove(dg,POS_FACEDOWN,REASON_COST)~=0 then
+		for tc in aux.Next(dg) do
+			if tc:IsFacedown() and tc:IsLocation(LOCATION_REMOVED) then
+				tc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id,3))
+			end
+		end
+	end
 end
 function s.rmfilter(c,tp,chk)
 	return c:IsFaceupEx() and c:IsSetCard(0x2ec) and c:GetOriginalLevel()>0 and c:GetOriginalLevel()<=4
@@ -72,11 +78,17 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local dg=g:Select(tp,1,1,nil)
 	Duel.HintSelection(dg)
-	if Duel.Remove(dg,POS_FACEDOWN,REASON_EFFECT)~=0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-		local sg=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_REMOVED,0,1,1,nil,e,tp)
-		if sg:GetCount()>0 then
-			Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP)
+	if Duel.Remove(dg,POS_FACEDOWN,REASON_EFFECT)~=0 then
+		local tc=dg:GetFirst()
+		if tc:IsFacedown() and tc:IsLocation(LOCATION_REMOVED) then
+			tc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id,4))
+		end
+		if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+			local sg=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_REMOVED,0,1,1,nil,e,tp)
+			if sg:GetCount()>0 then
+				Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP)
+			end
 		end
 	end
 end

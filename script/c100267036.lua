@@ -66,12 +66,16 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsRelateToChain() and Duel.Remove(c,POS_FACEDOWN,REASON_EFFECT)~=0
-		and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-		local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_REMOVED,0,1,1,nil,e,tp)
-		if #g>0 then
-			Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
+	if c:IsRelateToChain() and Duel.Remove(c,POS_FACEDOWN,REASON_EFFECT)~=0 then
+		if c:IsFacedown() and c:IsLocation(LOCATION_REMOVED) then
+			c:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id,3))
+		end
+		if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+			local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_REMOVED,0,1,1,nil,e,tp)
+			if #g>0 then
+				Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
+			end
 		end
 	end
 end
@@ -85,7 +89,13 @@ function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 	local dg=Duel.GetDecktopGroup(tp,6)
 	if dg and dg:GetCount()>0 then
 		Duel.DisableShuffleCheck()
-		Duel.Remove(dg,POS_FACEDOWN,REASON_EFFECT)
+		if Duel.Remove(dg,POS_FACEDOWN,REASON_EFFECT)~=0 then
+			for tc in aux.Next(dg) do
+				if tc:IsFacedown() and tc:IsLocation(LOCATION_REMOVED) then
+					tc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id,4))
+				end
+			end
+		end
 	end
 end
 function s.indtg(e,c)

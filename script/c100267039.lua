@@ -50,7 +50,13 @@ function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 		dg:Merge(gg)
 	end
 	Duel.DisableShuffleCheck()
-	Duel.Remove(dg,POS_FACEDOWN,REASON_COST)
+	if Duel.Remove(dg,POS_FACEDOWN,REASON_COST)~=0 then
+		for tc in aux.Next(dg) do
+			if tc:IsFacedown() and tc:IsLocation(LOCATION_REMOVED) then
+				tc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id,2))
+			end
+		end
+	end
 end
 function s.thfilter(c)
 	return c:IsFacedown() and not c:IsCode(id) and c:IsSetCard(0x2ec) and c:IsAbleToHand()

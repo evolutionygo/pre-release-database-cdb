@@ -67,7 +67,13 @@ function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 	local dg=Duel.GetDecktopGroup(tp,4)
 	if dg and dg:GetCount()>0 then
 		Duel.DisableShuffleCheck()
-		Duel.Remove(dg,POS_FACEDOWN,REASON_EFFECT)
+		if Duel.Remove(dg,POS_FACEDOWN,REASON_EFFECT)~=0 then
+			for tc in aux.Next(dg) do
+				if tc:IsFacedown() and tc:IsLocation(LOCATION_REMOVED) then
+					tc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id,3))
+				end
+			end
+		end
 	end
 end
 function s.spcon2(e,tp,eg,ep,ev,re,r,rp)
