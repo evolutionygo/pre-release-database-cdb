@@ -59,7 +59,7 @@ function s.atkval(e,c)
 end
 function s.immval(e,te)
 	return te:GetOwner()~=e:GetHandler() and te:IsActiveType(TYPE_MONSTER) and te:IsActivated()
-		and te:GetOwner():GetAttack()<=e:GetHandler():GetAttack()
+		and te:GetOwner():GetAttack()<e:GetHandler():GetAttack()
 end
 function s.tdfilter(c)
 	return c:IsFaceupEx() and c:IsSetCard(0xe3) and c:IsAbleToDeck()
