@@ -74,7 +74,6 @@ function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(s.tdfilter,tp,LOCATION_REMOVED,0,nil)
-	if aux.NecroValleyNegateCheck(g) then return end
 	if Duel.SendtoDeck(g,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)~=0
 		and g:IsExists(Card.IsLocation,1,nil,LOCATION_DECK+LOCATION_EXTRA) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
