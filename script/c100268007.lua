@@ -73,7 +73,7 @@ function s.thcop(e,tp,eg,ep,ev,re,r,rp)
 			local tc=g:GetFirst()
 			if tc then
 				Duel.HintSelection(g)
-				if Duel.GetControl(tc,tp)~=0 and tc:IsFaceup() and not tc:IsAttack(0)
+				if Duel.GetControl(tc,tp,PHASE_END,1)~=0 and tc:IsFaceup() and not tc:IsAttack(0)
 					and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 					Duel.BreakEffect()
 					Duel.Damage(1-tp,math.ceil(tc:GetAttack()/2),REASON_EFFECT)
