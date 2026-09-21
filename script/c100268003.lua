@@ -55,7 +55,7 @@ function s.spop2(e,tp,eg,ep,ev,re,r,rp)
 			if Duel.IsPlayerAffectedByEffect(tp,59822133) then maxct=1 end
 			maxct=math.min(maxct,ct)
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-			local sg=g:Select(tp,0,maxct,nil)
+			local sg=g:Select(tp,1,maxct,nil)
 			if sg:GetCount()>0 then
 				Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP)
 			end
