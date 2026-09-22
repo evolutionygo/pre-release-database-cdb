@@ -85,9 +85,8 @@ end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local sg=Duel.GetMatchingGroup(aux.TRUE,tp,0,LOCATION_MZONE,nil)
 	if sg:GetCount()>0 and Duel.Destroy(sg,REASON_EFFECT)>0 then
-		local dam=Duel.GetOperatedGroup():GetSum(Card.GetAttack)
-		if dam~=0 and Duel.SelectYesNo(tp,aux.Stringid(id,3)) then
-			Duel.BreakEffect()
+		local dam=Duel.GetOperatedGroup():GetSum(Card.GetBaseAttack)
+		if dam~=0 then
 			Duel.Damage(1-tp,dam,REASON_EFFECT)
 		end
 	end
