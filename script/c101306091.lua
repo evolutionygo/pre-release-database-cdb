@@ -29,7 +29,7 @@ function s.spfilter(c,e,tp)
 	return c:IsRace(RACE_FAIRY) and c:IsType(TYPE_SYNCHRO)and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 		and Duel.GetLocationCountFromEx(tp,tp,nil,c)>0
 end
-function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
+function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local b1=Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_HAND+LOCATION_DECK,0,1,nil,e,tp)
 	local b2=false
 	if Duel.IsPlayerCanSpecialSummon(1-tp) then
@@ -48,7 +48,7 @@ end
 function s.thfilter(c)
 	return not c:IsCode(id) and aux.IsCodeListed(c,46986414) and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToHand()
 end
-function s.activate(e,tp,eg,ep,ev,re,r,rp)
+function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToChain() and c:IsFaceup() then
 		local e1=Effect.CreateEffect(c)

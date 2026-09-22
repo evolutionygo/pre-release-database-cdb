@@ -32,8 +32,7 @@ function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_LINK)
 end
 function s.setfilter(c,e,tp)
-	return Duel.GetLocationCount(1-tp,LOCATION_MZONE)>0
-		and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP,1-tp,0x1f)
+	return c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP,1-tp,0x1f)
 end
 function s.spfilter(c,g,e,tp)
 	return not c:IsForbidden()
@@ -46,7 +45,7 @@ end
 function s.effilter(c,tp)
 	return not Duel.IsExistingMatchingCard(aux.AND(Card.IsFaceup,Card.IsCode),tp,LOCATION_SZONE,0,1,nil,c:GetCode())
 end
-function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
+function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	local g=Duel.GetMatchingGroup(s.effilter,tp,LOCATION_EXTRA,0,nil,tp)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0
@@ -55,29 +54,30 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 		and not Duel.IsPlayerAffectedByEffect(tp,59822133) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 end
-function s.spop(e,tp,eg,ep,ev,re,r,rp)
+function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_SZONE)>0 
 		and Duel.GetLocationCount(1-tp,LOCATION_MZONE)>0 then
 		local g=Duel.GetMatchingGroup(s.effilter,tp,LOCATION_EXTRA,0,nil,tp)
-		if not g:CheckSubGroup(s.gcheck,2,2,e,tp) then return end
-		Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,3))
-		local tg=g:SelectSubGroup(tp,s.gcheck,false,2,2,e,tp)
-		if tg:GetCount()>1 then
-			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-			local sg=tg:FilterSelect(tp,s.spfilter,1,1,nil,tg,e,tp)
-			tg:Sub(sg)
-			local sc=sg:GetFirst()
-			local tc=tg:GetFirst()
-			if tc:IsType(TYPE_MONSTER) then
-				Duel.SpecialSummon(tc,0,tp,1-tp,false,false,POS_FACEUP,0x1f)
-				Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
-				local e1=Effect.CreateEffect(e:GetHandler())
-				e1:SetCode(EFFECT_CHANGE_TYPE)
-				e1:SetType(EFFECT_TYPE_SINGLE)
-				e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-				e1:SetReset(RESET_EVENT+RESETS_STANDARD-RESET_TURN_SET)
-				e1:SetValue(TYPE_SPELL+TYPE_CONTINUOUS)
-				sc:RegisterEffect(e1)
+		if g:CheckSubGroup(s.gcheck,2,2,e,tp) then
+			Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,3))
+			local tg=g:SelectSubGroup(tp,s.gcheck,false,2,2,e,tp)
+			if tg:GetCount()>1 then
+				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+				local sg=tg:FilterSelect(tp,s.spfilter,1,1,nil,tg,e,tp)
+				tg:Sub(sg)
+				local sc=sg:GetFirst()
+				local tc=tg:GetFirst()
+				if tc:IsType(TYPE_MONSTER) then
+					Duel.SpecialSummon(tc,0,tp,1-tp,false,false,POS_FACEUP,0x1f)
+					Duel.MoveToField(sc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
+					local e1=Effect.CreateEffect(e:GetHandler())
+					e1:SetCode(EFFECT_CHANGE_TYPE)
+					e1:SetType(EFFECT_TYPE_SINGLE)
+					e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+					e1:SetReset(RESET_EVENT+RESETS_STANDARD-RESET_TURN_SET)
+					e1:SetValue(TYPE_SPELL+TYPE_CONTINUOUS)
+					sc:RegisterEffect(e1)
+				end
 			end
 		end
 	end
