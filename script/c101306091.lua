@@ -65,13 +65,12 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_CLIENT_HINT)
 		c:RegisterEffect(e2)
 	end
-	local res=false
 	local ss=false
 	for p in aux.TurnPlayers() do
-		if Duel.IsExistingMatchingCard(s.spfilter,p,LOCATION_HAND+LOCATION_DECK,0,1,nil,e,p)
+		if Duel.IsExistingMatchingCard(s.spfilter,p,LOCATION_e,0,1,nil,e,p)
 			and Duel.SelectYesNo(p,aux.Stringid(id,1)) then
 			Duel.Hint(HINT_SELECTMSG,p,HINTMSG_SPSUMMON)
-			local sc=Duel.SelectMatchingCard(p,s.spfilter,p,LOCATION_HAND+LOCATION_DECK,0,1,1,nil,e,p):GetFirst()
+			local sc=Duel.SelectMatchingCard(p,s.spfilter,p,LOCATION_EXTRA,0,1,1,nil,e,p):GetFirst()
 			if Duel.SpecialSummonStep(sc,0,p,p,false,false,POS_FACEUP) then
 				ss=true
 				local e1=Effect.CreateEffect(c)
