@@ -52,16 +52,16 @@ function s.rmfilter(c,ec)
 	local seq1=aux.MZoneSequence(c:GetSequence())
 	local seq2=aux.MZoneSequence(ec:GetSequence())
 	return c:IsAbleToRemove()
-		and (c:IsLocation(LOCATION_MZONE) and math.abs(4-seq1-c)==1
-		or c:IsLocation(LOCATION_SZONE) and math.abs(4-seq1-c)==2)
+		and (c:IsLocation(LOCATION_MZONE) and math.abs(4-seq1-seq2)==1
+		or c:IsLocation(LOCATION_SZONE) and math.abs(4-seq1-seq2)==2)
 end
 function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()
 	local ci=aux.MZoneSequence(c:GetSequence())
 	if chkc then return chkc:IsLocation(LOCATION_ONFIELD) and s.rmfilter(chkc,ec) and chkc~=c end
-	if chk==0 then return Duel.IsExistingTarget(s.rmfilter,tp,0,LOCATION_ONFIELD,1,c,ec) end
+	if chk==0 then return Duel.IsExistingTarget(s.rmfilter,tp,0,LOCATION_ONFIELD,1,c,c) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectTarget(tp,s.rmfilter,tp,0,LOCATION_ONFIELD,1,1,c,ec)
+	local g=Duel.SelectTarget(tp,s.rmfilter,tp,0,LOCATION_ONFIELD,1,1,c,c)
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,1,0,0)
 end
 function s.rmop(e,tp,eg,ep,ev,re,r,rp)
