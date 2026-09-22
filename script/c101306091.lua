@@ -26,24 +26,11 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function s.spfilter(c,e,tp)
-	return c:IsRace(RACE_FAIRY) and c:IsType(TYPE_SYNCHRO)and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsRace(RACE_FAIRY) and c:IsType(TYPE_SYNCHRO) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 		and Duel.GetLocationCountFromEx(tp,tp,nil,c)>0
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	local b1=Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_HAND+LOCATION_DECK,0,1,nil,e,tp)
-	local b2=false
-	if Duel.IsPlayerCanSpecialSummon(1-tp) then
-		if Duel.GetFieldGroupCount(tp,0,LOCATION_EXTRA)>0 then
-			for lv=1,12 do
-				if Duel.IsPlayerCanSpecialSummonMonster(1-tp,0,0,TYPE_MONSTER+TYPE_SYNCHRO,-2,-2,lv,RACE_FAIRY,nil,POS_FACEUP) then
-					b2=true
-					break
-				end
-			end
-		end
-		b2=b2
-	end
-	if chk==0 then return b1 or b2 end
+	if chk==0 then return true end
 end
 function s.thfilter(c)
 	return not c:IsCode(id) and aux.IsCodeListed(c,46986414) and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToHand()
@@ -67,7 +54,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 	local ss=false
 	for p in aux.TurnPlayers() do
-		if Duel.IsExistingMatchingCard(s.spfilter,p,LOCATION_e,0,1,nil,e,p)
+		if Duel.IsExistingMatchingCard(s.spfilter,p,LOCATION_EXTRA,0,1,nil,e,p)
 			and Duel.SelectYesNo(p,aux.Stringid(id,1)) then
 			Duel.Hint(HINT_SELECTMSG,p,HINTMSG_SPSUMMON)
 			local sc=Duel.SelectMatchingCard(p,s.spfilter,p,LOCATION_EXTRA,0,1,1,nil,e,p):GetFirst()
