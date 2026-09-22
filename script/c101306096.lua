@@ -1,8 +1,9 @@
---具象天使之裁
+--Angelechy Verdict
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_DISABLE+CATEGORY_REMOVE)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
@@ -30,7 +31,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local ct=Duel.GetMatchingGroupCount(s.tefilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)
 	local sg=Duel.GetMatchingGroup(aux.NegateAnyFilter,tp,0,LOCATION_ONFIELD,nil)
 	local g=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD,nil)
-	if chk==0 then return ct>0 and ct<5 and sg:GetCount()>0 and Duel.IsExistingTarget(s.desfilter,tp,LOCATION_MZONE,0,1,nil)
+	if chk==0 then return ct>0 and ct<5 and sg:GetCount()>0
 		or ct>4 and g:GetCount()>0 end
 	if ct<5 then
 		Duel.SetOperationInfo(0,CATEGORY_DISABLE,sg,1,0,0)

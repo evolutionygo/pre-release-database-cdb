@@ -1,10 +1,10 @@
---具象天使的总管人
+--Angelechy Seneschal
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--Synchro summon
 	aux.AddSynchroProcedure(c,nil,aux.NonTuner(nil),1)
 	c:EnableReviveLimit()
-	--special summo
+	--special summon
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
@@ -55,7 +55,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local ss=false
 	for p in aux.TurnPlayers() do
 		if Duel.IsExistingMatchingCard(s.spfilter,p,LOCATION_EXTRA,0,1,nil,e,p)
-			and Duel.SelectYesNo(p,aux.Stringid(id,1)) then
+			and Duel.SelectYesNo(p,aux.Stringid(id,3)) then
 			Duel.Hint(HINT_SELECTMSG,p,HINTMSG_SPSUMMON)
 			local sc=Duel.SelectMatchingCard(p,s.spfilter,p,LOCATION_EXTRA,0,1,1,nil,e,p):GetFirst()
 			if Duel.SpecialSummonStep(sc,0,p,p,false,false,POS_FACEUP) then

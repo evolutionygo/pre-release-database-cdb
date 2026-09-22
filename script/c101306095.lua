@@ -1,5 +1,6 @@
 --具象天使的终局之问
 local s,id,o=GetID()
+EFFECT_OPPONENT_SELECT_SPSUMMON_ZONE	=380	--特殊召唤落点改由对手选择
 function s.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
@@ -18,8 +19,16 @@ function s.initial_effect(c)
 	e2:SetCondition(s.drcon)
 	e2:SetTarget(s.drtg)
 	e2:SetOperation(s.drop)
-	c:RegisterEffect(e2)	--
+	c:RegisterEffect(e2)
 	--seq
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_FIELD)
+	e2:SetCode(EFFECT_OPPONENT_SELECT_SPSUMMON_ZONE)
+	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e2:SetRange(LOCATION_FZONE)
+	e2:SetCondition(s.seqcon)
+	e2:SetTargetRange(0,1)
+	c:RegisterEffect(e2)
 	--Trap activate in set turn
 	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(id,3))
@@ -33,7 +42,7 @@ function s.initial_effect(c)
 	e4:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x1e2))
 	e4:SetCountLimit(1)
 	c:RegisterEffect(e4)
-	--draw
+	--remove
 	local e5=Effect.CreateEffect(c)
 	e5:SetDescription(aux.Stringid(id,4))
 	e5:SetCategory(CATEGORY_REMOVE)
@@ -80,16 +89,8 @@ function s.drop(e,tp,eg,ep,ev,re,r,rp)
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 	Duel.Draw(p,d,REASON_EFFECT)
 end
-function s.discon(e,tp,eg,ep,ev,re,r,rp)
-	return tp~=ep and Duel.GetCurrentChain()==0
-end
-function s.disop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	Duel.NegateSummon(eg)
-	if Duel.IsCanRemoveCounter(tp,1,0,0x6a,3,REASON_EFFECT) then
-		Duel.BreakEffect()
-		Duel.RemoveCounter(tp,1,0,0x6a,3,REASON_EFFECT)
-	end
+function s.seqcon(e)
+	return Duel.IsExistingMatchingCard(s.tefilter,e:GetHandlerPlayer(),LOCATION_SZONE,0,2,nil)
 end
 function s.actcon(e,tp,eg,ep,ev,re,r,rp)
 	return s.clcon(tp,e:GetLabel())
@@ -108,7 +109,7 @@ function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,g:GetCount(),0,0)
 end
 function s.rmop(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToChain,nil)
+	local g=Duel.GetTargetsRelateToChain():Filter(Card.IsType,nil,TYPE_MONSTER)
 	if g:GetCount()>0 then
 		Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
 	end
@@ -118,11 +119,10 @@ function s.spfilter(c,e,tp)
 		and Duel.GetLocationCountFromEx(tp,tp,nil,c)>0
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c440556.spfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp) end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_EXTRA,0,1,1,nil,e,tp)
 	if g:GetCount()>0 then

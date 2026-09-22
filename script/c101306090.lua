@@ -1,4 +1,4 @@
---具象天使的城堡主
+--Angelechy Castellan
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--Synchro summon
@@ -53,19 +53,17 @@ function s.rmfilter(c,ec)
 	local seq2=aux.MZoneSequence(ec:GetSequence())
 	return c:IsAbleToRemove()
 		and (c:IsLocation(LOCATION_MZONE) and math.abs(4-seq1-seq2)==1
-		or c:IsLocation(LOCATION_SZONE) and math.abs(4-seq1-seq2)==2)
+		or c:IsType(TYPE_SPELL+TYPE_TRAP) and math.abs(4-seq1-seq2)==2)
 end
 function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()
-	local ci=aux.MZoneSequence(c:GetSequence())
-	if chkc then return chkc:IsLocation(LOCATION_ONFIELD) and s.rmfilter(chkc,ec) and chkc~=c end
+	if chkc then return chkc:IsLocation(LOCATION_ONFIELD) and s.rmfilter(chkc,c) and chkc~=c end
 	if chk==0 then return Duel.IsExistingTarget(s.rmfilter,tp,0,LOCATION_ONFIELD,1,c,c) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local g=Duel.SelectTarget(tp,s.rmfilter,tp,0,LOCATION_ONFIELD,1,1,c,c)
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,1,0,0)
 end
 function s.rmop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToChain() and tc:IsOnField() then
 		Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)
@@ -91,7 +89,7 @@ function s.tgcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetType()==TYPE_SPELL+TYPE_CONTINUOUS
 end
 function s.tgfilter(c)
-	return c:IsSetCard(0x1e2) and c:IsAbleToHand()
+	return c:IsSetCard(0x1e2) and c:IsAbleToGrave()
 end
 function s.tgtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.tgfilter,tp,LOCATION_DECK,0,1,nil) end
@@ -103,11 +101,6 @@ function s.tgop(e,tp,eg,ep,ev,re,r,rp)
 	if g:GetCount()>0 then
 		Duel.SendtoGrave(g,REASON_EFFECT)
 	end
-end
-function s.flipop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	c:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id,3))
-	c:SetStatus(STATUS_EFFECT_ENABLED,true)
 end
 function s.chainop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
