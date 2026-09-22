@@ -12,7 +12,7 @@ function s.initial_effect(c)
 	e1:SetTarget(s.sptg)
 	e1:SetOperation(s.spop)
 	c:RegisterEffect(e1)
-	--no 
+	--actlimit
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
@@ -77,16 +77,24 @@ function s.aclimit(e,re,tp)
 	local c=re:GetHandler()
 	return not c:IsCode(id)
 end
+function s.calfilter(c)
+	if c:GetTextAttack()<0 then return false end
+	return aux.covcheck(c)
+end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(aux.TRUE,tp,0,LOCATION_MZONE,1,nil) end
 	local sg=Duel.GetMatchingGroup(aux.TRUE,tp,0,LOCATION_MZONE,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,sg,sg:GetCount(),0,0)
-	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,sg:GetSum(Card.GetBaseAttack))
+	local cg=sg:Filter(s.calfilter,nil)
+	if cg:GetCount()>0 then
+		Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,cg:GetSum(Card.GetTextAttack))
+	end
 end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local sg=Duel.GetMatchingGroup(aux.TRUE,tp,0,LOCATION_MZONE,nil)
+	local cg=sg:Filter(s.calfilter,nil)
 	if sg:GetCount()>0 and Duel.Destroy(sg,REASON_EFFECT)>0 then
-		local dam=Duel.GetOperatedGroup():GetSum(Card.GetBaseAttack)
+		local dam=(Duel.GetOperatedGroup()&cg):GetSum(Card.GetTextAttack)
 		if dam~=0 then
 			Duel.Damage(1-tp,dam,REASON_EFFECT)
 		end
