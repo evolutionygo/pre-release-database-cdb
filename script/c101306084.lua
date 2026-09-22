@@ -3,7 +3,7 @@ local s,id,o=GetID()
 function s.initial_effect(c)
 	--xyz summon
 	aux.AddXyzProcedure(c,s.matfilter,4,2,nil,nil,99)
-	c:EnableReviveLimit()	
+	c:EnableReviveLimit()
 	--overlay
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
@@ -16,36 +16,39 @@ function s.initial_effect(c)
 	e1:SetCost(s.ovcost)
 	e1:SetTarget(s.ovtg)
 	e1:SetOperation(s.ovop)
+	c:RegisterEffect(e1)
+	--indestructable
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_SINGLE)
+	e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e2:SetRange(LOCATION_MZONE)
+	e2:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
+	e2:SetValue(1)
+	e2:SetCondition(s.con1)
 	c:RegisterEffect(e2)
 	--effect draw
-	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_FIELD)
-	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-	e2:SetCode(EFFECT_DRAW_COUNT)
-	e2:SetRange(LOCATION_MZONE)
-	e2:SetTargetRange(1,0)
-	e2:SetValue(2)
-	e2:SetCondition(s.con2)
-	c:RegisterEffect(e2)
-	--
 	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_SINGLE)
-	e3:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e3:SetType(EFFECT_TYPE_FIELD)
+	e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e3:SetCode(EFFECT_DRAW_COUNT)
 	e3:SetRange(LOCATION_MZONE)
-	e3:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
-	e3:SetValue(1)
-	e2:SetCondition(s.con1)
+	e3:SetTargetRange(1,0)
+	e3:SetValue(2)
+	e3:SetCondition(s.con2)
 	c:RegisterEffect(e3)
 end
-function s.matfilter2(c)
+function s.matfilter(c)
 	return c:IsAttribute(ATTRIBUTE_LIGHT+ATTRIBUTE_DARK)
 end
 function s.ovcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetCurrentPhase()==PHASE_MAIN1 or Duel.GetCurrentPhase()==PHASE_MAIN2
+	return Duel.IsMainPhase()
 end
 function s.ovcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end
 	e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_COST)
+	local ct=Duel.GetOperatedGroup():GetFirst()
+	e:SetLabelObject(ct)
+	ct:CreateEffectRelation(e)
 end
 function s.ovfilter(c,sc)
 	return c:IsCanBeXyzMaterial(sc) and c:IsCanOverlay()
@@ -53,14 +56,13 @@ end
 function s.ovtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.ovfilter,tp,LOCATION_HAND+LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil,e:GetHandler()) end
 end
-function s.ovfilter2(c)
-	return c:IsFaceup() and c:IsCanOverlay()
-end
 function s.ovop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if not c:IsRelateToEffect(e) then return end
+	if not c:IsRelateToChain() then return end
+	local ct=e:GetLabelObject()
+	if not ct:IsRelateToChain() then ct=nil end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
-	local mg=Duel.SelectMatchingCard(tp,s.ovfilter,tp,LOCATION_HAND+LOCATION_GRAVE+LOCATION_REMOVED,0,1,1,nil,c)
+	local mg=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.ovfilter),tp,LOCATION_HAND+LOCATION_GRAVE+LOCATION_REMOVED,0,1,1,ct,c)
 	if #mg==0 then return end
 	Duel.Overlay(c,mg)
 end
