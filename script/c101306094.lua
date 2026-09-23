@@ -54,7 +54,8 @@ function s.gcheck(g,e,tp)
 	return g:IsExists(s.setfilter,1,nil,g,e,tp)
 end
 function s.effilter(c,tp)
-	return not Duel.IsExistingMatchingCard(aux.AND(Card.IsFaceup,Card.IsCode),tp,LOCATION_SZONE,0,1,nil,c:GetCode())
+	return c:IsSetCard(0x1e2)
+		and not Duel.IsExistingMatchingCard(aux.AND(Card.IsFaceup,Card.IsCode),tp,LOCATION_SZONE,0,1,nil,c:GetCode())
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.GetMatchingGroup(s.effilter,tp,LOCATION_EXTRA,0,nil,tp)

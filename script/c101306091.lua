@@ -33,9 +33,6 @@ end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 end
-function s.thfilter(c)
-	return not c:IsCode(id) and aux.IsCodeListed(c,46986414) and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToHand()
-end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToChain() and c:IsFaceup() then
@@ -57,7 +54,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		e3:SetCode(EFFECT_LEAVE_FIELD_REDIRECT)
 		e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 		e3:SetReset(RESET_EVENT+RESETS_REDIRECT)
-		e3:SetValue(LOCATION_EXTRA)
+		e3:SetValue(LOCATION_DECK)
 		c:RegisterEffect(e3,true)
 	end
 	local ss=false
@@ -86,7 +83,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 				e3:SetCode(EFFECT_LEAVE_FIELD_REDIRECT)
 				e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 				e3:SetReset(RESET_EVENT+RESETS_REDIRECT)
-				e3:SetValue(LOCATION_EXTRA)
+				e3:SetValue(LOCATION_DECK)
 				sc:RegisterEffect(e3,true)
 				local e4=Effect.CreateEffect(c)
 				e4:SetType(EFFECT_TYPE_SINGLE)

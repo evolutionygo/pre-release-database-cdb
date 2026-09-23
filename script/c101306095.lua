@@ -1,6 +1,6 @@
---具象天使的终局之问
+--Angelechy Endgame Problem
 local s,id,o=GetID()
-EFFECT_OPPONENT_SELECT_SPSUMMON_ZONE	=380	--特殊召唤落点改由对手选择
+EFFECT_OPPO_SELECT_SPSUMMON_ZONE	=380	--特殊召唤落点改由对手选择
 function s.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
@@ -21,14 +21,14 @@ function s.initial_effect(c)
 	e2:SetOperation(s.drop)
 	c:RegisterEffect(e2)
 	--seq
-	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_FIELD)
-	e2:SetCode(EFFECT_OPPONENT_SELECT_SPSUMMON_ZONE)
-	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-	e2:SetRange(LOCATION_FZONE)
-	e2:SetCondition(s.seqcon)
-	e2:SetTargetRange(0,1)
-	c:RegisterEffect(e2)
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_FIELD)
+	e3:SetCode(EFFECT_OPPO_SELECT_SPSUMMON_ZONE)
+	e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e3:SetRange(LOCATION_FZONE)
+	e3:SetCondition(s.seqcon)
+	e3:SetTargetRange(0,1)
+	c:RegisterEffect(e3)
 	--Trap activate in set turn
 	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(id,3))

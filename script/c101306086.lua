@@ -34,7 +34,7 @@ function s.atkfilter(c)
 	return c:IsFaceup() and c:IsAttribute(ATTRIBUTE_WATER)
 end
 function s.costfilter(c,tp)
-	return Duel.IsExistingMatchingCard(s.atkfilter,tp,LOCATION_MZONE,0,1,nil,tp) and c:IsAbleToGraveAsCost()
+	return Duel.IsExistingMatchingCard(s.atkfilter,tp,LOCATION_MZONE,0,1,c,tp) and c:IsAbleToGraveAsCost()
 end
 function s.srcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.costfilter,tp,LOCATION_ONFIELD,0,1,nil,tp) end
