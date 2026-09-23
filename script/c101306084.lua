@@ -24,7 +24,7 @@ function s.initial_effect(c)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
 	e2:SetValue(1)
-	e2:SetCondition(s.con1)
+	e2:SetCondition(s.racecon(2))
 	c:RegisterEffect(e2)
 	--effect draw
 	local e3=Effect.CreateEffect(c)
@@ -34,7 +34,7 @@ function s.initial_effect(c)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetTargetRange(1,0)
 	e3:SetValue(2)
-	e3:SetCondition(s.con2)
+	e3:SetCondition(s.racecon(3))
 	c:RegisterEffect(e3)
 end
 function s.matfilter(c)
@@ -50,11 +50,11 @@ function s.ovcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:SetLabelObject(ct)
 	ct:CreateEffectRelation(e)
 end
-function s.ovfilter(c,sc)
-	return c:IsCanBeXyzMaterial(sc) and c:IsCanOverlay()
+function s.ovfilter(c)
+	return c:IsCanOverlay()
 end
 function s.ovtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.ovfilter,tp,LOCATION_HAND+LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil,e:GetHandler()) end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.ovfilter,tp,LOCATION_HAND+LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil) end
 end
 function s.ovop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -62,13 +62,12 @@ function s.ovop(e,tp,eg,ep,ev,re,r,rp)
 	local ct=e:GetLabelObject()
 	if not ct:IsRelateToChain() then ct=nil end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
-	local mg=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.ovfilter),tp,LOCATION_HAND+LOCATION_GRAVE+LOCATION_REMOVED,0,1,1,ct,c)
+	local mg=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.ovfilter),tp,LOCATION_HAND+LOCATION_GRAVE+LOCATION_REMOVED,0,1,1,ct)
 	if #mg==0 then return end
 	Duel.Overlay(c,mg)
 end
-function s.con1(e)
-	return e:GetHandler():GetOverlayGroup():GetClassCount(Card.GetRace)>=2
-end
-function s.con2(e)
-	return e:GetHandler():GetOverlayGroup():GetClassCount(Card.GetRace)>=3
+function s.racecon(ct)
+	return function(e)
+		return e:GetHandler():GetOverlayGroup():Filter(Card.IsType,nil,TYPE_MONSTER):GetClassCount(Card.GetRace)>=ct
+	end
 end

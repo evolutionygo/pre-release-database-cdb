@@ -72,20 +72,20 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			local tg=g:SelectSubGroup(tp,s.gcheck,false,2,2,e,tp)
 			if tg:GetCount()>1 then
 				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-				local sg=tg:FilterSelect(tp,s.spfilter,1,1,nil,tg,e,tp)
+				local sg=tg:FilterSelect(tp,s.spfilter,1,1,nil,e,tp)
 				tg:Sub(sg)
 				local sc=sg:GetFirst()
-				local tc=tg:GetFirst()
-				if tc:IsType(TYPE_MONSTER) then
-					Duel.SpecialSummon(tc,0,tp,1-tp,false,false,POS_FACEUP,0x1f)
-					Duel.MoveToField(sc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
+				local pc=tg:GetFirst()
+				if pc:IsType(TYPE_MONSTER) then
+					Duel.SpecialSummon(sc,0,tp,1-tp,false,false,POS_FACEUP,0x1f)
+					Duel.MoveToField(pc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
 					local e1=Effect.CreateEffect(e:GetHandler())
 					e1:SetCode(EFFECT_CHANGE_TYPE)
 					e1:SetType(EFFECT_TYPE_SINGLE)
 					e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 					e1:SetReset(RESET_EVENT+RESETS_STANDARD-RESET_TURN_SET)
 					e1:SetValue(TYPE_SPELL+TYPE_CONTINUOUS)
-					sc:RegisterEffect(e1)
+					pc:RegisterEffect(e1)
 				end
 			end
 		end

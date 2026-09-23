@@ -37,7 +37,7 @@ function s.eqcon(e)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_FUSION)
 end
 function s.eqfilter(c,tp)
-	return (c:IsRace(RACE_WARRIOR) or c:IsControler(1-tp)) and c:CheckUniqueOnField(tp) and c:IsFaceup()
+	return (c:IsRace(RACE_WARRIOR) or c:IsControler(1-tp)) and c:IsType(TYPE_MONSTER) and c:IsFaceup()
 		and not c:IsForbidden() and c:CheckUniqueOnField(tp,LOCATION_SZONE)
 end
 function s.eqtg(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -46,9 +46,9 @@ function s.eqtg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.eqop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if not Duel.GetLocationCount(tp,LOCATION_SZONE)>0 or not c:IsRelateToChain() or not c:IsFaceup() then return end
+	if Duel.GetLocationCount(tp,LOCATION_SZONE)==0 or not c:IsRelateToChain() or not c:IsFaceup() then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EQUIP)
-	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.eqfilter),tp,LOCATION_GRAVE+LOCATION_REMOVED,LOCATION_GRAVE+LOCATION_REMOVED,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.eqfilter),tp,LOCATION_GRAVE+LOCATION_REMOVED,LOCATION_GRAVE+LOCATION_REMOVED,1,1,nil,tp)
 	local tc=g:GetFirst()
 	if not Duel.Equip(tp,tc,c) then return end
 	local e1=Effect.CreateEffect(c)
@@ -64,6 +64,9 @@ function s.eqop(e,tp,eg,ep,ev,re,r,rp)
 	e2:SetValue(500)
 	e2:SetReset(RESET_EVENT+RESETS_STANDARD)
 	tc:RegisterEffect(e2)
+	local e3=e2:Clone()
+	e3:SetCode(EFFECT_UPDATE_DEFENSE)
+	tc:RegisterEffect(e3)
 end
 function s.eqlimit(e,c)
 	return e:GetOwner()==c

@@ -75,7 +75,7 @@ function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local b=Duel.IsExistingMatchingCard(s.setfilter,tp,LOCATION_GRAVE,0,1,nil)
 	if chk==0 then return a or b end
 	local op=aux.SelectFromOptions(tp, {
-		{a,aux.Stringid(id,1),1},
+		{a,aux.Stringid(id,2),1},
 		{b,aux.Stringid(id,3),2},
 	})
 	e:SetLabel(op)
@@ -94,7 +94,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 		local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.rfilter),tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
 		local tc=g:GetFirst()
 		if tc then
-			Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
+			Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
 		end
 	elseif e:GetLabel()==2 then
 		local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.setfilter),tp,LOCATION_GRAVE,0,1,1,nil)

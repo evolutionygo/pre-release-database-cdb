@@ -6,13 +6,12 @@ function s.initial_effect(c)
 	c:EnableReviveLimit()
 	--atk/def up
 	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(id,1))
+	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_ATKCHANGE)
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCountLimit(1,id)
-	e1:SetCondition(s.srcost)
-	e1:SetCost(aux.bfgcost)
+	e1:SetCost(s.srcost)
 	e1:SetTarget(s.atktg)
 	e1:SetOperation(s.atkop)
 	c:RegisterEffect(e1)
@@ -60,18 +59,19 @@ function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 		tc:RegisterEffect(e2)
 	end
 end
-function s.cfilter(c)
-	return c:IsReason(REASON_EFFECT) and c:IsType(TYPE_LINK) and c:IsAttribute(ATTRIBUTE_WATER) and c:IsPreviousLocation(LOCATION_MZONE)
+function s.cfilter(c,tp)
+	return c:IsReason(REASON_EFFECT) and c:IsType(TYPE_LINK) and c:IsAttribute(ATTRIBUTE_WATER)
+		and c:IsPreviousLocation(LOCATION_MZONE) and c:GetPreviousControler()==tp
 end
 function s.descon(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(s.cfilter,1,e:GetHandler()) and not eg:IsContains(e:GetHandler())
+	return eg:IsExists(s.cfilter,1,e:GetHandler(),tp) and not eg:IsContains(e:GetHandler()) and rp==1-tp
 end
 function s.spfilter(c,e,tp,lk)
-	return c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsAttribute(ATTRIBUTE_WATER) and c:IsLinkBelow(lk)
+	return c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsAttribute(ATTRIBUTE_WATER) and c:IsLevelBelow(lk)
 end
 function s.tgfilter(c,e,tp)
 	local lk=c:GetLink()
-	return s.cfilter(c) and c:IsCanBeEffectTarget(e) and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,nil,lk)
+	return s.cfilter(c,tp) and c:IsCanBeEffectTarget(e) and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,nil,e,tp,lk)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return eg:IsContains(chkc) and s.tgfilter(chkc,e,tp) end
@@ -84,7 +84,7 @@ end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToChain() then
-		local g=Duel.GetMatchingGroup(aux.NecroValleyFilter(s.spfilter),tp,LOCATION_GRAVE,0,nil,e,tp,tc:GetLink())
+		local g=Duel.GetMatchingGroup(aux.NecroValleyFilter(s.spfilter),tp,LOCATION_HAND+LOCATION_GRAVE,0,nil,e,tp,tc:GetLink())
 		if g:GetCount()>0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 			local sg=g:Select(tp,1,1,nil)

@@ -19,6 +19,7 @@ function s.initial_effect(c)
 	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetRange(LOCATION_GRAVE)
 	e2:SetCountLimit(1,id+o)
+	e2:SetCost(aux.bfgcost)
 	e2:SetTarget(s.settg)
 	e2:SetOperation(s.setop)
 	c:RegisterEffect(e2)
@@ -41,7 +42,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local ct=Duel.GetMatchingGroupCount(s.tefilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)
-	if ct<0 and ct<5 then
+	if ct>0 and ct<5 then
 		local sg=Duel.GetMatchingGroup(aux.NegateAnyFilter,tp,0,LOCATION_ONFIELD,nil)
 		if sg:GetCount()>0 then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DISABLE)
