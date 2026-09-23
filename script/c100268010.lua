@@ -97,9 +97,8 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,c)
 	else return false end
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp,c)
-	local g=e:GetLabelObject()
-	Duel.Release(g,REASON_SPSUMMON)
-	g:DeleteGroup()
+	local tc=e:GetLabelObject()
+	Duel.Release(tc,REASON_SPSUMMON)
 end
 function s.indct(e,re,r,rp)
 	return bit.band(r,REASON_BATTLE+REASON_EFFECT)~=0
