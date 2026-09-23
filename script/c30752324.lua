@@ -1,6 +1,6 @@
 --古の秘儀
 local s,id,o=GetID()
-local IsAllCardType = Card.IsAllCardType or function(c,tpe)
+local IsAllCardTypes = Card.IsAllCardTypes or function(c,tpe)
 	return c:GetOriginalType()&tpe==tpe or c:GetFlagEffect(100267007)>0
 end
 function s.initial_effect(c)
@@ -24,7 +24,7 @@ function s.spfilter2(c,e,tp)
 	return c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.cfilter(c)
-	return c:IsFaceup() and IsAllCardType(c,TYPE_NORMAL+TYPE_MONSTER)
+	return c:IsFaceup() and IsAllCardTypes(c,TYPE_NORMAL+TYPE_MONSTER)
 end
 function s.desfilter(c)
 	return c:IsType(TYPE_SPELL+TYPE_TRAP)
