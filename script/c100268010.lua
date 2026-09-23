@@ -1,4 +1,4 @@
---沈黙の闘者-サイレント・マジシャン
+--沈黙の闘者－サイレント・マジシャン
 local s,id,o=GetID()
 function s.initial_effect(c)
 	c:EnableReviveLimit()
@@ -31,7 +31,7 @@ function s.initial_effect(c)
 	--draw
 	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(id,1))
-	e4:SetCategory(CATEGORY_NEGATE)
+	e4:SetCategory(CATEGORY_DRAW)
 	e4:SetProperty(EFFECT_FLAG_DELAY)
 	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e4:SetRange(LOCATION_MZONE)
@@ -42,16 +42,17 @@ function s.initial_effect(c)
 	e4:SetTarget(s.drtg)
 	e4:SetOperation(s.drop)
 	c:RegisterEffect(e4)
-	local e={}
+	local el={}
 	for i=1,14 do
-		e[i]=e4:Clone()
-		e[i]:SetDescription(aux.Stringid(id,i+1))
-		e[i]:SetCondition(s.drcon2)
-		e[i]:SetLabel(i+1)
-		c:RegisterEffect(e[i])
+		el[i]=e4:Clone()
+		el[i]:SetDescription(aux.Stringid(id,i+1))
+		el[i]:SetCondition(s.drcon2)
+		el[i]:SetLabel(i+1)
+		c:RegisterEffect(el[i])
 	end
 	--disable
 	local e5=Effect.CreateEffect(c)
+	e5:SetCategory(CATEGORY_DISABLE)
 	e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e5:SetCode(EVENT_CHAIN_SOLVING)
 	e5:SetRange(LOCATION_MZONE)
@@ -81,6 +82,9 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp,c)
 	local g=e:GetLabelObject()
 	Duel.Release(g,REASON_SPSUMMON)
 end
+function s.indct(e,re,r,rp)
+	return bit.band(r,REASON_BATTLE+REASON_EFFECT)~=0
+end
 function s.drcon(e,tp,eg,ep,ev,re,r,rp)
 	return ep~=tp and (rp~=1-tp or eg:GetCount()==1)
 end
@@ -94,14 +98,14 @@ function s.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetTargetPlayer(tp)
 	Duel.SetTargetParam(e:GetLabel())
 	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,dr)
-	Duel.Hint(HINT_OPSELECTED,1-tp,aux.Stringid(id,e:GetLabel()))
+	Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
 end
 function s.drop(e,tp,eg,ep,ev,re,r,rp)
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 	Duel.Draw(p,d,REASON_EFFECT)
 end
 function s.discon(e,tp,eg,ep,ev,re,r,rp)
-	return rp==1-tp and re:IsActiveType(TYPE_SPELL) and Duel.GetMatchingGroupCount(aux.TURE,tp,LOCATION_HAND,0,6,nil)
+	return rp==1-tp and re:IsActiveType(TYPE_SPELL) and Duel.GetMatchingGroupCount(aux.TRUE,tp,LOCATION_HAND,0,nil)>=6
 end
 function s.disop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_CARD,0,id)
