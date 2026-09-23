@@ -58,8 +58,12 @@ function s.effilter(c,tp)
 		and not Duel.IsExistingMatchingCard(aux.AND(Card.IsFaceup,Card.IsCode),tp,LOCATION_SZONE,0,1,nil,c:GetCode())
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
+	local ct=0
+	if e:IsHasType(EFFECT_TYPE_ACTIVATE) and not e:GetHandler():IsLocation(LOCATION_SZONE) then
+		ct=1
+	end
 	local g=Duel.GetMatchingGroup(s.effilter,tp,LOCATION_EXTRA,0,nil,tp)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>ct
 		and Duel.GetLocationCount(1-tp,LOCATION_MZONE)>0
 		and g:CheckSubGroup(s.gcheck,2,2,e,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)

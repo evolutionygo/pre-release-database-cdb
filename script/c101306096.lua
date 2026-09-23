@@ -83,11 +83,13 @@ function s.settg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.tgfilter,tp,LOCATION_HAND+LOCATION_ONFIELD,0,1,nil) end
 end
 function s.setop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
 	local gg=Duel.SelectMatchingCard(tp,s.tgfilter,tp,LOCATION_HAND+LOCATION_ONFIELD,0,1,1,nil)
 	if gg:GetCount()==0 then return end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local sg=gg:Select(tp,1,1,nil)
-	if Duel.SendtoGrave(sg,REASON_EFFECT)~=0 and sg:GetFirst():IsLocation(LOCATION_GRAVE) and Duel.GetLocationCount(tp,LOCATION_SZONE)>0 then
+	if gg:IsExists(Card.IsLocation,1,nil,LOCATION_ONFIELD) then
+		Duel.HintSelection(gg)
+	end
+	if Duel.SendtoGrave(gg,REASON_EFFECT)~=0 and gg:GetFirst():IsLocation(LOCATION_GRAVE) and Duel.GetLocationCount(tp,LOCATION_SZONE)>0 then
 		local pg=Duel.GetMatchingGroup(s.setfilter,tp,LOCATION_EXTRA,0,nil,tp)
 		if pg:GetCount()>0 and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 			Duel.BreakEffect()
