@@ -19,9 +19,9 @@ function s.initial_effect(c)
 	--SpecialSummon
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
-	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e2:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_GRAVE_SPSUMMON)
 	e2:SetType(EFFECT_TYPE_TRIGGER_O+EFFECT_TYPE_FIELD)
-	e2:SetProperty(EFFECT_FLAG_DELAY)
+	e2:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
 	e2:SetCode(EVENT_DESTROYED)
 	e2:SetRange(LOCATION_GRAVE)
 	e2:SetCountLimit(1,id+o)
@@ -31,13 +31,16 @@ function s.initial_effect(c)
 	e2:SetOperation(s.spop)
 	c:RegisterEffect(e2)
 end
-function s.srcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToGraveAsCost,tp,LOCATION_ONFIELD,0,1,nil) end
-	local g=Duel.SelectMatchingCard(tp,Card.IsAbleToGraveAsCost,tp,LOCATION_ONFIELD,0,1,1,nil)
-	Duel.SendtoGrave(g,REASON_COST)
-end
 function s.atkfilter(c)
 	return c:IsFaceup() and c:IsAttribute(ATTRIBUTE_WATER)
+end
+function s.costfilter(c,tp)
+	return Duel.IsExistingMatchingCard(s.atkfilter,tp,LOCATION_MZONE,0,1,nil,tp) and c:IsAbleToGraveAsCost()
+end
+function s.srcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(s.costfilter,tp,LOCATION_ONFIELD,0,1,nil,tp) end
+	local g=Duel.SelectMatchingCard(tp,s.costfilter,tp,LOCATION_ONFIELD,0,1,1,nil,tp)
+	Duel.SendtoGrave(g,REASON_COST)
 end
 function s.atktg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.atkfilter,tp,LOCATION_MZONE,0,1,nil) end
@@ -50,7 +53,7 @@ function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetCode(EFFECT_UPDATE_ATTACK)
 		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 		e1:SetValue(500)
-		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
 		tc:RegisterEffect(e1)
 		local e2=e1:Clone()
 		e2:SetCode(EFFECT_UPDATE_DEFENSE)
@@ -58,7 +61,7 @@ function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.cfilter(c)
-	return c:IsReason(REASON_BATTLE+REASON_EFFECT) and c:IsType(TYPE_LINK) and c:IsAttribute(ATTRIBUTE_WATER)
+	return c:IsReason(REASON_EFFECT) and c:IsType(TYPE_LINK) and c:IsAttribute(ATTRIBUTE_WATER) and c:IsPreviousLocation(LOCATION_MZONE)
 end
 function s.descon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.cfilter,1,e:GetHandler()) and not eg:IsContains(e:GetHandler())
@@ -68,22 +71,20 @@ function s.spfilter(c,e,tp,lk)
 end
 function s.tgfilter(c,e,tp)
 	local lk=c:GetLink()
-	return s.cfilter(c,tp) and c:IsCanBeEffectTarget(e) and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_GRAVE,0,1,nil,lk)
+	return s.cfilter(c) and c:IsCanBeEffectTarget(e) and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,nil,lk)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return eg:IsContains(chkc) and s.tgfilter(chkc,e,tp) end
-	local c=e:GetHandler()
 	if chk==0 then return eg:IsExists(s.tgfilter,1,nil,e,tp) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
 	local g=eg:FilterSelect(tp,s.tgfilter,1,1,nil,e,tp)
 	Duel.SetTargetCard(g)
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,0,LOCATION_HAND+LOCATION_GRAVE)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToChain() then
-		local g=Duel.GetMatchingGroup(aux.NecroValleyFilter(s.spfilter),tp,LOCATION_GRAVE,0,nil,e,tp)
+		local g=Duel.GetMatchingGroup(aux.NecroValleyFilter(s.spfilter),tp,LOCATION_GRAVE,0,nil,e,tp,tc:GetLink())
 		if g:GetCount()>0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 			local sg=g:Select(tp,1,1,nil)
