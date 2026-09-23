@@ -1,4 +1,4 @@
---光帰ヘの契り
+--光帰への契り
 local s,id,o=GetID()
 EFFECT_ADD_CARD_TYPE=377
 function s.initial_effect(c)
@@ -44,7 +44,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.cfilter(c,tp)
-	return c:IsSetCard(0x2ea) and c:IsPreviousControler(tp)
+	return c:IsSetCard(0x2ea) and c:IsType(TYPE_RITUAL) and c:IsPreviousControler(tp)
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.cfilter,1,nil,tp)
