@@ -5,9 +5,8 @@ function s.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_COIN+CATEGORY_SPECIAL_SUMMON+CATEGORY_SSET+CATEGORY_GRAVE_SPSUMMON)
-	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_DESTROYED)
-	e1:SetRange(LOCATION_SZONE)
 	e1:SetProperty(EFFECT_FLAG_DELAY)
 	e1:SetCountLimit(1,id)
 	e1:SetCondition(s.spcon)
@@ -74,10 +73,10 @@ function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local a=Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.IsExistingMatchingCard(s.rfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp)
 	local b=Duel.IsExistingMatchingCard(s.setfilter,tp,LOCATION_GRAVE,0,1,nil)
 	if chk==0 then return a or b end
-	local op=aux.SelectFromOptions(tp, {
+	local op=aux.SelectFromOptions(tp,
 		{a,aux.Stringid(id,2),1},
-		{b,aux.Stringid(id,3),2},
-	})
+		{b,aux.Stringid(id,3),2}
+	)
 	e:SetLabel(op)
 	if op==1 then
 		e:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_GRAVE_SPSUMMON)
