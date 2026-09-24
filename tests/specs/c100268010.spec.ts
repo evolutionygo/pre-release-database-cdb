@@ -175,12 +175,9 @@ describe("c100268010 沉默斗者-沉默魔术师", () => {
         })
         .state(YGOProMsgSelectChain, (msg) => {
           expect(msg.player).toBe(1);
-          expect(hintNumbers(ctx.currentMessages)).toEqual(
-            expect.arrayContaining([
-              { player: 0, desc: 2 },
-              { player: 1, desc: 2 },
-            ]),
-          );
+          expect(hintNumbers(ctx.currentMessages)).toEqual([
+            { player: 1, desc: 2 },
+          ]);
           const ash = ctx
             .getFieldCard(1, LOCATION_HAND)
             .find((card) => card.code === ASH);
@@ -305,22 +302,16 @@ describe("c100268010 沉默斗者-沉默魔术师", () => {
           expect(
             msg.chains.filter((chain) => chain.code === CARD),
           ).toHaveLength(1);
-          expect(hintNumbers(ctx.currentMessages)).toEqual(
-            expect.arrayContaining([
-              { player: 0, desc: 2 },
-              { player: 1, desc: 2 },
-            ]),
-          );
+          expect(hintNumbers(ctx.currentMessages)).toEqual([
+            { player: 0, desc: 2 },
+          ]);
           return msg.prepareResponse({ code: CARD });
         })
         .advance(NoEffectAdvancor())
         .state(YGOProMsgSelectIdleCmd, () => {
-          expect(hintNumbers(ctx.currentMessages)).toEqual(
-            expect.arrayContaining([
-              { player: 0, desc: 1 },
-              { player: 1, desc: 1 },
-            ]),
-          );
+          expect(hintNumbers(ctx.currentMessages)).toEqual([
+            { player: 1, desc: 1 },
+          ]);
           const draws = ctx.currentMessages.filter(
             (msg): msg is YGOProMsgDraw =>
               msg instanceof YGOProMsgDraw && msg.player === 0,
@@ -376,12 +367,9 @@ describe("c100268010 沉默斗者-沉默魔术师", () => {
               (msg) => msg instanceof YGOProMsgAnnounceNumber,
             ),
           ).toBe(false);
-          expect(hintNumbers(ctx.currentMessages)).toEqual(
-            expect.arrayContaining([
-              { player: 0, desc: 1 },
-              { player: 1, desc: 1 },
-            ]),
-          );
+          expect(hintNumbers(ctx.currentMessages)).toEqual([
+            { player: 1, desc: 1 },
+          ]);
           expectCurrentMessageMatching(ctx, YGOProMsgDraw, {
             player: 0,
             count: 1,
@@ -421,12 +409,9 @@ describe("c100268010 沉默斗者-沉默魔术师", () => {
               (msg) => msg instanceof YGOProMsgAnnounceNumber,
             ),
           ).toBe(false);
-          expect(hintNumbers(ctx.currentMessages)).toEqual(
-            expect.arrayContaining([
-              { player: 0, desc: 1 },
-              { player: 1, desc: 1 },
-            ]),
-          );
+          expect(hintNumbers(ctx.currentMessages)).toEqual([
+            { player: 1, desc: 1 },
+          ]);
           const ourDraws = ctx.allMessages.filter(
             (msg): msg is YGOProMsgDraw =>
               msg instanceof YGOProMsgDraw && msg.player === 0,
@@ -553,12 +538,9 @@ describe("c100268010 沉默斗者-沉默魔术师", () => {
           })
           .advance(NoEffectAdvancor())
           .state(YGOProMsgSelectIdleCmd, () => {
-            expect(hintNumbers(ctx.currentMessages)).toEqual(
-              expect.arrayContaining([
-                { player: 0, desc: 1 },
-                { player: 1, desc: 1 },
-              ]),
-            );
+            expect(hintNumbers(ctx.currentMessages)).toEqual([
+              { player: 1, desc: 1 },
+            ]);
             expectCurrentMessageMatching(ctx, YGOProMsgDraw, {
               player: 0,
               count: 1,
