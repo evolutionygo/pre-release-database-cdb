@@ -53,7 +53,7 @@ function s.rmfilter(c,ec)
 	local seq2=aux.MZoneSequence(ec:GetSequence())
 	return c:IsAbleToRemove()
 		and (c:IsLocation(LOCATION_MZONE) and math.abs(4-seq1-seq2)==1
-		or c:IsType(TYPE_SPELL+TYPE_TRAP) and math.abs(4-seq1-seq2)==2 and c:GetSequence()~=5)
+		or c:IsLocation(LOCATION_SZONE) and math.abs(4-seq1-seq2)==2 and c:GetSequence()~=5)
 end
 function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()

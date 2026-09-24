@@ -29,7 +29,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function s.cfilter1(c,tp)
-	return c:IsPreviousLocation(LOCATION_ONFIELD) and c:IsType(TYPE_SPELL+TYPE_TRAP)
+	return c:IsPreviousLocation(LOCATION_ONFIELD) and c:GetPreviousTypeOnField()&(TYPE_SPELL+TYPE_TRAP)~=0
 end
 function s.spcon1(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.cfilter1,1,nil,tp)
