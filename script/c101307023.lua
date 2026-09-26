@@ -33,7 +33,7 @@ function s.initial_effect(c)
 	e3:SetType(EFFECT_TYPE_QUICK_O)
 	e3:SetRange(LOCATION_HAND)
 	e3:SetCode(EVENT_FREE_CHAIN)
-	e3:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_MAIN_END)
+	e3:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_MAIN_END+TIMING_END_PHASE)
 	e3:SetCountLimit(1,id+o*2)
 	e3:SetCondition(s.descon)
 	e3:SetCost(aux.bfgcost)
@@ -83,7 +83,7 @@ function s.drop(e,tp,eg,ep,ev,re,r,rp)
 				e1:SetReset(RESET_PHASE+PHASE_MAIN2)
 			end
 			Duel.RegisterEffect(e1,tp)
-		end 
+		end
 	end
 end
 function s.descon(e,tp,eg,ep,ev,re,r,rp)
