@@ -74,13 +74,17 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	if ft<=0 then return end
 	local g=Duel.GetTargetsRelateToChain():Filter(aux.NecroValleyFilter(),nil)
-	if g:GetCount()<2 or Duel.IsPlayerAffectedByEffect(tp,59822133) or g:GetCount()>ft then return end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local sg=g:Select(tp,ft,ft,nil)
+	if g:GetCount()>=2 and ft>=2 and Duel.IsPlayerAffectedByEffect(tp,59822133) then return end
+	local sg=g
+	if g:GetCount()>ft then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+		sg=g:Select(tp,ft,ft,nil)
+	end
 	Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP)
 end
 function s.thfilter(c)
 	return c:IsType(TYPE_NORMAL) and c:IsLevelAbove(5) and c:GetBaseAttack()<=2000 and c:GetBaseDefense()<=2000
+		and c:IsFaceup()
 end
 function s.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.thfilter,1,nil)
