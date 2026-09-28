@@ -38,16 +38,30 @@ function s.initial_effect(c)
 	e4:SetOperation(s.thop)
 	c:RegisterEffect(e4)
 end
+function s.relcheck(g,tp,mustg)
+	local m=mustg:GetCount()
+	if m>0 then
+		local hit=(g&mustg):GetCount()
+		if m>=3 then
+			if hit<3 then return false end
+		elseif hit~=m then
+			return false
+		end
+	end
+	return aux.mzctcheckrel(g,tp,REASON_SPSUMMON)
+end
 function s.spcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
 	local rg=Duel.GetReleaseGroup(tp,false,REASON_SPSUMMON)
-	return rg:CheckSubGroup(aux.mzctcheckrel,3,3,tp,REASON_SPSUMMON)
+	local mustg=rg:Filter(Card.IsHasEffect,nil,EFFECT_EXTRA_RELEASE)
+	return rg:CheckSubGroup(s.relcheck,3,3,tp,mustg)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,c)
 	local rg=Duel.GetReleaseGroup(tp,false,REASON_SPSUMMON)
+	local mustg=rg:Filter(Card.IsHasEffect,nil,EFFECT_EXTRA_RELEASE)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
-	local sg=rg:SelectSubGroup(tp,aux.mzctcheckrel,true,3,3,tp,REASON_SPSUMMON)
+	local sg=rg:SelectSubGroup(tp,s.relcheck,true,3,3,tp,mustg)
 	if sg then
 		sg:KeepAlive()
 		e:SetLabelObject(sg)

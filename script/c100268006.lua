@@ -34,11 +34,25 @@ function s.initial_effect(c)
 	e3:SetOperation(s.disop)
 	c:RegisterEffect(e3)
 end
+function s.relcheck(g,tp,mustg)
+	local mc=mustg:GetCount()
+	if mc>=2 then
+		local tc=g:GetFirst()
+		while tc do
+			if not mustg:IsContains(tc) then return false end
+			tc=g:GetNext()
+		end
+	elseif mc==1 and not g:IsContains(mustg:GetFirst()) then
+		return false
+	end
+	return aux.mzctcheckrel(g,tp)
+end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local rg=Duel.GetReleaseGroup(tp)
-	if chk==0 then return rg:CheckSubGroup(aux.mzctcheckrel,2,2,tp) end
+	local mustg=rg:Filter(Card.IsHasEffect,nil,EFFECT_EXTRA_RELEASE)
+	if chk==0 then return rg:CheckSubGroup(s.relcheck,2,2,tp,mustg) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
-	local g=rg:SelectSubGroup(tp,aux.mzctcheckrel,false,2,2,tp)
+	local g=rg:SelectSubGroup(tp,s.relcheck,false,2,2,tp,mustg)
 	aux.UseExtraReleaseCount(g,tp)
 	Duel.Release(g,REASON_COST)
 end
@@ -68,7 +82,7 @@ end
 function s.disop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if tc:IsFaceup() and tc:IsRelateToChain() then
+	if tc:IsFaceup() and tc:IsRelateToChain() and tc:IsCanBeDisabledByEffect(e,true) then
 		Duel.NegateRelatedChain(tc,RESET_TURN_SET)
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)

@@ -76,7 +76,7 @@ function s.cfilter(c,sp)
 	return c:IsSummonPlayer(sp)
 end
 function s.atkcon(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(s.cfilter,1,nil,1-tp)
+	return eg:IsExists(s.cfilter,1,nil,1-tp) and not eg:IsContains(e:GetHandler())
 end
 function s.atktg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end

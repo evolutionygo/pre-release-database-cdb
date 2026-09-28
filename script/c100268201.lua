@@ -61,6 +61,7 @@ end
 function s.disop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.NegateEffect(ev) and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
 		Duel.BreakEffect()
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 		local g=Duel.GetFieldGroup(tp,LOCATION_ONFIELD,LOCATION_ONFIELD):Select(tp,1,1,nil)
 		if #g>0 then
 			Duel.BreakEffect()
@@ -73,7 +74,7 @@ function s.checkop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=eg:GetFirst()
 	local res=false
 	while tc do
-		if tc:IsLocation(LOCATION_GRAVE) and (tc:GetReasonCard()==e:GetHandler() or (tc:IsReason(REASON_EFFECT) and re:GetHandler()== e:GetHandler()))
+		if tc:IsLocation(LOCATION_GRAVE) and (tc:GetReasonCard()==e:GetHandler() or (tc:IsReason(REASON_EFFECT) and re:GetHandler()==e:GetHandler()))
 		and tc:IsReason(REASON_DESTROY) then
 			local e1=Effect.CreateEffect(e:GetHandler())
 			e1:SetDescription(aux.Stringid(id,2))
