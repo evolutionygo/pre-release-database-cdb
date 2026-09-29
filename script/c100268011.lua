@@ -38,15 +38,15 @@ function s.damcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetFlagEffect(1-tp,id)>0
 end
 function s.damtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	local dam=Duel.GetMatchingGroupCount(aux.TRUE,tp,0,LOCATION_HAND,nil)
-	if chk==0 then return true end
+	local ct=Duel.GetMatchingGroupCount(aux.TRUE,tp,0,LOCATION_HAND,nil)
+	if chk==0 then return ct>0 end
 	Duel.SetTargetPlayer(1-tp)
-	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,dam*400)
+	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,ct*400)
 end
 function s.damop(e,tp,eg,ep,ev,re,r,rp)
 	local p=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER)
-	local dam=Duel.GetMatchingGroupCount(aux.TRUE,tp,0,LOCATION_HAND,nil)
-	if Duel.Damage(p,dam*400,REASON_EFFECT)~=0 then
+	local ct=Duel.GetMatchingGroupCount(aux.TRUE,tp,0,LOCATION_HAND,nil)
+	if Duel.Damage(p,ct*400,REASON_EFFECT)~=0 then
 		local g=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,0,LOCATION_HAND,nil)
 		if Duel.IsExistingMatchingCard(aux.TRUE,tp,0,LOCATION_HAND+LOCATION_ONFIELD+LOCATION_GRAVE,20,nil)
 			and g:GetCount()>0
