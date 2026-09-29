@@ -7,6 +7,8 @@ import YGOProDeck from "ygopro-deck-encode";
 
 const YGOCDB_API_BASE = "https://ygocdb.com/api/v0";
 const OFFICIAL_ID_LIMIT = 100000000;
+// 卡号差距不超过这个值才视为同一张卡的异画 alias；超出后只是规则同名，不能互相保留
+const ALIAS_SAME_CARD_MAX_DISTANCE = 50;
 const RC_SPECIALS_DIR = "rc-specials";
 
 type CardRow = {
@@ -181,6 +183,10 @@ function withoutHundredsDigit(id: number): number {
   return id - hundredsDigit(id) * 100;
 }
 
+function isAliasOfSameCard(id: number, alias: number): boolean {
+  return alias !== 0 && Math.abs(id - alias) <= ALIAS_SAME_CARD_MAX_DISTANCE;
+}
+
 function calculateKeptIds(
   cards: CardRow[],
   releasedIds: Set<number>,
@@ -212,12 +218,17 @@ function calculateKeptIds(
     const keptSnapshot = [...keptIds];
 
     for (const card of cards) {
+      // 规则同名卡的 alias 常指向已发售正式卡，卡号差距很大，不能据此保留
+      if (!isAliasOfSameCard(card.id, card.alias)) {
+        continue;
+      }
+
       const isAliasTargetKept =
         card.alias < OFFICIAL_ID_LIMIT ||
         releasedIds.has(card.alias) ||
         keptIds.has(card.alias);
 
-      if (!keptIds.has(card.id) && card.alias !== 0 && isAliasTargetKept) {
+      if (!keptIds.has(card.id) && isAliasTargetKept) {
         keptIds.add(card.id);
         changed = true;
       }
