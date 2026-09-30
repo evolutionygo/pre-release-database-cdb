@@ -2,7 +2,7 @@
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--synchro summon
-	aux.AddSynchroProcedure(c,aux.FilterBoolFunction(Card.IsPosition,POS_DEFENSE),aux.NonTuner(Card.IsPosition,POS_DEFENSE),1)
+	aux.AddSynchroProcedure(c,s.matfilter,aux.NonTuner(s.matfilter),1)
 	c:EnableReviveLimit()
 	--pos
 	local e1=Effect.CreateEffect(c)
@@ -29,13 +29,9 @@ function s.initial_effect(c)
 	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e3:SetCode(EVENT_CHAINING)
 	e3:SetRange(LOCATION_MZONE)
-	e3:SetCondition(s.chcon1)
+	e3:SetCondition(s.poscon2)
 	e3:SetOperation(s.chainop)
 	c:RegisterEffect(e3)
-	local e4=e3:Clone()
-	e4:SetCondition(s.chcon1)
-	e4:SetOperation(s.chainop2)
-	c:RegisterEffect(e4)
 	--recover
 	local e5=Effect.CreateEffect(c)
 	e5:SetDescription(aux.Stringid(id,1))
@@ -49,6 +45,9 @@ function s.initial_effect(c)
 	e5:SetTarget(s.rectg)
 	e5:SetOperation(s.recop)
 	c:RegisterEffect(e5)
+end
+function s.matfilter(c)
+	return c:IsOnField() and c:IsPosition(POS_DEFENSE)
 end
 function s.poscon(e)
 	return e:GetHandler():IsAttackPos()
@@ -69,23 +68,13 @@ end
 function s.postg2(e,c)
 	return c:IsFaceup()
 end
-function s.chcon1(e,tp,eg,ep,ev,re,r,rp)
-	return s.poscon2(e) and rp~=tp
+function s.chainop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.SetChainLimit(s.chainlm(ep))
 end
-function s.chcon2(e,tp,eg,ep,ev,re,r,rp)
-	return s.poscon2(e) and rp==tp
-end
-function s.chainop1(e,tp,eg,ep,ev,re,r,rp)
-	Duel.SetChainLimit(s.chainlm1)
-end
-function s.chainop2(e,tp,eg,ep,ev,re,r,rp)
-	Duel.SetChainLimit(s.chainlm2)
-end
-function s.chainlm1(e,rp,tp)
-	return tp==rp
-end
-function s.chainlm2(e,rp,tp)
-	return tp~=rp
+function s.chainlm(p)
+	return function(e,rp,tp)
+		return tp~=p
+	end
 end
 function s.rectg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
