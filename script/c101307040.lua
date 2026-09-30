@@ -29,9 +29,13 @@ function s.initial_effect(c)
 	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e3:SetCode(EVENT_CHAINING)
 	e3:SetRange(LOCATION_MZONE)
-	e3:SetCondition(s.poscon2)
+	e3:SetCondition(s.chcon1)
 	e3:SetOperation(s.chainop)
 	c:RegisterEffect(e3)
+	local e4=e3:Clone()
+	e4:SetCondition(s.chcon1)
+	e4:SetOperation(s.chainop2)
+	c:RegisterEffect(e4)
 	--recover
 	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(id,1))
@@ -65,11 +69,23 @@ end
 function s.postg2(e,c)
 	return c:IsFaceup()
 end
-function s.chainop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.SetChainLimit(s.chainlm)
+function s.chcon1(e,tp,eg,ep,ev,re,r,rp)
+	return s.poscon2(e) and rp~=tp
 end
-function s.chainlm(e,rp,tp)
+function s.chcon2(e,tp,eg,ep,ev,re,r,rp)
+	return s.poscon2(e) and rp==tp
+end
+function s.chainop1(e,tp,eg,ep,ev,re,r,rp)
+	Duel.SetChainLimit(s.chainlm1)
+end
+function s.chainop2(e,tp,eg,ep,ev,re,r,rp)
+	Duel.SetChainLimit(s.chainlm2)
+end
+function s.chainlm1(e,rp,tp)
 	return tp==rp
+end
+function s.chainlm2(e,rp,tp)
+	return tp~=rp
 end
 function s.rectg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
