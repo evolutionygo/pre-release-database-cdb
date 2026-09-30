@@ -68,7 +68,7 @@ function s.chainop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.SetChainLimit(s.chainlm)
 end
 function s.chainlm(e,rp,tp)
-	return tp==rp
+	return tp~=e:GetHandlerPlayer()
 end
 function s.rectg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
