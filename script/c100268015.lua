@@ -39,7 +39,6 @@ function s.thfilter(c)
 end
 --activation effect processing
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
-	if not e:GetHandler():IsRelateToEffect(e) then return end
 	if Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil)
 		and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
@@ -66,10 +65,10 @@ function s.checkdice(e,tp,eg,ep,ev,re,r,rp)
 	local dc={Duel.GetDiceResult()}
 	local c=e:GetHandler()
 	if s.hasone(dc,1,ct1) then
-		Duel.RaiseSingleEvent(e:GetHandler(),EVENT_CUSTOM+id,re,r,rp,ep,0)
+		Duel.RaiseSingleEvent(c,EVENT_CUSTOM+id,re,r,rp,ep,0)
 	end
 	if ct2>0 and s.hasone(dc,ct1+1,ct1+ct2) then
-		Duel.RaiseSingleEvent(e:GetHandler(),EVENT_CUSTOM+id,re,r,rp,1-ep,0)
+		Duel.RaiseSingleEvent(c,EVENT_CUSTOM+id,re,r,rp,1-ep,0)
 	end
 end
 --filter: opponent's monster (destroy)

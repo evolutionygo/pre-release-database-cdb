@@ -60,7 +60,7 @@ function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local d1,d2,d3=Duel.TossDice(tp,3)
 	local atk=(d1+d2+d3)*350
-	if c:IsRelateToChain() then
+	if c:IsRelateToChain() and c:IsFaceup() and c:IsType(TYPE_MONSTER) then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_UPDATE_ATTACK)

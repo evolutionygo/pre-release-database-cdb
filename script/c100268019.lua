@@ -37,21 +37,20 @@ function s.chainlm(e,rp,tp)
 	return tp==rp
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
 	local g=Duel.SelectMatchingCard(tp,s.tgfilter,tp,LOCATION_DECK+LOCATION_HAND+LOCATION_MZONE,0,1,1,nil)
 	if g:GetCount()>0 then
 		if Duel.SendtoGrave(g,REASON_EFFECT)>0 and g:IsExists(Card.IsLocation,1,nil,LOCATION_GRAVE) then
 			if tc:IsRelateToChain() and tc:IsFaceup() then
-				local atk=g:GetFirst():GetBaseAttack()
+				local atk=g:GetFirst():GetTextAttack()
 				local e1=Effect.CreateEffect(e:GetHandler())
 				e1:SetType(EFFECT_TYPE_SINGLE)
 				e1:SetCode(EFFECT_UPDATE_ATTACK)
 				e1:SetValue(-atk)
 				e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 				tc:RegisterEffect(e1)
-				if tc:IsAttribute(ATTRIBUTE_LIGHT) and aux.NegateMonsterFilter(tc) then
+				if tc:IsAttribute(ATTRIBUTE_LIGHT) and aux.NegateMonsterFilter(tc) and not tc:IsHasEffect(EFFECT_REVERSE_UPDATE) then
 					local e2=Effect.CreateEffect(e:GetHandler())
 					e2:SetType(EFFECT_TYPE_SINGLE)
 					e2:SetCode(EFFECT_DISABLE)
