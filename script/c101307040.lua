@@ -32,8 +32,9 @@ function s.initial_effect(c)
 	e3:SetCondition(s.poscon2)
 	e3:SetOperation(s.chainop)
 	c:RegisterEffect(e3)
-	--damage
+	--recover
 	local e4=Effect.CreateEffect(c)
+	e4:SetDescription(aux.Stringid(id,1))
 	e4:SetCategory(CATEGORY_RECOVER)
 	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
 	e4:SetCode(EVENT_PHASE+PHASE_END)
