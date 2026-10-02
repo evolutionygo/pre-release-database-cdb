@@ -69,7 +69,7 @@ function s.reop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local op=e:GetLabel()
 	local tc=Duel.GetFirstTarget()
-	if tc and tc:IsRelateToChain() then
+	if tc and tc:IsRelateToChain() and tc:IsType(TYPE_MONSTER) then
 		if op==5 and tc:IsFaceup() then
 			local e1=Effect.CreateEffect(c)
 			e1:SetType(EFFECT_TYPE_SINGLE)
@@ -80,7 +80,7 @@ function s.reop(e,tp,eg,ep,ev,re,r,rp)
 			local e2=e1:Clone()
 			e2:SetCode(EFFECT_SET_DEFENSE_FINAL)
 			tc:RegisterEffect(e2)
-		elseif op==10 then
+		elseif op==10 and tc:IsFaceup() then
 			local e1=Effect.CreateEffect(c)
 			e1:SetType(EFFECT_TYPE_SINGLE)
 			e1:SetCode(EFFECT_DISABLE)
