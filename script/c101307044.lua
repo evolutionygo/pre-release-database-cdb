@@ -54,9 +54,11 @@ function s.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 end
 function s.disop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.Draw(1-tp,1,REASON_EFFECT)==1
-		and Duel.NegateEffect(ev) and re:GetHandler():IsRelateToChain(ev) then
-		Duel.Destroy(eg,REASON_EFFECT)
+	if Duel.Draw(1-tp,1,REASON_EFFECT)==1 then
+		Duel.BreakEffect()
+		if Duel.NegateEffect(ev) and re:GetHandler():IsRelateToChain(ev) then
+			Duel.Destroy(eg,REASON_EFFECT)
+		end
 	end
 end
 function s.tdcon(e,c,tp,st)
