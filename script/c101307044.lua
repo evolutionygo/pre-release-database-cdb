@@ -10,7 +10,7 @@ function s.initial_effect(c)
 	--disable
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
-	e1:SetCategory(CATEGORY_DISABLE+CATEGORY_DESTROY)
+	e1:SetCategory(CATEGORY_DRAW+CATEGORY_DISABLE+CATEGORY_DESTROY)
 	e1:SetType(EFFECT_TYPE_QUICK_O)
 	e1:SetCode(EVENT_CHAINING)
 	e1:SetRange(LOCATION_MZONE)
@@ -47,9 +47,11 @@ function s.discost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsPlayerCanDraw(1-tp,1) end
-	Duel.SetOperationInfo(0,CATEGORY_DISABLE,eg,1,0,0)
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,eg,1,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
+	Duel.SetOperationInfo(0,CATEGORY_DISABLE,eg,1,0,0)
+	if re:GetHandler():IsDestructable() and re:GetHandler():IsRelateToEffect(re) then
+		Duel.SetOperationInfo(0,CATEGORY_DESTROY,eg,1,0,0)
+	end
 end
 function s.disop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.Draw(1-tp,1,REASON_EFFECT)==1
