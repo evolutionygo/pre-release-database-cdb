@@ -45,7 +45,8 @@ end
 function s.drop(e,tp,eg,ep,ev,re,r,rp)
 	local p=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER)
 	if Duel.Draw(p,1,REASON_EFFECT)~=0 then
-		local dg=Duel.SelectMatchingCard(p,Card.IsDiscardable,tp,LOCATION_HAND,0,1,1,nil,REASON_DISCARD+REASON_EFFECT)
+		Duel.Hint(HINT_SELECTMSG,p,HINTMSG_DISCARD)
+		local dg=Duel.SelectMatchingCard(p,Card.IsDiscardable,p,LOCATION_HAND,0,1,1,nil,REASON_DISCARD+REASON_EFFECT)
 		if dg:GetCount()>0 then
 			Duel.BreakEffect()
 			Duel.ShuffleHand(p)

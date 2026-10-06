@@ -41,21 +41,25 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local g=Duel.SelectTarget(tp,s.filter,tp,0,LOCATION_MZONE,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
 end
-function s.sumfilter(c,e,tc)
-	local se=Effect.CreateEffect(e:GetHandler())
-	se:SetType(EFFECT_TYPE_SINGLE)
-	se:SetCode(EFFECT_EXTRA_RELEASE)
-	se:SetReset(RESET_EVENT+RESETS_STANDARD)
-	tc:RegisterEffect(se,true)
+function s.regeffect(c,ec)
+	local e=Effect.CreateEffect(ec)
+	e:SetType(EFFECT_TYPE_SINGLE)
+	e:SetCode(EFFECT_EXTRA_RELEASE)
+	e:SetReset(RESET_EVENT+RESETS_STANDARD)
+	c:RegisterEffect(e,true)
+	return e
+end
+function s.sumfilter(c)
 	local res=c:IsSummonable(true,nil,1) or c:IsMSetable(true,nil,1)
-	se:Reset()
 	return res
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToChain() then
+	if tc:IsRelateToChain() and tc:IsType(TYPE_MONSTER) then
 		local b1=true
-		local b2=Duel.IsExistingMatchingCard(s.sumfilter,tp,LOCATION_HAND,0,1,nil,e,tc)
+		local tse=s.regeffect(tc,e:GetHandler())
+		local b2=Duel.IsExistingMatchingCard(s.sumfilter,tp,LOCATION_HAND,0,1,nil,e)
+		tse:Reset()
 		local op=aux.SelectFromOptions(tp,
 			{b1,aux.Stringid(id,2),1},
 			{b2,aux.Stringid(id,3),2})
@@ -63,20 +67,20 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			Duel.Destroy(tc,REASON_EFFECT)
 		else
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SUMMON)
-			local g=Duel.SelectMatchingCard(tp,s.sumfilter,tp,LOCATION_HAND,0,1,1,nil,e,tc)
+			tse=s.regeffect(tc,e:GetHandler())
+			local g=Duel.SelectMatchingCard(tp,s.sumfilter,tp,LOCATION_HAND,0,1,1,nil,e)
+			tse:Reset()
 			local sc=g:GetFirst()
 			if sc then
-				local e1=Effect.CreateEffect(e:GetHandler())
-				e1:SetType(EFFECT_TYPE_SINGLE)
-				e1:SetCode(EFFECT_EXTRA_RELEASE)
-				e1:SetReset(RESET_EVENT+RESETS_STANDARD)
-				tc:RegisterEffect(e1,true)
+				local se=s.regeffect(tc,e:GetHandler())
 				local s1=sc:IsSummonable(true,nil,1)
 				local s2=sc:IsMSetable(true,nil,1)
 				if (s1 and s2 and Duel.SelectPosition(tp,sc,POS_FACEUP_ATTACK+POS_FACEDOWN_DEFENSE)==POS_FACEUP_ATTACK) or not s2 then
 					Duel.Summon(tp,sc,true,nil,1)
-				else
+				elseif s2 then
 					Duel.MSet(tp,sc,true,nil,1)
+				else
+					se:Reset()
 				end
 			end
 		end

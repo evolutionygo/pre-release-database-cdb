@@ -76,11 +76,11 @@ function s.sfilter(c,e,tp)
 		and c:IsFaceup() and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.sptg2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsOnField() and s.sfilter(chkc,e,tp) and chkc:IsControler(tp) end
+	if chkc then return chkc:IsLocation(LOCATION_SZONE) and s.sfilter(chkc,e,tp) and chkc:IsControler(tp) end
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingTarget(s.sfilter,tp,LOCATION_ONFIELD,0,1,nil,e,tp) end
+		and Duel.IsExistingTarget(s.sfilter,tp,LOCATION_SZONE,0,1,nil,e,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectTarget(tp,s.sfilter,tp,LOCATION_ONFIELD,0,1,1,nil,e,tp)
+	local g=Duel.SelectTarget(tp,s.sfilter,tp,LOCATION_SZONE,0,1,1,nil,e,tp)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
 end
 function s.spop2(e,tp,eg,ep,ev,re,r,rp)

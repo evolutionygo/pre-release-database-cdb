@@ -23,6 +23,7 @@ function s.initial_effect(c)
 	e2:SetCode(EVENT_BE_BATTLE_TARGET)
 	e2:SetCountLimit(1,id+o)
 	e2:SetCondition(s.negcon)
+	e2:SetTarget(s.negtg)
 	e2:SetOperation(s.negop)
 	c:RegisterEffect(e2)
 end

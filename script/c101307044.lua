@@ -61,7 +61,7 @@ function s.disop(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 end
-function s.tdcon(e,c,tp,st)
+function s.tdcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetCurrentPhase()==PHASE_MAIN2
 end
 function s.tdfilter(c)

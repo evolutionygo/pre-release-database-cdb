@@ -24,6 +24,7 @@ function s.initial_effect(c)
 	e2:SetOperation(s.thop)
 	c:RegisterEffect(e2)
 	local e3=Effect.CreateEffect(c)
+	e3:SetDescription(aux.Stringid(id,2))
 	e3:SetType(EFFECT_TYPE_FIELD)
 	e3:SetCode(EFFECT_SUMMON_PROC)
 	e3:SetRange(LOCATION_HAND)
@@ -39,7 +40,7 @@ function s.condition(e,tp,eg,ep,ev,re,r,rp)
 	local ex,g,gc,dp,dv=Duel.GetOperationInfo(ev,CATEGORY_SPECIAL_SUMMON)
 	return ((ex and (dv&LOCATION_GRAVE==LOCATION_GRAVE or g and g:IsExists(s.cfilter,1,nil)))
 		or re:IsHasCategory(CATEGORY_GRAVE_SPSUMMON))
-		and Duel.IsChainNegatable(ev)
+		and Duel.IsChainDisablable(ev)
 end
 function s.spfilter(c,e,tp)
 	return c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP,1-tp)
@@ -60,11 +61,11 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.NegateEffect(ev) then
 		if Duel.GetLocationCount(1-tp,LOCATION_MZONE,tp)<=0 then return end
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-		local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,0,LOCATION_GRAVE,1,1,nil,e,tp)
+		local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.spfilter),tp,0,LOCATION_GRAVE,1,1,nil,e,tp)
 		if g:GetCount()>0 and Duel.SpecialSummon(g,0,tp,1-tp,false,false,POS_FACEUP)~=0 then
 			Duel.AdjustAll()
 			local sg=Duel.GetMatchingGroup(s.tgfilter,tp,0,LOCATION_MZONE,nil)
-			if sg:GetCount()>0 and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
+			if sg:GetCount()>0 then
 				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
 				local tg=sg:SelectSubGroup(tp,s.gcheck,false,1,sg:GetCount())
 				Duel.HintSelection(tg)
@@ -86,7 +87,8 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	if c:IsRelateToChain() then
 		Duel.SendtoHand(c,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,c)
-		if Duel.IsExistingMatchingCard(s.sumfilter,tp,LOCATION_HAND,0,1,nil,e)
+		if c:IsLocation(LOCATION_HAND)
+			and Duel.IsExistingMatchingCard(s.sumfilter,tp,LOCATION_HAND,0,1,nil,e)
 			and Duel.SelectYesNo(tp,aux.Stringid(id,3)) then
 			Duel.BreakEffect()
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SUMMON)
@@ -94,7 +96,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 			if sg:GetCount()>0 then
 				Duel.Summon(tp,sg:GetFirst(),true,e:GetLabelObject())
 			end
-		end	
+		end
 	end
 end
 function s.ntcon(e,c,minc)

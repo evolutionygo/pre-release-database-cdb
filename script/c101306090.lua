@@ -115,6 +115,3 @@ function s.chainop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.RegisterEffect(e1,rp)
 	end
 end
-function s.chainlm(e,rp,tp)
-	return tp==rp
-end

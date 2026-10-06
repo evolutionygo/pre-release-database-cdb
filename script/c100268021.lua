@@ -57,14 +57,18 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetOperation(s.retop)
 		Duel.RegisterEffect(e1,tp)
 		if e:GetLabel()==1 and rc:IsType(TYPE_MONSTER) then
-			if rc:IsLevelBelow(4)
-				and (Duel.IsExistingMatchingCard(aux.NecroValleyFilter(s.rmfilter),tp,0,LOCATION_GRAVE,1,nil,rc:GetCode())
-				or Duel.IsExistingMatchingCard(s.rmfilter2,tp,0,LOCATION_HAND+LOCATION_DECK,1,nil,rc:GetCode()))
-				and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
-				local rg=Duel.GetMatchingGroup(aux.NecroValleyFilter(s.rmfilter),tp,0,LOCATION_GRAVE+LOCATION_HAND+LOCATION_DECK,nil,rc:GetCode())
-				if rg:GetCount()>0 then
-					Duel.BreakEffect()
-					Duel.Remove(rg,POS_FACEUP,REASON_EFFECT)
+			if rc:IsLevelBelow(4) then
+				local gg=Duel.GetMatchingGroup(s.rmfilter,tp,0,LOCATION_GRAVE,nil,rc:GetCode())
+				if gg:IsExists(Card.IsHasEffect,1,nil,EFFECT_NECRO_VALLEY) then
+					return
+				end
+				if (gg:GetCount()>0 or Duel.IsExistingMatchingCard(s.rmfilter2,tp,0,LOCATION_HAND+LOCATION_DECK,1,nil,rc:GetCode()))
+					and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
+					local rg=Duel.GetMatchingGroup(aux.NecroValleyFilter(s.rmfilter),tp,0,LOCATION_GRAVE+LOCATION_HAND+LOCATION_DECK,nil,rc:GetCode())
+					if rg:GetCount()>0 then
+						Duel.BreakEffect()
+						Duel.Remove(rg,POS_FACEUP,REASON_EFFECT)
+					end
 				end
 			elseif rc:IsLevelAbove(5)
 				and Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil,rc)

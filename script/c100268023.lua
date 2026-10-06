@@ -103,12 +103,15 @@ end
 function s.thfilter(c,g)
 	return g:IsExists(s.ckfilter,1,nil,c) and c:IsAbleToHand()
 end
+function s.desfilter(c)
+	return c:IsType(TYPE_MONSTER) and c:GetLevel()>0
+end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToChain() and c:IsFaceup() then
 		local g=Duel.GetMatchingGroup(s.deqfilter,tp,LOCATION_SZONE,LOCATION_SZONE,nil,c)
 		if Duel.Destroy(g,REASON_EFFECT)~=0 then
-			local og=Duel.GetOperatedGroup():Filter(Card.IsType,nil,TYPE_MONSTER)
+			local og=Duel.GetOperatedGroup():Filter(s.desfilter,nil)
 			if Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil,og)
 				and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 				Duel.BreakEffect()
