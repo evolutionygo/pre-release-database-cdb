@@ -99,8 +99,7 @@ function s.negtg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.negop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if Duel.NegateAttack()
-		and c:IsRelateToChain() then
+	if Duel.NegateAttack() and c:IsRelateToChain() then
 		Duel.GetControl(c,1-tp)
 	end
 end
