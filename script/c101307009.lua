@@ -61,7 +61,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.sfilter(c,e,tp)
 	local lv=c:GetOriginalLevel()
-	return c:GetOriginalType()&TYPE_MONSTER>0
+	return c:IsCardType(TYPE_MONSTER)
 		and (c:IsSetCard(0x2f2) or lv>6 and lv<9)
 		and c:IsFaceup() and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end

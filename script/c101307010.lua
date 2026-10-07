@@ -71,7 +71,7 @@ function s.spcon2(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetType()==TYPE_SPELL+TYPE_CONTINUOUS
 end
 function s.sfilter(c,e,tp)
-	return c:GetOriginalType()&TYPE_MONSTER>0
+	return c:IsCardType(TYPE_MONSTER)
 		and c:IsSetCard(0x2f2)
 		and c:IsFaceup() and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
