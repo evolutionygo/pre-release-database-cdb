@@ -1,5 +1,8 @@
 --香水戦術
 local s,id,o=GetID()
+if not CATEGORY_DECK_SPSUMMON then
+	CATEGORY_DECK_SPSUMMON=0x800000000
+end
 function s.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
@@ -9,7 +12,7 @@ function s.initial_effect(c)
 	--announce
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,0))
-	e2:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_DECKDES+CATEGORY_SSET)
+	e2:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_DECKDES+CATEGORY_SSET+CATEGORY_DECK_SPSUMMON)
 	e2:SetType(EFFECT_TYPE_QUICK_O)
 	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetRange(LOCATION_SZONE)
