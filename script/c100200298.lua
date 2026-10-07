@@ -1,6 +1,7 @@
 --カウンターマジック「攻撃の無力化」
 local s,id,o=GetID()
 function s.initial_effect(c)
+	--activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
@@ -10,6 +11,7 @@ function s.initial_effect(c)
 	e1:SetTarget(s.target)
 	e1:SetOperation(s.activate)
 	c:RegisterEffect(e1)
+	--special summon
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
@@ -49,9 +51,13 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 		{b2,aux.Stringid(id,3),2})
 	e:SetLabel(op)
 	if op==1 then
-		e:SetCategory(0)
+		if e:IsCostChecked() then
+			e:SetCategory(0)
+		end
 	else
-		e:SetCategory(CATEGORY_DISABLE+CATEGORY_DESTROY)
+		if e:IsCostChecked() then
+			e:SetCategory(CATEGORY_DISABLE+CATEGORY_DESTROY)
+		end
 		Duel.SetOperationInfo(0,CATEGORY_DISABLE,og,1,0,0)
 		if tse and tse:GetHandler():IsDestructable() and tse:GetHandler():IsRelateToEffect(tse) then
 			Duel.SetOperationInfo(0,CATEGORY_DESTROY,og,1,0,0)
