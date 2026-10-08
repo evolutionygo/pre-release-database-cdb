@@ -3,6 +3,7 @@ local s,id,o=GetID()
 function s.initial_effect(c)
 	--fusion material
 	aux.AddFusionProcFunRep(c,s.ffilter,3,true)
+	aux.EnablePendulumAttribute(c,false)
 	c:EnableReviveLimit()
 	--spsummon condition
 	local e1=Effect.CreateEffect(c)
