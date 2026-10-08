@@ -36,7 +36,7 @@ function s.initial_effect(c)
 	Duel.RegisterEffect(e4,0)
 end
 function s.nsfilter(c)
-	return c:IsFaceupEx() and not c:IsSummonableCard()
+	return c:IsFaceupEx() and not c:IsSummonableCard() and c:IsType(TYPE_MONSTER)
 end
 function s.dscon(e,tp,eg,ep,ev,re,r,rp)
 	return tp~=ep and Duel.GetCurrentChain()==0 and eg:GetCount()==1

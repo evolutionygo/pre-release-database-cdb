@@ -1,10 +1,10 @@
--- 終天獄神Ωヴィードリウム
+--終天獄神Ωヴィードリウム
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--fusion material
 	aux.AddFusionProcFunRep(c,s.ffilter,3,true)
 	c:EnableReviveLimit()
-		--spsummon condition
+	--spsummon condition
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SINGLE_RANGE)
@@ -12,7 +12,7 @@ function s.initial_effect(c)
 	e1:SetRange(LOCATION_EXTRA)
 	e1:SetValue(aux.fuslimit)
 	c:RegisterEffect(e1)
-		--to extra
+	--to extra
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,0))
 	e2:SetCategory(CATEGORY_TOEXTRA+CATEGORY_SPECIAL_SUMMON+CATEGORY_FUSION_SUMMON)
@@ -24,7 +24,7 @@ function s.initial_effect(c)
 	e2:SetTarget(s.tdtg)
 	e2:SetOperation(s.tdop)
 	c:RegisterEffect(e2)
-		--immune
+	--immune
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_SINGLE)
 	e3:SetCode(EFFECT_IMMUNE_EFFECT)
@@ -32,7 +32,7 @@ function s.initial_effect(c)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetValue(s.efilter)
 	c:RegisterEffect(e3)
-		--negateid
+	--negateid
 	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(id,1))
 	e4:SetCategory(CATEGORY_NEGATE+CATEGORY_REMOVE)
@@ -45,7 +45,7 @@ function s.initial_effect(c)
 	e4:SetTarget(aux.nbtg)
 	e4:SetOperation(s.negop)
 	c:RegisterEffect(e4)
-		--to pendulum
+	--to pendulum
 	local e5=Effect.CreateEffect(c)
 	e5:SetDescription(aux.Stringid(id,2))
 	e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
@@ -113,7 +113,7 @@ function s.tdop(e,tp,eg,ep,ev,re,r,rp)
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 			local tg=sg:Select(tp,1,1,nil)
 			local tc=tg:GetFirst()
-			if sg1:IsContains(tc) and (sg2==nil or not sg2:IsContains(tc) or not Duel.SelectYesNo(tp,ce:GetDescription())) then
+			if sg1:IsContains(tc) and (sg2==nil or not sg2:IsContains(tc) or ce and not Duel.SelectYesNo(tp,ce:GetDescription())) then
 				aux.FCheckAdditional=s.fcheck
 				local mat1=Duel.SelectFusionMaterial(tp,tc,mg1,nil,chkf)
 				aux.FCheckAdditional=nil
@@ -121,7 +121,7 @@ function s.tdop(e,tp,eg,ep,ev,re,r,rp)
 				Duel.SendtoGrave(mat1,REASON_EFFECT+REASON_MATERIAL+REASON_FUSION)
 				Duel.BreakEffect()
 				Duel.SpecialSummon(tc,SUMMON_TYPE_FUSION,tp,tp,false,false,POS_FACEUP)
-			else
+			elseif ce then
 				local mat2=Duel.SelectFusionMaterial(tp,tc,mg3,nil,chkf)
 				local fop=ce:GetOperation()
 				fop(ce,e,tp,tc,mat2)
@@ -133,13 +133,13 @@ end
 function s.efilter(e,te)
 	return not te:GetOwner():IsSetCard(0x1ce)
 end
-function s.cfilter(c,race)
+function s.ctfilter(c,race)
 	return c:IsFaceup() and c:IsRace(race)
 end
 function s.negcon(e,tp,eg,ep,ev,re,r,rp)
 	local race=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_RACE)
 	return rp==1-tp and not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) and Duel.IsChainNegatable(ev) and re:IsActiveType(TYPE_MONSTER)
-		and Duel.IsExistingMatchingCard(s.cfilter,tp,0,LOCATION_MZONE,2,nil,race)
+		and Duel.IsExistingMatchingCard(s.ctfilter,tp,0,LOCATION_MZONE,2,nil,race)
 end
 function s.costfilter(c,e,tp)
 	return e:GetHandler():IsSetCard(0x1ce) and c:IsAbleToRemove() and c:IsHasEffect(99311889,tp)
@@ -167,7 +167,7 @@ function s.negcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 end
 function s.negop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToEffect(re) then
+	if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToChain(ev) then
 		Duel.Remove(eg,POS_FACEDOWN,REASON_EFFECT)
 	end
 end

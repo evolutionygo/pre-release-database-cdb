@@ -1,4 +1,4 @@
--- 獄神封門-共滅の剣-
+--獄神封門-共滅の剣-
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--Activate
@@ -13,7 +13,7 @@ function s.initial_effect(c)
 	e1:SetOperation(s.activate)
 	e1:SetValue(s.zones)
 	c:RegisterEffect(e1)
-		--atk up
+	--atk up
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetCategory(CATEGORY_ATKCHANGE)
@@ -61,6 +61,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
 		local sg=Duel.SelectMatchingCard(tp,s.psfilter,tp,LOCATION_DECK,0,1,1,nil)
 		if sg:GetCount()>0 then
+			Duel.BreakEffect()
 			Duel.MoveToField(sg:GetFirst(),tp,tp,LOCATION_PZONE,POS_FACEUP,true)
 		end
 	end
