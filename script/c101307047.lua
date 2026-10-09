@@ -51,7 +51,7 @@ function s.atktg(e,c)
 	return c:IsLinkState()
 end
 function s.atkfilter(c)
-	return c:IsFaceup() and c:GetAttribute()~=0
+	return c:IsFaceup() and c:GetRace()~=0
 end
 function s.atkval(e,c)
 	local g=Duel.GetMatchingGroup(s.atkfilter,e:GetHandlerPlayer(),LOCATION_MZONE,LOCATION_MZONE,nil)
@@ -79,7 +79,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 			res=Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)
 		end
 		local hg=Duel.GetMatchingGroup(Card.IsAbleToHand,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
-		if res>0 and #g>0 and Duel.SelectYesNo(tp,aux.Stringid(id,4)) then
+		if res>0 and #hg>0 and Duel.SelectYesNo(tp,aux.Stringid(id,4)) then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
 			local sg=hg:Select(tp,1,1,nil)
 			Duel.HintSelection(sg)

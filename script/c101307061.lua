@@ -46,13 +46,14 @@ function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.SelectMatchingCard(tp,s.cfilter2,tp,LOCATION_GRAVE,0,1,1,nil)
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
-function s.spfilter(c,e,tp)
-	return c:IsSetCard(0x01e6) and c:IsType(TYPE_LINK)
+function s.spfilter(c,e,tp,code)
+	return c:IsSetCard(0x1e6) and c:IsType(TYPE_LINK)
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 		and Duel.GetLocationCountFromEx(tp,tp,nil,c)>0
+		and (code==0 or c:IsCode(code))
 end
 function s.anfilter(c,e,tp)
-	return s.spfilter(c,e,tp) and not c:IsHasEffect(id,tp)
+	return s.spfilter(c,e,tp,0) and not c:IsHasEffect(id,tp)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.anfilter,tp,LOCATION_DECK,0,1,nil,e,tp) end
@@ -80,14 +81,14 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CODE)
 	local ac=Duel.AnnounceCard(tp,table.unpack(afilter))
 	local af={
-		TYPE_FUSION+TYPE_SYNCHRO+TYPE_XYZ+TYPE_LINK,OPCODE_ISTYPE,OPCODE_NOT,
-		0x1cd,OPCODE_ISSETCARD,OPCODE_AND,
+		TYPE_LINK,OPCODE_ISTYPE,OPCODE_AND,
+		0x1e6,OPCODE_ISSETCARD,OPCODE_AND,
 		TYPE_MONSTER,OPCODE_ISTYPE,OPCODE_AND
 	}
 	getmetatable(e:GetHandler()).announce_filter=af
 	Duel.SetTargetParam(ac)
 	Duel.SetOperationInfo(0,CATEGORY_ANNOUNCE,nil,0,tp,0)
-	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 	local e0=Effect.CreateEffect(e:GetHandler())
 	e0:SetType(EFFECT_TYPE_FIELD)
 	e0:SetCode(id)

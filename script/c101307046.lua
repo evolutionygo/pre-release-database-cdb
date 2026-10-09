@@ -66,7 +66,7 @@ function s.tdop(e,tp,eg,ep,ev,re,r,rp)
 		local tc=g:GetFirst()
 		local res=0
 		Duel.HintSelection(g)
-		if tc (not tc:IsAbleToRemove() or not Duel.SelectYesNo(tp,aux.Stringid(id,3))) then
+		if tc and tc:IsAbleToGrave() and (not tc:IsAbleToRemove() or not Duel.SelectYesNo(tp,aux.Stringid(id,3))) then
 			res=Duel.Destroy(tc,REASON_EFFECT)
 		elseif tc:IsAbleToRemove() then
 			res=Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)
