@@ -71,15 +71,15 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.SelectMatchingCard(tp,aux.TRUE,tp,LOCATION_ONFIELD,0,1,1,nil)
 	if g:GetCount()>0 then
 		local tc=g:GetFirst()
-		local res=0
+		local res=false
 		Duel.HintSelection(g)
 		if tc and tc:IsAbleToGrave() and (not tc:IsAbleToRemove() or not Duel.SelectYesNo(tp,aux.Stringid(id,3))) then
-			res=Duel.SendtoGrave(tc,REASON_EFFECT)
+			res=Duel.SendtoGrave(tc,REASON_EFFECT)>0
 		elseif tc:IsAbleToRemove() then
-			res=Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)
+			res=Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)>0 and (tc:IsLocation(LOCATION_REMOVED) or tc:IsType(TYPE_TOKEN))
 		end
 		local hg=Duel.GetMatchingGroup(Card.IsAbleToHand,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
-		if res>0 and #hg>0 and Duel.SelectYesNo(tp,aux.Stringid(id,4)) then
+		if res and #hg>0 and Duel.SelectYesNo(tp,aux.Stringid(id,4)) then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
 			local sg=hg:Select(tp,1,1,nil)
 			Duel.HintSelection(sg)
