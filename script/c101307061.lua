@@ -56,7 +56,7 @@ function s.anfilter(c,e,tp)
 	return s.spfilter(c,e,tp,0) and not c:IsHasEffect(id,tp)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.anfilter,tp,LOCATION_DECK,0,1,nil,e,tp) end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.anfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp) end
 	local g=Duel.GetMatchingGroup(s.anfilter,tp,LOCATION_EXTRA,0,nil,e,tp)
 	local ag=Group.CreateGroup()
 	local codes={}
