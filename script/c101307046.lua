@@ -1,11 +1,10 @@
---無垢なる血盟 ドゥームズ
+-- 無垢なる血盟 ドゥームズ
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddLinkProcedure(c,nil,2,2,s.lcheck)
 	c:EnableReviveLimit()
 	--bp remove
 	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetCode(EFFECT_BATTLE_DESTROY_REDIRECT)
 	e1:SetValue(LOCATION_REMOVED)
@@ -15,10 +14,10 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 	--destroy
 	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetCategory(CATEGORY_REMOVE+CATEGORY_DESTROY+CATEGORY_GRAVE_ACTION+CATEGORY_TODECK)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_MZONE)
+	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e2:SetCountLimit(1,id)
 	e2:SetCondition(s.tdcon1)
 	e2:SetTarget(s.tdtg)
@@ -32,7 +31,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 	--spsummon
 	local e4=Effect.CreateEffect(c)
-	e4:SetDescription(aux.Stringid(id,2))
+	e4:SetDescription(aux.Stringid(id,1))
 	e4:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e4:SetType(EFFECT_TYPE_IGNITION)
 	e4:SetRange(LOCATION_GRAVE)
@@ -66,14 +65,13 @@ function s.tdop(e,tp,eg,ep,ev,re,r,rp)
 	if g:GetCount()>0 then
 		local tc=g:GetFirst()
 		local res=0
-		Duel.HintSelection(g)
-		if tc (not tc:IsAbleToRemove() or not Duel.SelectYesNo(tp,aux.Stringid(id,3))) then
+		if tc (not tc:IsAbleToRemove() or not Duel.SelectYesNo(tp,aux.Stringid(id,2))) then
 			res=Duel.Destroy(tc,REASON_EFFECT)
-		elseif tc:IsAbleToRemove() then
+		else
 			res=Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)
 		end
 		local dg=Duel.GetMatchingGroup(aux.NecroValleyFilter(Card.IsAbleToDeck),tp,LOCATION_GRAVE,LOCATION_GRAVE,nil)
-		if res>0 and dg:GetCount()~=0 and Duel.SelectYesNo(tp,aux.Stringid(id,4)) then
+		if res>0 and dg:GetCount()~=0 and Duel.SelectYesNo(tp,aux.Stringid(id,3)) then
 			Duel.BreakEffect()
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
 			local sg=dg:Select(tp,1,2,nil)

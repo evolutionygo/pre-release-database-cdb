@@ -1,13 +1,11 @@
---無垢なる絆 アルトメギア
-if not CATEGORY_DECK_SPSUMMON then
-	CATEGORY_DECK_SPSUMMON=0x800000000
-end
+-- 無垢なる絆 アルトメギア
 local s,id,o=GetID()
 function s.initial_effect(c)
+
 	--link summon
 	aux.AddLinkProcedure(c,nil,2,4,s.lcheck)
 	c:EnableReviveLimit()
-	--cannot target
+		--cannot target
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
@@ -19,12 +17,11 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 	--to hand or special summon
 	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(id,1))
-	e2:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH+CATEGORY_SPECIAL_SUMMON+CATEGORY_GRAVE_SPSUMMON+CATEGORY_DECK_SPSUMMON)
+	e2:SetCategory(CATEGORY_REMOVE)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e2:SetCountLimit(1,id)
+	e2:SetCountLimit(1,id+o*2)
 	e2:SetCondition(s.thcon1)
 	e2:SetTarget(s.thtg)
 	e2:SetOperation(s.thop)
@@ -32,7 +29,7 @@ function s.initial_effect(c)
 	local e3=e2:Clone()
 	e3:SetType(EFFECT_TYPE_QUICK_O)
 	e3:SetCode(EVENT_FREE_CHAIN)
-	e3:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_MAIN_END)
+	e3:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_END_PHASE)
 	e3:SetCondition(s.thcon2)
 	c:RegisterEffect(e3)
 end
@@ -66,11 +63,10 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=g:GetFirst()
 	if tc then
 		local res=0
-		local sschk=tc:IsCanBeSpecialSummoned(e,0,tp,false,false) and ft>0
-		if tc:IsAbleToHand() and (not sschk or Duel.SelectOption(tp,1190,1152)==0) then
+		if tc:IsAbleToHand() and (not tc:IsCanBeSpecialSummoned(e,0,tp,false,false) or ft<=0 or Duel.SelectOption(tp,1190,1152)==0) then
 			res=Duel.SendtoHand(tc,nil,REASON_EFFECT)
 			Duel.ConfirmCards(1-tp,tc)
-		elseif sschk then
+		else
 			res=Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
 		end
 		Duel.AdjustAll()

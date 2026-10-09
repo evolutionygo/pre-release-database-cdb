@@ -1,4 +1,4 @@
---無垢なる協奏 エルフェンノーツ
+-- 無垢なる協奏 エルフェンノーツ
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddLinkProcedure(c,nil,2,2,s.lcheck)
@@ -14,10 +14,10 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 	--to grave
 	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetCategory(CATEGORY_REMOVE+CATEGORY_TOGRAVE+CATEGORY_TOHAND)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_MZONE)
+	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e2:SetCountLimit(1,id)
 	e2:SetCondition(s.thcon1)
 	e2:SetTarget(s.thtg)
@@ -31,7 +31,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 	--spsummon
 	local e4=Effect.CreateEffect(c)
-	e4:SetDescription(aux.Stringid(id,2))
+	e4:SetDescription(aux.Stringid(id,1))
 	e4:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e4:SetType(EFFECT_TYPE_IGNITION)
 	e4:SetRange(LOCATION_GRAVE)
@@ -63,25 +63,27 @@ end
 function s.thcon2(e,tp,eg,ep,ev,re,r,rp)
 	return aux.IsCanBeQuickEffect(e:GetHandler(),tp,37279096)
 end
+function s.thfilter(c)
+	return c:IsAbleToGrave() or c:IsAbleToRemove()()
+end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(aux.TRUE,tp,LOCATION_ONFIELD,0,1,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_ONFIELD,0,1,nil) end
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_OPERATECARD)
-	local g=Duel.SelectMatchingCard(tp,aux.TRUE,tp,LOCATION_ONFIELD,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_ONFIELD,0,1,1,nil)
 	if g:GetCount()>0 then
 		local tc=g:GetFirst()
 		local res=0
-		Duel.HintSelection(g)
-		if tc and tc:IsAbleToGrave() and (not tc:IsAbleToRemove() or not Duel.SelectYesNo(tp,aux.Stringid(id,3))) then
+		if tc and tc:IsAbleToGrave() and (not tc:IsAbleToRemove() or not Duel.SelectYesNo(tp,aux.Stringid(id,2))) then
 			res=Duel.SendtoGrave(tc,REASON_EFFECT)
-		elseif tc:IsAbleToRemove() then
+		else
 			res=Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)
 		end
-		local hg=Duel.GetMatchingGroup(Card.IsAbleToHand,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
-		if res>0 and #g>0 and Duel.SelectYesNo(tp,aux.Stringid(id,4)) then
+		local g=Duel.GetMatchingGroup(Card.IsAbleToHand,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
+		if res>0 and #g>0 and Duel.SelectYesNo(tp,aux.Stringid(id,3)) then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
-			local sg=hg:Select(tp,1,1,nil)
+			local sg=g:Select(tp,1,1,nil)
 			Duel.HintSelection(sg)
 			Duel.BreakEffect()
 			Duel.SendtoHand(sg,nil,REASON_EFFECT)
