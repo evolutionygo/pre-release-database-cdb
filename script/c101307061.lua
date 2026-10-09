@@ -1,4 +1,4 @@
--- 神幻学都アルス＝マグナ
+--神幻学都アルス＝マグナ
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--activate
@@ -13,8 +13,9 @@ function s.initial_effect(c)
 	e2:SetRange(LOCATION_FZONE)
 	e2:SetValue(s.effectfilter)
 	c:RegisterEffect(e2)
-	--Activate
+	--special summon
 	local e3=Effect.CreateEffect(c)
+	e3:SetDescription(aux.Stringid(id,0))
 	e3:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_ANNOUNCE)
 	e3:SetType(EFFECT_TYPE_IGNITION)
 	e3:SetRange(LOCATION_FZONE)
@@ -31,7 +32,7 @@ function s.effectfilter(e,ct)
 	return p==tp and te:GetHandler():IsSetCard(0x1e8)
 end
 function s.cfilter(c)
-	return c:IsSetCard(0x1ce) and c:IsType((TYPE_MONSTER))
+	return c:IsSetCard(0x1ce) and c:IsType(TYPE_MONSTER)
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_GRAVE,0,1,nil)
@@ -45,16 +46,13 @@ function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.SelectMatchingCard(tp,s.cfilter2,tp,LOCATION_GRAVE,0,1,1,nil)
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
-function s.anfilter(c,e,tp)
-	return c:IsSetCard(0x01e6) and c:IsType(TYPE_LINK)
-		and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
-		and Duel.GetLocationCountFromEx(tp,tp,nil,c)>0
-		and not c:IsHasEffect(id,tp)
-end
 function s.spfilter(c,e,tp)
 	return c:IsSetCard(0x01e6) and c:IsType(TYPE_LINK)
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 		and Duel.GetLocationCountFromEx(tp,tp,nil,c)>0
+end
+function s.anfilter(c,e,tp)
+	return s.spfilter(c,e,tp) and not c:IsHasEffect(id,tp)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.anfilter,tp,LOCATION_DECK,0,1,nil,e,tp) end
@@ -94,12 +92,12 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	e0:SetType(EFFECT_TYPE_FIELD)
 	e0:SetCode(id)
 	e0:SetTargetRange(1,0)
-	e0:SetTarget(s.splimit)
+	e0:SetTarget(s.anlimit)
 	e0:SetLabel(ac)
 	e0:SetReset(RESET_PHASE+PHASE_END)
 	Duel.RegisterEffect(e0,tp)
 end
-function s.splimit(e,c,tp,re)
+function s.anlimit(e,c,tp,re)
 	return c:IsCode(e:GetLabel())
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
@@ -108,8 +106,10 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_EXTRA,0,1,1,nil,e,tp,ac)
 	if g:GetCount()>0 and Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP) then
 		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetDescription(aux.Stringid(id,1))
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_CANNOT_BE_LINK_MATERIAL)
+		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_CLIENT_HINT)
 		e1:SetValue(1)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 		g:GetFirst():RegisterEffect(e1)
