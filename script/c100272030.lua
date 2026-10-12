@@ -49,7 +49,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.cfilter(c)
-	return (c:IsFaceup() or c:IsLocation(LOCATION_GRAVE)) and c:GetOriginalType()&TYPE_LINK~=0 and c:IsAbleToRemoveAsCost()
+	return (c:IsFaceup() or c:IsLocation(LOCATION_GRAVE)) and c:IsAllCardTypes(TYPE_LINK+TYPE_MONSTER) and c:IsAbleToRemoveAsCost()
 end
 function s.descost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_ONFIELD+LOCATION_GRAVE,0,1,nil) end
