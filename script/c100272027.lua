@@ -32,6 +32,7 @@ function s.initial_effect(c)
 	e4:SetCategory(CATEGORY_DRAW)
 	e4:SetType(EFFECT_TYPE_IGNITION)
 	e4:SetRange(LOCATION_MZONE)
+	e4:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 	e4:SetCountLimit(1,id+o*2)
 	e4:SetCost(s.drcost)
 	e4:SetTarget(s.drtg)
@@ -70,7 +71,7 @@ function s.setop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.drfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x12b) and c:IsType(TYPE_LINK) and c:IsType(TYPE_MONSTER) and c:IsAbleToGraveAsCost()
+	return c:IsFaceup() and c:IsSetCard(0x12b) and c:IsAllCardTypes(TYPE_LINK+TYPE_MONSTER) and c:IsAbleToGraveAsCost()
 end
 function s.drcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.drfilter,tp,LOCATION_ONFIELD,0,1,nil) end
