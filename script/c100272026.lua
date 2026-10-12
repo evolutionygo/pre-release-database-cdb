@@ -16,11 +16,12 @@ function s.initial_effect(c)
 	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
 	c:RegisterEffect(e2)
 	--equip
+	local code=aux.RegisterMergedDelayedEvent_ToSingleCard(c,id,EVENT_SPSUMMON_SUCCESS)
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,1))
 	e3:SetCategory(CATEGORY_LEAVE_GRAVE)
 	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
-	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e3:SetCode(code)
 	e3:SetProperty(EFFECT_FLAG_DELAY)
 	e3:SetRange(LOCATION_GRAVE)
 	e3:SetCountLimit(1,id+o)
@@ -73,22 +74,23 @@ function s.eqtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0
 		and Duel.IsExistingMatchingCard(s.eqfilter,tp,LOCATION_GRAVE,0,1,e:GetHandler()) end
 	local g=eg:Filter(s.lkfilter,nil,tp)
-	local tc=g:GetFirst()
-	while tc do
-		tc:CreateEffectRelation(e)
-		tc=g:GetNext()
+	if g:GetCount()==1 then
+		Duel.SetTargetCard(g:GetFirst())
+	else
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
+		local tc=g:Select(tp,1,1,nil):GetFirst()
+		Duel.HintSelection(Group.FromCards(tc))
+		Duel.SetTargetCard(tc)
 	end
 	Duel.SetOperationInfo(0,CATEGORY_LEAVE_GRAVE,nil,1,tp,LOCATION_GRAVE)
 end
 function s.eqop(e,tp,eg,ep,ev,re,r,rp)
-	local g=eg:Filter(s.lkfilter,nil,tp):Filter(Card.IsRelateToChain,nil)
-	if g:GetCount()==0 or Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 then return end
+	local tc=Duel.GetFirstTarget()
+	if not tc:IsRelateToChain() or Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-	local tc=g:Select(tp,1,1,nil):GetFirst()
-	Duel.HintSelection(Group.FromCards(tc))
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EQUIP)
-	local ec=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.eqfilter),tp,LOCATION_GRAVE,0,1,1,nil):GetFirst()
-	if not ec or not Duel.Equip(tp,ec,tc) then return end
+	local ec=Duel.SelectMatchingCard(tp,s.eqfilter,tp,LOCATION_GRAVE,0,1,1,nil):GetFirst()
+	if not ec then return end
+	if not Duel.Equip(tp,ec,tc) then return end
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetCode(EFFECT_EQUIP_LIMIT)
