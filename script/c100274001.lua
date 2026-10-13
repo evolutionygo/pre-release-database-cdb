@@ -87,9 +87,9 @@ function s.tdtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_TOEXTRA,g,g:GetCount(),0,0)
 end
 function s.tdop(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetMatchingGroup(s.tdfilter,tp,0,LOCATION_MZONE+LOCATION_GRAVE,nil)
+	local g=Duel.GetMatchingGroup(aux.NecroValleyFilter(s.tdfilter),tp,0,LOCATION_MZONE+LOCATION_GRAVE,nil)
 	if g:GetCount()>0 then
-		Duel.SendtoHand(g,nil,REASON_EFFECT)
+		Duel.SendtoDeck(g,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)
 	end
 end
 function s.thcon(e,tp,eg,ep,ev,re,r,rp)
