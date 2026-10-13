@@ -21,14 +21,18 @@ function s.initial_effect(c)
 	e2:SetDescription(aux.Stringid(id,0))
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetType(EFFECT_TYPE_QUICK_O)
-	e1:SetCode(EVENT_FREE_CHAIN)
+	e2:SetCode(EVENT_CHAINING)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCountLimit(1,id+o)
-	e2:SetCondition(s.spcon)
+	e2:SetCondition(s.spcon1)
 	e2:SetCost(s.spcost)
 	e2:SetTarget(s.sptg)
 	e2:SetOperation(s.spop)
 	c:RegisterEffect(e2)
+	local e3=e2:Clone()
+	e3:SetCode(EVENT_ATTACK_ANNOUNCE)
+	e3:SetCondition(s.spcon2)
+	c:RegisterEffect(e3)
 end
 function s.matfilter(c)
 	return c:IsRace(RACE_SPELLCASTER)
@@ -49,26 +53,19 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Destroy(tc,REASON_EFFECT)
 	end
 end
-function s.spcon(e,tp,eg,ep,ev,re,r,rp)
-	local ch=Duel.GetCurrentChain()
-	local b1=false
-	if ch>0 then
-		local tsp,tse=Duel.GetChainInfo(ch,CHAININFO_TRIGGERING_PLAYER,CHAININFO_TRIGGERING_EFFECT)
-		if tsp==1-tp and tse and tse:IsActiveType(TYPE_MONSTER) then
-			b1=true
-		end
-	end
-	local a=Duel.GetAttacker()
-	local b2=Duel.CheckEvent(EVENT_ATTACK_ANNOUNCE)
-		and a~=nil and a:IsControler(1-tp) and a:IsType(TYPE_MONSTER)
-	return b1 or b2
+function s.spcon1(e,tp,eg,ep,ev,re,r,rp)
+	return ep==1-tp and re:IsActiveType(TYPE_MONSTER)
+end
+function s.spcon2(e,tp,eg,ep,ev,re,r,rp)
+	local at=Duel.GetAttacker()
+	return at and at:IsControler(1-tp)
 end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return not e:GetHandler():IsStatus(STATUS_SPSUMMON_TURN) and aux.bfgcost(e,tp,eg,ep,ev,re,r,rp,chk) end
 	aux.bfgcost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.spfilter(c,e,tp,ec)
-	return c:IsSetCard(0x150,0xf4)
+	return c:IsSetCard(0x150,0xf4) and not c:IsCode(id)
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and Duel.GetLocationCountFromEx(tp,tp,ec,c)>0
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
