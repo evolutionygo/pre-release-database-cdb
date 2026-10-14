@@ -162,6 +162,7 @@ end
 function s.retop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=e:GetLabelObject()
 	Duel.ReturnToField(tc)
+	tc:ResetFlagEffect(id)
 end
 function s.cfilter(c,rc,fid)
 	local code1,code2=rc:GetOriginalCodeRule()
