@@ -68,6 +68,7 @@ function s.codeop(e,tp,eg,ep,ev,re,r,rp)
 		local mg2=Duel.GetMatchingGroup(s.mfilter2,tp,LOCATION_GRAVE,0,nil)
 		local res1=fc:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) and fc:CheckFusionMaterial(m,nil,chkf)
 		local mg3=nil
+		local res2=false
 		local ce=Duel.GetChainMaterial(tp)
 		if ce~=nil then
 			local fgroup=ce:GetTarget()
