@@ -79,11 +79,11 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	if g:GetCount()==0 then return end
 	g:KeepAlive()
 	local ac=a:GetAttackAnnouncedCount()
-	local afid=a:GetFieldID()
-	local dfid=d and d:GetFieldID() or 0
+	local afid=a:GetRealFieldID()
+	local dfid=d and d:GetRealFieldID() or 0
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e1:SetCode(EVENT_BATTLED)
+	e1:SetCode(EVENT_DAMAGE_STEP_END)
 	e1:SetLabel(c:GetFieldID(),ac,afid,dfid)
 	e1:SetLabelObject(g)
 	e1:SetOperation(s.rmop)
@@ -103,14 +103,19 @@ function s.indes(e,c)
 	local ac,afid,dfid=e:GetLabel()
 	local a=Duel.GetAttacker()
 	local d=Duel.GetAttackTarget()
-	if not a or a:GetAttackAnnouncedCount()~=ac or a:GetFieldID()~=afid then return false end
+	if not a or a:GetAttackAnnouncedCount()~=ac or a:GetRealFieldID()~=afid then return false end
 	if dfid~=0 then
-		if not d or d:GetFieldID()~=dfid then return false end
+		if not d or d:GetRealFieldID()~=dfid then return false end
 	elseif d then
 		return false
 	end
 	local tc=e:GetHandler()
 	return tc==a or tc==d
+end
+function s.samebattler(c,g,fid)
+	if not c or not g:IsContains(c) then return false end
+	if c:IsOnField() then return c:GetRealFieldID()==fid end
+	return true
 end
 function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 	local g=e:GetLabelObject()
@@ -118,9 +123,9 @@ function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 	local fid,ac,afid,dfid=e:GetLabel()
 	local a=Duel.GetAttacker()
 	local d=Duel.GetAttackTarget()
-	local same=a and a:GetAttackAnnouncedCount()==ac and a:GetFieldID()==afid
-		and ((dfid~=0 and d and d:GetFieldID()==dfid) or (dfid==0 and not d))
-	if same then
+	local attacker_same=s.samebattler(a,g,afid) and (not a:IsOnField() or a:GetAttackAnnouncedCount()==ac)
+	local defender_same=(dfid==0 and not d) or (dfid~=0 and s.samebattler(d,g,dfid))
+	if attacker_same and defender_same then
 		for rc in aux.Next(g) do
 			if (rc==a or rc==d) and rc:IsOnField() and rc:IsRelateToBattle()
 				and Duel.Remove(rc,0,REASON_EFFECT+REASON_TEMPORARY)~=0

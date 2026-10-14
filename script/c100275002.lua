@@ -66,12 +66,15 @@ function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(aux.TRUE,tp,LOCATION_MZONE,LOCATION_MZONE,1,e:GetHandler()) end
 	local g=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_MZONE,LOCATION_MZONE,e:GetHandler())
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,g:GetCount(),0,0)
-	local mg,atk=g:Filter(s.cfilter,nil,tp):GetMaxGroup(s.damfilter)
+	local mg,atk=g:Filter(s.cfilter1,nil,tp):GetMaxGroup(s.damfilter)
 	if mg and atk>0 then
 		Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,atk)
 	end
 end
-function s.cfilter(c,tp)
+function s.cfilter1(c,tp)
+	return c:IsFaceup() and c:GetOwner()==1-tp
+end
+function s.cfilter2(c,tp)
 	return c:IsPreviousPosition(POS_FACEUP) and c:GetOwner()==1-tp
 end
 function s.filter(c)
@@ -81,7 +84,7 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local g=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_MZONE,LOCATION_MZONE,aux.ExceptThisCard(e))
 	if g:GetCount()>0 and Duel.Destroy(g,REASON_EFFECT)~=0 then
-		local og=Duel.GetOperatedGroup():Filter(s.cfilter,nil,tp)
+		local og=Duel.GetOperatedGroup():Filter(s.cfilter2,nil,tp)
 		if og:GetCount()==0 then return end
 		local mg,atk=og:GetMaxGroup(s.filter)
 		if not mg or atk==0 then return end
