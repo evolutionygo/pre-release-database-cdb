@@ -32,6 +32,7 @@ function s.mfilter2(c,e)
 	return c:IsAbleToRemove() and c:IsType(TYPE_MONSTER)
 end
 function s.codeop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
 	if c:IsFacedown() or not c:IsRelateToChain() then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONFIRM)
 	local cg=Duel.SelectMatchingCard(tp,s.filter1,tp,LOCATION_EXTRA,0,1,1,nil,tp,c)
