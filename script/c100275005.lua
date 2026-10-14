@@ -24,7 +24,7 @@ function s.initial_effect(c)
 	e3:SetDescription(aux.Stringid(id,2))
 	e3:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
-	e3:SetCode(EVENT_PHASE+PHASE_DRAW)
+	e3:SetCode(EVENT_PREDRAW)
 	e3:SetCountLimit(1)
 	e3:SetRange(LOCATION_SZONE)
 	e3:SetCondition(s.thcon)
@@ -71,54 +71,83 @@ end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local a=Duel.GetAttacker()
-	local d=a:GetBattleTarget()
-	if a:IsRelateToBattle() and d:IsRelateToBattle() then
-		local g=Group.FromCards(a,d)
-		g:KeepAlive()
-		local e1=Effect.CreateEffect(c)
-		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		e1:SetCode(EVENT_BATTLED)
-		e1:SetLabel(c:GetFieldID())
-		e1:SetLabelObject(g)
-		e1:SetOperation(s.rmop)
-		e1:SetReset(RESET_PHASE+PHASE_DAMAGE)
-		Duel.RegisterEffect(e1,tp)
-		for tc in aux.Next(g) do
-			local e2=Effect.CreateEffect(c)
-			e2:SetType(EFFECT_TYPE_SINGLE)
-			e2:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
-			e2:SetValue(1)
-			e2:SetReset(RESET_PHASE+PHASE_DAMAGE)
-			tc:RegisterEffect(e2)
-		end
+	if not a then return end
+	local d=Duel.GetAttackTarget()
+	local g=Group.CreateGroup()
+	if a:IsRelateToBattle() then g:AddCard(a) end
+	if d and d:IsRelateToBattle() then g:AddCard(d) end
+	if g:GetCount()==0 then return end
+	g:KeepAlive()
+	local ac=a:GetAttackAnnouncedCount()
+	local afid=a:GetFieldID()
+	local dfid=d and d:GetFieldID() or 0
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e1:SetCode(EVENT_BATTLED)
+	e1:SetLabel(c:GetFieldID(),ac,afid,dfid)
+	e1:SetLabelObject(g)
+	e1:SetOperation(s.rmop)
+	e1:SetReset(RESET_PHASE+PHASE_DAMAGE)
+	Duel.RegisterEffect(e1,tp)
+	for tc in aux.Next(g) do
+		local e2=Effect.CreateEffect(c)
+		e2:SetType(EFFECT_TYPE_SINGLE)
+		e2:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
+		e2:SetLabel(ac,afid,dfid)
+		e2:SetValue(s.indes)
+		e2:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_DAMAGE)
+		tc:RegisterEffect(e2)
 	end
+end
+function s.indes(e,c)
+	local ac,afid,dfid=e:GetLabel()
+	local a=Duel.GetAttacker()
+	local d=Duel.GetAttackTarget()
+	if not a or a:GetAttackAnnouncedCount()~=ac or a:GetFieldID()~=afid then return false end
+	if dfid~=0 then
+		if not d or d:GetFieldID()~=dfid then return false end
+	elseif d then
+		return false
+	end
+	local tc=e:GetHandler()
+	return tc==a or tc==d
 end
 function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 	local g=e:GetLabelObject()
-	for rc in aux.Next(g) do
-		if Duel.Remove(rc,0,REASON_EFFECT+REASON_TEMPORARY)~=0
-			and rc:IsLocation(LOCATION_REMOVED) then
-			rc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,EFFECT_FLAG_CLIENT_HINT,5,e:GetLabel(),aux.Stringid(id,4))
-			local rep=rc:GetPreviousControler()
-			local e1=Effect.CreateEffect(e:GetHandler())
-			e1:SetDescription(aux.Stringid(id,3))
-			e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-			e1:SetCode(EVENT_PHASE+PHASE_STANDBY)
-			e1:SetLabelObject(rc)
-			e1:SetCountLimit(1)
-			e1:SetCondition(s.retcon)
-			e1:SetOperation(s.retop)
-			if Duel.GetTurnPlayer()==rep then
-				e1:SetReset(RESET_PHASE+PHASE_STANDBY+RESET_SELF_TURN,3)
-				e1:SetLabel(Duel.GetTurnCount()+4,e:GetLabel())
-			else
-				e1:SetReset(RESET_PHASE+PHASE_STANDBY+RESET_SELF_TURN,2)
-				e1:SetLabel(Duel.GetTurnCount()+3,e:GetLabel())
+	if not g then return end
+	local fid,ac,afid,dfid=e:GetLabel()
+	local a=Duel.GetAttacker()
+	local d=Duel.GetAttackTarget()
+	local same=a and a:GetAttackAnnouncedCount()==ac and a:GetFieldID()==afid
+		and ((dfid~=0 and d and d:GetFieldID()==dfid) or (dfid==0 and not d))
+	if same then
+		for rc in aux.Next(g) do
+			if (rc==a or rc==d) and rc:IsOnField() and rc:IsRelateToBattle()
+				and Duel.Remove(rc,0,REASON_EFFECT+REASON_TEMPORARY)~=0
+				and rc:IsLocation(LOCATION_REMOVED) then
+				rc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,EFFECT_FLAG_CLIENT_HINT,5,fid,aux.Stringid(id,4))
+				local rep=rc:GetPreviousControler()
+				local e1=Effect.CreateEffect(e:GetHandler())
+				e1:SetDescription(aux.Stringid(id,3))
+				e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+				e1:SetCode(EVENT_PHASE+PHASE_STANDBY)
+				e1:SetLabelObject(rc)
+				e1:SetCountLimit(1)
+				e1:SetCondition(s.retcon)
+				e1:SetOperation(s.retop)
+				if Duel.GetTurnPlayer()==rep then
+					e1:SetReset(RESET_PHASE+PHASE_STANDBY+RESET_SELF_TURN,3)
+					e1:SetLabel(Duel.GetTurnCount()+4,fid)
+				else
+					e1:SetReset(RESET_PHASE+PHASE_STANDBY+RESET_SELF_TURN,2)
+					e1:SetLabel(Duel.GetTurnCount()+3,fid)
+				end
+				Duel.RegisterEffect(e1,rep)
 			end
-			Duel.RegisterEffect(e1,rep)
 		end
 	end
 	g:DeleteGroup()
+	e:SetLabelObject(nil)
 end
 function s.retcon(e,tp,eg,ep,ev,re,r,rp)
 	local dt,fid=e:GetLabel()
@@ -129,13 +158,15 @@ function s.retop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=e:GetLabelObject()
 	Duel.ReturnToField(tc)
 end
-function s.cfilter(c,code,fid)
-	return c:IsFaceup() and c:GetOriginalCode()==code
+function s.cfilter(c,rc,fid)
+	local code1,code2=rc:GetOriginalCodeRule()
+	return c:IsFaceup() and c:IsOriginalCodeRule(code1,code2)
 		and c:GetFlagEffectLabel(id)==fid
 end
 function s.discon(e,tp,eg,ep,ev,re,r,rp)
-	return re:IsActiveType(TYPE_MONSTER)
-		and Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_REMOVED,LOCATION_REMOVED,1,nil,re:GetHandler():GetOriginalCode(),e:GetHandler():GetFieldID())
+	local rc=re:GetHandler()
+	return rc and re:IsActiveType(TYPE_MONSTER)
+		and Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_REMOVED,LOCATION_REMOVED,1,nil,rc,e:GetHandler():GetFieldID())
 end
 function s.disop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.NegateEffect(ev)
