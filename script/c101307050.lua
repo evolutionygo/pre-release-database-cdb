@@ -19,7 +19,7 @@ function s.filter1(c,tp,ec)
 	return c:IsType(TYPE_FUSION) and Duel.IsExistingMatchingCard(s.filter2,tp,LOCATION_GRAVE,0,1,nil,c,ec)
 end
 function s.filter2(c,fc,ec)
-	return aux.IsCodeListed(fc,c:GetCode()) and not c:IsType(TYPE_FUSION)
+	return aux.IsCodeListed(fc,c:GetCode()) and not c:IsType(TYPE_FUSION) and c:IsType(TYPE_MONSTER)
 		and not c:IsCode(ec:GetCode())
 end
 function s.codetg(e,tp,eg,ep,ev,re,r,rp,chk)
