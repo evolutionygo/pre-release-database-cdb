@@ -31,12 +31,28 @@ end
 function s.mfilter2(c,e)
 	return c:IsAbleToRemove() and c:IsType(TYPE_MONSTER)
 end
+function s.regeff(e,tp)
+	local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e1:SetTargetRange(1,0)
+	e1:SetTarget(s.splimit)
+	e1:SetReset(RESET_PHASE+PHASE_END)
+	Duel.RegisterEffect(e1,tp)
+end
 function s.codeop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsFacedown() or not c:IsRelateToChain() then return end
+	if c:IsFacedown() or not c:IsRelateToChain() then
+		s.regeff(e,tp)
+		return
+	end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONFIRM)
 	local cg=Duel.SelectMatchingCard(tp,s.filter1,tp,LOCATION_EXTRA,0,1,1,nil,tp,c)
-	if cg:GetCount()==0 then return end
+	if cg:GetCount()==0 then
+		s.regeff(e,tp)
+		return
+	end
 	Duel.ConfirmCards(1-tp,cg)
 	local fc=cg:GetFirst()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
@@ -67,7 +83,7 @@ function s.codeop(e,tp,eg,ep,ev,re,r,rp)
 		local mg1=Duel.GetFusionMaterial(tp):Filter(s.mfilter1,nil,e)
 		local mg2=Duel.GetMatchingGroup(aux.NecroValleyFilter(s.mfilter2),tp,LOCATION_GRAVE,0,nil)
 		mg1:Merge(mg2)
-		local res1=fc:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) and fc:CheckFusionMaterial(m,nil,chkf)
+		local res1=fc:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) and fc:CheckFusionMaterial(mg1,nil,chkf)
 		local mg3=nil
 		local res2=false
 		local ce=Duel.GetChainMaterial(tp)
@@ -75,17 +91,17 @@ function s.codeop(e,tp,eg,ep,ev,re,r,rp)
 			local fgroup=ce:GetTarget()
 			mg3=fgroup(ce,e,tp)
 			local mf=ce:GetValue()
-			res2=fc:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) and fc:CheckFusionMaterial(mg3,nil,chkf)
+			res2=fc:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) and mf(c) and fc:CheckFusionMaterial(mg3,nil,chkf)
 		end
 		if (res1 or res2) and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
 			Duel.BreakEffect()
-			if res1 and (not res2 or not Duel.SelectYesNo(tp,ce:GetDescription())) then
+			if res1 and (not res2 or ce and not Duel.SelectYesNo(tp,ce:GetDescription())) then
 				local mat1=Duel.SelectFusionMaterial(tp,fc,mg1,nil,chkf)
 				fc:SetMaterial(mat1)
 				Duel.Remove(mat1,POS_FACEUP,REASON_EFFECT+REASON_MATERIAL+REASON_FUSION)
 				Duel.BreakEffect()
 				Duel.SpecialSummon(fc,SUMMON_TYPE_FUSION,tp,tp,false,false,POS_FACEUP)
-			else
+			elseif ce then
 				local mat2=Duel.SelectFusionMaterial(tp,fc,mg3,nil,chkf)
 				local fop=ce:GetOperation()
 				fop(ce,e,tp,fc,mat2)
@@ -93,14 +109,7 @@ function s.codeop(e,tp,eg,ep,ev,re,r,rp)
 			fc:CompleteProcedure()
 		end
 	end
-	local e3=Effect.CreateEffect(e:GetHandler())
-	e3:SetType(EFFECT_TYPE_FIELD)
-	e3:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
-	e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-	e3:SetTargetRange(1,0)
-	e3:SetTarget(s.splimit)
-	e3:SetReset(RESET_PHASE+PHASE_END)
-	Duel.RegisterEffect(e3,tp)
+	s.regeff(e,tp)
 end
 function s.rstop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
