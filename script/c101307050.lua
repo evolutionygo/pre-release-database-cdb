@@ -9,7 +9,7 @@ function s.initial_effect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_FUSION_SUMMON+CATEGORY_SPECIAL_SUMMON+CATEGORY_GRAVE_ACTION)
 	e1:SetType(EFFECT_TYPE_IGNITION)
-	e1:SetRange(LOCATION_PZONE)
+	e1:SetRange(LOCATION_MZONE)
 	e1:SetCountLimit(1,id)
 	e1:SetTarget(s.codetg)
 	e1:SetOperation(s.codeop)
@@ -22,7 +22,7 @@ function s.filter2(c,fc,ec)
 	return aux.IsCodeListed(fc,c:GetCode()) and not c:IsType(TYPE_FUSION)
 		and not c:IsCode(ec:GetCode())
 end
-function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
+function s.codetg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.filter1,tp,LOCATION_EXTRA,0,1,nil,tp,e:GetHandler()) end
 end
 function s.mfilter1(c,e)
@@ -35,7 +35,7 @@ end
 function s.mfilter2(c,e)
 	return c:IsAbleToRemove() and c:IsType(TYPE_MONSTER)
 end
-function s.activate(e,tp,eg,ep,ev,re,r,rp)
+function s.codeop(e,tp,eg,ep,ev,re,r,rp)
 	if c:IsFacedown() or not c:IsRelateToChain() then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONFIRM)
 	local cg=Duel.SelectMatchingCard(tp,s.filter1,tp,LOCATION_EXTRA,0,1,1,nil,tp,c)
