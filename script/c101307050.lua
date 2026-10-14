@@ -66,6 +66,7 @@ function s.codeop(e,tp,eg,ep,ev,re,r,rp)
 		local chkf=tp
 		local mg1=Duel.GetFusionMaterial(tp):Filter(s.mfilter1,nil,e)
 		local mg2=Duel.GetMatchingGroup(s.mfilter2,tp,LOCATION_GRAVE,0,nil)
+		mg1:Merge(mg2)
 		local res1=fc:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) and fc:CheckFusionMaterial(m,nil,chkf)
 		local mg3=nil
 		local res2=false
@@ -76,7 +77,7 @@ function s.codeop(e,tp,eg,ep,ev,re,r,rp)
 			local mf=ce:GetValue()
 			res2=fc:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) and fc:CheckFusionMaterial(mg3,nil,chkf)
 		end
-		if res1 or res2 and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
+		if (res1 or res2) and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
 			Duel.BreakEffect()
 			if res1 and (not res2 or not Duel.SelectYesNo(tp,ce:GetDescription())) then
 				local mat1=Duel.SelectFusionMaterial(tp,fc,mg1,nil,chkf)
