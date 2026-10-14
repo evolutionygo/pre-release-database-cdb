@@ -1,4 +1,4 @@
---黒金の暴竜ガンドラX
+--黒金の暴竜ガンドラＸ
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddCodeList(c,16832845)
@@ -20,6 +20,7 @@ function s.initial_effect(c)
 	e2:SetCategory(CATEGORY_DESTROY+CATEGORY_DAMAGE+CATEGORY_ATKCHANGE)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e2:SetProperty(EFFECT_FLAG_DELAY)
 	e2:SetCountLimit(1,id+o)
 	e2:SetCost(s.descost)
 	e2:SetTarget(s.destg)
@@ -66,7 +67,7 @@ function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_MZONE,LOCATION_MZONE,e:GetHandler())
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,g:GetCount(),0,0)
 	local mg,atk=g:Filter(s.cfilter,nil,tp):GetMaxGroup(s.damfilter)
-	if atk>0 then
+	if mg and atk>0 then
 		Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,atk)
 	end
 end
@@ -83,7 +84,7 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 		local og=Duel.GetOperatedGroup():Filter(s.cfilter,nil,tp)
 		if og:GetCount()==0 then return end
 		local mg,atk=og:GetMaxGroup(s.filter)
-		if atk==0 then return end
+		if not mg or atk==0 then return end
 		local dam=Duel.Damage(1-tp,atk,REASON_EFFECT)
 		if dam~=0 and c:IsFaceup() and c:IsRelateToChain() then
 			local e1=Effect.CreateEffect(c)
