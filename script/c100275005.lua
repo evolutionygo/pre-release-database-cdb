@@ -1,8 +1,9 @@
--- 時空鎖
+--時空鎖
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_REMOVE)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_BE_BATTLE_TARGET)
@@ -18,9 +19,10 @@ function s.initial_effect(c)
 	e2:SetCondition(s.discon)
 	e2:SetOperation(s.disop)
 	c:RegisterEffect(e2)
+	--search
 	local e3=Effect.CreateEffect(c)
-	e3:SetDescription(aux.Stringid(id,1))
-	e3:SetCategory(CATEGORY_TOHAND)
+	e3:SetDescription(aux.Stringid(id,2))
+	e3:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e3:SetCode(EVENT_PHASE+PHASE_DRAW)
 	e3:SetCountLimit(1)
@@ -38,7 +40,7 @@ end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local a=Duel.GetAttacker()
 	local d=a:GetBattleTarget()
-	if chk==0 then return Duel.IsPlayerCanRemove(tp) end
+	if chk==0 then return Duel.IsPlayerCanRemove(tp) and Duel.IsPlayerCanRemove(tp,a) and Duel.IsPlayerCanRemove(tp,d) end
 	e:SetLabelObject(d)
 	local c=e:GetHandler()
 	c:SetTurnCounter(0)
@@ -96,10 +98,10 @@ function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 	for rc in aux.Next(g) do
 		if Duel.Remove(rc,0,REASON_EFFECT+REASON_TEMPORARY)~=0
 			and rc:IsLocation(LOCATION_REMOVED) then
-			rc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,5,e:GetLabel())
+			rc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,EFFECT_FLAG_CLIENT_HINT,5,e:GetLabel(),aux.Stringid(id,4))
 			local rep=rc:GetPreviousControler()
 			local e1=Effect.CreateEffect(e:GetHandler())
-			e1:SetDescription(aux.Stringid(id,2))
+			e1:SetDescription(aux.Stringid(id,3))
 			e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 			e1:SetCode(EVENT_PHASE+PHASE_STANDBY)
 			e1:SetLabelObject(rc)
