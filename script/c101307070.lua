@@ -1,0 +1,100 @@
+--キャッスル・オブ・ヴァンパイア
+local s,id,o=GetID()
+function s.initial_effect(c)
+	--Activate
+	local e1=Effect.CreateEffect(c)
+	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_GRAVE_SPSUMMON)
+	e1:SetType(EFFECT_TYPE_ACTIVATE)
+	e1:SetCode(EVENT_FREE_CHAIN)
+	e1:SetCountLimit(1,id+EFFECT_COUNT_CODE_OATH)
+	e1:SetOperation(s.activate)
+	c:RegisterEffect(e1)
+	--Destroy
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
+	e2:SetRange(LOCATION_SZONE)
+	e2:SetCode(EVENT_LEAVE_FIELD)
+	e2:SetCondition(s.descon)
+	e2:SetOperation(s.desop)
+	c:RegisterEffect(e2)
+	--Unaffected
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_FIELD)
+	e3:SetCode(id)
+	e3:SetRange(LOCATION_SZONE)
+	e3:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
+	e3:SetTarget(s.immtg)
+	c:RegisterEffect(e3)
+	--destroy
+	local e4=Effect.CreateEffect(c)
+	e4:SetDescription(aux.Stringid(id,0))
+	e4:SetCategory(CATEGORY_DESTROY+CATEGORY_DAMAGE)
+	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
+	e4:SetCode(EVENT_LEAVE_FIELD)
+	e4:SetCondition(s.descon2)
+	e4:SetTarget(s.destg2)
+	e4:SetOperation(s.desop2)
+	c:RegisterEffect(e4)
+end
+function s.spfilter(c,e,tp)
+	return c:IsRace(RACE_ZOMBIE) and c:IsAttribute(ATTRIBUTE_DARK) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+end
+function s.activate(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0
+		or not Duel.IsExistingMatchingCard(aux.NecroValleyFilter(s.spfilter),tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil,e,tp)
+		or not Duel.SelectYesNo(tp,aux.Stringid(id,1)) then return end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.spfilter),tp,LOCATION_DECK+LOCATION_GRAVE,0,1,1,nil,e,tp)
+	if g:GetCount()>0 then
+		local tc=g:GetFirst()
+		if Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
+			and c:IsRelateToChain() and tc:IsFaceup() then
+			c:SetCardTarget(tc)
+			tc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,0,1,c:GetFieldID())
+			local e1=Effect.CreateEffect(c)
+			e1:SetType(EFFECT_TYPE_SINGLE)
+			e1:SetCode(EFFECT_IMMUNE_EFFECT)
+			e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+			e1:SetCondition(s.efcon)
+			e1:SetValue(s.efilter)
+			e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+			tc:RegisterEffect(e1)
+		end
+	end
+end
+function s.descon(e,tp,eg,ep,ev,re,r,rp)
+	local tc=e:GetHandler():GetFirstCardTarget()
+	return tc and eg:IsContains(tc)
+end
+function s.desop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Destroy(e:GetHandler(),REASON_EFFECT)
+end
+function s.immtg(e,c)
+	return c:GetFlagEffectLabel(id)==e:GetHandler():GetFieldID()
+end
+function s.efcon(e,tp,eg,ep,ev,re,r,rp)
+	return e:GetHandler():IsHasEffect(id,tp)
+end
+function s.efilter(e,te)
+	local tc=te:GetOwner()
+	return tc~=e:GetHandler() and te:IsActiveType(TYPE_MONSTER) and te:IsActivated()
+		and not tc:IsAttribute(ATTRIBUTE_DARK)
+end
+function s.descon2(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	return c:IsPreviousPosition(POS_FACEUP)
+end
+function s.destg2(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	local sg=Duel.GetMatchingGroup(aux.TRUE,tp,0,LOCATION_MZONE,nil)
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,sg,sg:GetCount(),0,0)
+	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,tp,sg:GetCount()*400)
+end
+function s.desop2(e,tp,eg,ep,ev,re,r,rp)
+	local g=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_ONFIELD,0,nil)
+	local dam=Duel.Destroy(g,REASON_EFFECT)
+	if dam>0 then
+		Duel.Damage(tp,dam*400,REASON_EFFECT)
+	end
+end
