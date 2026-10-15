@@ -28,6 +28,13 @@ function s.initial_effect(c)
 	e3:SetTarget(s.destg2)
 	e3:SetOperation(s.desop2)
 	c:RegisterEffect(e3)
+	--id
+	local e4=Effect.CreateEffect(c)
+	e4:SetType(EFFECT_TYPE_SINGLE)
+	e4:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e4:SetCode(id)
+	e4:SetRange(LOCATION_SZONE)
+	c:RegisterEffect(e4)
 end
 function s.spfilter(c,e,tp)
 	return c:IsRace(RACE_ZOMBIE) and c:IsAttribute(ATTRIBUTE_DARK) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
@@ -68,7 +75,8 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Destroy(e:GetHandler(),REASON_EFFECT)
 end
 function s.efcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetLabelObject():GetFieldID()==e:GetLabel()
+	local fc=e:GetLabelObject()
+	return fc:IsHasEffect(id) and fc:GetFieldID()==e:GetLabel()
 end
 function s.efilter(e,te)
 	local tc=te:GetOwner()
