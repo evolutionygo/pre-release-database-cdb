@@ -55,7 +55,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		if Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
 			and c:IsRelateToChain() and tc:IsFaceup() then
 			c:SetCardTarget(tc)
-			tc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,0,1,c:GetFieldID())
+			tc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,0,0,c:GetFieldID())
 			local e1=Effect.CreateEffect(c)
 			e1:SetType(EFFECT_TYPE_SINGLE)
 			e1:SetCode(EFFECT_IMMUNE_EFFECT)
