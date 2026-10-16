@@ -58,8 +58,10 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	elseif op==3 then
 		if e:IsCostChecked() then
 			e:SetCategory(CATEGORY_DRAW+CATEGORY_HANDES_SELF)
-			e:SetProperty(0)
+			e:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 		end
+		Duel.SetTargetPlayer(tp)
+		Duel.SetTargetParam(2)
 		Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,2)
 		Duel.SetOperationInfo(0,CATEGORY_HANDES_SELF,nil,0,tp,1)
 	elseif op==4 then
@@ -80,13 +82,15 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)
 		end
 	elseif op==3 then
-		if Duel.Draw(tp,2,REASON_EFFECT)==2 then
-			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DISCARD)
-			local dg=Duel.SelectMatchingCard(tp,Card.IsDiscardable,tp,LOCATION_HAND,0,1,1,nil,REASON_EFFECT+REASON_DISCARD)
+		local p=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER)
+		local d=Duel.GetChainInfo(0,CHAININFO_TARGET_PARAM)
+		if Duel.Draw(p,d,REASON_EFFECT)==d then
+			Duel.Hint(HINT_SELECTMSG,p,HINTMSG_DISCARD)
+			local dg=Duel.SelectMatchingCard(p,Card.IsDiscardable,p,LOCATION_HAND,0,1,1,nil,REASON_EFFECT+REASON_DISCARD)
 			if dg:GetCount()>0 then
 				Duel.BreakEffect()
-				Duel.ShuffleHand(tp)
-				Duel.SendtoGrave(dg,REASON_EFFECT+REASON_DISCARD,tp)
+				Duel.ShuffleHand(p)
+				Duel.SendtoGrave(dg,REASON_EFFECT+REASON_DISCARD,p)
 			end
 		end
 	elseif op==4 then
@@ -121,6 +125,10 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			end
 		end
 	end
+	local p=tp
+	if op==3 then
+		p=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER)
+	end
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e1:SetCode(EVENT_PHASE+PHASE_END)
@@ -128,13 +136,14 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetOperation(s.tgop)
 	e1:SetLabel(att)
 	e1:SetReset(RESET_PHASE+PHASE_END)
-	Duel.RegisterEffect(e1,tp)
+	Duel.RegisterEffect(e1,p)
 end
 function s.tgop(e,tp,eg,ep,ev,re,r,rp)
-	local label=Duel.GetFlagEffectLabel(tp,id)
+	local p=e:GetOwnerPlayer()
+	local label=Duel.GetFlagEffectLabel(p,id)
 	if not label or label&e:GetLabel()~=e:GetLabel() then
 		Duel.Hint(HINT_CARD,0,id)
-		local g=Duel.GetMatchingGroup(Card.IsAbleToGrave,tp,LOCATION_ONFIELD,0,nil)
-		Duel.SendtoGrave(g,REASON_RULE)
+		local g=Duel.GetMatchingGroup(Card.IsAbleToGrave,p,LOCATION_ONFIELD,0,nil)
+		Duel.SendtoGrave(g,REASON_RULE,p)
 	end
 end

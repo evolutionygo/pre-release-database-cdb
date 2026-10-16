@@ -1,7 +1,7 @@
 --ハーピィ＆アマゾネス －羅刹の陣－
 local s,id,o=GetID()
 function s.initial_effect(c)
-	aux.AddCodeList(c,76812113,101307067)
+	aux.AddCodeList(c,76812113,101307075)
 	--Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
@@ -29,7 +29,7 @@ function s.cfilter(c)
 	return c:IsFaceup() and (c:IsCode(76812113) or c:IsSetCard(0x4))
 end
 function s.setfilter(c)
-	return c:IsCode(101307067) and not c:IsForbidden()
+	return c:IsCode(101307075) and not c:IsForbidden()
 end
 function s.tgfilter(c)
 	return c:IsControlerCanBeChanged()

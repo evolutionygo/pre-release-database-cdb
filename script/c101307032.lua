@@ -73,7 +73,7 @@ function s.egfilter(c,tp)
 			and bc:IsType(TYPE_MONSTER) and bc:IsSetCard(0x4)
 	else
 		return bc:GetPreviousPosition()&POS_FACEUP>0 and bc:GetPreviousLocation()&LOCATION_MZONE==LOCATION_MZONE and bc:IsPreviousControler(tp)
-			and bc:GetPreviousTypeOnField()&TYPE_MONSTER==TYPE_MONSTER and c:IsPreviousSetCard(0x4)
+			and bc:GetPreviousTypeOnField()&TYPE_MONSTER==TYPE_MONSTER and bc:IsPreviousSetCard(0x4)
 	end
 end
 function s.drcon(e,tp,eg,ep,ev,re,r,rp)
