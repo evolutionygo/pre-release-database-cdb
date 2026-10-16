@@ -80,8 +80,13 @@ function s.efcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.efilter(e,te)
 	local tc=te:GetOwner()
-	return tc~=e:GetHandler() and te:IsActiveType(TYPE_MONSTER) and te:IsActivated()
-		and not tc:IsAttribute(ATTRIBUTE_DARK)
+	if not tc or tc==e:GetHandler() or not te:IsActiveType(TYPE_MONSTER) or not te:IsActivated() then return false end
+	local ct=Duel.GetCurrentChain()
+	for i=1,ct do
+		local ce,attr=Duel.GetChainInfo(i,CHAININFO_TRIGGERING_EFFECT,CHAININFO_TRIGGERING_ATTRIBUTE)
+		if ce==te then return attr and attr&ATTRIBUTE_DARK==0 end
+	end
+	return not te:GetHandler():IsAttribute(ATTRIBUTE_DARK)
 end
 function s.descon2(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
