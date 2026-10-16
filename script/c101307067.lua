@@ -57,7 +57,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,1,0,0)
 	elseif op==3 then
 		if e:IsCostChecked() then
-			e:SetCategory(CATEGORY_DRAW+CATEGORY_REMOVE+CATEGORY_HANDES_SELF)
+			e:SetCategory(CATEGORY_DRAW+CATEGORY_HANDES_SELF)
 			e:SetProperty(0)
 		end
 		Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,2)
@@ -101,21 +101,21 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 				e1:SetType(EFFECT_TYPE_SINGLE)
 				e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 				e1:SetCode(EFFECT_DISABLE)
-				e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+				e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 				tc:RegisterEffect(e1)
 				local e2=Effect.CreateEffect(c)
 				e2:SetType(EFFECT_TYPE_SINGLE)
 				e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 				e2:SetCode(EFFECT_DISABLE_EFFECT)
 				e2:SetValue(RESET_TURN_SET)
-				e2:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+				e2:SetReset(RESET_EVENT+RESETS_STANDARD)
 				tc:RegisterEffect(e2)
 				if tc:IsType(TYPE_TRAPMONSTER) then
 					local e3=Effect.CreateEffect(c)
 					e3:SetType(EFFECT_TYPE_SINGLE)
 					e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 					e3:SetCode(EFFECT_DISABLE_TRAPMONSTER)
-					e3:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+					e3:SetReset(RESET_EVENT+RESETS_STANDARD)
 					tc:RegisterEffect(e3)
 				end
 			end
@@ -135,6 +135,6 @@ function s.tgop(e,tp,eg,ep,ev,re,r,rp)
 	if not label or label&e:GetLabel()~=e:GetLabel() then
 		Duel.Hint(HINT_CARD,0,id)
 		local g=Duel.GetMatchingGroup(Card.IsAbleToGrave,tp,LOCATION_ONFIELD,0,nil)
-		Duel.SendtoGrave(g,REASON_EFFECT)
+		Duel.SendtoGrave(g,REASON_RULE)
 	end
 end
