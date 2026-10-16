@@ -36,6 +36,10 @@ function s.checkop(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 end
+function s.clearop(e,tp,eg,ep,ev,re,r,rp)
+	s[0]=0x0
+	s[1]=0x0
+end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsAbleToRemove() end
 	local b1=Duel.IsExistingTarget(Card.IsAbleToRemove,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil)
