@@ -15,12 +15,12 @@ function s.initial_effect(c)
 	local e2=e1:Clone()
 	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
 	c:RegisterEffect(e2)
-	--special summon
+	--fusion summon
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,1))
 	e3:SetCategory(CATEGORY_FUSION_SUMMON+CATEGORY_SPECIAL_SUMMON)
 	e3:SetType(EFFECT_TYPE_IGNITION)
-	e3:SetRange(LOCATION_PZONE)
+	e3:SetRange(LOCATION_MZONE)
 	e3:SetCountLimit(1,id+o)
 	e3:SetTarget(s.fsptg)
 	e3:SetOperation(s.fspop)
@@ -31,7 +31,7 @@ function s.initial_effect(c)
 	e4:SetCategory(CATEGORY_ATKCHANGE)
 	e4:SetType(EFFECT_TYPE_QUICK_O)
 	e4:SetCode(EVENT_PRE_DAMAGE_CALCULATE)
-	e4:SetRange(LOCATION_HAND+LOCATION_MZONE)
+	e4:SetRange(LOCATION_GRAVE)
 	e4:SetCountLimit(1,id+o*2)
 	e4:SetCondition(s.atkcon)
 	e4:SetCost(aux.bfgcost)
@@ -115,14 +115,17 @@ function s.fspop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.atkcon(e,tp,eg,ep,ev,re,r,rp)
-	local a,d=Duel.GetBattleMonster(tp)
-	return a and d and a:IsSetCard(0x4)
+	local a=Duel.GetAttacker()
+	local d=a:GetBattleTarget()
+	if a:IsControler(1-tp) then a,d=d,a end
+	return a:IsSetCard(0x4) and a:IsFaceup()
 end
 function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local a,d=Duel.GetBattleMonster(tp)
-	if a:IsRelateToBattle() and d:IsRelateToBattle() then
+	if a:IsRelateToBattle() and d:IsRelateToBattle()
+		and not a:IsImmuneToEffect(e) and not d:IsImmuneToEffect(e) then
 		local atk1=a:GetAttack()
-		local atk2=b:GetAttack()
+		local atk2=d:GetAttack()
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_SET_ATTACK_FINAL)
@@ -134,6 +137,6 @@ function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 		e2:SetCode(EFFECT_SET_ATTACK_FINAL)
 		e2:SetValue(atk1)
 		e2:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
-		b:RegisterEffect(e2)
+		d:RegisterEffect(e2)
 	end
 end
