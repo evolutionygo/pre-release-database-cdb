@@ -30,9 +30,10 @@ function s.initial_effect(c)
 end
 function s.checkop(e,tp,eg,ep,ev,re,r,rp)
 	if re:IsType(TYPE_MONSTER) then
-	local loc,attr=Duel.GetChainInfo(i,CHAININFO_TRIGGERING_LOCATION,CHAININFO_TRIGGERING_ATTRIBUTE)
-	if (loc&LOCATION_MZONE+LOCATION_GRAVE)~=0 and s[rp]&attr==0 then
-		s[rp]=bit.bor(s[rp],attr)
+		local loc,attr=Duel.GetChainInfo(i,CHAININFO_TRIGGERING_LOCATION,CHAININFO_TRIGGERING_ATTRIBUTE)
+		if (loc&LOCATION_MZONE+LOCATION_GRAVE)~=0 and s[rp]&attr==0 then
+			s[rp]=bit.bor(s[rp],attr)
+		end
 	end
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
@@ -46,7 +47,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 			{b2,aux.Stringid(id,2),3},
 			{b2,aux.Stringid(id,3),4})
 	local att=0x0
-	for 1,op do
+	for i=1,op do
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATTRIBUTE)
 		local rc=Duel.AnnounceAttribute(tp,1,0x7f&att)
 		att=bit.bor(att,rc)
@@ -128,11 +129,8 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RegisterEffect(e1,tp)
 end
 function s.tgop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Hint(HINT_CARD,0,id)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.filter),tp,LOCATION_DECK+LOCATION_GRAVE,0,1,1,nil)
-	if #g>0 then
-		Duel.SendtoHand(g,nil,REASON_EFFECT)
-		Duel.ConfirmCards(1-tp,g)
+	if s[tp]&e:GetLabel()~=e:GetLabel() then
+		local g=Duel.GetMatchingGroup(Card.IsAbleToGrave,tp,LOCATION_ONFIELD,0,1,nil)
+		Duel.SendtoGrave(g,REASON_EFFECT)
 	end
 end
