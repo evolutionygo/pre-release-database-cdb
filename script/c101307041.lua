@@ -13,6 +13,7 @@ function s.initial_effect(c)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetCountLimit(1,id)
+	e1:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_END_PHASE)
 	e1:SetCost(s.tgcost)
 	e1:SetTarget(s.tgtg)
 	e1:SetOperation(s.tgop)
@@ -74,9 +75,10 @@ function s.mtcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.mttg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
+	Duel.SetOperationInfo(0,CATEGORY_LEAVE_GRAVE,nil,1,tp,LOCATION_GRAVE)
 end
 function s.xyzfilter(c,e,tp)
-	return c:IsFaceup() and c:IsType(TYPE_XYZ) and c:IsRace(RACE_PLANT)
+	return c:IsFaceup() and c:IsType(TYPE_XYZ) and c:IsRace(RACE_PLANT) and not c:IsImmuneToEffect(e)
 		and Duel.IsExistingMatchingCard(aux.NecroValleyFilter(s.mtfilter),tp,0,LOCATION_GRAVE,1,nil,e)
 end
 function s.mtfilter(c,e)

@@ -3,7 +3,8 @@ local s,id,o=GetID()
 function s.initial_effect(c)
 	--
 	local e1=Effect.CreateEffect(c)
-	e1:SetCategory(CATEGORY_TOGRAVE+CATEGORY_TOHAND+CATEGORY_SEARCH)
+	e1:SetDescription(aux.Stringid(id,0))
+	e1:SetCategory(CATEGORY_TOGRAVE+CATEGORY_TOHAND+CATEGORY_SEARCH+CATEGORY_DECKDES)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetCountLimit(1,id+EFFECT_COUNT_CODE_OATH)
@@ -32,34 +33,34 @@ function s.thfilter(c,e,tp)
 	return c:IsSetCard(0x141) and c:IsType(TYPE_MONSTER)
 		and (c:IsAbleToGrave() or c:IsAbleToHand())
 end
-function s.thfilter2(c,g,e,tp)
-	return c:IsAbleToGrave() and g:FilterCount(Card.IsAbleToHand,c)==1
+function s.rthfilter(c,g)
+	return c:IsAbleToHand() and g:FilterCount(Card.IsAbleToGrave,c)==1
 end
 function s.sporthGroup(g,e,tp)
-	return g:FilterCount(s.thfilter2,nil,g,e,tp)~=0
+	return g:FilterCount(s.rthfilter,nil,g)~=0
+		and g:GetClassCount(Card.GetCode)==2
 		and aux.SameValueCheck(g,Card.GetLevel)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	local g=Duel.GetMatchingGroup(s.thfilter,tp,LOCATION_DECK,0,nil,e,tp)
-	if chk==0 then return Duel.GetMZoneCount(tp,c)>0 and g:CheckSubGroup(s.sporthGroup,2,2,e,tp) end
+	if chk==0 then return g:CheckSubGroup(s.sporthGroup,2,2,e,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_DECK)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 end
-function s.rthfilter(c,tp,e,g)
-	return c:IsAbleToHand() and g:FilterCount(Card.IsAbleToGrave,c)==1
-end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(s.thfilter,tp,LOCATION_DECK,0,nil,e,tp)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
-	local sg=g:SelectSubGroup(tp,s.sporthGroup,false,2,2,e,tp)
-	if sg then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-		local tc=sg:FilterSelect(tp,s.rthfilter,1,1,nil,tp,e,sg):GetFirst()
-		Duel.SendtoHand(tc,nil,REASON_EFFECT)
-		Duel.ConfirmCards(1-tp,tc)
-		sg:RemoveCard(tc)
-		Duel.SendtoGrave(sg,REASON_EFFECT)
+	if g:CheckSubGroup(s.sporthGroup,2,2,e,tp) then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
+		local sg=g:SelectSubGroup(tp,s.sporthGroup,false,2,2,e,tp)
+		if sg then
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+			local tc=sg:FilterSelect(tp,s.rthfilter,1,1,nil,sg):GetFirst()
+			Duel.SendtoHand(tc,nil,REASON_EFFECT)
+			Duel.ConfirmCards(1-tp,tc)
+			sg:RemoveCard(tc)
+			Duel.SendtoGrave(sg,REASON_EFFECT)
+		end
 	end
 	if e:GetLabel()==1 then
 		local e1=Effect.CreateEffect(e:GetHandler())
