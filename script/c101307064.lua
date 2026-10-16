@@ -39,7 +39,7 @@ end
 function s.sporthGroup(g,e,tp)
 	return g:FilterCount(s.rthfilter,nil,g)~=0
 		and g:GetClassCount(Card.GetCode)==2
-		and aux.SameValueCheck(g,Card.GetLevel)
+		and g:GetClassCount(Card.GetLevel)==1
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()

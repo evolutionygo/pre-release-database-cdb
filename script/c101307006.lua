@@ -1,4 +1,4 @@
---アマゾネスの格闘戦士-蹴殺の舞い-
+--アマゾネスの格闘戦士－蹴殺の舞い－
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddCodeList(c,76812113)
@@ -66,8 +66,8 @@ end
 function s.indcon(e,tp,eg,ep,ev,re,r,rp)
 	local a=Duel.GetAttacker()
 	local d=a:GetBattleTarget()
-	if a:IsControler(1-tp) then a,b=b,a end
-	return a:IsSetCard(0x4)
+	if a:IsControler(1-tp) then a,d=d,a end
+	return a:IsSetCard(0x4) and a:IsFaceup()
 end
 function s.indop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
