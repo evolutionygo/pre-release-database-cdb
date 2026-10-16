@@ -37,22 +37,20 @@ function s.thfilter2(c,g,e,tp)
 end
 function s.sporthGroup(g,e,tp)
 	return g:FilterCount(s.thfilter2,nil,g,e,tp)~=0
+		and aux.SameValueCheck(g,Card.GetLevel)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	local g=Duel.GetMatchingGroup(s.thfilter,tp,LOCATION_DECK,0,nil,e,tp)
 	if chk==0 then return Duel.GetMZoneCount(tp,c)>0 and g:CheckSubGroup(s.sporthGroup,2,2,e,tp) end
-	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_GRAVE)
-	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_GRAVE)
-end
-function s.spfilter(c)
-	return c:IsType(TYPE_TUNER) and c:IsSynchroSummonable(nil)
+	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_DECK)
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 end
 function s.rthfilter(c,tp,e,g)
 	return c:IsAbleToHand() and g:FilterCount(Card.IsAbleToGrave,c)==1
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetMatchingGroup(aux.NecroValleyFilter(s.thfilter),tp,LOCATION_GRAVE,0,nil,e,tp)
+	local g=Duel.GetMatchingGroup(s.thfilter,tp,LOCATION_DECK,0,nil,e,tp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
 	local sg=g:SelectSubGroup(tp,s.sporthGroup,false,2,2,e,tp)
 	if sg then

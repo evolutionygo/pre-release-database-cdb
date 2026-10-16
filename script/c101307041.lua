@@ -1,6 +1,7 @@
 --六花深聖ティアドロップ
 local s,id,o=GetID()
 function s.initial_effect(c)
+	aux.AddCodeList(c,33779875)
 	--xyz summon
 	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsRace,RACE_PLANT),10,2,s.ovfilter,aux.Stringid(id,0))
 	c:EnableReviveLimit()
@@ -76,7 +77,7 @@ function s.mttg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.xyzfilter(c,e,tp)
 	return c:IsFaceup() and c:IsType(TYPE_XYZ) and c:IsRace(RACE_PLANT)
-		and Duel.IsExistingMatchingCard(s.mtfilter,tp,0,LOCATION_GRAVE,1,nil,e)
+		and Duel.IsExistingMatchingCard(aux.NecroValleyFilter(s.mtfilter),tp,0,LOCATION_GRAVE,1,nil,e)
 end
 function s.mtfilter(c,e)
 	return c:IsCanOverlay() and not (e and c:IsImmuneToEffect(e))
@@ -86,7 +87,7 @@ function s.mtop(e,tp,eg,ep,ev,re,r,rp)
 		local g=Duel.SelectMatchingCard(tp,s.xyzfilter,tp,LOCATION_MZONE,0,1,1,nil,e,tp)
 		local xc=g:GetFirst()
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
-		local mg=Duel.SelectMatchingCard(tp,s.mtfilter,tp,0,LOCATION_GRAVE,1,1,nil,e)
+		local mg=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.mtfilter),tp,0,LOCATION_GRAVE,1,1,nil,e)
 		if mg:GetCount()>0 then
 			Duel.Overlay(xc,mg)
 		end
