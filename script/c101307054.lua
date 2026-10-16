@@ -4,6 +4,7 @@ function s.initial_effect(c)
 	aux.AddCodeList(c,76812113,101307067)
 	--Activate
 	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_CONTROL+CATEGORY_DESTROY)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
@@ -17,11 +18,11 @@ function s.spfilter(c,e,tp)
 	return c:IsFaceupEx() and c:IsSetCard(0x64,0x4) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and s.filter(chkc,e,tp) end
+	if chkc then return chkc:IsLocation(LOCATION_GRAVE+LOCATION_REMOVED) and chkc:IsControler(tp) and s.spfilter(chkc,e,tp) end
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingTarget(s.spfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp) end
+		and Duel.IsExistingTarget(s.spfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil,e,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectTarget(tp,s.spfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
+	local g=Duel.SelectTarget(tp,s.spfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,1,nil,e,tp)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
 end
 function s.cfilter(c)
@@ -29,6 +30,9 @@ function s.cfilter(c)
 end
 function s.setfilter(c)
 	return c:IsCode(101307067) and not c:IsForbidden()
+end
+function s.tgfilter(c)
+	return c:IsControlerCanBeChanged()
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
@@ -52,10 +56,10 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			elseif op==2 then
 				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONTROL)
 				local sg=Duel.SelectMatchingCard(tp,s.tgfilter,tp,0,LOCATION_MZONE,1,1,nil)
-				local tc=sg:GetFirst()
-				if tc then
+				local tgc=sg:GetFirst()
+				if tgc then
 					Duel.HintSelection(sg)
-					Duel.GetControl(tc,tp)
+					Duel.GetControl(tgc,tp)
 				end
 			elseif op==3 then
 				local sg=Duel.GetMatchingGroup(aux.TRUE,tp,0,LOCATION_MZONE,nil)
