@@ -115,14 +115,12 @@ function s.fspop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.atkcon(e,tp,eg,ep,ev,re,r,rp)
-	local a=Duel.GetAttacker()
-	local d=a:GetBattleTarget()
-	if a:IsControler(1-tp) then a,d=d,a end
-	return a:IsSetCard(0x4) and a:IsFaceup()
+	local a,d=Duel.GetBattleMonster(tp)
+	return a and d and a:IsSetCard(0x4) and a:IsFaceup()
 end
 function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local a,d=Duel.GetBattleMonster(tp)
-	if a:IsRelateToBattle() and d:IsRelateToBattle()
+	if a and d and a:IsRelateToBattle() and d:IsRelateToBattle()
 		and not a:IsImmuneToEffect(e) and not d:IsImmuneToEffect(e) then
 		local atk1=a:GetAttack()
 		local atk2=d:GetAttack()

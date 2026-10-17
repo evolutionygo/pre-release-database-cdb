@@ -64,16 +64,14 @@ function s.setop(e,tp,eg,ep,ev,re,r,rp)
 	if tc then Duel.SSet(tp,tc) end
 end
 function s.indcon(e,tp,eg,ep,ev,re,r,rp)
-	local a=Duel.GetAttacker()
-	local d=a:GetBattleTarget()
-	if a:IsControler(1-tp) then a,d=d,a end
-	return a:IsSetCard(0x4) and a:IsFaceup()
+	local a,d=Duel.GetBattleMonster(tp)
+	return a and d and a:IsSetCard(0x4) and a:IsFaceup()
 end
 function s.indop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local a=Duel.GetAttacker()
 	local d=a:GetBattleTarget()
-	if a:IsRelateToBattle() and d:GetBattleTarget() then
+	if d and a:IsRelateToBattle() and d:GetBattleTarget() then
 		local g=Group.FromCards(a,d)
 		for tc in aux.Next(g) do
 			local e2=Effect.CreateEffect(c)
