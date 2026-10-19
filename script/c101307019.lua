@@ -1,5 +1,8 @@
 --アトランティスの暴翼
 local s,id,o=GetID()
+if not CATEGORY_DECK_SPSUMMON then
+	CATEGORY_DECK_SPSUMMON=0x800000000
+end
 function s.initial_effect(c)
 	aux.AddCodeList(c,22702055,38391684)
 	aux.EnableChangeCode(c,22702055)
@@ -18,7 +21,7 @@ function s.initial_effect(c)
 	--special
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
-	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e2:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_DECK_SPSUMMON)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_GRAVE)
 	e2:SetCountLimit(1,id+o)
@@ -48,7 +51,7 @@ function s.tgtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function s.tgop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToChain() then
+	if tc:IsRelateToChain() and tc:IsOnField() then
 		Duel.SendtoGrave(tc,REASON_EFFECT)
 	end
 end
@@ -56,7 +59,7 @@ function s.cfilter2(c)
 	return c:IsFaceup() and c:IsCode(38391684)
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(s.cfilter2,tp,LOCATION_ONFIELD,0,1,nil)
+	return Duel.IsExistingMatchingCard(s.cfilter2,tp,LOCATION_ONFIELD,0,1,nil) or Duel.IsEnvironment(38391684,tp)
 end
 function s.spfilter(c,e,tp)
 	return c:IsLevelBelow(4) and c:IsRace(RACE_SEASERPENT)
