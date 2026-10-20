@@ -59,8 +59,8 @@ function s.mvop(e,tp,eg,ep,ev,re,r,rp)
 		local sg=g:SelectSubGroup(tp,s.gcheck,false,1,g:GetCount(),tp,ft1,ft2)
 		Duel.HintSelection(sg)
 		for tc in aux.Next(sg) do
-			if tc:IsType(TYPE_MONSTER) and not tc:IsImmuneToEffect(e) then
-				Duel.MoveToField(tc,tp,tc:GetOwner(),LOCATION_SZONE,POS_FACEUP,true)
+			if tc:IsType(TYPE_MONSTER) and not tc:IsImmuneToEffect(e)
+				and Duel.MoveToField(tc,tp,tc:GetOwner(),LOCATION_SZONE,POS_FACEUP,true) then
 				local e1=Effect.CreateEffect(e:GetHandler())
 				e1:SetCode(EFFECT_CHANGE_TYPE)
 				e1:SetType(EFFECT_TYPE_SINGLE)
