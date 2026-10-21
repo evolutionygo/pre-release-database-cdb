@@ -567,6 +567,8 @@ messages:
   - identifier: 73
     msg: ChainSolved
     chainCount: 1
+  - identifier: 74
+    msg: ChainEnd
   - identifier: 50
     msg: Move
     code: 96729612
@@ -581,8 +583,6 @@ messages:
       sequence: 0
       position: 5
     reason: 1024
-  - identifier: 74
-    msg: ChainEnd
   - identifier: 16
     msg: SelectChain
     player: 0
@@ -1223,6 +1223,8 @@ messages:
   - identifier: 73
     msg: ChainSolved
     chainCount: 1
+  - identifier: 74
+    msg: ChainEnd
   - identifier: 50
     msg: Move
     code: 14735698
@@ -1237,8 +1239,6 @@ messages:
       sequence: 3
       position: 5
     reason: 1024
-  - identifier: 74
-    msg: ChainEnd
   - identifier: 16
     msg: SelectChain
     player: 0

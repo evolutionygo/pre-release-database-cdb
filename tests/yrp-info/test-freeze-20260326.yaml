@@ -907,6 +907,8 @@ messages:
   - identifier: 73
     msg: ChainSolved
     chainCount: 1
+  - identifier: 74
+    msg: ChainEnd
   - identifier: 50
     msg: Move
     code: 30271097
@@ -935,8 +937,6 @@ messages:
       sequence: 2
       position: 5
     reason: 1024
-  - identifier: 74
-    msg: ChainEnd
   - identifier: 16
     msg: SelectChain
     player: 0
@@ -1540,6 +1540,8 @@ messages:
   - identifier: 73
     msg: ChainSolved
     chainCount: 1
+  - identifier: 74
+    msg: ChainEnd
   - identifier: 50
     msg: Move
     code: 30271097
@@ -1554,8 +1556,6 @@ messages:
       sequence: 4
       position: 5
     reason: 1024
-  - identifier: 74
-    msg: ChainEnd
   - identifier: 16
     msg: SelectChain
     player: 1
