@@ -1,7 +1,7 @@
 --白鴉の森の炎魔
 local s,id,o=GetID()
 function s.initial_effect(c)
-	--specail summon
+	--special summon
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetCode(EFFECT_SPSUMMON_PROC)
