@@ -44,7 +44,7 @@ function s.initial_effect(c)
 end
 function s.mfilter(c)
 	return c:IsType(TYPE_MONSTER) and aux.IsCodeListed(c,40235813)
-		or c:IsLevel(1) and c:IsAttribute(ATTRIBUTE_EARTH) and c:IsType(TYPE_TOKEN)
+		or c:IsLevel(1) and c:IsFusionAttribute(ATTRIBUTE_EARTH) and c:IsType(TYPE_TOKEN)
 end
 function s.fsmfiler(ec)
 	return  function(c)
