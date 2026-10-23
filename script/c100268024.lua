@@ -73,6 +73,30 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			local sc=g:GetFirst()
 			if sc then
 				local se=s.regeffect(tc,e:GetHandler())
+				local restored=false
+				local cleanups={}
+				local function restore()
+					if restored then return end
+					restored=true
+					se:Reset()
+					for _,ce in ipairs(cleanups) do
+						ce:Reset()
+					end
+				end
+				local function reg_restore(event,con)
+					local rse=Effect.CreateEffect(e:GetHandler())
+					rse:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+					rse:SetCode(event)
+					if con then
+						rse:SetCondition(con)
+					end
+					rse:SetOperation(restore)
+					Duel.RegisterEffect(rse,tp)
+					table.insert(cleanups,rse)
+				end
+				reg_restore(EVENT_RELEASE,function(e2,tp,eg,ep,ev,re,r,rp)
+					return r&REASON_SUMMON~=0
+				end)
 				local s1=sc:IsSummonable(true,nil,1)
 				local s2=sc:IsMSetable(true,nil,1)
 				if (s1 and s2 and Duel.SelectPosition(tp,sc,POS_FACEUP_ATTACK+POS_FACEDOWN_DEFENSE)==POS_FACEUP_ATTACK) or not s2 then
