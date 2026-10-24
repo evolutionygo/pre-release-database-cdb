@@ -48,7 +48,8 @@ function s.cfilter(c,tp)
 		and Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil,c:GetOriginalCode(),c:GetOriginalLevel())
 end
 function s.thfilter(c,code,lv)
-	return not c:IsCode(code) and c:IsLevel(lv) and c:IsRace(RACE_INSECT) and c:IsAbleToHand()
+	return not c:IsOriginalCodeRule(code) and c:GetOriginalLevel()==lv
+		and c:IsRace(RACE_INSECT) and c:IsAbleToHand()
 end
 function s.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_HAND+LOCATION_MZONE,0,1,nil,tp) end

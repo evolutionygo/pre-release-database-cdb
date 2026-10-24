@@ -43,7 +43,7 @@ function s.initial_effect(c)
 	e4:SetRange(LOCATION_MZONE)
 	e4:SetCondition(s.negcon)
 	e4:SetCost(s.negcost)
-	e4:SetTarget(aux.nbtg)
+	e4:SetTarget(s.negtg)
 	e4:SetOperation(s.negop)
 	c:RegisterEffect(e4)
 	--to pendulum

@@ -51,7 +51,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 		return b1 or b2
 	end
 	if b1 then
-		Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,2,tp,LOCATION_GRAVE)
+		Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,2,PLAYER_ALL,LOCATION_GRAVE)
 	end
 	if b2 then
 		Duel.SetOperationInfo(0,CATEGORY_CONTROL,mg,mg:GetCount(),0,0)

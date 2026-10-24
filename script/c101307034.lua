@@ -92,5 +92,5 @@ function s.atkval(e,c)
 end
 function s.nfcon(e)
 	local c=e:GetHandler()
-	return c:IsSummonType(SUMMON_TYPE_FUSION) and c:IsFaceup()
+	return c:IsSummonType(SUMMON_TYPE_FUSION) and c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
 end

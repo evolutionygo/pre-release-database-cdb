@@ -1,7 +1,7 @@
 --六花水月
 local s,id,o=GetID()
 function s.initial_effect(c)
-	--
+	--activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_TOGRAVE+CATEGORY_TOHAND+CATEGORY_SEARCH+CATEGORY_DECKDES)

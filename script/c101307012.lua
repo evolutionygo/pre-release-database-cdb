@@ -27,10 +27,10 @@ function s.initial_effect(c)
 end
 function s.spfilter(c,tp)
 	return c:IsFaceup()
-		and c:GetOriginalAttribute()&ATTRIBUTE_FIRE==ATTRIBUTE_FIRE
 		and c:IsCardType(TYPE_MONSTER)
 		and c:IsAbleToDeckAsCost() and Duel.GetMZoneCount(tp,c)>0
-		and (c:IsType(TYPE_MONSTER) and c:IsLevel(1) or not c:IsType(TYPE_MONSTER) and c:GetOriginalLevel()==1)
+		and (c:IsType(TYPE_MONSTER) and c:IsLevel(1) and c:IsAttribute(ATTRIBUTE_FIRE)
+			or not c:IsType(TYPE_MONSTER) and c:GetOriginalLevel()==1 and c:GetOriginalAttribute()&ATTRIBUTE_FIRE==ATTRIBUTE_FIRE)
 end
 function s.spcon(e,c)
 	if c==nil then return true end

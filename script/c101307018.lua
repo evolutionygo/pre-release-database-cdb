@@ -54,7 +54,9 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 			end
 		end
 	end
-	aux.RegisterSynchroMaterialRequire(c,tp,s.tlmfilter,RESET_PHASE+PHASE_END)
+	if aux.RegisterSynchroMaterialRequire then
+		aux.RegisterSynchroMaterialRequire(c,tp,s.tlmfilter,RESET_PHASE+PHASE_END)
+	end
 end
 function s.tlmfilter(c)
 	return c:IsLevel(1) and c:IsType(TYPE_TUNER)

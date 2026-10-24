@@ -91,8 +91,8 @@ function s.drop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.SelectMatchingCard(p,s.tdfilter,p,LOCATION_HAND,0,1,mct,nil)
 	if g:GetCount()==0 then return end
 	Duel.ConfirmCards(1-tp,g)
-	Duel.SendtoDeck(g,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)
+	local ct=Duel.SendtoDeck(g,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)
 	Duel.ShuffleDeck(p)
 	Duel.BreakEffect()
-	Duel.Draw(p,g:GetCount(),REASON_EFFECT)
+	Duel.Draw(p,ct,REASON_EFFECT)
 end

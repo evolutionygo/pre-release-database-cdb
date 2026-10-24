@@ -40,6 +40,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
+	if not c:IsRelateToChain() then return end
 	if not Duel.IsPlayerCanSpecialSummonMonster(tp,id,0x2ef,TYPES_EFFECT_TRAP_MONSTER,3000,3000,10,RACE_AQUA,ATTRIBUTE_WATER) then return end
 	c:AddMonsterAttribute(TYPE_EFFECT+TYPE_TRAP)
 	Duel.SpecialSummon(c,SUMMON_VALUE_SELF,tp,tp,true,false,POS_FACEUP_DEFENSE)

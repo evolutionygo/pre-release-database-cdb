@@ -37,6 +37,7 @@ function s.rfilter(c,e,tp,mg)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
+		if Duel.GetLocationCount(tp,LOCATION_MZONE)==0 then return false end
 		local mg=Duel.GetMatchingGroup(s.mfilter,tp,LOCATION_GRAVE,LOCATION_GRAVE,nil)
 		return Duel.IsExistingMatchingCard(s.rfilter,tp,LOCATION_HAND,0,1,nil,e,tp,mg)
 	end
