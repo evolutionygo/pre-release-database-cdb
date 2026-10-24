@@ -42,7 +42,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 			local tc=g:GetFirst()
 			if tc then
 				Duel.ConfirmCards(tp,tc)
-				if Duel.SelectYesNo(tp,aux.Stringid(id,2)) and Duel.SpecialSummonStep(tc,0,tp,tp,true,false,POS_FACEUP)~=0 then
+				if Duel.SelectYesNo(tp,aux.Stringid(id,2)) and Duel.SpecialSummonStep(tc,0,tp,tp,true,false,POS_FACEUP) then
 					local e1=Effect.CreateEffect(e:GetHandler())
 					e1:SetType(EFFECT_TYPE_SINGLE)
 					e1:SetCode(EFFECT_CANNOT_TRIGGER)

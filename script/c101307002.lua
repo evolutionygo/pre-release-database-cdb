@@ -65,7 +65,7 @@ function s.setop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SET)
 	local g=Duel.SelectMatchingCard(tp,s.setfilter,tp,LOCATION_DECK+LOCATION_HAND,0,1,1,nil)
 	local tc=g:GetFirst()
-	if g:GetCount()>0 and Duel.SSet(tp,tc) then
+	if g:GetCount()>0 and Duel.SSet(tp,tc)>0 then
 		if tc:IsType(TYPE_TRAP+TYPE_QUICKPLAY) then
 			local e1=Effect.CreateEffect(c)
 			e1:SetDescription(aux.Stringid(id,2))

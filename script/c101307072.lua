@@ -54,7 +54,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 		Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,2,tp,LOCATION_GRAVE)
 	end
 	if b2 then
-		Duel.SetOperationInfo(0,CATEGORY_CONTROL,sg,sg:GetCount(),0,0)
+		Duel.SetOperationInfo(0,CATEGORY_CONTROL,mg,mg:GetCount(),0,0)
 	end
 end
 function s.cgheck(c)

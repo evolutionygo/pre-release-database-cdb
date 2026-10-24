@@ -29,7 +29,7 @@ end
 function s.cfilter1(c,e,tp)
 	local g=Group.FromCards(c,e:GetHandler())
 	return c:IsAbleToGraveAsCost() and Duel.GetMZoneCount(tp,g)>0
-		and Duel.GetSZoneCount(tp,c)>0
+		and Duel.GetSZoneCount(e:GetHandler():GetOwner(),c)>0
 end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.cfilter1,tp,LOCATION_HAND+LOCATION_ONFIELD,0,1,e:GetHandler(),e,tp) end
@@ -46,8 +46,8 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if not c:IsRelateToChain() then return end
-	if Duel.MoveToField(c,tp,tp,LOCATION_SZONE,POS_FACEUP,true) then
+	if not c:IsRelateToChain() or c:IsImmuneToEffect(e) then return end
+	if Duel.MoveToField(c,tp,e:GetHandler():GetOwner(),LOCATION_SZONE,POS_FACEUP,true) then
 		local e1=Effect.CreateEffect(c)
 		e1:SetCode(EFFECT_CHANGE_TYPE)
 		e1:SetType(EFFECT_TYPE_SINGLE)

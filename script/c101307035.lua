@@ -80,8 +80,8 @@ function s.filter1(c,e)
 	return c:IsFaceup() and c:IsCanBeFusionMaterial() and not c:IsImmuneToEffect(e)
 end
 function s.filter2(c,e,tp,m,f,chkf)
-	if not c:IsType(TYPE_FUSION) and (not f or f(c))
-		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) then return false end
+	if not (c:IsType(TYPE_FUSION) and (not f or f(c))
+		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false)) then return false end
 	aux.FCheckAdditional=s.fcheck
 	local res=c:CheckFusionMaterial(m,nil,chkf)
 	aux.FCheckAdditional=nil
@@ -123,7 +123,9 @@ function s.tdop(e,tp,eg,ep,ev,re,r,rp)
 				Duel.BreakEffect()
 				Duel.SpecialSummon(tc,SUMMON_TYPE_FUSION,tp,tp,false,false,POS_FACEUP)
 			elseif ce then
+				aux.FCheckAdditional=s.fcheck
 				local mat2=Duel.SelectFusionMaterial(tp,tc,mg3,nil,chkf)
+				aux.FCheckAdditional=nil
 				local fop=ce:GetOperation()
 				fop(ce,e,tp,tc,mat2)
 			end
@@ -165,6 +167,23 @@ function s.negcost(e,tp,eg,ep,ev,re,r,rp,chk)
 			te:UseCountLimit(tp)
 			Duel.Remove(tc,POS_FACEUP,REASON_COST+REASON_REPLACE)
 		end
+	end
+end
+function s.nbcond(tp,re)
+	local rc=re:GetHandler()
+	return Duel.IsPlayerCanRemove(tp)
+		and (not rc:IsRelateToEffect(re) or rc:IsAbleToRemove(tp,POS_FACEDOWN))
+end
+function s.negtg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return s.nbcond(tp,re) end
+	Duel.SetOperationInfo(0,CATEGORY_NEGATE,eg,1,0,0)
+	if re:GetHandler():IsRelateToEffect(re) then
+		Duel.SetOperationInfo(0,CATEGORY_REMOVE,eg,1,0,0)
+	end
+	if re:GetActivateLocation()==LOCATION_GRAVE then
+		e:SetCategory(e:GetCategory()|CATEGORY_GRAVE_ACTION)
+	else
+		e:SetCategory(e:GetCategory()&~CATEGORY_GRAVE_ACTION)
 	end
 end
 function s.negop(e,tp,eg,ep,ev,re,r,rp)

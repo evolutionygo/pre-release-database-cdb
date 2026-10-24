@@ -79,15 +79,15 @@ function s.efftg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	e:SetLabel(op)
 	if op==1 then
 		e:SetCategory(CATEGORY_SPECIAL_SUMMON)
-		e:SetProperty(0)
+		e:SetProperty(EFFECT_FLAG_FUSION_SUMMON)
 		Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND+LOCATION_GRAVE)
 	elseif op==2 then
 		e:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_FUSION_SUMMON)
-		e:SetProperty(0)
+		e:SetProperty(EFFECT_FLAG_FUSION_SUMMON)
 		Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 	elseif op==3 then
 		e:SetCategory(CATEGORY_DISABLE)
-		e:SetProperty(EFFECT_FLAG_CARD_TARGET)
+		e:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_FUSION_SUMMON)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DISABLE)
 		local g=Duel.SelectTarget(tp,aux.NegateAnyFilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
 		Duel.SetOperationInfo(0,CATEGORY_DISABLE,g,1,0,0)
