@@ -31,7 +31,7 @@ function s.filter1(c,e,tp)
 		and Duel.IsExistingMatchingCard(s.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,c,c:GetRank())
 end
 function s.filter2(c,e,tp,mc,rk)
-	return c:IsRank(rk+1,rk-2) and c:IsSetCard(0x48) and mc:IsCanBeXyzMaterial(c)
+	return c:IsRank(rk+1,rk-2) and c:IsSetCard(0x48) and c:IsType(TYPE_XYZ) and mc:IsCanBeXyzMaterial(c)
 		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false) and Duel.GetLocationCountFromEx(tp,tp,mc,c)>0
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)

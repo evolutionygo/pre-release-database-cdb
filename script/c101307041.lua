@@ -74,7 +74,7 @@ function s.mtcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.mttg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
-	Duel.SetOperationInfo(0,CATEGORY_LEAVE_GRAVE,nil,1,tp,LOCATION_GRAVE)
+	Duel.SetOperationInfo(0,CATEGORY_LEAVE_GRAVE,nil,1,1-tp,LOCATION_GRAVE)
 end
 function s.xyzfilter(c,e,tp)
 	return c:IsFaceup() and c:IsType(TYPE_XYZ) and c:IsRace(RACE_PLANT) and not c:IsImmuneToEffect(e)
@@ -86,6 +86,9 @@ end
 function s.mtop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.IsExistingMatchingCard(s.xyzfilter,tp,LOCATION_MZONE,0,1,nil,e,tp) then
 		local g=Duel.SelectMatchingCard(tp,s.xyzfilter,tp,LOCATION_MZONE,0,1,1,nil,e,tp)
+		if g and g:GetCount()>0 then
+			Duel.HintSelection(g)
+		end
 		local xc=g:GetFirst()
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
 		local mg=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.mtfilter),tp,0,LOCATION_GRAVE,1,1,nil,e)

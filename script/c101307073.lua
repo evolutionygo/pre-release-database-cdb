@@ -66,7 +66,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	if g:GetCount()>0 then
 		Duel.SendtoHand(tc,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,tc)
-		if Duel.GetTurnPlayer()==1-tp and tc:IsCanBeSpecialSummoned(e,0,tp,false,false)
+		if tc:IsLocation(LOCATION_HAND) and Duel.GetTurnPlayer()==1-tp and tc:IsCanBeSpecialSummoned(e,0,tp,false,false)
 			and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 			Duel.BreakEffect()
 			Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)

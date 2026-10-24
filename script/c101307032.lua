@@ -96,16 +96,16 @@ function s.cfilter(c,tp)
 	return Duel.IsExistingTarget(s.disfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,c)
 end
 function s.discost(e,tp,eg,ep,ev,re,r,rp,chk)
-	local c=e:GetHandler()
-	if chk==0 then return Duel.CheckReleaseGroup(tp,s.cfilter,1,nil) end
-	local rg=Duel.SelectReleaseGroup(tp,s.cfilter,1,1,nil)
+	if chk==0 then return Duel.CheckReleaseGroup(tp,s.cfilter,1,nil,tp) end
+	local rg=Duel.SelectReleaseGroup(tp,s.cfilter,1,1,nil,tp)
 	Duel.Release(rg,REASON_COST)
 end
 function s.distg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and s.disfilter(chkc) end
 	if chk==0 then return Duel.IsExistingTarget(s.disfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DISABLE)
-	Duel.SelectTarget(tp,s.disfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
+	local g=Duel.SelectTarget(tp,s.disfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
+	Duel.SetOperationInfo(0,CATEGORY_DISABLE,g,1,0,0)
 end
 function s.disop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()

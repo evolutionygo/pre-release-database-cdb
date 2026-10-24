@@ -81,7 +81,8 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	if g:GetCount()>0 then
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,g)
-		if (Duel.GetLP(tp)+2000)<=Duel.GetLP(1-tp)
+		if g:IsExists(Card.IsLocation,1,nil,LOCATION_HAND)
+			and (Duel.GetLP(tp)+2000)<=Duel.GetLP(1-tp)
 			and Duel.GetMatchingGroupCount(Card.IsDiscardable,tp,0,LOCATION_HAND,nil,REASON_EFFECT)>0
 			and Duel.SelectYesNo(tp,aux.Stringid(id,3)) then
 			Duel.BreakEffect()

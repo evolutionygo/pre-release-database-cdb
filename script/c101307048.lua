@@ -66,7 +66,7 @@ function s.cfilter(c,tp)
 		and Duel.IsExistingMatchingCard(s.atkfilter,tp,LOCATION_GRAVE,0,1,nil,c:GetAttack())
 end
 function s.atkfilter(c,atk)
-	return c:IsType(TYPE_MONSTER) and not c:IsAttack(atk)
+	return c:IsType(TYPE_MONSTER) and not c:IsAttack(atk) and c:GetTextAttack()>=0
 end
 function s.tdop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()

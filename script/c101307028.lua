@@ -30,7 +30,9 @@ function s.initial_effect(c)
 end
 function s.negcon(e,tp,eg,ep,ev,re,r,rp)
 	local loc=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_LOCATION)
-	return e:GetHandler():IsSummonType(SUMMON_TYPE_RITUAL) and ep==1-tp and loc&(LOCATION_ONFIELD+LOCATION_GRAVE)~=0
+	local c=e:GetHandler()
+	return c:IsSummonType(SUMMON_TYPE_RITUAL) and not c:IsStatus(STATUS_BATTLE_DESTROYED)
+		and ep==1-tp and loc&(LOCATION_ONFIELD+LOCATION_GRAVE)~=0
 		and re:IsActiveType(TYPE_MONSTER) and Duel.IsChainNegatable(ev)
 end
 function s.negtg(e,tp,eg,ep,ev,re,r,rp,chk)
