@@ -40,7 +40,7 @@ function s.condition(e,tp,eg,ep,ev,re,r,rp)
 	local ex,g,gc,dp,dv=Duel.GetOperationInfo(ev,CATEGORY_SPECIAL_SUMMON)
 	return ((ex and (dv&LOCATION_GRAVE==LOCATION_GRAVE or g and g:IsExists(s.cfilter,1,nil)))
 		or re:IsHasCategory(CATEGORY_GRAVE_SPSUMMON))
-		and Duel.IsChainDisablable(ev)
+		and Duel.IsChainDisablable(ev) and rp==1-tp
 end
 function s.spfilter(c,e,tp)
 	return c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP,1-tp)

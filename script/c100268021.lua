@@ -44,7 +44,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local g=Duel.GetFieldGroup(1-tp,LOCATION_HAND,0)
 	local rc=g:RandomSelect(1-tp,1):GetFirst()
-	if Duel.Remove(rc,POS_FACEUP,REASON_EFFECT)>0 then
+	if rc and Duel.Remove(rc,POS_FACEUP,REASON_EFFECT)>0 then
 		rc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id,1))
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)

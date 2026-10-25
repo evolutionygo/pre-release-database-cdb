@@ -328,3 +328,9 @@ npm test -- specs/c<code>.spec.ts
 ```
 
 如果不通过，修改脚本或测试，直到全部通过。
+
+## 本地 AGENTS.md
+
+- 本地可能存在 `AGENTS.local.md` 或 `AGENTS.user.md`，并被 `.gitignore` 或 `.git/info/exclude` 忽略。
+- 它们可以包含本地开发者的特殊要求、ygopro、ygopro-scripts 和卡片数据库的本地路径等。
+- 这些文件不会被提交到仓库，但应与此 AGENTS.md 文件同时读取。

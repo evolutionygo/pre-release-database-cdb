@@ -64,7 +64,7 @@ end
 function s.bdfilter(c,tp)
 	if c:IsRace(RACE_FIEND) and c:IsPreviousControler(tp) then return true end
 	local rc=c:GetBattleTarget()
-	return rc:IsRace(RACE_FIEND)
+	return rc and rc:IsRace(RACE_FIEND)
 		and (not rc:IsLocation(LOCATION_MZONE) and rc:IsPreviousControler(tp)
 			or rc:IsLocation(LOCATION_MZONE) and rc:IsControler(tp))
 end

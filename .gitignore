@@ -46,3 +46,7 @@ lerna-debug.log*
 /ref
 /tests/yrp-patched
 /tests/research
+
+# Local agent instructions
+AGENTS.local.md
+AGENTS.user.md
