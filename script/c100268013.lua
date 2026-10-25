@@ -91,7 +91,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.discon(e,tp,eg,ep,ev,re,r,rp)
 	return re:IsActiveType(TYPE_MONSTER) and rp==1-tp
-		and re:GetActivateLocation()&LOCATION_ONFIELD~=0 and Duel.IsChainDisablable(ev)
+		and re:GetActivateLocation()&LOCATION_MZONE~=0 and Duel.IsChainDisablable(ev)
 end
 function s.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end

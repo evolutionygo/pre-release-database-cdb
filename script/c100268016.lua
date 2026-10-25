@@ -1,4 +1,4 @@
---環境適應力
+--環境適応力
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--activate

@@ -32,8 +32,12 @@ end
 function s.rmfilter(c,code)
 	return c:IsCode(code) and c:IsAbleToRemove()
 end
-function s.rmfilter2(c,code)
-	return (not c:IsPublic() or c:IsCode(code)) and c:IsAbleToRemove()
+---comment
+---@param c Card
+---@param code any
+---@return unknown
+function s.rmfilter2(c,code,p)
+	return (not c:IsPublic() or c:IsCode(code)) and c:IsAbleToRemove(p)
 end
 function s.thfilter(c,rc)
 	return (c:IsAttribute(rc:GetAttribute())
@@ -62,9 +66,9 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 				if gg:IsExists(Card.IsHasEffect,1,nil,EFFECT_NECRO_VALLEY) then
 					return
 				end
-				if (gg:GetCount()>0 or Duel.IsExistingMatchingCard(s.rmfilter2,tp,0,LOCATION_HAND+LOCATION_DECK,1,nil,rc:GetCode()))
+				if (gg:GetCount()>0 or Duel.IsExistingMatchingCard(s.rmfilter2,tp,0,LOCATION_HAND+LOCATION_DECK,1,nil,rc:GetCode(),1-tp))
 					and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
-					local rg=Duel.GetMatchingGroup(aux.NecroValleyFilter(s.rmfilter),tp,0,LOCATION_GRAVE+LOCATION_HAND+LOCATION_DECK,nil,rc:GetCode())
+					local rg=Duel.GetMatchingGroup(aux.NecroValleyFilter(s.rmfilter),tp,0,LOCATION_GRAVE+LOCATION_HAND+LOCATION_DECK,nil,rc:GetCode(),1-tp)
 					if rg:GetCount()>0 then
 						Duel.BreakEffect()
 						Duel.Remove(rg,POS_FACEUP,REASON_EFFECT)

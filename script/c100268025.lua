@@ -87,7 +87,8 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	if c:IsRelateToChain() then
 		Duel.SendtoHand(c,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,c)
-		if c:IsLocation(LOCATION_HAND)
+		local ph=Duel.GetCurrentPhase()
+		if c:IsLocation(LOCATION_HAND) and ph~=PHASE_DAMAGE and ph~=PHASE_DAMAGE_CAL
 			and Duel.IsExistingMatchingCard(s.sumfilter,tp,LOCATION_HAND,0,1,nil,e)
 			and Duel.SelectYesNo(tp,aux.Stringid(id,3)) then
 			Duel.BreakEffect()

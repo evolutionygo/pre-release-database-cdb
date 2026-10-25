@@ -29,6 +29,7 @@ function s.initial_effect(c)
 	e3:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_BOTH_SIDE+EFFECT_FLAG_EVENT_PLAYER)
 	e3:SetRange(LOCATION_SZONE)
 	e3:SetCountLimit(1,EFFECT_COUNT_CODE_CHAIN)
+	e3:SetCondition(s.dicecon)
 	e3:SetTarget(s.dicetg)
 	e3:SetOperation(s.diceop)
 	c:RegisterEffect(e3)
@@ -70,6 +71,10 @@ function s.checkdice(e,tp,eg,ep,ev,re,r,rp)
 	if ct2>0 and s.hasone(dc,ct1+1,ct1+ct2) then
 		Duel.RaiseSingleEvent(c,EVENT_CUSTOM+id,re,r,rp,1-ep,0)
 	end
+end
+function s.dicecon(e,tp,eg,ep,ev,re,r,rp)
+	local ph=Duel.GetCurrentPhase()
+	return ph~=PHASE_DAMAGE and ph~=PHASE_DAMAGE_CAL
 end
 --filter: opponent's monster (destroy)
 function s.desfilter(c)
