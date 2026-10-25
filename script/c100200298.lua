@@ -71,9 +71,9 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			Duel.SkipPhase(Duel.GetTurnPlayer(),PHASE_BATTLE,RESET_PHASE+PHASE_BATTLE_STEP,1)
 		end
 	elseif e:GetLabel()==2 then
-		local ch=Duel.GetCurrentChain()
-		local tse=Duel.GetChainInfo(ch-1,CHAININFO_TRIGGERING_EFFECT)
-		if Duel.NegateEffect(ch-1) and tse:GetHandler():IsRelateToEffect(tse) then
+		local ch=Duel.GetCurrentChain()-1
+		local tse=Duel.GetChainInfo(ch,CHAININFO_TRIGGERING_EFFECT)
+		if Duel.NegateEffect(ch) and tse:GetHandler():IsRelateToChain(ch) then
 			Duel.Destroy(tse:GetHandler(),REASON_EFFECT)
 		end
 	end
