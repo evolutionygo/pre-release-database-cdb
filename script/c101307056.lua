@@ -45,7 +45,7 @@ end
 function s.cfilter(c,tp)
 	return c:IsFaceupEx() and c:IsType(TYPE_MONSTER) and c:IsAbleToGraveAsCost()
 		and (c:IsSetCard(0x2f1) or c:IsRace(RACE_DRAGON))
-		and Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil,c:GetOriginalCode(),c:GetOriginalLevel())
+		and Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil,c:GetOriginalCodeRule(),c:GetOriginalLevel())
 end
 function s.thfilter(c,code,lv)
 	return not c:IsOriginalCodeRule(code) and c:GetOriginalLevel()==lv
@@ -54,7 +54,7 @@ end
 function s.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_HAND+LOCATION_MZONE,0,1,nil,tp) end
 	local g=Duel.SelectMatchingCard(tp,s.cfilter,tp,LOCATION_HAND+LOCATION_MZONE,0,1,1,nil,tp)
-	e:SetLabel(g:GetFirst():GetOriginalCode(),g:GetFirst():GetOriginalLevel())
+	e:SetLabel(g:GetFirst():GetOriginalCodeRule(),g:GetFirst():GetOriginalLevel())
 	Duel.SendtoGrave(g,REASON_COST)
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
