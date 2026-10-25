@@ -32,10 +32,6 @@ end
 function s.rmfilter(c,code)
 	return c:IsCode(code) and c:IsAbleToRemove()
 end
----comment
----@param c Card
----@param code any
----@return unknown
 function s.rmfilter2(c,code,p)
 	return (not c:IsPublic() or c:IsCode(code)) and c:IsAbleToRemove(p)
 end
