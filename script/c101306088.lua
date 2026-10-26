@@ -45,7 +45,9 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.sumcon(e,tp,eg,ep,ev,re,r,rp)
+	local ph=Duel.GetCurrentPhase()
 	return e:GetHandler():IsLocation(LOCATION_GRAVE) and r==REASON_SYNCHRO
+		and ph~=PHASE_DAMAGE and ph~=PHASE_DAMAGE_CAL
 end
 function s.sumfilter(c)
 	return c:IsRace(RACE_ROCK) and c:IsSummonable(true,nil)

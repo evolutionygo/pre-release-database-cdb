@@ -58,7 +58,7 @@ function s.regeff(c)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsRelateToChain() and c:IsFaceup() then
+	if c:IsRelateToChain() then
 		s.regeff(c)
 	end
 	local ss=false
@@ -91,7 +91,8 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.negcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():GetBattleTarget():IsSetCard(0x1e2)
+	local bc=e:GetHandler():GetBattleTarget()
+	return bc and bc:IsFaceup() and bc:IsSetCard(0x1e2)
 end
 function s.negtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end

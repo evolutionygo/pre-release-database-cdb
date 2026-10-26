@@ -42,10 +42,13 @@ function s.initial_effect(c)
 	c:RegisterEffect(e4)
 	--act limit
 	local e5=Effect.CreateEffect(c)
-	e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e5:SetCode(EVENT_CHAINING)
+	e5:SetType(EFFECT_TYPE_FIELD)
+	e5:SetCode(EFFECT_CANNOT_ACTIVATE)
+	e5:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 	e5:SetRange(LOCATION_SZONE)
-	e5:SetOperation(s.chainop)
+	e5:SetTargetRange(1,1)
+	e5:SetCondition(s.tgcon)
+	e5:SetValue(s.actlimit)
 	c:RegisterEffect(e5)
 end
 function s.rmfilter(c,ec)
@@ -57,7 +60,7 @@ function s.rmfilter(c,ec)
 end
 function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()
-	if chkc then return chkc:IsLocation(LOCATION_ONFIELD) and s.rmfilter(chkc,c) and chkc~=c end
+	if chkc then return chkc:IsLocation(LOCATION_ONFIELD) and chkc:IsControler(1-tp) and s.rmfilter(chkc,c) and chkc~=c end
 	if chk==0 then return Duel.IsExistingTarget(s.rmfilter,tp,0,LOCATION_ONFIELD,1,c,c) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local g=Duel.SelectTarget(tp,s.rmfilter,tp,0,LOCATION_ONFIELD,1,1,c,c)
@@ -102,16 +105,12 @@ function s.tgop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SendtoGrave(g,REASON_EFFECT)
 	end
 end
-function s.chainop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	if c:GetType()==TYPE_SPELL+TYPE_CONTINUOUS then
-		local e1=Effect.CreateEffect(c)
-		e1:SetType(EFFECT_TYPE_FIELD)
-		e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-		e1:SetCode(EFFECT_CANNOT_ACTIVATE)
-		e1:SetTargetRange(1,0)
-		e1:SetValue(aux.TRUE)
-		e1:SetReset(RESET_CHAIN)
-		Duel.RegisterEffect(e1,rp)
+function s.actlimit(e,te,tp)
+	local ct=Duel.GetCurrentChain()
+	for i=1,ct do
+		if Duel.GetChainInfo(i,CHAININFO_TRIGGERING_PLAYER)==tp then
+			return true
+		end
 	end
+	return false
 end

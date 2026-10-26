@@ -76,6 +76,7 @@ function s.tgfilter(c)
 end
 function s.setfilter(c,tp)
 	return c:IsSetCard(0x1e2) and not c:IsForbidden()
+		and c:CheckUniqueOnField(tp,LOCATION_SZONE)
 		and not Duel.IsExistingMatchingCard(aux.AND(Card.IsFaceup,Card.IsCode),tp,LOCATION_SZONE,0,1,nil,c:GetCode())
 end
 function s.settg(e,tp,eg,ep,ev,re,r,rp,chk)

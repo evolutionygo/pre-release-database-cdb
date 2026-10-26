@@ -45,13 +45,14 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToChain() then
-		e:GetHandler():SetCardTarget(tc)
+	local c=e:GetHandler()
+	if c:IsRelateToChain() and tc:IsRelateToChain() then
+		c:SetCardTarget(tc)
 	end
 end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=e:GetHandler():GetFirstCardTarget()
-	if tc then
+	if tc and tc:IsOnField() then
 		Duel.Destroy(tc,REASON_EFFECT)
 	end
 end
