@@ -28,10 +28,8 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(aux.TRUE,tp,0,LOCATION_DECK+LOCATION_EXTRA+LOCATION_HAND,1,nil)
 		and Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_GRAVE,0,1,e:GetHandler()) end
 end
-function s.spfilter(c,e,tp)
-	return c:IsLevel(10) and c:IsCanBeSpecialSummoned(e,0,tp,true,false,POS_FACEUP,tp)
-		and (c:IsLocation(LOCATION_DECK) and Duel.GetMZoneCount(tp)>0
-			or c:IsLocation(LOCATION_EXTRA) and Duel.GetLocationCountFromEx(tp,tp,nil,c)>0)
+function s.spfilter(c)
+	return c:IsLevel(10) and c:IsType(TYPE_MONSTER)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.IsExistingMatchingCard(s.spfilter,tp,0,LOCATION_DECK+LOCATION_EXTRA,1,nil,e,tp)
@@ -42,7 +40,10 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 			local tc=g:GetFirst()
 			if tc then
 				Duel.ConfirmCards(tp,tc)
-				if Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
+				local flag=tc:IsCanBeSpecialSummoned(e,0,tp,true,false,POS_FACEUP,tp)
+					and (tc:IsLocation(LOCATION_DECK) and Duel.GetMZoneCount(tp)>0
+						or tc:IsLocation(LOCATION_EXTRA) and Duel.GetLocationCountFromEx(tp,tp,nil,tc)>0)
+				if flag and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 					if Duel.SpecialSummonStep(tc,0,tp,tp,true,false,POS_FACEUP) then
 						local e1=Effect.CreateEffect(e:GetHandler())
 						e1:SetType(EFFECT_TYPE_SINGLE)

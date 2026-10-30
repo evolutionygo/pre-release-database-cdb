@@ -94,7 +94,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			end
 		end
 	elseif op==4 then
-		local g=Duel.GetMatchingGroup(aux.NegateAnyFilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,e:GetHandler())
+		local g=Duel.GetMatchingGroup(aux.NegateAnyFilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,aux.ExceptThisCard(e))
 		if g:GetCount()>=2 then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DISABLE)
 			local ng=g:Select(tp,2,2,nil)
