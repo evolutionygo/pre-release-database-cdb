@@ -48,7 +48,7 @@ function s.lcheck(g)
 	return g:IsExists(s.lfilter,1,nil)
 end
 function s.immtg(e,c)
-	return c:IsLinkState()
+	return c:IsLinkState() and not e:GetHandler():IsStatus(STATUS_BATTLE_RESULT)
 end
 function s.tdcon1(e,tp,eg,ep,ev,re,r,rp)
 	return not aux.IsCanBeQuickEffect(e:GetHandler(),tp,37279096)

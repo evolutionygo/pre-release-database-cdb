@@ -53,6 +53,7 @@ function s.thfilter(c,code,lv)
 end
 function s.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_HAND+LOCATION_MZONE,0,1,nil,tp) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
 	local g=Duel.SelectMatchingCard(tp,s.cfilter,tp,LOCATION_HAND+LOCATION_MZONE,0,1,1,nil,tp)
 	e:SetLabel(g:GetFirst():GetOriginalCodeRule(),g:GetFirst():GetOriginalLevel())
 	Duel.SendtoGrave(g,REASON_COST)

@@ -48,7 +48,9 @@ function s.tgop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.rscon(e,tp,eg,ep,ev,re,r,rp)
+	local ph=Duel.GetCurrentPhase()
 	return not e:GetHandler():IsReason(REASON_BATTLE)
+		and ph~=PHASE_DAMAGE and ph~=PHASE_DAMAGE_CAL
 end
 function s.rfilter(c)
 	return c:IsRace(RACE_INSECT)

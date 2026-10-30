@@ -176,7 +176,7 @@ function s.LinkOperation(f,minct,maxct,gf)
 				g:DeleteGroup()
 			end
 end
-function s.thcon(e,tp,eg,ep,ev,re,r,r)
+function s.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_LINK)
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)

@@ -69,6 +69,7 @@ end
 function s.rthop(e,tp,eg,ep,ev,re,r,rp)
 	local sg=Duel.GetMatchingGroup(s.rthfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)
 	if Duel.SendtoHand(sg,nil,REASON_EFFECT)~=0
+		and sg:IsExists(Card.IsLocation,1,nil,LOCATION_HAND)
 		and Duel.IsExistingMatchingCard(Card.IsType,tp,LOCATION_GRAVE,0,5,nil,TYPE_TRAP)
 		and Duel.IsExistingMatchingCard(Card.IsAbleToHand,tp,0,LOCATION_ONFIELD,1,nil)
 		and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then

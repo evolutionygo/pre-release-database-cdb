@@ -48,12 +48,14 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			Duel.BreakEffect()
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 			local sg=g:Select(tp,1,1,nil)
-			Duel.SendtoHand(sg,nil,REASON_EFFECT)
+			local res=Duel.SendtoHand(sg,nil,REASON_EFFECT)
 			Duel.ConfirmCards(1-tp,sg)
-			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-			local tg=Duel.SelectMatchingCard(tp,s.tgfilter,tp,LOCATION_MZONE,0,1,1,nil)
-			Duel.HintSelection(tg)
-			Duel.SendtoGrave(tg,REASON_EFFECT)
+			if res>0 and sg:IsExists(Card.IsLocation,1,nil,LOCATION_HAND) then
+				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
+				local tg=Duel.SelectMatchingCard(tp,s.tgfilter,tp,LOCATION_MZONE,0,1,1,nil)
+				Duel.HintSelection(tg)
+				Duel.SendtoGrave(tg,REASON_EFFECT)
+			end
 		end
 	end
 end

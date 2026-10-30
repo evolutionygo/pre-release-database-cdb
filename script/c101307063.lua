@@ -105,8 +105,8 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	local g=sg:Select(tp,3,3,nil)
 	if g:GetCount()>0 then
 		Duel.HintSelection(g)
-		if Duel.SendtoDeck(g,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)~=0
-			and g:IsExists(Card.IsLocation,1,nil,LOCATION_DECK+LOCATION_EXTRA)
+		if Duel.SendtoDeck(g,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)==3
+			and g:IsExists(Card.IsLocation,3,nil,LOCATION_DECK+LOCATION_EXTRA)
 			and c:IsRelateToChain() and aux.NecroValleyFilter()(c) then
 			Duel.SendtoHand(c,nil,REASON_EFFECT)
 			Duel.ConfirmCards(1-tp,c)

@@ -93,7 +93,7 @@ end
 function s.tdop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToChain() and Duel.SendtoDeck(c,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)
-	 and c:IsLocation(LOCATION_EXTRA) then
+		and c:IsLocation(LOCATION_EXTRA) then
 		local chkf=tp
 		local mg1=Duel.GetFusionMaterial(tp):Filter(s.filter3,nil,e)
 		local mg2=Duel.GetMatchingGroup(s.filter1,tp,0,LOCATION_MZONE,nil,e)
@@ -109,6 +109,7 @@ function s.tdop(e,tp,eg,ep,ev,re,r,rp)
 			sg2=Duel.GetMatchingGroup(s.filter2,tp,LOCATION_EXTRA,0,nil,e,tp,mg3,mf,chkf)
 		end
 		if (sg1:GetCount()>0 or (sg2~=nil and sg2:GetCount()>0)) and Duel.SelectYesNo(tp,aux.Stringid(id,3)) then
+			Duel.BreakEffect()
 			local sg=sg1:Clone()
 			if sg2 then sg:Merge(sg2) end
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)

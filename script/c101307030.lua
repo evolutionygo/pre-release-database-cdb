@@ -98,12 +98,16 @@ function s.atkcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local lp=Duel.GetLP(tp)
-	if chk==0 then return Duel.CheckLPCost(tp,lp-1,true) end
+	local g=Duel.GetMatchingGroup(s.atkfilter,tp,LOCATION_GRAVE,0,nil)
+	local atk=g:GetSum(Card.GetAttack)
+	if chk==0 then return Duel.CheckLPCost(tp,lp-1,true) or atk>0 end
 	e:SetLabel(lp-1)
-	Duel.PayLPCost(tp,lp-1,true)
+	if lp>1 then
+		Duel.PayLPCost(tp,lp-1,true)
+	end
 end
 function s.atkfilter(c)
-	return c:IsSetCard(0x2ef) and c:IsType(TYPE_MONSTER)
+	return c:IsSetCard(0x2ef) and c:IsType(TYPE_MONSTER) and c:GetTextAttack()>0
 end
 function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()

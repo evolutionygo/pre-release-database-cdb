@@ -87,12 +87,14 @@ end
 function s.damop(e,tp,eg,ep,ev,re,r,rp)
 	local dmg1,dmg2=e:GetLabel()
 	local map={[tp]=dmg1,[1-tp]=dmg2}
+	local res=false
 	for p in aux.TurnPlayers() do
 		if map[p]>0 then
-			Duel.Damage(p,map[p],REASON_EFFECT,true)
+			local dmg=Duel.Damage(p,map[p],REASON_EFFECT,true)
+			res=res or dmg>0
 		end
 	end
-	if dmg1>0 or dmg2>0 then
+	if res then
 		Duel.RDComplete()
 		if Duel.IsExistingMatchingCard(Card.IsCode,tp,LOCATION_GRAVE,0,1,nil,10000010) then
 			Duel.BreakEffect()
