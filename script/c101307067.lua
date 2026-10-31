@@ -58,7 +58,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	elseif op==3 then
 		if e:IsCostChecked() then
 			e:SetCategory(CATEGORY_DRAW+CATEGORY_HANDES_SELF)
-			e:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+			e:SetProperty(0)
 		end
 		Duel.SetTargetPlayer(tp)
 		Duel.SetTargetParam(2)
