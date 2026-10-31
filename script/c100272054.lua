@@ -24,7 +24,8 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function s.rfilter(c,tp)
-	return c:IsSetCard(0x8d) and c:IsType(TYPE_MONSTER) and c:IsControler(tp)
+	return c:IsSetCard(0x8d) and c:IsType(TYPE_MONSTER)
+		and (c:IsControler(tp) or c:IsFaceup())
 end
 function s.spfilter(c,e,tp)
 	return c:IsSetCard(0x8d) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_DEFENSE)
@@ -63,7 +64,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			local tg=g:SelectSubGroup(tp,aux.dncheck,false,ct,ct)
 			if Duel.SpecialSummon(tg,0,tp,tp,false,false,POS_DEFENSE)>0 then
 				local cg=Duel.GetOperatedGroup():Filter(Card.IsFacedown,nil)
-				if #cg>0 then Duel.ConfirmCards(1-tp,cg) end
+				if #cg==1 then Duel.ConfirmCards(1-tp,cg) end
 			end
 		end
 	end

@@ -1,4 +1,4 @@
--- ゴーストリック・リッチー
+--ゴーストリック・リッチー
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--summon limit
@@ -13,6 +13,7 @@ function s.initial_effect(c)
 	e2:SetCategory(CATEGORY_SSET)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
 	e2:SetCode(EVENT_SUMMON_SUCCESS)
+	e2:SetCountLimit(1,id)
 	e2:SetTarget(s.settg)
 	e2:SetOperation(s.setop)
 	c:RegisterEffect(e2)
@@ -36,7 +37,8 @@ function s.sumcon(e)
 	return not Duel.IsExistingMatchingCard(s.sfilter,e:GetHandlerPlayer(),LOCATION_MZONE,0,1,nil)
 end
 function s.setfilter(c)
-	return c:IsSetCard(0x8d) and c:IsType(TYPE_QUICKPLAY+TYPE_TRAP) and c:IsSSetable()
+	return c:IsSetCard(0x8d) and c:IsSSetable()
+		and (c:IsType(TYPE_QUICKPLAY) or c:GetType()==TYPE_TRAP)
 end
 function s.settg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
@@ -48,10 +50,14 @@ function s.setop(e,tp,eg,ep,ev,re,r,rp)
 		local tc=g:GetFirst()
 		if tc and Duel.SSet(tp,tc)~=0 then
 			local e1=Effect.CreateEffect(e:GetHandler())
-			e1:SetDescription(aux.Stringid(id,3))
+			e1:SetDescription(aux.Stringid(id,2))
 			e1:SetType(EFFECT_TYPE_SINGLE)
 			e1:SetProperty(EFFECT_FLAG_SET_AVAILABLE)
-			e1:SetCode(EFFECT_TRAP_ACT_IN_SET_TURN)
+			if tc:IsType(TYPE_QUICKPLAY) then
+				e1:SetCode(EFFECT_QP_ACT_IN_SET_TURN)
+			else
+				e1:SetCode(EFFECT_TRAP_ACT_IN_SET_TURN)
+			end
 			e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 			tc:RegisterEffect(e1)
 		end

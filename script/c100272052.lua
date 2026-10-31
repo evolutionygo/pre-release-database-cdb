@@ -1,4 +1,4 @@
--- ゴーストリック・マスター アルカード
+--ゴーストリック・マスター アルカード
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddCodeList(c,75367227)
@@ -33,7 +33,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 	--negate
 	local e3=Effect.CreateEffect(c)
-	e3:SetDescription(aux.Stringid(id,1))
+	e3:SetDescription(aux.Stringid(id,2))
 	e3:SetCategory(CATEGORY_NEGATE+CATEGORY_SSET)
 	e3:SetType(EFFECT_TYPE_QUICK_O)
 	e3:SetCode(EVENT_CHAINING)
@@ -62,6 +62,7 @@ end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsFacedown,tp,0,LOCATION_ONFIELD,1,nil) end
 	local sg=Duel.GetMatchingGroup(Card.IsFacedown,tp,0,LOCATION_ONFIELD,nil)
+	Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,sg,sg:GetCount(),0,0)
 end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
@@ -80,12 +81,12 @@ function s.negcost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.negtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
+	Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
 	Duel.SetOperationInfo(0,CATEGORY_NEGATE,eg,1,0,0)
 end
 function s.negop(e,tp,eg,ep,ev,re,r,rp)
 	local rc=re:GetHandler()
-	if not Duel.NegateActivation(ev) then return end
-	if rc:IsRelateToEffect(re) and rc:IsRelateToEffect(re) and rc:IsCanTurnSet() then
+	if Duel.NegateActivation(ev) and rc:IsRelateToChain(ev) and rc:IsCanTurnSet() and not rc:IsType(TYPE_PENDULUM) then
 		rc:CancelToGrave()
 		Duel.ChangePosition(rc,POS_FACEDOWN)
 		Duel.RaiseEvent(rc,EVENT_SSET,e,REASON_EFFECT,tp,tp,0)

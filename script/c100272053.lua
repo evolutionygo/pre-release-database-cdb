@@ -47,7 +47,7 @@ function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
-	if not e:GetHandler():IsRelateToEffect(e) then return end
+	if not e:GetHandler():IsRelateToChain() then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	local g=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_DECK,0,1,1,nil)
 	if #g>0 then
@@ -107,13 +107,13 @@ function s.efftg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if op==1 then
 		e:SetCategory(CATEGORY_POSITION)
 		Duel.SetOperationInfo(0,CATEGORY_POSITION,nil,1,tp,LOCATION_MZONE)
-	else
+	elseif op==2 then
 		e:SetCategory(0)
 	end
 end
 function s.effop(e,tp,eg,ep,ev,re,r,rp)
-	if not e:GetHandler():IsRelateToEffect(e) then return end
-	if e:GetLabel()==1 then
+	local op=e:GetLabel()
+	if op==1 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_POSCHANGE)
 		local g=Duel.SelectMatchingCard(tp,s.posfilter,tp,LOCATION_MZONE,0,1,1,nil)
 		local tc=g:GetFirst()
@@ -124,7 +124,7 @@ function s.effop(e,tp,eg,ep,ev,re,r,rp)
 		if not tc:IsPosition(POS_FACEUP_DEFENSE) then pos=POS_FACEUP_DEFENSE end
 		if tc:IsFaceup() and tc:IsCanTurnSet() then pos=pos|POS_FACEDOWN_DEFENSE end
 		Duel.ChangePosition(tc,Duel.SelectPosition(tp,tc,pos))
-	else
+	elseif op==2 then
 		local g=Duel.GetDecktopGroup(tp,1)
 		if not Duel.IsExistingMatchingCard(s.matfilter,tp,LOCATION_MZONE,0,1,nil) or #g==0 then return end
 		Duel.DisableShuffleCheck()
