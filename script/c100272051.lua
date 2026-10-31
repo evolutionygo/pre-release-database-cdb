@@ -2,7 +2,7 @@
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--xyz summon
-	aux.AddXyzProcedure(c,s.mfilter,2,2,s.smfilter,aux.Stringid(id,0))
+	aux.AddXyzProcedure(c,s.mfilter,2,2,s.smfilter,aux.Stringid(id,2))
 	c:EnableReviveLimit()
 	--indes
 	local e1=Effect.CreateEffect(c)
