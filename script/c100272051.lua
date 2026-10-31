@@ -57,7 +57,7 @@ function s.mfilter(c)
 	return c:IsSetCard(0x8d)
 end
 function s.smfilter(c)
-	return c:IsSetCard(0x8d) and c:IsFacedown()
+	return c:IsSetCard(0x8d) and c:IsFacedown() and c:IsLevelAbove(1)
 end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end
