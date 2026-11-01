@@ -65,6 +65,166 @@ function s.rsgcheck(g,sg)
 	end
 	return false
 end
+--Material selection: mg:SelectSubGroup(tp,s.rsgcheck,true,1,99,rg) with the
+--Ritual Monsters rg, which searches every superset of every partial group and
+--hangs on a big GY. s.rselect asks the same prompts; only its candidates are
+--found directly (s.rcandidates).
+
+--the levels mc can count as for tc (Card.GetRitualLevel): {lv} or {lv1,lv2}
+function s.rlevels(mc,tc)
+	local v=mc:GetRitualLevel(tc)
+	local lo=v&0xffff
+	local hi=v>>16
+	if hi==0 or hi==lo then return {lo} end
+	return {lo,hi}
+end
+--whether rsgcheck passes for some group of all of must plus any of more,
+--each card counted as one of its levels: sum>=lv and sum-min<lv, i.e. for a
+--floor m (the least level counted) every level is >= m and the sum is in
+--[lv,lv+m-1]
+function s.rcan(must,more,lv)
+	local floors={}
+	for _,t in ipairs({must,more}) do
+		for _,ls in ipairs(t) do
+			for _,v in ipairs(ls) do floors[v]=true end
+		end
+	end
+	for m in pairs(floors) do
+		--reach[n]: the cards so far can sum to n (more than top never helps)
+		local top=lv+m-1
+		local reach={[0]=true}
+		for _,ls in ipairs(must) do
+			local nr={}
+			for n=0,top do
+				if reach[n] then
+					for _,v in ipairs(ls) do
+						if v>=m and n+v<=top then nr[n+v]=true end
+					end
+				end
+			end
+			reach=nr
+		end
+		--cards with one usable level by count (used[n]: copies of v that
+		--reach n), cards with two one by one
+		local count,two={},{}
+		for _,ls in ipairs(more) do
+			local a,b=ls[1],ls[2]
+			if a<m then a=nil end
+			if b and b<m then b=nil end
+			if a and b then
+				two[#two+1]=ls
+			elseif a or b then
+				local v=a or b
+				count[v]=(count[v] or 0)+1
+			end
+		end
+		for v,k in pairs(count) do
+			local used={}
+			for n=0,top do
+				if reach[n] then
+					used[n]=0
+				elseif n>=v and reach[n-v] and used[n-v]<k then
+					reach[n]=true
+					used[n]=used[n-v]+1
+				end
+			end
+		end
+		--downwards, so each card adds at most once
+		for _,ls in ipairs(two) do
+			for n=top,0,-1 do
+				if reach[n] then
+					for _,v in ipairs(ls) do
+						if v>=m and n+v<=top then reach[n+v]=true end
+					end
+				end
+			end
+		end
+		for n=lv,top do
+			if reach[n] then return true end
+		end
+	end
+	return false
+end
+--the cards of mg not in sg that are in some group passing rsgcheck with all
+--of sg: the cg SelectSubGroup's search captures, as it does not depend on the
+--search order. lvs[tc][mc] holds s.rlevels; cards with the same key (the
+--same levels for every Ritual Monster) agree.
+function s.rcandidates(mg,sg,rg,lvs,keys,lv)
+	local cg=Group.CreateGroup()
+	--arrays: aux.Next keeps its place in the group, so no nested loops on one
+	local pool,sel={},{}
+	for mc in aux.Next(mg-sg) do pool[#pool+1]=mc end
+	for mc in aux.Next(sg) do sel[#sel+1]=mc end
+	local known={}
+	for _,mc in ipairs(pool) do
+		local ok=known[keys[mc]]
+		if ok==nil then
+			ok=false
+			for tc in aux.Next(rg) do
+				local must,more={lvs[tc][mc]},{}
+				for _,c in ipairs(sel) do must[#must+1]=lvs[tc][c] end
+				for _,c in ipairs(pool) do
+					if c~=mc then more[#more+1]=lvs[tc][c] end
+				end
+				if s.rcan(must,more,lv) then
+					ok=true
+					break
+				end
+			end
+			known[keys[mc]]=ok
+		end
+		if ok then cg:AddCard(mc) end
+	end
+	return cg
+end
+--Group.SelectSubGroup's loop for mg:SelectSubGroup(tp,s.rsgcheck,true,1,99,rg)
+function s.rselect(mg,tp,rg)
+	local min,max=1,99
+	local lv=rg:GetSum(Card.GetLevel)
+	local sg=Group.CreateGroup()
+	local fg=Duel.GrabSelectedCard()
+	if #fg>max or #(mg+fg)<min then return nil end
+	--nothing changes while the materials are selected
+	local lvs,keys={},{}
+	for tc in aux.Next(rg) do lvs[tc]={} end
+	for mc in aux.Next(mg+fg) do
+		local parts={}
+		for tc in aux.Next(rg) do
+			local ls=s.rlevels(mc,tc)
+			lvs[tc][mc]=ls
+			parts[#parts+1]=table.concat(ls,"/")
+		end
+		keys[mc]=table.concat(parts,",")
+	end
+	for _ in aux.Next(fg) do
+		fg:SelectUnselect(sg,tp,false,false,min,max)
+	end
+	sg:Merge(fg)
+	local finish=(#sg>=min and #sg<=max and s.rsgcheck(sg,rg))
+	while #sg<max do
+		local cg=s.rcandidates(mg,sg,rg,lvs,keys,lv)
+		finish=(#sg>=min and #sg<=max and s.rsgcheck(sg,rg))
+		if #cg==0 then break end
+		local cancel=not finish
+		local tc=cg:SelectUnselect(sg,tp,finish,cancel,min,max)
+		if not tc then break end
+		if not fg:IsContains(tc) then
+			if not sg:IsContains(tc) then
+				sg:AddCard(tc)
+				if #sg==max then finish=true end
+			else
+				sg:RemoveCard(tc)
+			end
+		else
+			return nil
+		end
+	end
+	if finish then
+		return sg
+	else
+		return nil
+	end
+end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	::cancel::
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
@@ -84,7 +244,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			end
 		end
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-		local mat=mg:SelectSubGroup(tp,s.rsgcheck,true,1,99,sg)
+		local mat=s.rselect(mg,tp,sg)
 		if not mat then goto cancel end
 		for tc in aux.Next(sg) do
 			tc:SetMaterial(mat)
