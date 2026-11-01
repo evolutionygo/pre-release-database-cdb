@@ -33,7 +33,7 @@ function s.rfilter(c,e,tp,mg)
 	if c.mat_filter then
 		mg2=mg:Filter(c.mat_filter,nil,tp)
 	end
-	return mg2:CheckWithSumGreater(Card.GetRitualLevel,c:GetLevel(),c)
+	return s.rgreater(mg2,c:GetLevel(),c)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
@@ -48,7 +48,7 @@ function s.gcheck(g,mg)
 	local res=false
 	local lv=g:GetSum(Card.GetLevel)
 	for tc in aux.Next(g) do
-		if mg:CheckWithSumGreater(Card.GetRitualLevel,lv,tc) then
+		if s.rgreater(mg,lv,tc) then
 			return true
 		end
 	end
@@ -65,10 +65,13 @@ function s.rsgcheck(g,sg)
 	end
 	return false
 end
---Material selection: mg:SelectSubGroup(tp,s.rsgcheck,true,1,99,rg) with the
---Ritual Monsters rg, which searches every superset of every partial group and
---hangs on a big GY. s.rselect asks the same prompts; only its candidates are
---found directly (s.rcandidates).
+--Material checks. On a big GY two searches hang:
+--mg:SelectSubGroup(tp,s.rsgcheck,true,1,99,rg) with the Ritual Monsters rg
+--tries every superset of every partial group, and
+--mg:CheckWithSumGreater(Card.GetRitualLevel,lv,tc) keeps searching after the
+--sum overshoots. s.rgreater answers the same as the latter, and s.rselect asks
+--the same prompts as the former with its candidates found directly
+--(s.rcandidates); both count with s.rcan.
 
 --the levels mc can count as for tc (Card.GetRitualLevel): {lv} or {lv1,lv2}
 function s.rlevels(mc,tc)
@@ -144,6 +147,13 @@ function s.rcan(must,more,lv)
 		end
 	end
 	return false
+end
+--mg:CheckWithSumGreater(Card.GetRitualLevel,lv,tc): some group of mg sums to
+--at least lv and drops below lv without its least card
+function s.rgreater(mg,lv,tc)
+	local more={}
+	for mc in aux.Next(mg) do more[#more+1]=s.rlevels(mc,tc) end
+	return s.rcan({},more,lv)
 end
 --the cards of mg not in sg that are in some group passing rsgcheck with all
 --of sg: the cg SelectSubGroup's search captures, as it does not depend on the
