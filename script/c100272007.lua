@@ -1,9 +1,13 @@
 --方界防陣
 local s,id,o=GetID()
+if not CATEGORY_DECK_SPSUMMON then
+	CATEGORY_DECK_SPSUMMON=0x800000000
+end
 function s.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
-	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_DECKDES)
+	e1:SetDescription(aux.Stringid(id,0))
+	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_DECKDES+CATEGORY_DECK_SPSUMMON)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_ATTACK_ANNOUNCE)
 	e1:SetCondition(s.condition)
@@ -53,16 +57,15 @@ function s.defilter(c)
 	return c:IsFaceup() and c:IsSetCard(0xe3)
 end
 function s.detg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsControler(tp) and chkc:IsOnField() end
+	if chkc then return chkc:IsControler(tp) and chkc:IsOnField() and s.defilter(chkc) end
 	if chk==0 then return Duel.IsExistingTarget(s.defilter,tp,LOCATION_ONFIELD,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
 	Duel.SelectTarget(tp,s.defilter,tp,LOCATION_ONFIELD,0,1,1,nil)
 end
 function s.deop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToChain() and tc:IsFaceup() then
-		tc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD-RESET_TURN_SET+RESET_PHASE+PHASE_END,0,1)
-		tc:RegisterFlagEffect(0,RESET_EVENT+RESETS_STANDARD-RESET_TURN_SET+RESET_PHASE+PHASE_END,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id,3))
+	if tc:IsRelateToChain() and tc:IsFaceup() and tc:IsOnField() then
+		tc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD-RESET_TURN_SET+RESET_PHASE+PHASE_END,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id,3))
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 		e1:SetCode(EVENT_CHAIN_SOLVING)
@@ -76,7 +79,6 @@ function s.disfilter(c,e,tp)
 	return c==e:GetLabelObject() and c:GetFlagEffect(id)>0
 end
 function s.disop(e,tp,eg,ep,ev,re,r,rp)
-	local tc=re:GetHandler()
 	if ep==tp or not Duel.IsChainDisablable(ev) then return end
 	if not re:IsHasProperty(EFFECT_FLAG_CARD_TARGET) then return end
 	local g=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)
