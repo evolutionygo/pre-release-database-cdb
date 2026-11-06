@@ -52,7 +52,9 @@ function s.thfilter(c)
 	return c:IsSetCard(0x2ef) and c:IsAbleToHand()
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil) end
+	--a Trap Monster is a monster only in the Monster Zone: back in the Spell & Trap Zone it has no monster effect
+	if chk==0 then return e:GetHandler():IsLocation(LOCATION_MZONE)
+		and Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
