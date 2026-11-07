@@ -50,3 +50,5 @@ lerna-debug.log*
 # Local agent instructions
 AGENTS.local.md
 AGENTS.user.md
+# 效果标记检查产物
+/mark-consistency*.md
