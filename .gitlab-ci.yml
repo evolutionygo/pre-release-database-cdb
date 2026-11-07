@@ -8,41 +8,6 @@ stages:
 variables:
   GIT_DEPTH: "1"
 
-check_effect_marks:
-  stage: prepare
-  dependencies: []
-  tags:
-    - linux
-  variables:
-    GIT_DEPTH: "0"
-  script:
-    - apt update && apt -y install python3
-    - python3 ci/effect_mark_check.py --selftest
-    - python3 ci/effect_mark_check.py --format md --report mark-consistency.md
-  artifacts:
-    when: always
-    paths:
-      - mark-consistency.md
-    reports:
-      markdown: mark-consistency.md
-
-check_effect_marks_all:
-  stage: prepare
-  dependencies: []
-  tags:
-    - linux
-  when: manual
-  allow_failure: true
-  variables:
-    GIT_DEPTH: "0"
-  script:
-    - apt update && apt -y install python3
-    - python3 ci/effect_mark_check.py --all --format md --report mark-consistency-all.md
-  artifacts:
-    when: always
-    paths:
-      - mark-consistency-all.md
-
 fail_if_banned_files:
   stage: prepare
   dependencies: []

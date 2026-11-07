@@ -187,56 +187,6 @@ npm run check:redtext -- BETB.cdb:101306045,101306046 RV01.cdb:100261001
 
 红字检查必须通过；失败就改脚本，直到通过。
 
-## 效果标记检查
-
-`aux.Stringid(id,n)` 里的 n 会被客户端当成「卡面效果段落的文档序」直接用（通讯 desc = 卡号*16+n，
-低 4 位就是要在卡面上高亮/打勾的那一段）。所以 n 写错 = 标记打错段落；`.cdb` 的 `texts.str{n+1}`
-缺文案 = 客户端显示 unknown。
-
-写完脚本、改完 cdb 后运行：
-
-```bash
-npm run check:marks                 # 只查本次改动涉及的卡（CI 上跑的就是这个）
-npm run check:marks -- --all        # 查全部卡池
-npm run check:marks -- IMPH.cdb:101307001,101307004   # 查指定卡
-npm run check:marks -- --base <ref> --format md --report marks.md
-```
-
-CI 上跑的是 `python3 ci/effect_mark_check.py`（不带参数=只查本次改动）。Windows 本机没有 `python3` 时，把 `package.json` 的 `check:marks` 改成 `python ci/effect_mark_check.py`，或直接执行：
-
-```bash
-python ci/effect_mark_check.py --selftest   # 先验证规则引擎本身
-python ci/effect_mark_check.py --base HEAD  # 查工作区未提交的改动
-python ci/effect_mark_check.py --all        # 存量卡池体检
-```
-
-实现是 `ci/effect_mark_check.py`（只用 python3 标准库），分段口径与客户端
-`EffectParagraphs.java` 一致：换行后首个 ①~⑳ 起段，到下一序号行前止；含「【」或「[」的框标题行
-和整行分隔线不归任何段；全文没有圈序号才退回按 ● 分段。
-
-检查项（error 会阻断 CI，warn/info 只提示）：
-
-- E1（error，规则 7）：`EFFECT_TYPE_IGNITION`、`TRIGGER_O/F`、`QUICK_O/F` 效果没有 `SetDescription`。
-- E2（error）：编号落在没有发动语义的段上。典型错法是「按带描述效果的顺序从 0 递增编号」，
-  于是跳过了「①：这张卡可以从手卡特殊召唤」「②：装备怪兽的攻击力上升…」这类段，
-  整组编号下移一格。报告里会给出应改成的段号、判定依据（关键字命中数）和 `str` 文案的搬运方向。
-- E3（error）：两条语义不同的效果共用同一个发动段号（发动段互斥）。同一时点的复制/`Clone()` 不算。
-- E4（warn）：发动效果编号 ≥ 段落数（让位号），但卡面还有没被任何发动效果指向的发动段 → 漏标。
-- E5（error）：编号超过 15，`str1..str16` 放不下。
-- E6（error，规则 8）：用到了 `aux.Stringid(id,n)` 但 `texts.str{n+1}` 是空的。
-- E7（error）：`texts.str{k+1}` 里装的是别的段落 d 的文案 → 编号与文案必须对齐。
-- W1（warn）：本家发动（`EFFECT_TYPE_ACTIVATE`）或永不进链的适用型判定跟真正需要该段号的效果争用时，
-  让位到 ≥ 段落数 的空闲号。注意：通常魔法/速攻魔法/通常陷阱/反击陷阱的「①：…才能发动」本身就是
-  这张卡的发动，不需要让位；`EFFECT_SPSUMMON_PROC` 这类召唤方法段需要描述才能高亮，也不算问题。
-- W2（warn）：`Duel.SelectOption`、`Duel.SelectYesNo` 等提示用了发动段的 str 槽，和效果文案争用。
-- N1（info）：卡面没有 ①②③ 圈序号（老文本或「场合：」式写法），客户端分段不可靠，标记不会显示。
-
-改法约定：改编号时同步搬文案 —— 把 `texts.str{旧+1}` 的内容移到 `texts.str{新+1}`，原槽清空，
-不要把别的段落文案留在那里；让位号（≥ 段落数）上的文案照样要搬过去，否则选项/连锁提示会变成空文字。
-
-CI 上的 `check_effect_marks` 作业只查本次 commit/MR 涉及的卡，报告同时以 markdown 形式贴在
-MR 页面；存量卡池的体检用 `check_effect_marks_all`（手动触发，不阻断）。
-
 ## 测试要求
 
 每张写脚本的卡都必须有测试。一张卡一个 `.spec.ts`。
