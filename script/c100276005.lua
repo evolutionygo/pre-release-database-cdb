@@ -20,33 +20,37 @@ end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local p1=Duel.GetTurnPlayer()
 	local p2=1-p1
-	if Duel.GetFieldGroupCount(p1,LOCATION_DECK,0)<2 or Duel.GetFieldGroupCount(p2,LOCATION_DECK,0)<2 then return end
-	s.placetop(p1)
-	s.placetop(p2)
+	--a Deck with fewer than 2 cards left at resolution: as many as it has
+	local c1=math.min(Duel.GetFieldGroupCount(p1,LOCATION_DECK,0),2)
+	local c2=math.min(Duel.GetFieldGroupCount(p2,LOCATION_DECK,0),2)
+	if c1==0 and c2==0 then return end
+	if c1>0 then s.placetop(p1,c1) end
+	if c2>0 then s.placetop(p2,c2) end
 	Duel.BreakEffect()
 	Duel.Hint(HINT_SELECTMSG,p1,aux.Stringid(id,1))
 	local n1=Duel.AnnounceNumber(p1,0,1,2,3,4)
 	Duel.Hint(HINT_SELECTMSG,p2,aux.Stringid(id,1))
 	local n2=Duel.AnnounceNumber(p2,0,1,2,3,4)
-	Duel.ConfirmDecktop(p1,2)
-	Duel.ConfirmDecktop(p2,2)
-	local g1=Duel.GetDecktopGroup(p1,2)
-	local g2=Duel.GetDecktopGroup(p2,2)
+	if c1>0 then Duel.ConfirmDecktop(p1,c1) end
+	if c2>0 then Duel.ConfirmDecktop(p2,c2) end
+	local g1=Duel.GetDecktopGroup(p1,c1)
+	local g2=Duel.GetDecktopGroup(p2,c2)
 	local ct=g1:FilterCount(Card.IsType,nil,TYPE_MONSTER)+g2:FilterCount(Card.IsType,nil,TYPE_MONSTER)
 	Duel.DisableShuffleCheck()
-	s.resolve(p1,g1,n1==ct)
-	s.resolve(p2,g2,n2==ct)
+	if c1>0 then s.resolve(p1,g1,n1==ct) end
+	if c2>0 then s.resolve(p2,g2,n2==ct) end
 end
-function s.placetop(p)
+function s.placetop(p,ct)
 	Duel.Hint(HINT_SELECTMSG,p,HINTMSG_SELECT)
-	local g=Duel.SelectMatchingCard(p,aux.TRUE,p,LOCATION_DECK,0,2,2,nil)
+	local g=Duel.SelectMatchingCard(p,aux.TRUE,p,LOCATION_DECK,0,ct,ct,nil)
 	Duel.ShuffleDeck(p)
 	for tc in aux.Next(g) do
 		Duel.MoveSequence(tc,SEQ_DECKTOP)
 	end
-	Duel.SortDecktop(p,p,2)
+	if ct>1 then Duel.SortDecktop(p,p,ct) end
 end
 function s.resolve(p,g,win)
+	local ct=#g
 	if win then
 		Duel.Hint(HINT_SELECTMSG,p,HINTMSG_ATOHAND)
 		local sg=g:Select(p,1,1,nil)
@@ -57,10 +61,10 @@ function s.resolve(p,g,win)
 			Duel.SendtoGrave(sg,REASON_RULE)
 		end
 		g:Sub(sg)
-		Duel.MoveSequence(g:GetFirst(),SEQ_DECKBOTTOM)
+		if ct>1 then Duel.MoveSequence(g:GetFirst(),SEQ_DECKBOTTOM) end
 	else
-		Duel.SortDecktop(p,p,2)
-		for i=1,2 do
+		if ct>1 then Duel.SortDecktop(p,p,ct) end
+		for i=1,ct do
 			local mg=Duel.GetDecktopGroup(p,1)
 			Duel.MoveSequence(mg:GetFirst(),SEQ_DECKBOTTOM)
 		end
