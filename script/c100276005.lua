@@ -41,7 +41,7 @@ function s.placetop(p)
 	Duel.SortDecktop(p,p,2)
 end
 function s.announce(p)
-	Duel.Hint(HINT_SELECTMSG,p,aux.Stringid(id,1))
+	Duel.Hint(HINT_SELECTMSG,p,HINGMSG_NUMBER)
 	return Duel.AnnounceNumber(p,0,1,2,3,4)
 end
 function s.resolve(p,g,win)
