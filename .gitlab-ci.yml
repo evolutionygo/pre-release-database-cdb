@@ -197,6 +197,10 @@ prepare_wasm_bin:
 
 .json:
   stage: prepare2
+  # REF_COMMIT is a tag forks do not have; the output is only released from master and tags
+  only:
+    - master
+    - tags
   dependencies:
     - merge_databases
   tags:
@@ -306,6 +310,9 @@ neos:
 
 pack:
   stage: pack
+  only:
+    - master
+    - tags
   dependencies:
     - merge_databases
     - add_script_diff_no_mc
