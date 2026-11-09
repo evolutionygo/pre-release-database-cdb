@@ -3,59 +3,27 @@ local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddSynchroProcedure(c,nil,aux.NonTuner(nil),1)
 	c:EnableReviveLimit()
-	--1 card: special summon
+	--activate
 	local e1=Effect.CreateEffect(c)
+	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_REMOVE+CATEGORY_DECKDES)
 	e1:SetDescription(aux.Stringid(id,0))
-	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetRange(LOCATION_MZONE)
-	e1:SetCountLimit(1,id)
-	e1:SetCost(s.spcost)
-	e1:SetTarget(s.sptg)
-	e1:SetOperation(s.spop)
+	e1:SetCost(s.cost)
+	e1:SetTarget(s.target)
+	e1:SetOperation(s.operation)
 	c:RegisterEffect(e1)
-	--2 cards: banish
+	--atk
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
-	e2:SetCategory(CATEGORY_REMOVE)
-	e2:SetType(EFFECT_TYPE_IGNITION)
+	e2:SetCategory(CATEGORY_ATKCHANGE)
+	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e2:SetCode(EVENT_ATTACK_ANNOUNCE)
 	e2:SetRange(LOCATION_MZONE)
-	e2:SetCountLimit(1,id+o)
-	e2:SetCost(s.cost(2))
-	e2:SetTarget(s.rmtg)
-	e2:SetOperation(s.rmop)
+	e2:SetCondition(s.atkcon)
+	e2:SetTarget(s.atktg)
+	e2:SetOperation(s.atkop)
 	c:RegisterEffect(e2)
-	--3 cards: send to the GY
-	local e3=Effect.CreateEffect(c)
-	e3:SetDescription(aux.Stringid(id,2))
-	e3:SetCategory(CATEGORY_DECKDES)
-	e3:SetType(EFFECT_TYPE_IGNITION)
-	e3:SetRange(LOCATION_MZONE)
-	e3:SetCountLimit(1,id+o*2)
-	e3:SetCost(s.cost(3))
-	e3:SetTarget(s.grtg)
-	e3:SetOperation(s.grop)
-	c:RegisterEffect(e3)
-	--4 cards: the next normal draw is 5
-	local e4=Effect.CreateEffect(c)
-	e4:SetDescription(aux.Stringid(id,3))
-	e4:SetType(EFFECT_TYPE_IGNITION)
-	e4:SetRange(LOCATION_MZONE)
-	e4:SetCountLimit(1,id+o*3)
-	e4:SetCost(s.cost(4))
-	e4:SetOperation(s.drawop)
-	c:RegisterEffect(e4)
-	--atk
-	local e5=Effect.CreateEffect(c)
-	e5:SetDescription(aux.Stringid(id,4))
-	e5:SetCategory(CATEGORY_ATKCHANGE)
-	e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
-	e5:SetCode(EVENT_ATTACK_ANNOUNCE)
-	e5:SetRange(LOCATION_MZONE)
-	e5:SetCondition(s.atkcon)
-	e5:SetTarget(s.atktg)
-	e5:SetOperation(s.atkop)
-	c:RegisterEffect(e5)
 	if not s.global_check then
 		s.global_check=true
 		local ge1=Effect.CreateEffect(c)
@@ -69,32 +37,130 @@ function s.checkop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1)
 	Duel.RegisterFlagEffect(1-tp,id,RESET_PHASE+PHASE_END,0,1)
 end
-function s.cost(ct)
-	return function(e,tp,eg,ep,ev,re,r,rp,chk)
-		if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToRemoveAsCost,tp,LOCATION_HAND,0,ct,nil) end
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-		local g=Duel.SelectMatchingCard(tp,Card.IsAbleToRemoveAsCost,tp,LOCATION_HAND,0,ct,ct,nil)
-		Duel.Remove(g,POS_FACEUP,REASON_COST)
-	end
+function s.flagok(e,tp,code)
+	return not e:IsCostChecked() or Duel.GetFlagEffect(tp,code)==0
+end
+function s.payremove(tp,ct,filter,...)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+	local g=Duel.SelectMatchingCard(tp,filter,tp,LOCATION_HAND,0,ct,ct,nil,...)
+	Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
 function s.spfilter(c,e,tp)
 	return c:IsLevelBelow(4) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
---the card banished cannot be the only monster left to summon
 function s.spcostfilter(c,e,tp)
 	return c:IsAbleToRemoveAsCost()
 		and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_HAND,0,1,c,e,tp)
 end
-function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.spcostfilter,tp,LOCATION_HAND,0,1,nil,e,tp) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,s.spcostfilter,tp,LOCATION_HAND,0,1,1,nil,e,tp)
-	Duel.Remove(g,POS_FACEUP,REASON_COST)
+function s.spchk(e,tp)
+	return s.flagok(e,tp,id+o)
+		and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_HAND,0,1,nil,e,tp)
 end
-function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_HAND,0,1,nil,e,tp) end
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND)
+function s.spcostchk(e,tp)
+	return s.spchk(e,tp)
+		and Duel.IsExistingMatchingCard(s.spcostfilter,tp,LOCATION_HAND,0,1,nil,e,tp)
+end
+function s.rmfilter(c)
+	return c:IsFaceup() and c:IsLevelBelow(4) and c:IsAbleToRemove()
+end
+function s.rmchk(e,tp)
+	return s.flagok(e,tp,id+o*2)
+		and Duel.IsExistingMatchingCard(s.rmfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil)
+end
+function s.rmcostchk(e,tp)
+	return s.rmchk(e,tp)
+		and Duel.IsExistingMatchingCard(Card.IsAbleToRemoveAsCost,tp,LOCATION_HAND,0,2,nil)
+end
+function s.grfilter(c)
+	return c:IsAttribute(ATTRIBUTE_DARK) and c:IsType(TYPE_MONSTER) and c:IsAbleToGrave()
+end
+function s.grchk(e,tp)
+	return s.flagok(e,tp,id+o*3)
+		and Duel.IsExistingMatchingCard(s.grfilter,tp,LOCATION_DECK,0,1,nil)
+end
+function s.grcostchk(e,tp)
+	return s.grchk(e,tp)
+		and Duel.IsExistingMatchingCard(Card.IsAbleToRemoveAsCost,tp,LOCATION_HAND,0,3,nil)
+end
+function s.drchk(e,tp)
+	return s.flagok(e,tp,id+o*4)
+end
+function s.drcostchk(e,tp)
+	return s.drchk(e,tp)
+		and Duel.IsExistingMatchingCard(Card.IsAbleToRemoveAsCost,tp,LOCATION_HAND,0,4,nil)
+end
+function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
+	local b1=s.spcostchk(e,tp)
+	local b2=s.rmcostchk(e,tp)
+	local b3=s.grcostchk(e,tp)
+	local b4=s.drcostchk(e,tp)
+	if chk==0 then return b1 or b2 or b3 or b4 end
+	local op=aux.SelectFromOptions(tp,
+		{b1,aux.Stringid(id,2),1},
+		{b2,aux.Stringid(id,3),2},
+		{b3,aux.Stringid(id,4),3},
+		{b4,aux.Stringid(id,5),4})
+	if not op then return end
+	e:SetLabel(op)
+	if op==1 then
+		s.payremove(tp,1,s.spcostfilter,e,tp)
+	else
+		s.payremove(tp,op,Card.IsAbleToRemoveAsCost)
+	end
+end
+function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
+	local b1=s.spchk(e,tp)
+	local b2=s.rmchk(e,tp)
+	local b3=s.grchk(e,tp)
+	local b4=s.drchk(e,tp)
+	if chk==0 then return b1 or b2 or b3 or b4 end
+	local op=e:GetLabel()
+	if not e:IsCostChecked() then
+		op=aux.SelectFromOptions(tp,
+			{b1,aux.Stringid(id,2),1},
+			{b2,aux.Stringid(id,3),2},
+			{b3,aux.Stringid(id,4),3},
+			{b4,aux.Stringid(id,5),4})
+		if not op then return end
+		e:SetLabel(op)
+	end
+	if op==1 then
+		e:SetCategory(CATEGORY_SPECIAL_SUMMON)
+		if e:IsCostChecked() then
+			Duel.RegisterFlagEffect(tp,id+o,RESET_PHASE+PHASE_END,0,1)
+		end
+		Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND)
+	elseif op==2 then
+		e:SetCategory(CATEGORY_REMOVE)
+		if e:IsCostChecked() then
+			Duel.RegisterFlagEffect(tp,id+o*2,RESET_PHASE+PHASE_END,0,1)
+		end
+		Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,1,PLAYER_ALL,LOCATION_MZONE)
+	elseif op==3 then
+		e:SetCategory(CATEGORY_DECKDES)
+		if e:IsCostChecked() then
+			Duel.RegisterFlagEffect(tp,id+o*3,RESET_PHASE+PHASE_END,0,1)
+		end
+		Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_DECK)
+	elseif op==4 then
+		e:SetCategory(0)
+		if e:IsCostChecked() then
+			Duel.RegisterFlagEffect(tp,id+o*4,RESET_PHASE+PHASE_END,0,1)
+		end
+	end
+end
+function s.operation(e,tp,eg,ep,ev,re,r,rp)
+	local op=e:GetLabel()
+	if op==1 then
+		s.spop(e,tp,eg,ep,ev,re,r,rp)
+	elseif op==2 then
+		s.rmop(e,tp,eg,ep,ev,re,r,rp)
+	elseif op==3 then
+		s.grop(e,tp,eg,ep,ev,re,r,rp)
+	elseif op==4 then
+		s.drawop(e,tp,eg,ep,ev,re,r,rp)
+	end
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
@@ -104,13 +170,6 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 	end
 end
-function s.rmfilter(c)
-	return c:IsFaceup() and c:IsLevelBelow(4) and c:IsAbleToRemove()
-end
-function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.rmfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
-	Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,1,PLAYER_ALL,LOCATION_MZONE)
-end
 function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local g=Duel.SelectMatchingCard(tp,s.rmfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
@@ -118,13 +177,6 @@ function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.HintSelection(g)
 		Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
 	end
-end
-function s.grfilter(c)
-	return c:IsAttribute(ATTRIBUTE_DARK) and c:IsType(TYPE_MONSTER) and c:IsAbleToGrave()
-end
-function s.grtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.grfilter,tp,LOCATION_DECK,0,1,nil) end
-	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_DECK)
 end
 function s.grop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)

@@ -55,7 +55,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.xyzfilter(c)
-	return c:IsFaceup() and  c:IsType(TYPE_XYZ)
+	return c:IsFaceup() and c:IsType(TYPE_XYZ)
 end
 function s.matfilter(c)
 	return c:IsSetCard(0x150) and c:IsType(TYPE_MONSTER) and c:IsCanOverlay()
