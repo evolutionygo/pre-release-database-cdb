@@ -82,8 +82,8 @@ function s.descon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(aux.IsInGroup,1,nil,lg)
 end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
 	local lg=e:GetHandler():GetLinkedGroup()
+	if chk==0 then return #lg>0 end
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,lg,#lg,0,0)
 end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
