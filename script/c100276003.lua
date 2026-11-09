@@ -53,6 +53,7 @@ function s.initial_effect(c)
 	e5:SetCode(EVENT_ATTACK_ANNOUNCE)
 	e5:SetRange(LOCATION_MZONE)
 	e5:SetCondition(s.atkcon)
+	e5:SetTarget(s.atktg)
 	e5:SetOperation(s.atkop)
 	c:RegisterEffect(e5)
 	if not s.global_check then
@@ -146,9 +147,12 @@ function s.atkcon(e,tp,eg,ep,ev,re,r,rp)
 	--the flag counts the declarations before this one
 	return Duel.GetFlagEffect(tp,id)==3
 end
+function s.atktg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return not e:GetHandler():IsAttack(4000) end
+end
 function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsFaceup() and c:IsRelateToChain() then
+	if c:IsFaceup() and c:IsRelateToChain() and not c:IsAttack(4000) then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_SET_ATTACK_FINAL)
