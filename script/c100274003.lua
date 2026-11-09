@@ -121,7 +121,7 @@ function s.indcon(e)
 end
 function s.atcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	return Duel.GetAttacker()==c and c:IsChainAttackable(0,true)
+	return Duel.GetAttacker()==c and c:IsChainAttackable(0,false)
 end
 function s.cfilter(c)
 	return c:IsFaceup() and c:IsType(TYPE_SPELL) and c:IsAbleToRemoveAsCost()
