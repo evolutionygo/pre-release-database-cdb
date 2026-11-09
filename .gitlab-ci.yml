@@ -292,6 +292,9 @@ jest_no_mc:
 
 neos:
   stage: pack
+  only:
+    - master
+    - tags
   dependencies:
     - merge_databases
   tags: 
@@ -351,6 +354,9 @@ pack:
 
 server:
   stage: pack
+  only:
+    - master
+    - tags
   dependencies:
     - merge_databases
     - add_script_diff_no_mc
