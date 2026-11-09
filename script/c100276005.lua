@@ -47,12 +47,15 @@ function s.placetop(p)
 	Duel.SortDecktop(p,p,2)
 end
 function s.resolve(p,g,win)
-	local ag=g:Filter(Card.IsAbleToHand,nil)
-	if win and #ag>0 then
+	if win then
 		Duel.Hint(HINT_SELECTMSG,p,HINTMSG_ATOHAND)
-		local sg=ag:Select(p,1,1,nil)
-		Duel.SendtoHand(sg,nil,REASON_EFFECT)
-		Duel.ShuffleHand(p)
+		local sg=g:Select(p,1,1,nil)
+		if sg:GetFirst():IsAbleToHand() then
+			Duel.SendtoHand(sg,nil,REASON_EFFECT)
+			Duel.ShuffleHand(p)
+		else
+			Duel.SendtoGrave(sg,REASON_RULE)
+		end
 		g:Sub(sg)
 		Duel.MoveSequence(g:GetFirst(),SEQ_DECKBOTTOM)
 	else
