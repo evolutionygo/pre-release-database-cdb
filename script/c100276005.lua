@@ -18,24 +18,18 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,PLAYER_ALL,LOCATION_DECK)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
-	local p1=Duel.GetTurnPlayer()
-	local p2=1-p1
 	--either player unable to choose 2 cards: the effect does not apply
-	if Duel.GetFieldGroupCount(p1,LOCATION_DECK,0)<2
-		or Duel.GetFieldGroupCount(p2,LOCATION_DECK,0)<2 then return end
-	s.placetop(p1)
-	s.placetop(p2)
+	if Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)<2
+		or Duel.GetFieldGroupCount(1-tp,LOCATION_DECK,0)<2 then return end
+	for p in aux.TurnPlayers() do s.placetop(p) end
 	Duel.BreakEffect()
-	local n1=s.announce(p1)
-	local n2=s.announce(p2)
-	Duel.ConfirmDecktop(p1,2)
-	Duel.ConfirmDecktop(p2,2)
-	local g1=Duel.GetDecktopGroup(p1,2)
-	local g2=Duel.GetDecktopGroup(p2,2)
-	local ct=(g1+g2):FilterCount(Card.IsType,nil,TYPE_MONSTER)
+	local num={}
+	for p in aux.TurnPlayers() do num[p]=s.announce(p) end
+	for p in aux.TurnPlayers() do Duel.ConfirmDecktop(p,2) end
+	local g=Duel.GetDecktopGroup(tp,2)+Duel.GetDecktopGroup(1-tp,2)
+	local ct=g:FilterCount(Card.IsType,nil,TYPE_MONSTER)
 	Duel.DisableShuffleCheck()
-	s.resolve(p1,g1,n1==ct)
-	s.resolve(p2,g2,n2==ct)
+	for p in aux.TurnPlayers() do s.resolve(p,Duel.GetDecktopGroup(p,2),num[p]==ct) end
 end
 function s.placetop(p)
 	Duel.Hint(HINT_SELECTMSG,p,HINTMSG_SELECT)
