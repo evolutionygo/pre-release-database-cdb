@@ -1,13 +1,14 @@
--- 神霊の来臨
+--神霊の来臨
 local s,id,o=GetID()
 function s.initial_effect(c)
-	--
+	--activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_TOEXTRA+CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetCode(EVENT_FREE_CHAIN)
+	e1:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_END_PHASE)
 	e1:SetCountLimit(1,id)
 	e1:SetTarget(s.target)
 	e1:SetOperation(s.activate)
@@ -25,23 +26,23 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function s.tefilter(c)
-	return c:IsFaceup() and c:GetOriginalType()&TYPE_FUSION+TYPE_SYNCHRO+TYPE_XYZ+TYPE_LINK~=0 and c:IsAbleToExtra()
+	return c:IsFaceup() and c:IsCardType(TYPE_FUSION+TYPE_SYNCHRO+TYPE_XYZ+TYPE_LINK) and c:IsAbleToExtra()
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_ONFIELD) and s.tefilter(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(s.tefilter,tp,LOCATION_MZONE,0,1,nil) end
+	if chkc then return chkc:IsLocation(LOCATION_ONFIELD) and chkc:IsControler(tp) and s.tefilter(chkc) end
+	if chk==0 then return Duel.IsExistingTarget(s.tefilter,tp,LOCATION_ONFIELD,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
 	local g=Duel.SelectTarget(tp,s.tefilter,tp,LOCATION_ONFIELD,0,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_TOEXTRA,g,1,0,0)
 end
 function s.spfilter(c,e,tp,type)
-	return c:IsSetCard(0x150) and c:GetType()&type&TYPE_FUSION+TYPE_SYNCHRO+TYPE_XYZ+TYPE_LINK~=0
+	return c:IsSetCard(0x150) and c:GetType()&type&(TYPE_FUSION+TYPE_SYNCHRO+TYPE_XYZ+TYPE_LINK)~=0
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 		and Duel.GetLocationCountFromEx(tp,tp,nil,c)>0
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToChain() then return end
+	if not tc:IsRelateToChain() then return end
 	if Duel.SendtoDeck(tc,nil,SEQ_DECKTOP,REASON_EFFECT)~=0
 		and tc:IsLocation(LOCATION_EXTRA)
 		and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp,tc:GetType())

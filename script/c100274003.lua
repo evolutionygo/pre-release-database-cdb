@@ -1,9 +1,10 @@
--- 聖魔の賢王エンディミオン
+--聖魔の賢王エンディミオン
 local s,id,o=GetID()
 function s.initial_effect(c)
 	c:EnableReviveLimit()
 	aux.EnablePendulumAttribute(c)
-		--spsummon condition
+	c:EnableCounterPermit(0x1,LOCATION_PZONE)
+	--spsummon condition
 	local e0=Effect.CreateEffect(c)
 	e0:SetType(EFFECT_TYPE_SINGLE)
 	e0:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
@@ -56,9 +57,9 @@ function s.initial_effect(c)
 	local e6=e5:Clone()
 	e6:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
 	c:RegisterEffect(e6)
-		--chain attack
+	--chain attack
 	local e7=Effect.CreateEffect(c)
-	e7:SetDescription(aux.Stringid(id,4))
+	e7:SetDescription(aux.Stringid(id,3))
 	e7:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e7:SetCode(EVENT_DAMAGE_STEP_END)
 	e7:SetCondition(s.atcon)
@@ -78,7 +79,7 @@ function s.thfilter(c)
 	return c:IsSetCard(0x150,0x12a) and c:IsType(TYPE_MONSTER) and not c:IsLevel(7) and c:IsAbleToHand()
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c31987203.thfilter,tp,LOCATION_DECK,0,1,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,e:GetHandler(),1,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 end
@@ -92,18 +93,16 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.ConfirmCards(1-tp,g)
 end
 function s.rmfilter(c,tp,ec)
-	return c:IsFaceup() and c:IsAbleToRemoveAsCost()
+	return c:IsFaceup() and c:IsAbleToRemoveAsCost() and c:IsType(TYPE_SPELL)
 		and ((ec:IsLocation(LOCATION_HAND) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0) or
 		(ec:IsLocation(LOCATION_EXTRA) and Duel.GetLocationCountFromEx(tp,tp,c,ec)>0))
 end
 function s.spcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
-	local g=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_GRAVE,0,nil)
 	return Duel.IsExistingMatchingCard(s.rmfilter,tp,LOCATION_ONFIELD,0,1,nil,tp,c)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,c)
-	local g=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_GRAVE,0,nil)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local sg=Duel.SelectMatchingCard(tp,s.rmfilter,tp,LOCATION_ONFIELD,0,1,1,nil,tp,c)
 	if sg then
@@ -122,12 +121,15 @@ function s.indcon(e)
 end
 function s.atcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	return Duel.GetAttacker()==c and c:IsChainAttackasble(0,true)
+	return Duel.GetAttacker()==c and c:IsChainAttackable(0,true)
+end
+function s.cfilter(c)
+	return c:IsFaceup() and c:IsType(TYPE_SPELL) and c:IsAbleToRemoveAsCost()
 end
 function s.atcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsCanRemoveCounter(tp,1,0,0x1,3,REASON_COST) or Duel.IsExistingMatchingCard(c11674673.cfilter,tp,LOCATION_ONFIELD,0,1,nil) end
+	if chk==0 then return Duel.IsCanRemoveCounter(tp,1,0,0x1,3,REASON_COST) or Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_ONFIELD,0,1,nil) end
 	if Duel.IsCanRemoveCounter(tp,1,0,0x1,3,REASON_COST)
-			and (not Duel.IsExistingMatchingCard(c11674673.cfilter,tp,LOCATION_ONFIELD,0,1,nil) or not Duel.SelectYesNo(tp,aux.Stringid(id,4))) then
+			and (not Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_ONFIELD,0,1,nil) or not Duel.SelectYesNo(tp,aux.Stringid(id,4))) then
 		Duel.RemoveCounter(tp,1,0,0x1,3,REASON_COST)
 	else
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
@@ -138,5 +140,13 @@ end
 function s.atop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if not c:IsRelateToBattle() then return end
-	Duel.ChainAttack()
+		local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_SINGLE)
+	e1:SetCode(EFFECT_UPDATE_ATTACK)
+	e1:SetValue(500)
+	e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_DISABLE)
+	c:RegisterEffect(e1)
+	if not c:IsHasEffect(EFFECT_REVERSE_UPDATE) then
+		Duel.ChainAttack()
+	end
 end
