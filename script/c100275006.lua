@@ -1,4 +1,4 @@
--- 強化反撃
+--強化反撃
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--Activate
@@ -64,21 +64,27 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local b3=dam>0
 	if chk==0 then return b1 or b2 or b3 end
 	local op=aux.SelectFromOptions(tp,
-		{b1,aux.Stringid(id,0),1},
-		{b2,aux.Stringid(id,1),2},
-		{b3,aux.Stringid(id,2),3})
+		{b1,aux.Stringid(id,1),1},
+		{b2,aux.Stringid(id,2),2},
+		{b3,aux.Stringid(id,3),3})
 	e:SetLabel(op)
 	if op==1 then
-		e:SetCategory(CATEGORY_ATKCHANGE)
-		e:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
+		if e:IsCostChecked() then
+			e:SetCategory(CATEGORY_ATKCHANGE)
+			e:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
+		end
 		local res,teg,tep,tev=Duel.CheckEvent(EVENT_CHAINING,true)
 		Duel.SetTargetParam(Duel.GetChainInfo(tev,CHAININFO_CHAIN_ID))
 	elseif op==2 then
-		e:SetCategory(CATEGORY_ATKCHANGE)
-		e:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
+		if e:IsCostChecked() then
+			e:SetCategory(CATEGORY_ATKCHANGE)
+			e:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
+		end
 	else
-		e:SetCategory(CATEGORY_DAMAGE)
-		e:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL+EFFECT_FLAG_PLAYER_TARGET)
+		if e:IsCostChecked() then
+			e:SetCategory(CATEGORY_DAMAGE)
+			e:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL+EFFECT_FLAG_PLAYER_TARGET)
+		end
 		Duel.SetTargetPlayer(1-tp)
 		Duel.SetTargetParam(dam)
 		Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,dam)
@@ -90,7 +96,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		s.activate1(e,tp)
 	elseif op==2 then
 		s.activate2(e,tp)
-	else
+	elseif op==3 then
 		local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 		Duel.Damage(p,d,REASON_EFFECT)
 	end
