@@ -69,11 +69,14 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 		and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and c:IsCanBeSpecialSummoned(e,0,tp,true,false) then
 		local res=Duel.SpecialSummon(c,0,tp,tp,true,false,POS_FACEUP)
-		if res>0 and ct>=3 then
-			Duel.BreakEffect()
-			local dg=Duel.GetMatchingGroup(aux.TRUE,tp,0,LOCATION_MZONE,nil)
-			if #dg>0 and Duel.Destroy(dg,REASON_EFFECT)>0 then
-				Duel.SetLP(1-tp,math.ceil(Duel.GetLP(1-tp)/2))
+		if res>0 then
+			c:CompleteProcedure()
+			if ct>=3 then
+				Duel.BreakEffect()
+				local dg=Duel.GetMatchingGroup(aux.TRUE,tp,0,LOCATION_MZONE,nil)
+				if #dg>0 and Duel.Destroy(dg,REASON_EFFECT)>0 then
+					Duel.SetLP(1-tp,math.ceil(Duel.GetLP(1-tp)/2))
+				end
 			end
 		end
 	end

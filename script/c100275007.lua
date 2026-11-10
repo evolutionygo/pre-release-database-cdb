@@ -1,4 +1,4 @@
--- ドラゴンズ・オーブ
+--ドラゴンズ・オーブ
 local s,id,o=GetID()
 function s.initial_effect(c)
 	--Activate
@@ -7,6 +7,7 @@ function s.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetHintTiming(0,TIMINGS_CHECK_MONSTER)
+	e1:SetCondition(s.condition)
 	e1:SetOperation(s.activate)
 	c:RegisterEffect(e1)
 	--search
@@ -24,7 +25,11 @@ function s.initial_effect(c)
 	e2:SetOperation(s.thop)
 	c:RegisterEffect(e2)
 end
+function s.condition(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetFlagEffect(tp,id)==0
+end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
+	Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1)
 	local c=e:GetHandler()
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
@@ -40,8 +45,8 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.efilter(e,ct)
 	local p=e:GetHandlerPlayer()
-	local te,tp,loc=Duel.GetChainInfo(ct,CHAININFO_TRIGGERING_EFFECT,CHAININFO_TRIGGERING_PLAYER,CHAININFO_TRIGGERING_LOCATION)
-	return p==tp and te:IsActiveType(TYPE_MONSTER) and te:GetHandler():IsRace(RACE_DRAGON) and loc&LOCATION_MZONE>0
+	local te,tp,loc,race=Duel.GetChainInfo(ct,CHAININFO_TRIGGERING_EFFECT,CHAININFO_TRIGGERING_PLAYER,CHAININFO_TRIGGERING_LOCATION,CHAININFO_TRIGGERING_RACE)
+	return p==tp and te:IsActiveType(TYPE_MONSTER) and race&RACE_DRAGON>0 and loc&LOCATION_MZONE>0
 end
 function s.cfilter(c)
 	return c:IsFaceup() and c:IsRace(RACE_DRAGON)
@@ -50,29 +55,27 @@ end
 function s.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_MZONE,0,1,nil)
 end
-function s.thfilter1(c,tp)
+function s.thfilter(c)
 	return c:IsRace(RACE_DRAGON) and c:IsAbleToHand()
-		and Duel.IsExistingMatchingCard(s.thfilter2,tp,LOCATION_DECK,0,1,nil,c)
 end
-function s.thfilter2(c,tc)
-	return c:IsRace(RACE_DRAGON) and c:IsAbleToHand()
-		and not c:IsCode(tc:GetCode())
-		and c:IsAttack(tc:GetAttack()) and c:IsDefense(tc:GetDefense())
+function s.thcheck(g)
+	return g:GetClassCount(Card.GetCode)==2
+		and g:GetClassCount(Card.GetAttack)==1
+		and g:GetClassCount(Card.GetDefense)==1
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter1,tp,LOCATION_DECK,0,1,nil,tp) end
+	local g=Duel.GetMatchingGroup(s.thfilter,tp,LOCATION_DECK,0,nil)
+	if chk==0 then return g:CheckSubGroup(s.thcheck,2,2) end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,2,tp,LOCATION_DECK)
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
-	local g1=Duel.GetMatchingGroup(s.thfilter1,tp,LOCATION_DECK,0,nil)
-	if g1:GetCount()>0 then
+	local g=Duel.GetMatchingGroup(s.thfilter,tp,LOCATION_DECK,0,nil)
+	if g:CheckSubGroup(s.thcheck,2,2) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-		local sg1=g1:Select(tp,1,1,nil)
-		local g2=Duel.GetMatchingGroup(s.thfilter2,tp,LOCATION_DECK,0,nil,sg1:GetFirst())
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-		local sg2=g2:Select(tp,1,1,nil)
-		sg1:Merge(sg2)
-		Duel.SendtoHand(sg1,nil,REASON_EFFECT)
-		Duel.ConfirmCards(1-tp,sg1)
+		local sg=g:SelectSubGroup(tp,s.thcheck,false,2,2)
+		if sg:GetCount()>0 then
+			Duel.SendtoHand(sg,nil,REASON_EFFECT)
+			Duel.ConfirmCards(1-tp,sg)
+		end
 	end
 end
