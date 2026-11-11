@@ -21,7 +21,7 @@ function s.filter2(c,e,tp,m,f,chkf)
 		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) and c:CheckFusionMaterial(m,nil,chkf)
 end
 function s.rfilter(c)
-	return (c:IsType(TYPE_MONSTER) and aux.IsCodeListed(c,101308049) or c:IsCode(89631139)) and c:IsAbleToRemove() and c:IsCanBeRitualMaterial()
+	return (c:IsType(TYPE_MONSTER) and aux.IsCodeListed(c,101308049) or c:IsCode(89631139)) and c:IsAbleToRemove()
 end
 function s.rsfilter(c)
 	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0xcf)
@@ -41,8 +41,9 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 				and (not e:IsCostChecked() or Duel.GetFlagEffect(tp,id)==0)
 		end
 	end
-	local rg=Duel.GetMatchingGroup(s.rfilter,tp,LOCATION_HAND+LOCATION_MZONE+LOCATION_GRAVE,0,nil)
-	local res2=Duel.IsExistingMatchingCard(aux.RitualUltimateFilter,tp,LOCATION_HAND+LOCATION_REMOVED,0,1,nil,s.rsfilter,e,tp,Group.CreateGroup(),rg,Card.GetLevel,"Greater")
+	local mg1=Duel.GetMatchingGroup(s.rfilter,tp,LOCATION_HAND+LOCATION_MZONE,0,nil)
+	local mg2=Duel.GetMatchingGroup(s.rfilter,tp,LOCATION_GRAVE,0,nil)
+	local res2=Duel.IsExistingMatchingCard(aux.RitualUltimateFilter,tp,LOCATION_HAND+LOCATION_REMOVED,0,1,nil,s.rsfilter,e,tp,mg1,mg2,Card.GetLevel,"Greater")
 		and (not e:IsCostChecked() or Duel.GetFlagEffect(tp,id+o)==0)
 	if chk==0 then return res1 and Duel.GetFlagEffect(tp,id)==0 or res2 and Duel.GetFlagEffect(tp,id+o)==0 end
 	local op=aux.SelectFromOptions(tp,
@@ -109,13 +110,18 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		end
 	elseif e:GetLabel()==2 then
 		::rcancel::
-		local mg=Duel.GetMatchingGroup(aux.NecroValleyFilter(s.rfilter),tp,LOCATION_HAND+LOCATION_MZONE+LOCATION_GRAVE,0,nil,tp)
+		local mg1=Duel.GetMatchingGroup(s.rfilter,tp,LOCATION_HAND+LOCATION_MZONE,0,nil)
+		local mg2=Duel.GetMatchingGroup(aux.NecroValleyFilter(s.rfilter),tp,LOCATION_GRAVE,0,nil)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-		local tg=Duel.SelectMatchingCard(tp,aux.RitualUltimateFilter,tp,LOCATION_HAND+LOCATION_REMOVED,0,1,1,nil,s.rsfilter,e,tp,Group.CreateGroup(),mg,Card.GetLevel,"Greater")
+		local tg=Duel.SelectMatchingCard(tp,aux.RitualUltimateFilter,tp,LOCATION_HAND+LOCATION_REMOVED,0,1,1,nil,s.rsfilter,e,tp,mg1,mg2,Card.GetLevel,"Greater")
 		local tc=tg:GetFirst()
 		if tc then
+			local mg=mg1:Filter(Card.IsCanBeRitualMaterial,tc,tc)
+			mg:Merge(mg2)
 			if tc.mat_filter then
 				mg=mg:Filter(tc.mat_filter,tc,tp)
+			else
+				mg:RemoveCard(tc)
 			end
 			aux.GCheckAdditional=aux.RitualCheckAdditional(tc,tc:GetLevel(),"Greater")
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
