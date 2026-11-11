@@ -21,7 +21,10 @@ function s.filter2(c,e,tp,m,f,chkf)
 		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) and c:CheckFusionMaterial(m,nil,chkf)
 end
 function s.rfilter(c)
-	return (c:IsType(TYPE_MONSTER) and aux.IsCodeListed(c,101308049) or c:IsCode(89631139)) and c:IsAbleToRemove()
+	return (c:IsType(TYPE_MONSTER) and aux.IsCodeListed(c,101308049) or c:IsCode(89631139)) and c:IsAbleToRemove() and c:IsCanBeRitualMaterial()
+end
+function s.rsfilter(c)
+	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0xcf)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local chkf=tp
@@ -39,7 +42,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 		end
 	end
 	local rg=Duel.GetMatchingGroup(s.rfilter,tp,LOCATION_HAND+LOCATION_MZONE+LOCATION_GRAVE,0,nil)
-	local res2=Duel.IsExistingMatchingCard(aux.RitualUltimateFilter,tp,LOCATION_HAND+LOCATION_REMOVED,0,1,nil,aux.TRUE,e,tp,Group.CreateGroup(),rg,Card.GetLevel,"Greater")
+	local res2=Duel.IsExistingMatchingCard(aux.RitualUltimateFilter,tp,LOCATION_HAND+LOCATION_REMOVED,0,1,nil,s.rsfilter,e,tp,Group.CreateGroup(),rg,Card.GetLevel,"Greater")
 		and (not e:IsCostChecked() or Duel.GetFlagEffect(tp,id+o)==0)
 	if chk==0 then return res1 and Duel.GetFlagEffect(tp,id)==0 or res2 and Duel.GetFlagEffect(tp,id+o)==0 end
 	local op=aux.SelectFromOptions(tp,
@@ -108,7 +111,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		::rcancel::
 		local mg=Duel.GetMatchingGroup(aux.NecroValleyFilter(s.rfilter),tp,LOCATION_HAND+LOCATION_MZONE+LOCATION_GRAVE,0,nil,tp)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-		local tg=Duel.SelectMatchingCard(tp,aux.RitualUltimateFilter,tp,LOCATION_HAND+LOCATION_REMOVED,0,1,1,nil,aux.TRUE,e,tp,Group.CreateGroup(),mg,Card.GetLevel,"Greater")
+		local tg=Duel.SelectMatchingCard(tp,aux.RitualUltimateFilter,tp,LOCATION_HAND+LOCATION_REMOVED,0,1,1,nil,s.rsfilter,e,tp,Group.CreateGroup(),mg,Card.GetLevel,"Greater")
 		local tc=tg:GetFirst()
 		if tc then
 			if tc.mat_filter then
@@ -122,7 +125,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 				goto rcancel
 			end
 			tc:SetMaterial(mat)
-			Duel.ReleaseRitualMaterial(mat)
+			Duel.Remove(mat,POS_FACEUP,REASON_EFFECT+REASON_MATERIAL+REASON_RITUAL)
 			Duel.BreakEffect()
 			Duel.SpecialSummon(tc,SUMMON_TYPE_RITUAL,tp,tp,false,true,POS_FACEUP)
 			tc:CompleteProcedure()
