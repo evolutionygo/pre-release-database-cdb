@@ -64,7 +64,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
-	if e:GetLabel()==0 then
+	if e:GetLabel()==1 then
 		local chkf=tp
 		local mg=Duel.GetMatchingGroup(aux.NecroValleyFilter(s.filter1),tp,LOCATION_HAND+LOCATION_GRAVE+LOCATION_REMOVED,0,nil,e)
 		local sg1=Duel.GetMatchingGroup(s.filter2,tp,LOCATION_EXTRA,0,nil,e,tp,mg,nil,chkf)
@@ -104,7 +104,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			end
 			tc:CompleteProcedure()
 		end
-	elseif e:GetLabel()==1 then
+	elseif e:GetLabel()==2 then
 		::rcancel::
 		local mg=Duel.GetMatchingGroup(aux.NecroValleyFilter(s.rfilter),tp,LOCATION_HAND+LOCATION_MZONE+LOCATION_GRAVE,0,nil,tp)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
