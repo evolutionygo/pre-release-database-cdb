@@ -1,0 +1,69 @@
+--真青眼の超究極竜
+local s,id,o=GetID()
+function s.initial_effect(c)
+	aux.AddCodeList(c,1013080049,89631139)
+	--fusion material
+	c:EnableReviveLimit()
+	aux.AddFusionProcFunFunRep(c,aux.FilterBoolFunction(Card.IsFusionCode,89631139),s.mfilter,2,2,true)
+	--extra attack
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_SINGLE)
+	e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e1:SetRange(LOCATION_MZONE)
+	e1:SetCode(EFFECT_EXTRA_ATTACK_MONSTER)
+	e1:SetValue(2)
+	c:RegisterEffect(e1)
+	--set
+	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(aux.Stringid(id,0))
+	e2:SetCategory(CATEGORY_SSET)
+	e2:SetType(EFFECT_TYPE_IGNITION)
+	e2:SetRange(LOCATION_MZONE)
+	e2:SetCountLimit(i,id)
+	e2:SetTarget(s.settg)
+	e2:SetOperation(s.setop)
+	c:RegisterEffect(e2)
+	--remove
+	local e3=Effect.CreateEffect(c)
+	e3:SetDescription(aux.Stringid(id,1))
+	e3:SetCategory(CATEGORY_REMOVE)
+	e3:SetType(EFFECT_TYPE_QUICK_O)
+	e3:SetCode(EVENT_CHAINING)
+	e3:SetRange(LOCATION_MZONE)
+	e3:SetCountLimit(1,id+o)
+	e3:SetCondition(s.rmcon)
+	e3:SetTarget(s.rmtg)
+	e3:SetOperation(s.rmop)
+	c:RegisterEffect(e3)
+end
+function s.mfilter(c)
+	return aux.IsCodeListed(c,1013080049) or c:IsFusionCode(89631139)
+end
+function s.setfilter(c)
+	return aux.IsCodeListed(c,1013080049) and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsSSetable()
+end
+function s.settg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(s.setfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil) end
+end
+function s.setop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SET)
+	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.setfilter),tp,LOCATION_DECK+LOCATION_GRAVE,0,1,1,nil)
+	local tc=g:GetFirst()
+	if tc then
+		Duel.SSet(tp,tc)
+	end
+end
+function s.rmcon(e,tp,eg,ep,ev,re,r,rp)
+	return ep==1-tp and re:GetHandler():IsOnField() and re:GetHandler():IsRelateToEffect(re) and re:IsActiveType(TYPE_MONSTER)
+end
+function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
+	local rc=re:GetHandler()
+	if chk==0 then return rc:IsAbleToRemove() end
+	Duel.SetOperationInfo(0,CATEGORY_REMOVE,rc,1,0,0)
+end
+function s.rmop(e,tp,eg,ep,ev,re,r,rp)
+	local rc=re:GetHandler()
+	if rc:IsRelateToEffect(re) then
+		Duel.Remove(rc,POS_FACEUP,REASON_EFFECT)
+	end
+end
