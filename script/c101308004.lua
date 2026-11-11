@@ -1,7 +1,7 @@
 --身代わり闇・道化師 サギー
 local s,id,o=GetID()
 function s.initial_effect(c)
-	aux.AddCodeList(c,1013080049)
+	aux.AddCodeList(c,101308049)
 	--search
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
@@ -41,7 +41,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 function s.thfilter(c)
-	return (aux.IsCodeListed(c,1013080049) and c:IsType(TYPE_SPELL+TYPE_TRAP) or c:IsCode(76045757)) and c:IsAbleToHand()
+	return (aux.IsCodeListed(c,101308049) and c:IsType(TYPE_SPELL+TYPE_TRAP) or c:IsCode(76045757)) and c:IsAbleToHand()
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil) end

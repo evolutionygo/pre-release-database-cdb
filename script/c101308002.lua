@@ -1,7 +1,7 @@
 --クリスタル・クラウド・ドラゴン
 local s,id,o=GetID()
 function s.initial_effect(c)
-	aux.AddCodeList(c,1013080049)
+	aux.AddCodeList(c,101308049)
 	--special summon
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
@@ -27,7 +27,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function s.cfilter(c)
-	return c:IsFacedown() or not aux.IsCodeListed(c,1013080049)
+	return c:IsFacedown() or not aux.IsCodeListed(c,101308049)
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return not Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_MZONE,0,1,nil)
@@ -44,7 +44,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.thfilter(c)
-	return aux.IsCodeListed(c,1013080049) and c:IsType(TYPE_MONSTER) and not c:IsLevel(6) and c:IsAbleToHand()
+	return aux.IsCodeListed(c,101308049) and c:IsType(TYPE_MONSTER) and not c:IsLevel(6) and c:IsAbleToHand()
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil) end

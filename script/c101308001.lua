@@ -1,7 +1,7 @@
 --導かれし幻獣-青眼の亜白龍
 local s,id,o=GetID()
 function s.initial_effect(c)
-	aux.AddCodeList(c,1013080049,89631139)
+	aux.AddCodeList(c,101308049,89631139)
 	--Special Summon
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
@@ -41,7 +41,7 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
 function s.tffilter(c,tp)
-	return c:IsCode(1013080049) and c:IsAllTypes(TYPE_FIELD+TYPE_SPELL)
+	return c:IsCode(101308049) and c:IsAllTypes(TYPE_FIELD+TYPE_SPELL)
 		and not c:IsForbidden() and c:CheckUniqueOnField(tp)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)

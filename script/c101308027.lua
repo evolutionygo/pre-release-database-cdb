@@ -1,7 +1,7 @@
 --ブルーアイズ・カオス・MAXIMUM・ドラゴン
 local s,id,o=GetID()
 function s.initial_effect(c)
-	aux.AddCodeList(c,1013080049,21082832)
+	aux.AddCodeList(c,101308049,21082832)
 	c:EnableReviveLimit()
 	--spsummon condition
 	local e0=Effect.CreateEffect(c)
@@ -57,5 +57,5 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.ptarget(e,c)
-	return aux.IsCodeListed(c,1013080049)
+	return aux.IsCodeListed(c,101308049)
 end

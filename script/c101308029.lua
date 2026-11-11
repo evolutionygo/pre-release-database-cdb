@@ -1,7 +1,7 @@
 --真青眼の超究極竜
 local s,id,o=GetID()
 function s.initial_effect(c)
-	aux.AddCodeList(c,1013080049,89631139)
+	aux.AddCodeList(c,101308049,89631139)
 	--fusion material
 	c:EnableReviveLimit()
 	aux.AddFusionProcFunFunRep(c,aux.FilterBoolFunction(Card.IsFusionCode,89631139),s.mfilter,2,2,true)
@@ -37,10 +37,10 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function s.mfilter(c)
-	return aux.IsCodeListed(c,1013080049) or c:IsFusionCode(89631139)
+	return aux.IsCodeListed(c,101308049) or c:IsFusionCode(89631139)
 end
 function s.setfilter(c)
-	return aux.IsCodeListed(c,1013080049) and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsSSetable()
+	return aux.IsCodeListed(c,101308049) and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsSSetable()
 end
 function s.settg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.setfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil) end

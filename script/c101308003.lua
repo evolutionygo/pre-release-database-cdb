@@ -1,7 +1,7 @@
 --アサルト・スラッシュ・ワイバーン
 local s,id,o=GetID()
 function s.initial_effect(c)
-	aux.AddCodeList(c,1013080049,89631139)
+	aux.AddCodeList(c,101308049,89631139)
 	--tograve or remove
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_TOGRAVE+CATEGORY_REMOVE)
@@ -59,7 +59,7 @@ function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Release(c,REASON_COST)
 end
 function s.spfilter(c,e,tp)
-	return (aux.IsCodeListed(c,1013080049) or c:IsCode(89631139))
+	return (aux.IsCodeListed(c,101308049) or c:IsCode(89631139))
 		and not c:IsCode(id) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
