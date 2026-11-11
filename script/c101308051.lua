@@ -36,14 +36,19 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and Duel.IsExistingMatchingCard(s.filter,tp,loc,0,1,nil,e,tp) end
+	if Duel.GetCustomActivityCount(id,1-tp,ACTIVITY_CHAIN)~=0 then
+		e:SetLabel(1)
+	else
+		e:SetLabel(0)
+	end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,loc)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	local loc=LOCATION_GRAVE+LOCATION_REMOVED
-	if Duel.GetCustomActivityCount(id,1-tp,ACTIVITY_CHAIN)~=0 then
+	if e:GetLabel()==1 then
 		loc=LOCATION_GRAVE+LOCATION_REMOVED+LOCATION_DECK
 	end
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.filter),tp,loc,0,1,1,nil,e,tp)
 	if g:GetCount()>0 then
@@ -56,11 +61,11 @@ function s.spfilter2(c,e,tp)
 end
 function s.sptg2(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.spfilter2,tp,LOCATION_REMOVED,0,1,nil,e,tp)
-		and Duel.GetMZoneCount(tp)>0 end
+		and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_REMOVED)
 end
 function s.spop2(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetMZoneCount(tp)<1 then return end
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,s.spfilter2,tp,LOCATION_REMOVED,0,1,1,nil,e,tp)
 	local tc=g:GetFirst()
