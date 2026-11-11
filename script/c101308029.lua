@@ -4,7 +4,7 @@ function s.initial_effect(c)
 	aux.AddCodeList(c,101308049,89631139)
 	--fusion material
 	c:EnableReviveLimit()
-	aux.AddFusionProcFunFunRep(c,aux.FilterBoolFunction(Card.IsFusionCode,89631139),s.mfilter,2,2,true)
+	aux.AddFusionProcCodeFunRep(c,89631139,{89631139,s.mfilter},2,2,true,true)
 	--extra attack
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
@@ -37,7 +37,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function s.mfilter(c)
-	return aux.IsCodeListed(c,101308049) or c:IsFusionCode(89631139)
+	return aux.IsCodeListed(c,101308049)
 end
 function s.setfilter(c)
 	return aux.IsCodeListed(c,101308049) and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsSSetable()
