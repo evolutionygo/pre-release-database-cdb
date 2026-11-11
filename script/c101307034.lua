@@ -72,7 +72,7 @@ function s.mvop(e,tp,eg,ep,ev,re,r,rp)
 		end
 		if sg:IsExists(Card.IsLocation,1,nil,LOCATION_SZONE) then
 			local ct=Duel.GetMatchingGroupCount(Card.IsType,tp,LOCATION_ONFIELD,0,nil,TYPE_SPELL+TYPE_TRAP)
-			if ct>0 and Duel.IsExistingMatchingCard(Card.IsAbleToHand,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
+			if ct>0 and Duel.IsExistingMatchingCard(Card.IsAbleToHand,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) and Duel.SelectYesNo(tp,aux.Stringid(id,3)) then
 				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
 				local hg=Duel.SelectMatchingCard(tp,Card.IsAbleToHand,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,ct,nil)
 				if #hg>0 then

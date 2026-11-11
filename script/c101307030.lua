@@ -71,14 +71,7 @@ function s.tgtg(e,tp,eg,ep,ev,re,r,rp,chk)
 		end
 	end
 	if chk==0 then return fdzone&0x1f>0 end
-	local dis=0
-	for i=1,e:GetLabel() do
-		if i==1 then
-			dis=dis|Duel.SelectField(tp,1,0,LOCATION_MZONE,(~fdzone|0x60)<<16)
-		else
-			dis=dis|Duel.SelectField(tp,1,0,LOCATION_MZONE,(~fdzone|(dis>>16)|0x60)<<16)
-		end
-	end
+	local dis=Duel.SelectField(tp,e:GetLabel(),0,LOCATION_MZONE,(~fdzone|0x60)<<16)
 	e:SetLabel(dis)
 	local g=Duel.GetMatchingGroup(s.tgfilter2,tp,0,LOCATION_MZONE,nil,dis)
 	Duel.Hint(HINT_ZONE,tp,dis)
@@ -98,13 +91,9 @@ function s.atkcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local lp=Duel.GetLP(tp)
-	local g=Duel.GetMatchingGroup(s.atkfilter,tp,LOCATION_GRAVE,0,nil)
-	local atk=g:GetSum(Card.GetAttack)
-	if chk==0 then return Duel.CheckLPCost(tp,lp-1,true) or atk>0 end
+	if chk==0 then return Duel.CheckLPCost(tp,lp-1,true) end
 	e:SetLabel(lp-1)
-	if lp>1 then
-		Duel.PayLPCost(tp,lp-1,true)
-	end
+	Duel.PayLPCost(tp,lp-1,true)
 end
 function s.atkfilter(c)
 	return c:IsSetCard(0x2ef) and c:IsType(TYPE_MONSTER) and c:GetTextAttack()>0

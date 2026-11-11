@@ -35,7 +35,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 	--negate
 	local e4=Effect.CreateEffect(c)
-	e4:SetDescription(aux.Stringid(id,1))
+	e4:SetDescription(aux.Stringid(id,2))
 	e4:SetCategory(CATEGORY_NEGATE+CATEGORY_REMOVE)
 	e4:SetType(EFFECT_TYPE_QUICK_O)
 	e4:SetCode(EVENT_CHAINING)
@@ -48,7 +48,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e4)
 	--to pendulum
 	local e5=Effect.CreateEffect(c)
-	e5:SetDescription(aux.Stringid(id,2))
+	e5:SetDescription(aux.Stringid(id,3))
 	e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
 	e5:SetCode(EVENT_PHASE+PHASE_STANDBY)
 	e5:SetRange(LOCATION_MZONE)
@@ -108,7 +108,7 @@ function s.tdop(e,tp,eg,ep,ev,re,r,rp)
 			local mf=ce:GetValue()
 			sg2=Duel.GetMatchingGroup(s.filter2,tp,LOCATION_EXTRA,0,nil,e,tp,mg3,mf,chkf)
 		end
-		if (sg1:GetCount()>0 or (sg2~=nil and sg2:GetCount()>0)) and Duel.SelectYesNo(tp,aux.Stringid(id,3)) then
+		if (sg1:GetCount()>0 or (sg2~=nil and sg2:GetCount()>0)) and Duel.SelectYesNo(tp,aux.Stringid(id,4)) then
 			Duel.BreakEffect()
 			local sg=sg1:Clone()
 			if sg2 then sg:Merge(sg2) end

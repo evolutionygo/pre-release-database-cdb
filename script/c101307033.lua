@@ -1,4 +1,4 @@
---ハーピィ・レディ三姉妹・ＴＸ
+--ハーピィ・レディ三姉妹・TX
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.EnableChangeCode(c,76812113,LOCATION_MZONE+LOCATION_GRAVE)

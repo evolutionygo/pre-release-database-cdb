@@ -24,7 +24,7 @@ function s.rfilter(c)
 	return (c:IsType(TYPE_MONSTER) and aux.IsCodeListed(c,101308049) or c:IsCode(89631139)) and c:IsAbleToRemove()
 end
 function s.rsfilter(c)
-	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0xcf)
+	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0xcf) and c:IsFaceupEx()
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local chkf=tp
@@ -45,7 +45,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local mg2=Duel.GetMatchingGroup(s.rfilter,tp,LOCATION_GRAVE,0,nil)
 	local res2=Duel.IsExistingMatchingCard(aux.RitualUltimateFilter,tp,LOCATION_HAND+LOCATION_REMOVED,0,1,nil,s.rsfilter,e,tp,mg1,mg2,Card.GetLevel,"Greater")
 		and (not e:IsCostChecked() or Duel.GetFlagEffect(tp,id+o)==0)
-	if chk==0 then return res1 and Duel.GetFlagEffect(tp,id)==0 or res2 and Duel.GetFlagEffect(tp,id+o)==0 end
+	if chk==0 then return res1 or res2 end
 	local op=aux.SelectFromOptions(tp,
 		{res1,aux.Stringid(id,1),1},
 		{res2,aux.Stringid(id,2),2})
