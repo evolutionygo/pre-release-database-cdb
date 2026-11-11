@@ -1,8 +1,5 @@
 --アトランティスの暴翼
 local s,id,o=GetID()
-if not CATEGORY_DECK_SPSUMMON then
-	CATEGORY_DECK_SPSUMMON=0x800000000
-end
 function s.initial_effect(c)
 	aux.AddCodeList(c,22702055,38391684)
 	aux.EnableChangeCode(c,22702055)
@@ -20,8 +17,8 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 	--special
 	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(id,1))
-	e2:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_DECK_SPSUMMON)
+	e2:SetDescription(aux.Stringid(id,2))
+	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_GRAVE)
 	e2:SetCountLimit(1,id+o)
