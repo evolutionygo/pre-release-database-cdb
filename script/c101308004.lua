@@ -1,9 +1,10 @@
 --身代わり闇・道化師 サギー
 local s,id,o=GetID()
 function s.initial_effect(c)
-	aux.AddCodeList(c,101308049)
+	aux.AddCodeList(c,101308049,76045757)
 	--search
 	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e1:SetType(EFFECT_TYPE_TRIGGER_O+EFFECT_TYPE_SINGLE)
 	e1:SetCode(EVENT_SUMMON_SUCCESS)
@@ -17,6 +18,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 	--destroy
 	local e3=Effect.CreateEffect(c)
+	e3:SetDescription(aux.Stringid(id,1))
 	e3:SetCategory(CATEGORY_DESTROY)
 	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e3:SetType(EFFECT_TYPE_QUICK_O)
@@ -31,6 +33,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 	--destroy replace
 	local e4=Effect.CreateEffect(c)
+	e4:SetDescription(aux.Stringid(id,2))
 	e4:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
 	e4:SetCode(EFFECT_DESTROY_REPLACE)
 	e4:SetRange(LOCATION_MZONE+LOCATION_HAND)
@@ -74,7 +77,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToChain() and tc:IsOnField() then
+	if tc:IsRelateToChain() and tc:IsOnField() and tc:IsType(TYPE_MONSTER) then
 		Duel.Destroy(tc,REASON_EFFECT)
 	end
 end

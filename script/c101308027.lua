@@ -1,7 +1,7 @@
 --ブルーアイズ・カオス・MAXIMUM・ドラゴン
 local s,id,o=GetID()
 function s.initial_effect(c)
-	aux.AddCodeList(c,101308049,21082832)
+	aux.AddCodeList(c,101308049,101308050)
 	c:EnableReviveLimit()
 	--spsummon condition
 	local e0=Effect.CreateEffect(c)
@@ -42,7 +42,7 @@ function s.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Remove(c,POS_FACEUP,REASON_COST)
 end
 function s.thfilter(c)
-	return c:IsCode(1013080060) and c:IsAbleToHand() and c:IsFaceupEx()
+	return c:IsCode(101308050) and c:IsAbleToHand() and c:IsFaceupEx()
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK+LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil) end
