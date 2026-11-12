@@ -12,7 +12,7 @@ function s.initial_effect(c)
 	e1:SetTarget(s.atktg)
 	e1:SetValue(s.atkval)
 	c:RegisterEffect(e1)
-	--to grave
+	--to grave/remove
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetCategory(CATEGORY_REMOVE+CATEGORY_TOGRAVE+CATEGORY_TOHAND)

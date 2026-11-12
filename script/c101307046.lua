@@ -12,7 +12,7 @@ function s.initial_effect(c)
 	e1:SetTargetRange(LOCATION_MZONE,0)
 	e1:SetTarget(s.immtg)
 	c:RegisterEffect(e1)
-	--destroy
+	--destroy/remove
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetCategory(CATEGORY_REMOVE+CATEGORY_DESTROY+CATEGORY_GRAVE_ACTION+CATEGORY_TODECK)
