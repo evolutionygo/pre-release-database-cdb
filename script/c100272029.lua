@@ -27,6 +27,22 @@ function s.initial_effect(c)
 	e2:SetTarget(s.tgtg)
 	e2:SetOperation(s.tgop)
 	c:RegisterEffect(e2)
+	--global chk of 91027843/海晶乙女の闘海
+	if not s.global_check then
+		s.global_check=true
+		local ge1=Effect.CreateEffect(c)
+		ge1:SetType(EFFECT_TYPE_FIELD)
+		ge1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_SET_AVAILABLE+EFFECT_FLAG_IGNORE_RANGE)
+		ge1:SetCode(EFFECT_MATERIAL_CHECK)
+		ge1:SetValue(s.valcheck)
+		Duel.RegisterEffect(ge1,0)
+	end
+end
+function s.valcheck(e,c)
+	local g=c:GetMaterial()
+	if c:IsType(TYPE_LINK) and g:IsExists(Card.IsLinkCode,1,nil,67712104) then
+		c:RegisterFlagEffect(91027843,RESET_EVENT+0x4fe0000,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(91027843,0))
+	end
 end
 function s.spfilter(c,e,tp,zone)
 	return c:IsSetCard(0x12b) and c:IsType(TYPE_LINK) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP,tp,zone)
