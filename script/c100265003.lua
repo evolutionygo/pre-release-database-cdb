@@ -1,4 +1,4 @@
--- 魔導書の賢才バテル
+--魔導書の賢才バテル
 local s,id,o=GetID()
 function s.initial_effect(c)
 	aux.AddCodeList(c,96228804)
@@ -26,7 +26,7 @@ function s.initial_effect(c)
 	e2:SetTarget(s.sptg2)
 	e2:SetOperation(s.spop2)
 	c:RegisterEffect(e2)
-		--position
+	--position
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,2))
 	e3:SetCategory(CATEGORY_POSITION+CATEGORY_MSET)
@@ -85,8 +85,7 @@ function s.spop2(e,tp,eg,ep,ev,re,r,rp)
 	Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 end
 function s.cpcon(e,tp,eg,ep,ev,re,r,rp)
-	local ph=Duel.GetCurrentPhase()
-	return ph>=PHASE_BATTLE_START and ph<=PHASE_BATTLE
+	return Duel.IsBattlePhase()
 end
 function s.posfilter(c)
 	return c:IsFaceup() and c:IsCanTurnSet()
