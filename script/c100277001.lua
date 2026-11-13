@@ -50,8 +50,9 @@ end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetTargetsRelateToChain():Filter(Card.IsOnField,nil)
 	if g:GetCount()>0 and Duel.Destroy(g,REASON_EFFECT)>0 then
+		local og=Duel.GetOperatedGroup()
 		local tg=Duel.GetMatchingGroup(s.tgfilter,tp,LOCATION_DECK,0,nil)
-		if g:IsExists(Card.IsPreviousPosition,1,nil,POS_FACEDOWN) and #tg>0
+		if og:IsExists(Card.IsPreviousPosition,1,nil,POS_FACEDOWN) and #tg>0
 			and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
 			local sg=tg:Select(tp,1,1,nil)
