@@ -42,7 +42,6 @@ function s.sporthGroup(g,e,tp)
 		and g:GetClassCount(Card.GetLevel)==1
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	local c=e:GetHandler()
 	local g=Duel.GetMatchingGroup(s.thfilter,tp,LOCATION_DECK,0,nil,e,tp)
 	if chk==0 then return g:CheckSubGroup(s.sporthGroup,2,2,e,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_DECK)
@@ -51,7 +50,7 @@ end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(s.thfilter,tp,LOCATION_DECK,0,nil,e,tp)
 	if g:CheckSubGroup(s.sporthGroup,2,2,e,tp) then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_OPERATECARD)
 		local sg=g:SelectSubGroup(tp,s.sporthGroup,false,2,2,e,tp)
 		if sg then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
@@ -62,18 +61,18 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			Duel.SendtoGrave(sg,REASON_EFFECT)
 		end
 	end
-	if e:GetLabel()==1 then
-		local e1=Effect.CreateEffect(e:GetHandler())
-		e1:SetType(EFFECT_TYPE_FIELD)
-		e1:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
-		e1:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
-		e1:SetTargetRange(LOCATION_MZONE,0)
-		e1:SetTarget(s.efftg)
-		e1:SetValue(aux.tgoval)
-		e1:SetReset(RESET_PHASE+PHASE_END)
-		Duel.RegisterEffect(e1,tp)
-	end
 	if e:IsHasType(EFFECT_TYPE_ACTIVATE) then
+		if e:GetLabel()==1 then
+			local e1=Effect.CreateEffect(e:GetHandler())
+			e1:SetType(EFFECT_TYPE_FIELD)
+			e1:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
+			e1:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
+			e1:SetTargetRange(LOCATION_MZONE,0)
+			e1:SetTarget(s.efftg)
+			e1:SetValue(aux.tgoval)
+			e1:SetReset(RESET_PHASE+PHASE_END)
+			Duel.RegisterEffect(e1,tp)
+		end
 		local e2=Effect.CreateEffect(e:GetHandler())
 		e2:SetType(EFFECT_TYPE_FIELD)
 		e2:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)

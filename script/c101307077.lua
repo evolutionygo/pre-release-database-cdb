@@ -8,7 +8,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 	--select effect
 	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(id,1))
+	e2:SetDescription(aux.Stringid(id,0))
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_FUSION_SUMMON+CATEGORY_DISABLE)
 	e2:SetType(EFFECT_TYPE_QUICK_O)
 	e2:SetCode(EVENT_FREE_CHAIN)
@@ -53,7 +53,7 @@ function s.efftg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,nil,e,tp)
 	local chkf=tp
 	local mg1=Duel.GetFusionMaterial(tp):Filter(s.mfilter1,nil,e)
-	local mg2=Duel.GetMatchingGroup(s.mfilter2,tp,LOCATION_EXTRA,0,nil,e)
+	local mg2=Duel.GetMatchingGroup(s.mfilter2,tp,LOCATION_EXTRA,0,nil)
 	mg1:Merge(mg2)
 	aux.FCheckAdditional=s.fcheck
 	aux.GCheckAdditional=s.gcheck
@@ -73,9 +73,9 @@ function s.efftg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		and Duel.IsExistingTarget(aux.NegateAnyFilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil)
 	if chk==0 then return res1 or res2 or res3 end
 	local op=aux.SelectFromOptions(tp,
-			{res1,aux.Stringid(id,2),1},
-			{res2,aux.Stringid(id,3),2},
-			{res3,aux.Stringid(id,4),3})
+			{res1,aux.Stringid(id,1),1},
+			{res2,aux.Stringid(id,2),2},
+			{res3,aux.Stringid(id,3),3})
 	e:SetLabel(op)
 	if op==1 then
 		e:SetCategory(CATEGORY_SPECIAL_SUMMON)
