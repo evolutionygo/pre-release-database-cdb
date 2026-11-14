@@ -3,6 +3,7 @@ stages:
   - prepare2
   - pack
   - deploy
+  - warm
   - deploy2
 
 variables:
@@ -400,6 +401,26 @@ upload_archive:
   extends: .minio
   variables:
     uploadDir: archive
+  only:
+    - tags
+
+# Runs after upload_archive and before upload_data (version.txt), so edges hold the new archive before users ask.
+# A failed or slow warm never blocks the release: allow_failure plus a job timeout.
+warm_edges:
+  stage: warm
+  tags:
+    - linux
+  dependencies: []
+  allow_failure: true
+  timeout: 15 minutes
+  variables:
+    # Only edges whose /ygopro-super-pre/archive/ cache key ignores Range (see scripts/warm-edges.sh).
+    WARM_EDGES: "tx-nrt-nana3=43.163.237.208 koishi=218.95.37.119"
+    # Per request; two tries per edge, so 2 edges stay well inside the job timeout.
+    WARM_TIMEOUT: "180"
+  script:
+    - command -v curl || { apt update; apt -y install curl; }
+    - sh scripts/warm-edges.sh "$CI_COMMIT_REF_NAME" "$WARM_EDGES"
   only:
     - tags
 
