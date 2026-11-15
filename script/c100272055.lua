@@ -51,9 +51,10 @@ function s.naop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_CARD,0,id)
 	for tc in aux.Next(g) do
 		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetDescription(aux.Stringid(id,3))
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_CANNOT_TRIGGER)
-		e1:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_CANNOT_DISABLE)
+		e1:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_CLIENT_HINT)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,2)
 		tc:RegisterEffect(e1)
 	end
@@ -69,6 +70,7 @@ function s.tdop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
 	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.tdfilter),tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,5,nil)
 	if #g>0 then
+		Duel.HintSelection(g)
 		Duel.SendtoDeck(g,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)
 	end
 end
@@ -90,7 +92,9 @@ function s.setop(e,tp,eg,ep,ev,re,r,rp)
 		local og=Duel.GetOperatedGroup()
 		for tc in aux.Next(og) do
 			local e1=Effect.CreateEffect(e:GetHandler())
+			e1:SetDescription(aux.Stringid(id,3))
 			e1:SetType(EFFECT_TYPE_SINGLE)
+			e1:SetProperty(EFFECT_FLAG_CLIENT_HINT)
 			e1:SetCode(EFFECT_CANNOT_CHANGE_POSITION)
 			e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 			tc:RegisterEffect(e1)
