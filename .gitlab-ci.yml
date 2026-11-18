@@ -405,6 +405,9 @@ upload_archive:
     - tags
 
 # Runs after upload_archive and before upload_data (version.txt), so edges hold the new archive before users ask.
+# The edge-warm service fills every edge in the CDN pool (read live from DNS), core edges first; the job waits for
+# the core edges only and the service keeps filling the rest after it ends. No stored secret: the job's id_token
+# proves this project and this tag. Prints per-tier counts only.
 # A failed or slow warm never blocks the release: allow_failure plus a job timeout.
 warm_edges:
   stage: warm
@@ -412,15 +415,15 @@ warm_edges:
     - linux
   dependencies: []
   allow_failure: true
-  timeout: 15 minutes
+  timeout: 10 minutes
+  id_tokens:
+    EDGE_WARM_ID_TOKEN:
+      aud: edge-warm
   variables:
-    # Only edges whose /ygopro-super-pre/archive/ cache key ignores Range (see scripts/warm-edges.sh).
-    WARM_EDGES: "tx-nrt-nana3=43.163.237.208 koishi=218.95.37.119"
-    # Per request; two tries per edge, so 2 edges stay well inside the job timeout.
-    WARM_TIMEOUT: "180"
+    EDGE_WARM_WAIT: "180"
   script:
     - command -v curl || { apt update; apt -y install curl; }
-    - sh scripts/warm-edges.sh "$CI_COMMIT_REF_NAME" "$WARM_EDGES"
+    - sh scripts/edge-warm.sh superpre "$CI_COMMIT_REF_NAME"
   only:
     - tags
 
