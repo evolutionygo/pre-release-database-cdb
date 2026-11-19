@@ -91,3 +91,4 @@ function s.thop2(e,tp,eg,ep,ev,re,r,rp)
 		Duel.ConfirmCards(1-tp,g)
 	end
 end
+-- Verify release packaging after archive maintenance.
