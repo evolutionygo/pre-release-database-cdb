@@ -47,7 +47,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_HAND,0,1,ft,nil,e,tp)
 	if #g==0 or Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)==0 then return end
-	local sg=Duel.GetMatchingGroup(s.samefilter,tp,LOCATION_MZONE,0,nil,tp)
+	local sg=Duel.GetMatchingGroup(s.samefilter,tp,LOCATION_MZONE,0,nil,tp):Filter(aux.NOT(Card.IsType),nil,TYPE_TUNER)
 	if #sg>0 and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 		Duel.BreakEffect()
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
@@ -62,7 +62,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.otherfilter(c,tc)
-	return (c:IsLocation(LOCATION_GRAVE) or c:IsFaceup()) and c:IsType(TYPE_MONSTER) and c:IsCode(tc:GetCode())
+	return c:IsFaceupEx() and c:IsType(TYPE_MONSTER) and c:IsCode(tc:GetCode())
 end
 function s.cfilter(c,tp)
 	return c:IsSummonLocation(LOCATION_GRAVE) and c:IsPreviousControler(tp) and c:IsFaceup() and c:IsAttribute(ATTRIBUTE_WATER)

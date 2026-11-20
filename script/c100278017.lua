@@ -33,7 +33,7 @@ function s.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_MZONE,0,1,nil)
 end
 function s.filter(c)
-	return c:IsAttackPos() and c:IsCanChangePosition() and not c:IsHasEffect(EFFECT_CANNOT_CHANGE_POS_E)
+	return c:IsAttackPos() and c:IsCanChangePosition()
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp) and s.filter(chkc) end
