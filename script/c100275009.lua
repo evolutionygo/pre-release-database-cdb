@@ -53,14 +53,14 @@ function s.ritcheck(e,tp,exc)
 	if exc then mg:RemoveCard(exc) end
 	return Duel.IsExistingMatchingCard(aux.RitualUltimateFilter,tp,LOCATION_HAND,0,1,exc,aux.TRUE,e,tp,mg,nil,Card.GetLevel,"Greater")
 end
-function s.costfilter(c,e,tp)
-	return c:IsDiscardable()
+function s.costfilter(c)
+	return c:IsAbleToGraveAsCost()
 end
 function s.fcostfilter(c,e,tp)
-	return c:IsDiscardable() and s.fuscheck(e,tp,c)
+	return c:IsAbleToGraveAsCost() and s.fuscheck(e,tp,c)
 end
 function s.rcostfilter(c,e,tp)
-	return c:IsDiscardable() and s.ritcheck(e,tp,c)
+	return c:IsAbleToGraveAsCost() and s.ritcheck(e,tp,c)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and s.spfilter(chkc,e,tp) end
@@ -68,7 +68,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local b2=false
 	local b3=false
 	if e:IsCostChecked() then
-		b1=b1 and Duel.IsExistingMatchingCard(s.costfilter,tp,LOCATION_HAND,0,1,nil,e,tp)
+		b1=b1 and Duel.IsExistingMatchingCard(s.costfilter,tp,LOCATION_HAND,0,1,nil)
 		b2=Duel.IsExistingMatchingCard(s.fcostfilter,tp,LOCATION_HAND,0,1,nil,e,tp)
 		b3=Duel.IsExistingMatchingCard(s.rcostfilter,tp,LOCATION_HAND,0,1,nil,e,tp)
 	else
@@ -84,7 +84,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if op==1 then
 		if e:IsCostChecked() then
 			e:SetCategory(CATEGORY_SPECIAL_SUMMON)
-			Duel.DiscardHand(tp,s.costfilter,1,1,REASON_COST,nil,e,tp)
+			Duel.DiscardHand(tp,s.costfilter,1,1,REASON_COST)
 		end
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local g=Duel.SelectTarget(tp,s.spfilter,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,1,nil,e,tp)
@@ -95,7 +95,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 			Duel.DiscardHand(tp,s.fcostfilter,1,1,REASON_COST,nil,e,tp)
 		end
 		Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
-	else
+	elseif op==3 then
 		if e:IsCostChecked() then
 			e:SetCategory(CATEGORY_SPECIAL_SUMMON)
 			Duel.DiscardHand(tp,s.rcostfilter,1,1,REASON_COST,nil,e,tp)
