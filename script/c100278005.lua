@@ -1,6 +1,7 @@
 --サイバー・ツバーン
 local s,id,o=GetID()
 function s.initial_effect(c)
+	c:EnableReviveLimit()
 	--special summon
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
@@ -90,7 +91,7 @@ function s.limop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RegisterEffect(e2,tp)
 end
 function s.sucfilter(c,tp)
-	return c:IsFaceup() and c:IsControler(tp) and c:IsRace(RACE_MACHINE)
+	return c:IsFaceup() and c:IsSummonPlayer(tp) and c:IsRace(RACE_MACHINE)
 		and c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsLevel(10)
 end
 function s.sucop(e,tp,eg,ep,ev,re,r,rp)
