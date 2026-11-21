@@ -23,7 +23,7 @@ function s.initial_effect(c)
 	--special summon
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,1))
-	e3:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_SEARCH+CATEGORY_TOHAND)
+	e3:SetCategory(CATEGORY_TOEXTRA+CATEGORY_SPECIAL_SUMMON+CATEGORY_SEARCH+CATEGORY_TOHAND+CATEGORY_GRAVE_SPSUMMON)
 	e3:SetType(EFFECT_TYPE_QUICK_O)
 	e3:SetCode(EVENT_FREE_CHAIN)
 	e3:SetRange(LOCATION_MZONE)
@@ -59,8 +59,20 @@ function s.atkval(e,c)
 	return Duel.GetMatchingGroupCount(Card.IsCode,c:GetControler(),LOCATION_GRAVE,0,nil,15610297)*1000
 end
 function s.immval(e,te)
-	return te:GetOwner()~=e:GetHandler() and te:IsActiveType(TYPE_MONSTER) and te:IsActivated()
-		and te:GetOwner():GetAttack()<e:GetHandler():GetAttack()
+	if not te:IsActiveType(TYPE_MONSTER) or not te:IsActivated() then return false end
+	local catk=e:GetHandler():GetAttack()
+	local tc=te:GetHandler()
+	local atk=tc:GetTextAttack()
+	local ct=Duel.GetCurrentChain()
+	for ev=1,ct do
+		local ce=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_EFFECT)
+		if ce==te then
+			if tc:IsRelateToChain(ev) and tc:IsFaceup() then
+				atk=tc:GetAttack()
+			end
+		end
+	end
+	return atk>=0 and atk<catk
 end
 function s.spfilter(c,e,tp)
 	return c:IsSetCard(0xe3) and c:IsType(TYPE_MONSTER) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)

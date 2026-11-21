@@ -21,19 +21,29 @@ function s.initial_effect(c)
 	e2:SetTarget(s.cttg)
 	e2:SetOperation(s.ctop)
 	c:RegisterEffect(e2)
+	--trigger custom effect
+	local e30=Effect.CreateEffect(c)
+	e30:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e30:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+	e30:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e30:SetRange(LOCATION_SZONE)
+	e30:SetCondition(s.regcon)
+	e30:SetOperation(s.regop)
+	c:RegisterEffect(e30)
 	--special summon
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,2))
 	e3:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_FUSION_SUMMON)
 	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e3:SetProperty(EFFECT_FLAG_DELAY)
-	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e3:SetCode(EVENT_CUSTOM+id)
 	e3:SetRange(LOCATION_SZONE)
 	e3:SetCondition(s.fspcon)
 	e3:SetTarget(s.fsptg)
 	e3:SetOperation(s.fspop)
 	c:RegisterEffect(e3)
 end
+s.mentioned_counter={[0x1038]=true}
 function s.filter(c)
 	return c:IsSetCard(0xe3) and c:IsAbleToGrave()
 end
@@ -49,25 +59,31 @@ function s.ctcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,1,nil) end
 	Duel.DiscardHand(tp,Card.IsDiscardable,1,1,REASON_COST+REASON_DISCARD)
 end
+function s.ctfilter(c)
+	return c:IsFaceup() and c:IsCanAddCounter(0x1038,1)
+end
 function s.cttg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsFaceup,tp,0,LOCATION_MZONE,1,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.ctfilter,tp,0,LOCATION_MZONE,1,nil) end
+	Duel.SetOperationInfo(0,CATEGORY_COUNTER,nil,1,0,0x1038)
 end
 function s.ctop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_COUNTER)
-	local g=Duel.SelectMatchingCard(tp,Card.IsFaceup,tp,0,LOCATION_MZONE,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,s.ctfilter,tp,0,LOCATION_MZONE,1,1,nil)
 	if g:GetCount()>0 then
+		Duel.HintSelection(g)
 		local tc=g:GetFirst()
-		tc:AddCounter(0x1038,1)
-		local e1=Effect.CreateEffect(c)
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_CANNOT_ATTACK)
-		e1:SetCondition(s.condition)
-		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
-		tc:RegisterEffect(e1)
-		local e2=e1:Clone()
-		e2:SetCode(EFFECT_DISABLE)
-		tc:RegisterEffect(e2)
+		if tc:AddCounter(0x1038,1) then
+			local e1=Effect.CreateEffect(c)
+			e1:SetType(EFFECT_TYPE_SINGLE)
+			e1:SetCode(EFFECT_CANNOT_ATTACK)
+			e1:SetCondition(s.condition)
+			e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+			tc:RegisterEffect(e1)
+			local e2=e1:Clone()
+			e2:SetCode(EFFECT_DISABLE)
+			tc:RegisterEffect(e2)
+		end
 	end
 end
 function s.condition(e)
@@ -76,8 +92,33 @@ end
 function s.exfilter(c,tp)
 	return c:IsControler(tp) and c:IsSetCard(0xe3) and c:IsFaceup()
 end
-function s.fspcon(e,tp,eg,ep,ev,re,r,rp)
+function s.regcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.exfilter,1,nil,tp)
+end
+function s.regop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	if Duel.GetCurrentChain()==0 and not Duel.CheckEvent(EVENT_CHAIN_END) then
+		Duel.RaiseEvent(c,EVENT_CUSTOM+id,re,r,rp,ep,ev)
+	elseif c:GetFlagEffect(id)==0 then
+		c:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,0,1)
+		local e1=Effect.CreateEffect(c)
+		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		e1:SetCode(EVENT_CHAIN_END)
+		e1:SetLabelObject(c)
+		e1:SetOperation(s.raiseop)
+		Duel.RegisterEffect(e1,tp)
+	end
+end
+function s.raiseop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetLabelObject()
+	if c:GetFlagEffect(id)>0 then
+		c:ResetFlagEffect(id)
+		Duel.RaiseEvent(c,EVENT_CUSTOM+id,re,r,rp,ep,ev)
+	end
+	e:Reset()
+end
+function s.fspcon(e,tp,eg,ep,ev,re,r,rp)
+	return eg:IsContains(e:GetHandler())
 end
 function s.filter1(c,e)
 	return not c:IsImmuneToEffect(e)

@@ -11,7 +11,6 @@ function s.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_ATTACK_ANNOUNCE)
 	e1:SetCondition(s.condition)
-	e1:SetTarget(s.target)
 	e1:SetOperation(s.activate)
 	c:RegisterEffect(e1)
 	--disable
@@ -29,9 +28,6 @@ function s.initial_effect(c)
 end
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetAttacker():IsControler(1-tp)
-end
-function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
 end
 function s.spfilter(c,e,tp)
 	return c:IsSetCard(0xe3) and c:IsType(TYPE_MONSTER) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
@@ -81,5 +77,8 @@ function s.disop(e,tp,eg,ep,ev,re,r,rp)
 	if ep==tp or not Duel.IsChainDisablable(ev) then return end
 	if not re:IsHasProperty(EFFECT_FLAG_CARD_TARGET) then return end
 	local g=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)
-	if g and g:IsExists(s.disfilter,1,nil,e,tp) then Duel.NegateEffect(ev,true) end
+	if g and g:IsExists(s.disfilter,1,nil,e,tp) then
+		Duel.Hint(HINT_CARD,0,id)
+		Duel.NegateEffect(ev)
+	end
 end

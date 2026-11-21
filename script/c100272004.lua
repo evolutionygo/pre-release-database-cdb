@@ -58,14 +58,26 @@ function s.atkval(e,c)
 	return Duel.GetMatchingGroupCount(Card.IsCode,c:GetControler(),LOCATION_GRAVE,0,nil,15610297)*1500
 end
 function s.immval(e,te)
-	return te:GetOwner()~=e:GetHandler() and te:IsActiveType(TYPE_MONSTER) and te:IsActivated()
-		and te:GetOwner():GetAttack()<e:GetHandler():GetAttack()
+	if not te:IsActiveType(TYPE_MONSTER) or not te:IsActivated() then return false end
+	local catk=e:GetHandler():GetAttack()
+	local tc=te:GetHandler()
+	local atk=tc:GetTextAttack()
+	local ct=Duel.GetCurrentChain()
+	for ev=1,ct do
+		local ce=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_EFFECT)
+		if ce==te then
+			if tc:IsRelateToChain(ev) and tc:IsFaceup() then
+				atk=tc:GetAttack()
+			end
+		end
+	end
+	return atk>=0 and atk<catk
 end
 function s.tdfilter(c)
 	return c:IsFaceupEx() and c:IsSetCard(0xe3) and c:IsAbleToDeck()
 end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.tdfilter,tp,LOCATION_REMOVED,0,1,e:GetHandler())
+	if chk==0 then return Duel.IsExistingMatchingCard(s.tdfilter,tp,LOCATION_REMOVED,0,1,nil)
 		and Duel.IsExistingMatchingCard(aux.TRUE,tp,0,LOCATION_ONFIELD,1,nil) end
 	local rg=Duel.GetMatchingGroup(s.tdfilter,tp,LOCATION_REMOVED,0,nil)
 	local dg=Duel.GetMatchingGroup(aux.TRUE,tp,0,LOCATION_ONFIELD,nil)
