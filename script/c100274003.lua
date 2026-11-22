@@ -67,6 +67,7 @@ function s.initial_effect(c)
 	e7:SetOperation(s.atop)
 	c:RegisterEffect(e7)
 end
+s.counter_add_list={0x1}
 s.mentioned_counter={
 	[0x1]=true,
 }

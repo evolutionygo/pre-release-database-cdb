@@ -67,7 +67,7 @@ function s.immval(e,te)
 	for ev=1,ct do
 		local ce=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_EFFECT)
 		if ce==te then
-			if tc:IsRelateToChain(ev) and tc:IsFaceup() then
+			if tc:IsRelateToChain(ev) and not tc:IsFacedown() then
 				atk=tc:GetAttack()
 			end
 		end
