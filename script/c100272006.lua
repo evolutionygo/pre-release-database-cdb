@@ -44,6 +44,9 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 s.mentioned_counter={[0x1038]=true}
+s.mentioned_counter={
+	[0x1038]=true,
+}
 function s.filter(c)
 	return c:IsSetCard(0xe3) and c:IsAbleToGrave()
 end
