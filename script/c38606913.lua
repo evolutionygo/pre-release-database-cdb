@@ -22,7 +22,7 @@ function c38606913.initial_effect(c)
 	e2:SetOperation(c38606913.damop)
 	c:RegisterEffect(e2)
 end
-c38606913.mentioned_counter={[0x1038]=true}
+c38606913.counter_add_list={0x1038}
 c38606913.mentioned_counter={
 	[0x1038]=true,
 }

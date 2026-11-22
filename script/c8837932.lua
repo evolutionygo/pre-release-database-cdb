@@ -27,7 +27,7 @@ function c8837932.initial_effect(c)
 	e3:SetOperation(c8837932.desop)
 	c:RegisterEffect(e3)
 end
-c8837932.mentioned_counter={[0x1038]=true}
+c8837932.counter_add_list={0x1038}
 c8837932.mentioned_counter={
 	[0x1038]=true,
 }

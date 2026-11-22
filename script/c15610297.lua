@@ -28,7 +28,7 @@ function c15610297.initial_effect(c)
 	e3:SetOperation(c15610297.spop)
 	c:RegisterEffect(e3)
 end
-c15610297.mentioned_counter={[0x1038]=true}
+c15610297.counter_add_list={0x1038}
 c15610297.mentioned_counter={
 	[0x1038]=true,
 }

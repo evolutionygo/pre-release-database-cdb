@@ -11,7 +11,7 @@ function c71442223.initial_effect(c)
 	e1:SetOperation(c71442223.activate)
 	c:RegisterEffect(e1)
 end
-c71442223.mentioned_counter={[0x1038]=true}
+c71442223.counter_add_list={0x1038}
 c71442223.mentioned_counter={
 	[0x1038]=true,
 }

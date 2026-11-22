@@ -21,7 +21,7 @@ function c35058588.initial_effect(c)
 	e2:SetOperation(c35058588.counterop)
 	c:RegisterEffect(e2)
 end
-c35058588.mentioned_counter={[0x1038]=true}
+c35058588.counter_add_list={0x1038}
 c35058588.mentioned_counter={
 	[0x1038]=true,
 }
