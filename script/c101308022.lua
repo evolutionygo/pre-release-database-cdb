@@ -31,15 +31,14 @@ function s.initial_effect(c)
 	e3:SetTarget(s.negtg)
 	e3:SetOperation(s.negop)
 	c:RegisterEffect(e3)
-	
 end
 function s.spfilter(c)
-	return c:IsFaceup() and c:IsRace(RACE_MACHINE) and c:IsSetCard(0x93)
+	return c:IsFaceup() and c:IsType(TYPE_MONSTER)
 end
 function s.spcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
-	local g1=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_REMOVED,0,nil)
+	local g1=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_REMOVED,0,nil)
 	local g2=Duel.GetMatchingGroup(Card.IsFacedown,tp,LOCATION_REMOVED,0,nil)
 	return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and (g1:GetSum(Card.GetAttack)>=4000 or #g2>=5)
@@ -53,8 +52,9 @@ function s.cfilter(c,rtype)
 	return c:IsAbleToRemoveAsCost()	and c:IsFaceup() and c:IsType(rtype)
 end
 function s.negcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	local rtype=re:GetActiveType()&0x3
+	local rtype=re:GetActiveType()&(TYPE_MONSTER|TYPE_SPELL)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_GRAVE,0,1,nil,rtype) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local g=Duel.SelectMatchingCard(tp,s.cfilter,tp,LOCATION_GRAVE,0,1,1,nil,rtype)
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
