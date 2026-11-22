@@ -48,7 +48,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function s.cfilter(c)
-	return c:IsSetCard(0x8d) and c:IsDiscardable()
+	return c:IsSetCard(0x8d) and c:IsDiscardable(REASON_SPSUMMON)
 end
 function s.ovfilter(c)
 	return c:IsFaceup() and c:IsCode(75367227)

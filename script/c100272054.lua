@@ -62,10 +62,26 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			local g=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_DECK,0,nil,e,tp)
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 			local tg=g:SelectSubGroup(tp,aux.dncheck,false,ct,ct)
-			if Duel.SpecialSummon(tg,0,tp,tp,false,false,POS_DEFENSE)>0 then
-				local cg=Duel.GetOperatedGroup():Filter(Card.IsFacedown,nil)
-				if #cg==1 then Duel.ConfirmCards(1-tp,cg) end
+			local posmap={}
+			local cg=Group.CreateGroup()
+			for sc in aux.Next(tg) do
+				local spos=0
+				if sc:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE) then spos=spos+POS_FACEUP_DEFENSE end
+				if sc:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEDOWN_DEFENSE) then spos=spos+POS_FACEDOWN_DEFENSE end
+				local pos=Duel.SelectPosition(tp,sc,spos)
+				posmap[sc]=pos
+				if pos==POS_FACEDOWN_DEFENSE then cg:AddCard(sc) end
 			end
+			if #cg==2 then Duel.ConfirmCards(1-tp,cg) end
+			local fg=Group.CreateGroup()
+			for sc in aux.Next(tg) do
+				local pos=posmap[sc]
+				if Duel.SpecialSummonStep(sc,0,tp,tp,false,false,pos) and pos==POS_FACEDOWN_DEFENSE then
+					fg:AddCard(sc)
+				end
+			end
+			Duel.SpecialSummonComplete()
+			if #fg==1 then Duel.ConfirmCards(1-tp,fg) end
 		end
 	end
 	if e:IsHasType(EFFECT_TYPE_ACTIVATE) then
@@ -90,7 +106,7 @@ function s.postg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_POSITION,nil,1,tp,LOCATION_MZONE)
 end
 function s.posop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEDOWNDEFENSE)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_POSCHANGE)
 	local g=Duel.SelectMatchingCard(tp,s.posfilter,tp,LOCATION_MZONE,0,1,1,nil)
 	if #g>0 then
 		Duel.HintSelection(g)

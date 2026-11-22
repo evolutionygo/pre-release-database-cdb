@@ -37,7 +37,7 @@ function s.sumcon(e)
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	local loc=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_LOCATION)
-	return rp==1-tp and loc&(LOCATION_ONFIELD)~=0 and re:IsActiveType(TYPE_MONSTER)
+	return rp==1-tp and loc==LOCATION_MZONE and re:IsActiveType(TYPE_MONSTER)
 end
 function s.mvfilter(c,tp)
 	return c:IsSetCard(0x8d) and not c:IsForbidden() and c:CheckUniqueOnField(tp)
@@ -69,7 +69,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 			else
 				Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
 			end
-			if tc:IsLocation(LOCATION_SZONE)
+			if tc:IsLocation(LOCATION_SZONE) and tc:IsFaceup()
 				and Duel.IsExistingMatchingCard(aux.TRUE,tp,0,LOCATION_GRAVE,5,nil)
 				and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 				and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_HAND,0,1,nil,e,tp)

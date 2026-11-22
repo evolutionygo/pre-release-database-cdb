@@ -21,6 +21,7 @@ function s.initial_effect(c)
 	--position or overlay (once per chain)
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,1))
+	e3:SetCategory(CATEGORY_POSITION+CATEGORY_MSET)
 	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e3:SetProperty(EFFECT_FLAG_DELAY)
 	e3:SetCode(EVENT_CUSTOM+id)
@@ -45,6 +46,7 @@ end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
+	e:GetHandler():RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id,4))
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToChain() then return end
@@ -92,12 +94,12 @@ function s.posfilter(c)
 	if c:IsPosition(POS_FACEUP_ATTACK+POS_FACEDOWN_DEFENSE) then return c:IsCanChangePosition() end
 	return c:IsPosition(POS_FACEUP_DEFENSE) and c:IsCanTurnSet()
 end
-function s.matfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x8d) and c:IsType(TYPE_XYZ)
+function s.matfilter(c,e)
+	return c:IsFaceup() and c:IsSetCard(0x8d) and c:IsType(TYPE_XYZ) and not c:IsImmuneToEffect(e)
 end
 function s.efftg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local b1=Duel.IsExistingMatchingCard(s.posfilter,tp,LOCATION_MZONE,0,1,nil)
-	local b2=Duel.IsExistingMatchingCard(s.matfilter,tp,LOCATION_MZONE,0,1,nil)
+	local b2=Duel.IsExistingMatchingCard(s.matfilter,tp,LOCATION_MZONE,0,1,nil,e)
 		and Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>0
 	if chk==0 then return b1 or b2 end
 	local op=aux.SelectFromOptions(tp,
@@ -126,11 +128,11 @@ function s.effop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.ChangePosition(tc,Duel.SelectPosition(tp,tc,pos))
 	elseif op==2 then
 		local g=Duel.GetDecktopGroup(tp,1)
-		if not Duel.IsExistingMatchingCard(s.matfilter,tp,LOCATION_MZONE,0,1,nil) or #g==0 then return end
+		if not Duel.IsExistingMatchingCard(s.matfilter,tp,LOCATION_MZONE,0,1,nil,e) or #g==0 then return end
 		Duel.DisableShuffleCheck()
 		if g:GetFirst():IsCanOverlay() then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-			local sg=Duel.SelectMatchingCard(tp,s.matfilter,tp,LOCATION_MZONE,0,1,1,nil)
+			local sg=Duel.SelectMatchingCard(tp,s.matfilter,tp,LOCATION_MZONE,0,1,1,nil,e)
 			Duel.HintSelection(sg)
 			Duel.Overlay(sg:GetFirst(),g)
 		else
