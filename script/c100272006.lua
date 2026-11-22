@@ -45,9 +45,6 @@ function s.initial_effect(c)
 end
 s.counter_add_list={0x1038}
 s.mentioned_counter={[0x1038]=true}
-s.mentioned_counter={
-	[0x1038]=true,
-}
 function s.filter(c)
 	return c:IsSetCard(0xe3) and c:IsAbleToGrave()
 end

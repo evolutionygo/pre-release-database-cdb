@@ -25,7 +25,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 s.mentioned_counter={
-	[0x100e]=true,
+	[0x1038]=true,
 }
 function s.thfilter(c)
 	return aux.IsCounterAdded(c,0x1038) and c:IsAbleToHand()

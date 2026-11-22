@@ -41,7 +41,9 @@ function c38606913.activate(e,tp,eg,ep,ev,re,r,rp)
 	if g:GetCount()==0 then return end
 	for i=1,ct do
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_COUNTER)
-		local tc=g:Select(tp,1,1,nil):GetFirst()
+		local sg=g:Select(tp,i==1 and 1 or 0,1,nil)
+		if #sg==0 then break end
+		local tc=sg:GetFirst()
 		tc:AddCounter(0x1038,1)
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
@@ -70,36 +72,50 @@ function c38606913.damop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
 	if tc:IsFaceup() and tc:IsRelateToEffect(e) then
+		--record that the battle target leaves the field with a counter
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 		e1:SetCode(EVENT_LEAVE_FIELD_P)
 		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-		e1:SetTargetRange(0,LOCATION_MZONE)
-		e1:SetRange(LOCATION_MZONE)
+		e1:SetLabel(tc:GetFieldID(),0)
+		e1:SetLabelObject(tc)
 		e1:SetOperation(c38606913.regop)
-		tc:RegisterEffect(e1)
+		e1:SetReset(RESET_PHASE+PHASE_END)
+		Duel.RegisterEffect(e1,tp)
+		--damage, also when the target monster is destroyed in the same battle
 		local e2=Effect.CreateEffect(c)
-		e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
-		e2:SetRange(LOCATION_MZONE)
+		e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 		e2:SetCode(EVENT_BATTLE_DESTROYING)
-		e2:SetOperation(c38606913.damop2)
-		e2:SetReset(RESET_EVENT+RESETS_STANDARD+EVENT_PHASE+PHASE_END)
+		e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 		e2:SetLabelObject(e1)
-		tc:RegisterEffect(e2)
-		tc:RegisterFlagEffect(38606913,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,1)
+		e2:SetCondition(c38606913.damcon2)
+		e2:SetOperation(c38606913.damop2)
+		e2:SetReset(RESET_PHASE+PHASE_END)
+		Duel.RegisterEffect(e2,tp)
 	end
 end
 function c38606913.regop(e,tp,eg,ep,ev,re,r,rp)
-	local c=eg:GetFirst()
-	local ct=c:GetCounter(0x1038)
-	e:SetLabel(ct)
+	local fid=e:GetLabel()
+	local tc=e:GetLabelObject()
+	if tc:GetFieldID()~=fid then return end
+	local bc=tc:GetBattleTarget()
+	if bc and eg:IsContains(bc) and bc:IsReason(REASON_BATTLE) and bc:GetCounter(0x1038)>0 then
+		e:SetLabel(fid,1)
+	end
+end
+function c38606913.damcon2(e,tp,eg,ep,ev,re,r,rp)
+	local te=e:GetLabelObject()
+	local _,ct=te:GetLabel()
+	return ct==1 and eg:IsContains(te:GetLabelObject())
 end
 function c38606913.damop2(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	local tc=c:GetBattleTarget()
-	local ct=e:GetLabelObject():GetLabel()
-	if c:GetFlagEffect(38606913)>0 and ct>0 then
-		local atk=tc:GetBaseAttack()
-		Duel.Damage(1-tp,atk,REASON_EFFECT)
+	local te=e:GetLabelObject()
+	local tc=te:GetLabelObject()
+	te:SetLabel(te:GetLabel(),0)
+	--the destroyed monster's original ATK where it is now
+	local bc=Duel.GetAttacker()
+	if bc==tc then bc=Duel.GetAttackTarget() end
+	if bc then
+		Duel.Damage(1-tp,bc:GetBaseAttack(),REASON_EFFECT)
 	end
 end
