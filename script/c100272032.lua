@@ -52,7 +52,8 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.tgfilter(c)
-	return c:IsFaceupEx() and c:IsSetCard(0x12b) and c:IsLinkAbove(3) and c:IsAllCardTypes(TYPE_LINK+TYPE_MONSTER)
+	return c:IsFaceup() and c:IsSetCard(0x12b) and c:IsLinkAbove(3) and c:IsAllCardTypes(TYPE_LINK+TYPE_MONSTER)
+		and c:IsAbleToGrave()
 end
 function s.tgtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.tgfilter,tp,LOCATION_ONFIELD,0,1,nil) end

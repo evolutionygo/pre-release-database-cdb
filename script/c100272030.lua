@@ -27,7 +27,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function s.matfilter(c)
-	return c:IsType(TYPE_LINK) and c:GetBaseAttack()==0
+	return c:IsLinkType(TYPE_LINK) and c:GetBaseAttack()==0
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -81,5 +81,5 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RegisterEffect(e1,tp)
 end
 function s.rmlimit(e,c,tp,r,re)
-	return c:GetLink()==e:GetLabel() and re and re:IsActiveType(TYPE_MONSTER) and re:GetHandler():IsCode(id) and r==REASON_COST
+	return c:GetLink()==e:GetLabel() and re and re:GetHandler():IsCode(id) and r&REASON_COST~=0
 end
