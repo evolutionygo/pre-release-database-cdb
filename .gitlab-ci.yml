@@ -192,6 +192,7 @@ prepare_wasm_bin:
     - cd ../../..
     - mkdir -p wasm-bin
     - cp wasm-build/ocgcore/build/bin/wasm_cjs/Release/libocgcore.wasm wasm-bin/libocgcore.wasm
+    - cp wasm-build/ocgcore/build/bin/wasm_cjs/Release/libocgcore.cjs wasm-bin/libocgcore.cjs
   artifacts:
     paths:
       - wasm-bin
